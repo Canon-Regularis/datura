@@ -1,0 +1,7 @@
+model,subset,clips,macro_f1_mean,macro_f1_std
+xgboost,rate unique to a species,3370,0.7890499127133671,0.20390171210418528
+xgboost,rate shared by species,847,0.6619059814514181,0.20418565915124537
+cnn_small,rate unique to a species,3370,0.7483600378729627,0.24317060340982646
+cnn_small,rate shared by species,847,0.6384609256081397,0.2115088489244179
+metadata,rate unique to a species,3370,0.9395209809156977,0.13438374639087516
+metadata,rate shared by species,847,0.7715345098972898,0.22512104419120374
