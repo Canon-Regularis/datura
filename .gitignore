@@ -1,0 +1,15 @@
+data/raw/
+data/processed/
+data/metadata/*.parquet
+
+# Reports are kept so a clone carries the results, minus the heavy artifacts.
+data/metadata/report/**/checkpoints/
+data/metadata/report/**/clip_predictions.parquet
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+uv.lock
