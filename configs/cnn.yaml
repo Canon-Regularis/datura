@@ -1,0 +1,26 @@
+model:
+  base_width: 32
+  blocks_per_stage: 2
+  n_stages: 4
+  dropout: 0.2
+
+train:
+  epochs: 30
+  batch_size: 64
+  lr: 0.004
+  weight_decay: 0.01
+  warmup_epochs: 3
+  early_stopping_patience: 7
+  seed: 1234
+  device: auto
+
+augment:
+  enabled: true
+  probability: 0.5
+  # Applied in mel space, where windows are already normalised individually.
+  # No gain jitter: normalisation would undo it. No pitch shifting: it moves the
+  # frequency content the label depends on.
+  max_time_shift: 0.2
+  noise_std: 0.1
+  freq_mask_bins: 8
+  time_mask_frames: 32

@@ -1,0 +1,32 @@
+# Reduced-capacity variant, roughly 0.15 M parameters against the 2.8 M default.
+#
+# The default network reaches its best validation score between epochs 0 and 4 on
+# every fold and declines from there. With around 135 independent tapes behind the
+# whole training set, it memorises recordings before it learns acoustic structure.
+# This config cuts width and depth and leans harder on regularisation.
+#
+# Which of the two is reported is decided on validation macro-F1 alone. Test folds
+# take no part in the choice.
+model:
+  base_width: 16
+  blocks_per_stage: 1
+  n_stages: 3
+  dropout: 0.4
+
+train:
+  epochs: 30
+  batch_size: 64
+  lr: 0.002
+  weight_decay: 0.03
+  warmup_epochs: 2
+  early_stopping_patience: 8
+  seed: 1234
+  device: auto
+
+augment:
+  enabled: true
+  probability: 0.8
+  max_time_shift: 0.3
+  noise_std: 0.15
+  freq_mask_bins: 12
+  time_mask_frames: 48
