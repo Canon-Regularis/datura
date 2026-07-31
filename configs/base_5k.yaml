@@ -1,0 +1,40 @@
+# Sensitivity variant. Drops the common band to 0 to 2560 Hz, which keeps every
+# humpback tape including the three recorded at 5120 Hz. Compare against base.yaml
+# to see whether conclusions depend on the band choice.
+name: base_5k
+
+dataset:
+  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_root: Watkins_Marine_Mammal_Sound_Database
+  species:
+    - HumpbackWhale
+    - SpermWhale
+    - KillerWhale
+
+audio:
+  target_sample_rate: 5120
+  min_native_sample_rate: 5120
+  window_seconds: 2.0
+  hop_seconds: 1.0
+  min_clip_seconds: 0.5
+  pad_mode: reflect
+  max_windows_per_clip: 16
+
+spectrogram:
+  n_fft: 512
+  hop_length: 64
+  n_mels: 64
+  fmin: 50
+  fmax: 2500
+
+split:
+  n_folds: 5
+  seed: 1234
+  tape_id_length: 5
+
+paths:
+  raw: data/raw
+  metadata: data/metadata
+  processed: data/processed
+  reports: data/metadata/report

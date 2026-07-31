@@ -1,0 +1,46 @@
+# Primary configuration. Every stage of the pipeline reads this file.
+name: base_10k
+
+dataset:
+  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_root: Watkins_Marine_Mammal_Sound_Database
+  species:
+    - HumpbackWhale
+    - SpermWhale
+    - KillerWhale
+
+audio:
+  # Every surviving file is resampled to exactly this rate, so all species share
+  # an identical 0 to target/2 band. Files recorded below min_native_sample_rate
+  # are dropped rather than upsampled: upsampling leaves an empty high band that
+  # a classifier will use as a species label.
+  target_sample_rate: 10000
+  min_native_sample_rate: 10000
+  window_seconds: 2.0
+  hop_seconds: 1.0
+  min_clip_seconds: 0.5
+  pad_mode: reflect
+  # Clip length runs from under a second to twenty-four minutes. Without a cap
+  # a handful of long sperm whale recordings would supply most of the windows.
+  max_windows_per_clip: 16
+
+spectrogram:
+  n_fft: 512
+  hop_length: 64
+  n_mels: 64
+  fmin: 50
+  fmax: 4900
+
+split:
+  n_folds: 5
+  seed: 1234
+  # First 5 characters of the clip id identify the original tape. Cuts from one
+  # tape are near duplicates, so the tape is the unit that must not straddle folds.
+  tape_id_length: 5
+
+paths:
+  raw: data/raw
+  metadata: data/metadata
+  processed: data/processed
+  reports: data/metadata/report
