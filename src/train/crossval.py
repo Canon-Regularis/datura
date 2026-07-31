@@ -2,8 +2,8 @@
 
 One loop fits every model in the project. It never learns what kind of model it is
 holding, so the acoustic baseline, the CNN and the metadata control are evaluated
-under identical folds, identical aggregation and identical metrics. Anything that
-differs between their reported numbers came from the features, not the harness.
+under identical folds, identical aggregation and identical metrics. The harness is the
+same for all of them, so any gap between their reported numbers came from the features.
 """
 
 from __future__ import annotations

@@ -126,9 +126,9 @@ class MetadataFeatureSource(FeatureSource):
     """Recording metadata only, with no audio content whatsoever.
 
     This is the control. Native sample rate, recording year, clip duration and file
-    size describe the tape and the equipment, not the animal. Whatever accuracy this
-    reaches is the floor an audio model has to clear before its score can be read as
-    evidence about whale vocalisation.
+    size describe the tape and the equipment. None of them describe the animal.
+    Whatever accuracy this reaches is the floor an audio model has to clear before its
+    score can be read as evidence about whale vocalisation.
     """
 
     COLUMNS = ("native_sample_rate", "year", "duration_seconds", "bytes_on_disk")

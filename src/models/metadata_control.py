@@ -30,5 +30,6 @@ _CONTROL_PARAMS: dict[str, Any] = {
 
 
 def build_metadata_control(seed: int) -> GradientBoostedTrees:
-    """A deliberately small model. The point is to measure a floor, not to beat it."""
+    """A deliberately small model. Its job is to measure a floor. Clearing that floor
+    is what the audio models are for."""
     return GradientBoostedTrees({**_CONTROL_PARAMS, "random_state": seed}, name="metadata")

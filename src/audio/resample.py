@@ -18,7 +18,7 @@ class UpsamplingRejected(ValueError):
     def __init__(self, native_rate: int, target_rate: int) -> None:
         super().__init__(
             f"native rate {native_rate} Hz is below the target rate {target_rate} Hz; "
-            "this file must be excluded, not upsampled"
+            "this file must be excluded from the dataset"
         )
         self.native_rate = native_rate
         self.target_rate = target_rate
