@@ -134,9 +134,7 @@ def cross_species_tapes(cfg: Config) -> pd.DataFrame:
             if not member.startswith(prefix) or not member.lower().endswith(".wav"):
                 continue
             try:
-                identity = parse_relative_path(
-                    member[len(prefix) :], cfg.split.tape_id_length
-                )
+                identity = parse_relative_path(member[len(prefix) :], cfg.split.tape_id_length)
             except ManifestError:
                 continue
             tapes.setdefault(identity.tape_id, set()).add(identity.species)

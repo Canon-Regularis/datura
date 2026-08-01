@@ -80,9 +80,7 @@ def _safe_roc_auc(labels: np.ndarray, probabilities: np.ndarray, n_classes: int)
         return float("nan")
 
 
-def _safe_average_precision(
-    labels: np.ndarray, probabilities: np.ndarray, n_classes: int
-) -> float:
+def _safe_average_precision(labels: np.ndarray, probabilities: np.ndarray, n_classes: int) -> float:
     one_hot = np.zeros((len(labels), n_classes), dtype=np.float64)
     one_hot[np.arange(len(labels)), labels] = 1.0
     present = one_hot.sum(axis=0) > 0

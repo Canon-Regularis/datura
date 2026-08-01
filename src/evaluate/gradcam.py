@@ -47,8 +47,10 @@ class GradCam:
         try:
             logits = self.module(inputs)
             predicted = logits.argmax(dim=1)
-            chosen = predicted if targets is None else torch.as_tensor(
-                targets, dtype=torch.long, device=self.device
+            chosen = (
+                predicted
+                if targets is None
+                else torch.as_tensor(targets, dtype=torch.long, device=self.device)
             )
             selected = logits.gather(1, chosen.view(-1, 1)).sum()
             gradients = torch.autograd.grad(selected, captured["activations"])[0]

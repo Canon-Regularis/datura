@@ -129,9 +129,7 @@ class AcousticFeatures(FeatureExtractor):
 
         centroid = librosa.feature.spectral_centroid(S=magnitude, sr=sample_rate)
         bandwidth = librosa.feature.spectral_bandwidth(S=magnitude, sr=sample_rate)
-        rolloff = librosa.feature.spectral_rolloff(
-            S=magnitude, sr=sample_rate, roll_percent=0.85
-        )
+        rolloff = librosa.feature.spectral_rolloff(S=magnitude, sr=sample_rate, roll_percent=0.85)
         flatness = librosa.feature.spectral_flatness(S=magnitude)
         zero_crossing = librosa.feature.zero_crossing_rate(
             window, frame_length=self.n_fft, hop_length=self.hop_length

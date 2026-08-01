@@ -65,9 +65,7 @@ def _gradcam_examples(
             continue
         chosen = rng.choice(pool, size=min(per_species, len(pool)), replace=False)
         positions.extend(chosen.tolist())
-        labels.extend(
-            f"{name} (predicted {class_names[predicted[p]]})" for p in chosen.tolist()
-        )
+        labels.extend(f"{name} (predicted {class_names[predicted[p]]})" for p in chosen.tolist())
 
     windows = view.take(np.asarray(positions, dtype=np.int64))
     heatmaps, _ = GradCam(model).heatmaps(windows)
@@ -90,9 +88,7 @@ def run(
     extractor = build_extractor("logmel", cfg)
     frequencies = extractor.mel_frequencies()
 
-    table = band_occlusion(
-        model, source.matrix(rows), source.index, rows, class_names, frequencies
-    )
+    table = band_occlusion(model, source.matrix(rows), source.index, rows, class_names, frequencies)
     table.insert(0, "fold", fold.index)
     table.to_csv(directory / "occlusion.csv", index=False)
     plots.occlusion_profile(table, directory / "occlusion.png", class_names)
@@ -104,9 +100,7 @@ def run(
         .to_string(index=False)
     )
 
-    windows, heatmaps, labels = _gradcam_examples(
-        model, source, rows, class_names, cfg.split.seed
-    )
+    windows, heatmaps, labels = _gradcam_examples(model, source, rows, class_names, cfg.split.seed)
     plots.gradcam_panel(
         windows,
         heatmaps,
