@@ -20,6 +20,7 @@ from src.data.splits import Fold, rows_for_clips
 from src.evaluate import metrics
 from src.features.source import FeatureSource
 from src.models.base import Batch, WindowClassifier
+from src.provenance import write as write_provenance
 
 ModelFactory = Callable[[], WindowClassifier]
 FoldHook = Callable[[int, WindowClassifier], dict[str, pd.DataFrame]]
@@ -144,4 +145,9 @@ def save_result(cfg: Config, result: CrossValidationResult) -> Path:
     result.clip_predictions.to_parquet(directory / "clip_predictions.parquet", index=False)
     for key, table in result.extras.items():
         table.to_csv(directory / f"{key}.csv", index=False)
+    write_provenance(
+        cfg,
+        directory,
+        extra={"model": result.model_name, "feature_source": result.source_name},
+    )
     return directory

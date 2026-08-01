@@ -20,6 +20,7 @@ import pandas as pd
 from src.config import Config, load_config
 from src.data.manifest import load_manifest
 from src.evaluate import metrics, plots
+from src.provenance import write as write_provenance
 
 MODELS = ("xgboost", "cnn", "cnn_small", "metadata")
 CONTROL = "metadata"
@@ -112,8 +113,14 @@ def ambiguity_breakdown(cfg: Config, models: list[str]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def _write_markdown(cfg: Config, table: pd.DataFrame, margins: pd.DataFrame, directory: Path,
-                    figures: list[Path], ambiguity: pd.DataFrame) -> Path:
+def _write_markdown(
+    cfg: Config,
+    table: pd.DataFrame,
+    margins: pd.DataFrame,
+    directory: Path,
+    figures: list[Path],
+    ambiguity: pd.DataFrame,
+) -> Path:
     class_names = list(cfg.dataset.species)
     lines = [
         f"# Results: {cfg.name}",
@@ -226,6 +233,7 @@ def build(cfg: Config) -> Path:
     print("\nSplit by whether the native sample rate identifies the species")
     print(ambiguity.round(4).to_string(index=False))
 
+    write_provenance(cfg, directory, extra={"models": models})
     report = _write_markdown(cfg, table, margins, directory, figures, ambiguity)
     print(f"\n{len(figures)} figures and {report.name} written to {directory}")
     return report
