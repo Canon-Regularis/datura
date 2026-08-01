@@ -1,0 +1,25 @@
+version: 2
+
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      # One PR for the routine bumps. Anything that moves a major version comes
+      # through on its own, because those are the ones that change results.
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # torch is pinned to a CUDA build that has to match the local driver, so it
+      # gets bumped by hand alongside a rerun of the training.
+      - dependency-name: torch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
