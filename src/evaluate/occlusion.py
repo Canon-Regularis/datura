@@ -16,7 +16,7 @@ from itertools import pairwise
 import numpy as np
 import pandas as pd
 
-from src.evaluate import metrics
+from src import scoring
 from src.features.source import MaskedRowView, RowView
 from src.models.base import WindowClassifier
 
@@ -41,7 +41,7 @@ def _evaluate(
     class_names: list[str],
 ) -> dict[str, float]:
     """Score the model through the same path the training runner uses."""
-    _, scores = metrics.evaluate_clips(index, rows, model.predict_proba(view), class_names)
+    _, scores = scoring.evaluate_clips(index, rows, model.predict_proba(view), class_names)
     return scores
 
 

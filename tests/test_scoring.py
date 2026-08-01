@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.evaluate.metrics import aggregate_to_clips, confusion, score, summarise_folds
 from src.evaluate.occlusion import band_edges
+from src.scoring import aggregate_to_clips, confusion, score, summarise_folds
 
 CLASSES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
 

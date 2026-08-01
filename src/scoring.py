@@ -1,5 +1,9 @@
 """Scoring, shared by every model so the numbers stay comparable.
 
+This sits below both training and evaluation because both need it. The cross
+validation runner scores each fold as it fits; the report scores subsets of the
+same predictions afterwards. Neither owns it.
+
 Two things here matter more than the metric list.
 
 Predictions are aggregated from windows to clips before scoring. Windows cut from

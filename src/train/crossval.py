@@ -2,7 +2,7 @@
 
 One loop fits every model in the project. It never learns what kind of model it is
 holding, so the acoustic baseline, the network and the metadata control are
-evaluated under identical folds, identical aggregation and identical metrics. The
+evaluated under identical folds, identical aggregation and identical scoring. The
 harness is the same for all of them; any gap between their reported numbers came
 from the features.
 
@@ -20,9 +20,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src import scoring
 from src.config import Config
 from src.data.splits import Fold, rows_for_clips
-from src.evaluate import metrics
 from src.features.source import FeatureSource
 from src.models.base import Batch, FoldContext, WindowClassifier
 from src.provenance import write as write_provenance
@@ -48,10 +48,10 @@ class CrossValidationResult:
 
     @property
     def summary(self) -> pd.DataFrame:
-        return metrics.summarise_folds(self.clip_metrics)
+        return scoring.summarise_folds(self.clip_metrics)
 
     def headline(self) -> str:
-        return metrics.format_headline(self.model_name, self.summary)
+        return scoring.format_headline(self.model_name, self.summary)
 
 
 def _batch(source: FeatureSource, rows: np.ndarray, labels: np.ndarray) -> Batch:
@@ -93,11 +93,11 @@ def run_cross_validation(
         window_rows.append(
             {
                 "fold": fold.index,
-                **metrics.score(labels[test_rows], window_probabilities, class_names),
+                **scoring.score(labels[test_rows], window_probabilities, class_names),
             }
         )
 
-        clips, scores = metrics.evaluate_clips(index, test_rows, window_probabilities, class_names)
+        clips, scores = scoring.evaluate_clips(index, test_rows, window_probabilities, class_names)
         clip_rows.append({"fold": fold.index, **scores})
         predictions.append(clips.assign(fold=fold.index))
 
@@ -126,7 +126,7 @@ def run_cross_validation(
         clip_metrics=pd.DataFrame(clip_rows),
         window_metrics=pd.DataFrame(window_rows),
         clip_predictions=all_predictions,
-        confusion=metrics.confusion(
+        confusion=scoring.confusion(
             all_predictions["label"].to_numpy(),
             all_predictions["prediction"].to_numpy(),
             class_names,

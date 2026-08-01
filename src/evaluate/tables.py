@@ -10,10 +10,10 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from src import scoring
 from src.config import Config
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
-from src.evaluate import metrics
 from src.models import registry as models
 from src.results import has_results, model_directory, predictions_path
 
@@ -85,7 +85,7 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
     rate_of_clip = manifest.set_index("clip_id")["native_sample_rate"]
 
     class_names = list(cfg.dataset.species)
-    columns = metrics.probability_columns(len(class_names))
+    columns = scoring.probability_columns(len(class_names))
 
     rows = []
     for name in model_names:
@@ -93,7 +93,7 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
         predictions["shared_rate"] = predictions["clip_id"].map(rate_of_clip).isin(shared_rates)
         for shared, subset in predictions.groupby("shared_rate"):
             per_fold = [
-                metrics.score(
+                scoring.score(
                     fold_subset["label"].to_numpy(),
                     fold_subset[columns].to_numpy(),
                     class_names,
