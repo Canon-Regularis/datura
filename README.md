@@ -113,17 +113,20 @@ data/processed/   cached feature arrays (gitignored)
 
 src/pipeline.py   every stage in order, skipping whatever is already done
 src/cli.py        the options every command shares
-src/config.py     YAML validated once into typed objects; nothing else reads a raw dict
+src/config/       sections declare the shape and validate it; loading reads the YAML
 src/results.py    where results live on disk; every report path is built here
+src/scoring.py    how a prediction becomes a number, shared by training and reporting
 src/provenance.py what produced a result: commit, versions, accelerator, config digests
 src/errors.py     the base every deliberate failure inherits from
+src/logging_config.py  configured by entry points only, never by a library module
 
 src/audio/        decode, resample, window
-src/data/         download, manifest, and the fold grouping rule
+src/data/         clips parses identity, manifest lists them, audit describes them,
+                  splits holds the fold grouping rule
 src/features/     the extractor interface, its implementations, the cache and the registry
-src/models/       the classifier interface, its implementations and the registry
+src/models/       the classifier interface, the trees, the cnn package, the registry
 src/train/        folds, one cross validation runner, and one training session
-src/evaluate/     metrics, tables, figures, occlusion, Grad-CAM, report
+src/evaluate/     tables, figures, occlusion, Grad-CAM, report
 experiments/      notebooks that read artifacts and plot, no training code
 ```
 
