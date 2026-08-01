@@ -12,19 +12,23 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
 import hashlib
+import logging
 import re
 import subprocess
 import sys
 import zipfile
 from pathlib import Path
 
-from src.config import Config, load_config
+from src import cli
+from src.config import Config
+from src.errors import DaturaError
+
+logger = logging.getLogger(__name__)
 
 
-class DownloadError(RuntimeError):
-    pass
+class DownloadError(DaturaError):
+    """Raised when the archive cannot be fetched or does not match its digest."""
 
 
 def remote_size(url: str) -> int | None:
@@ -57,7 +61,7 @@ def verify_archive(cfg: Config, path: Path) -> str:
     content can match on length, and everything downstream would then be measured
     against data nobody can reproduce.
     """
-    print(f"verifying {path.name}, this takes about half a minute")
+    logger.info("verifying %s, this takes about half a minute", path.name)
     actual = file_digest(path)
     if actual != cfg.dataset.archive_sha256:
         raise DownloadError(
@@ -67,7 +71,7 @@ def verify_archive(cfg: Config, path: Path) -> str:
             "delete the file and download it again, or update dataset.archive_sha256 "
             "if the upstream release genuinely changed"
         )
-    print(f"digest matches {actual[:16]}...")
+    logger.info("digest matches %s...", actual[:16])
     return actual
 
 
@@ -80,11 +84,11 @@ def download_archive(cfg: Config, *, force: bool = False, verify: bool = True) -
     if destination.exists() and not force:
         actual = destination.stat().st_size
         if expected is None or actual == expected:
-            print(f"archive already present at {destination} ({actual / 1e9:.2f} GB)")
+            logger.info("archive already present at %s (%.2f GB)", destination, actual / 1e9)
             if verify:
                 verify_archive(cfg, destination)
             return destination
-        print(f"resuming download at {actual / 1e9:.2f} of {expected / 1e9:.2f} GB")
+        logger.info("resuming download at %.2f of %.2f GB", actual / 1e9, expected / 1e9)
 
     command = [
         "curl",
@@ -133,26 +137,25 @@ def extract_species(cfg: Config, archive: Path, *, force: bool = False) -> Path:
             )
 
         pending = [m for m in wanted if force or not (cfg.paths.raw / m).exists()]
-        print(f"{len(wanted)} clips requested, {len(pending)} to extract")
+        logger.info("%d clips requested, %d to extract", len(wanted), len(pending))
         for index, member in enumerate(pending, start=1):
             bundle.extract(member, cfg.paths.raw)
             if index % 500 == 0 or index == len(pending):
-                print(f"  extracted {index}/{len(pending)}")
+                logger.info("  extracted %d/%d", index, len(pending))
 
     return root
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/base.yaml")
-    parser.add_argument("--force", action="store_true", help="redownload and re-extract")
+    parser = cli.parser_for(__doc__)
+    parser.add_argument("--force", action="store_true", help="redownload and extract again")
     parser.add_argument("--skip-download", action="store_true", help="extract an existing archive")
     parser.add_argument(
         "--skip-verify", action="store_true", help="skip the SHA256 check on an existing archive"
     )
     args = parser.parse_args(argv)
 
-    cfg = load_config(args.config)
+    cfg = cli.prepare(args)
     archive = cfg.paths.raw / cfg.dataset.zip_name
     if not args.skip_download:
         archive = download_archive(cfg, force=args.force, verify=not args.skip_verify)
@@ -162,7 +165,7 @@ def main(argv: list[str] | None = None) -> int:
         verify_archive(cfg, archive)
 
     root = extract_species(cfg, archive, force=args.force)
-    print(f"dataset root: {root}")
+    logger.info("dataset root: %s", root)
     return 0
 
 

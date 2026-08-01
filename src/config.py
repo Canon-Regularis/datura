@@ -1,6 +1,6 @@
 """Single parse and validation point for YAML configuration.
 
-Every other module receives an already-validated ``Config`` object. Nothing else
+Every other module receives an already validated ``Config`` object. Nothing else
 in the codebase reads a raw dict or reaches into the YAML file, so a typo or an
 impossible combination of settings fails here rather than halfway through a
 training run.
@@ -16,12 +16,14 @@ from typing import Any
 
 import yaml
 
+from src.errors import DaturaError
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 _PAD_MODES = {"reflect", "wrap", "edge", "constant"}
 
 
-class ConfigError(ValueError):
+class ConfigError(DaturaError, ValueError):
     """Raised when a configuration file is missing keys or internally inconsistent."""
 
 
@@ -223,9 +225,9 @@ def load_config(path: str | Path) -> Config:
 
     raw = yaml.safe_load(source.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
-        raise ConfigError(f"config file {source} must contain a top-level mapping")
+        raise ConfigError(f"config file {source} must contain a top level mapping")
     if "name" not in raw:
-        raise ConfigError("config must define a top-level 'name'")
+        raise ConfigError("config must define a top level 'name'")
 
     dataset_block = _require(
         raw,
@@ -299,5 +301,5 @@ def load_yaml(path: str | Path) -> dict[str, Any]:
         raise ConfigError(f"config file not found: {source}")
     data = yaml.safe_load(source.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
-        raise ConfigError(f"config file {source} must contain a top-level mapping")
+        raise ConfigError(f"config file {source} must contain a top level mapping")
     return data

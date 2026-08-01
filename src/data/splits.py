@@ -7,7 +7,7 @@ model in the project calls this module rather than rolling its own split, so the
 protection cannot drift between experiments.
 
 Humpback whale survives on roughly a dozen tapes, which is why the project reports
-a spread across folds instead of a single held-out score.
+a spread across folds instead of a single held out score.
 """
 
 from __future__ import annotations
@@ -19,15 +19,16 @@ import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 
 from src.config import Config
+from src.errors import DaturaError
 
 
-class SplitError(RuntimeError):
-    pass
+class SplitError(DaturaError):
+    """Raised when folds would leak a tape, or cannot be built at all."""
 
 
 @dataclass(frozen=True)
 class Fold:
-    """One cross-validation fold, addressed by clip id rather than row position."""
+    """One cross validation fold, addressed by clip id rather than row position."""
 
     index: int
     train_clips: tuple[str, ...]
@@ -72,7 +73,7 @@ def make_folds(manifest: pd.DataFrame, cfg: Config, *, validation_splits: int = 
     """Build ``cfg.split.n_folds`` folds grouped by tape and stratified by species.
 
     Each fold's fitting data is split again, still by tape, to give the CNN an
-    early-stopping signal that the test tapes never touch.
+    early stopping signal that the test tapes never touch.
     """
     _check_manifest(manifest)
     frame = manifest.reset_index(drop=True)
@@ -166,6 +167,15 @@ def clips_from_index(index: pd.DataFrame) -> pd.DataFrame:
     """
     columns = ["clip_id", "tape_id", "species", "label"]
     return index.drop_duplicates("clip_id")[columns].reset_index(drop=True)
+
+
+def folds_for_index(index: pd.DataFrame, cfg: Config) -> list[Fold]:
+    """Folds over whichever clips a window index actually contains.
+
+    Training and explainability both need this. Sharing it is what keeps the fold
+    a model was scored on identical to the fold its explanation is computed on.
+    """
+    return make_folds(clips_from_index(index), cfg)
 
 
 def rows_for_clips(index: pd.DataFrame, clips: tuple[str, ...] | list[str]) -> np.ndarray:

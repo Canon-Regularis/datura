@@ -22,7 +22,7 @@ audio:
   hop_seconds: 1.0
   min_clip_seconds: 0.5
   pad_mode: reflect
-  # Clip length runs from under a second to twenty-four minutes. Without a cap
+  # Clip length runs from under a second to twenty four minutes. Without a cap
   # a handful of long sperm whale recordings would supply most of the windows.
   max_windows_per_clip: 16
 

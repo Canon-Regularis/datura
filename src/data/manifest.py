@@ -10,7 +10,7 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
+import logging
 import sys
 import zipfile
 from dataclasses import dataclass
@@ -18,12 +18,16 @@ from pathlib import Path, PurePosixPath
 
 import pandas as pd
 
+from src import cli
 from src.audio.io import probe
-from src.config import Config, load_config
+from src.config import Config
+from src.errors import DaturaError
+
+logger = logging.getLogger(__name__)
 
 
-class ManifestError(RuntimeError):
-    pass
+class ManifestError(DaturaError):
+    """Raised when the extracted tree does not look like the Watkins layout."""
 
 
 @dataclass(frozen=True)
@@ -52,7 +56,7 @@ def parse_relative_path(relative: str | PurePosixPath, tape_id_length: int) -> C
     if not filename.lower().endswith(".wav"):
         raise ManifestError(f"not a wav file: {relative!r}")
     if not year_text.isdigit():
-        raise ManifestError(f"non-numeric year directory in {relative!r}")
+        raise ManifestError(f"not numeric year directory in {relative!r}")
 
     clip_id = filename[: -len(".wav")]
     if len(clip_id) < tape_id_length:
@@ -201,25 +205,26 @@ def audit_tables(manifest: pd.DataFrame) -> dict[str, pd.DataFrame]:
     }
 
 
-def _print_summary(manifest: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None:
-    print("\nCoverage before and after the sample rate filter")
-    print(tables["audit_coverage"].to_string(index=False))
+def _log_summary(manifest: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> None:
+    logger.info("\nCoverage before and after the sample rate filter")
+    logger.info(tables["audit_coverage"].to_string(index=False))
     if not tables["audit_dropped"].empty:
-        print("\nDropped clips")
-        print(tables["audit_dropped"].to_string(index=False))
-    print("\nNative sample rates present")
-    print(tables["audit_sample_rates"].to_string(index=False))
+        logger.info("\nDropped clips")
+        logger.info(tables["audit_dropped"].to_string(index=False))
+    logger.info("\nNative sample rates present")
+    logger.info(tables["audit_sample_rates"].to_string(index=False))
     kept = manifest["keep"].sum()
-    print(f"\n{kept} of {len(manifest)} clips kept across {manifest['species'].nunique()} species")
+    logger.info(
+        "\n%d of %d clips kept across %d species",
+        kept,
+        len(manifest),
+        manifest["species"].nunique(),
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/base.yaml")
-    args = parser.parse_args(argv)
-
-    cfg = load_config(args.config)
-    cfg.paths.ensure()
+    args = cli.parser_for(__doc__).parse_args(argv)
+    cfg = cli.prepare(args)
 
     manifest = build_manifest(cfg)
     tables = audit_tables(manifest)
@@ -230,8 +235,8 @@ def main(argv: list[str] | None = None) -> int:
     for stem, table in tables.items():
         table.to_csv(cfg.paths.metadata / f"{stem}_{cfg.name}.csv", index=False)
 
-    _print_summary(manifest, tables)
-    print(f"\nmanifest written to {destination}")
+    _log_summary(manifest, tables)
+    logger.info("\nmanifest written to %s", destination)
     return 0
 
 

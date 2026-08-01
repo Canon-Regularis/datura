@@ -1,6 +1,6 @@
-"""Cutting a clip into fixed-length analysis windows.
+"""Cutting a clip into fixed length analysis windows.
 
-Short clips are reflect-padded rather than zero-padded. A block of digital silence
+Short clips are reflect padded rather than zero padded. A block of digital silence
 at the end of a clip is a length cue, and clip length differs systematically
 between species, so zero padding would hand the model a shortcut.
 """
@@ -21,13 +21,13 @@ def pad_to_length(signal: np.ndarray, length: int, mode: str = "reflect") -> np.
 
 
 def window_starts(n_samples: int, window: int, hop: int, max_windows: int = 0) -> list[int]:
-    """Start offsets covering the whole signal, including a tail-aligned final window.
+    """Start offsets covering the whole signal, including a tail aligned final window.
 
     Without the final window the last fraction of a clip shorter than one hop would
     never be seen by the model.
 
     ``max_windows`` thins long clips down to that many evenly spaced windows. Clip
-    length is wildly uneven in this collection, from under a second to twenty-four
+    length is wildly uneven in this collection, from under a second to twenty four
     minutes, so without a cap a handful of the longest recordings would supply most
     of the training set and the model would mostly be learning those tapes.
     """
