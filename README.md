@@ -105,11 +105,14 @@ Full numbers live in `data/metadata/report/base_10k/REPORT.md` and
 ## Layout
 
 ```text
+.github/          CI, and the dependency update schedule
 configs/          base.yaml drives the pipeline; base_5k.yaml is the narrow-band variant
 data/raw/         the archive and the extracted species (gitignored)
-data/metadata/    manifest and audit tables
+data/metadata/    manifest, audit tables and every report
 data/processed/   cached feature arrays (gitignored)
+src/pipeline.py   every stage in order, skipping whatever is already done
 src/config.py     YAML validated once into typed objects; nothing else reads a raw dict
+src/provenance.py what produced a result: commit, versions, accelerator, config digests
 src/data/         download, manifest, splits
 src/audio/        decode, resample, window
 src/features/     the extractor interface and its two implementations, plus the cache
@@ -125,10 +128,29 @@ is the only reason the three models produce numbers you can put in the same tabl
 
 ## Running it
 
-```bash
-uv sync
-uv run pytest
+torch comes from one of two extras because the wheels differ by gigabytes. Pick the one that
+matches the machine:
 
+```bash
+uv sync --extra cuda    # NVIDIA GPU, driver 560 or newer
+uv sync --extra cpu     # everything else, and CI
+uv run pytest
+```
+
+Then the whole thing in one command:
+
+```bash
+uv run python -m src.pipeline --config configs/base.yaml
+uv run python -m src.pipeline --config configs/base_5k.yaml   # narrow-band check
+```
+
+That runs download, manifest, features, both tree models, both CNN sizes, explainability and the
+report, in that order. Stages whose output already exists are skipped, so a rerun after a failure
+picks up where it stopped. Add `--force` to redo everything or `--only report` to run one stage.
+
+The stages are also individual commands if you want them separately:
+
+```bash
 uv run python -m src.data.download                                  # 6.7 GB archive, resumable
 uv run python -m src.data.manifest    --config configs/base.yaml
 uv run python -m src.features.extract --config configs/base.yaml
@@ -142,15 +164,69 @@ uv run python -m src.evaluate.report  --config configs/base.yaml
 ```
 
 `--model-config` points the trainers at the hyperparameter files. Both CNN sizes get trained. The
-reported one is picked on validation macro-F1 while the test folds stay untouched. For the
-narrow-band check, rerun everything from the manifest onward with `--config configs/base_5k.yaml`.
+reported one is picked on validation macro-F1 while the test folds stay untouched.
 
 Results land in `data/metadata/report/<config name>/` as CSVs, figures and a `REPORT.md`. The
 notebooks only read those artifacts, so every figure can be regenerated from the command line
 without opening Jupyter.
 
 On hardware: the CNN trains in about 17 minutes per fold on a 4 GB laptop GPU. CPU works, it just
-takes considerably longer.
+takes considerably longer. A full run from an empty `data/` is a little over three hours, most of
+it the download and the four CNN trainings.
+
+## Reproducing a result
+
+The archive, the environment and the code are all pinned, and every run writes down what produced
+it.
+
+`uv.lock` is committed and CI installs with `--frozen`, so the exact package versions are fixed. The
+interpreter is pinned in `.python-version`, and the test matrix covers 3.12 through 3.14 on Linux
+plus 3.14 on Windows.
+
+`dataset.archive_sha256` in the config pins the archive contents. The download verifies the digest
+rather than trusting the byte count, since a truncated resume or a mirror serving different content
+can match on length alone.
+
+Every result directory gets a `provenance.json` with the commit, whether the tree was dirty, the
+package versions, the accelerator, and the config digests. Cache filenames carry those digests too,
+so changing the sample rate or the mel settings produces a new key and a stale cache can never be
+reused by accident.
+
+The CNN runs with cuDNN autotuning on by default, which is faster but picks whichever kernel is
+quickest on the day. Set `deterministic: true` in the CNN config, and export
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`, for bit-identical reruns at about a third less throughput.
+
+Manifests and per-clip predictions are committed, so both reports rebuild from a fresh clone with no
+download at all:
+
+```bash
+uv run python -m src.evaluate.report --config configs/base.yaml
+```
+
+CI does exactly that on every push and fails if a regenerated table differs from the committed one.
+Figures are excluded from that check because matplotlib output is not byte-stable across versions.
+
+## CI
+
+`.github/workflows/ci.yml` runs three jobs on push and pull request:
+
+- **lint**: `uv lock --check`, then `ruff check` and `ruff format --check` across source, tests
+  and notebooks
+- **test**: the suite on 3.12, 3.13 and 3.14 on Linux, plus 3.14 on Windows, with coverage
+- **reproduce**: rebuilds both reports from committed results and diffs them against what is in the
+  repo
+
+The suite finishes in well under a minute because nothing in it needs the archive.
+`tests/test_pipeline_e2e.py` generates its own audio, three species with distinct acoustic regimes,
+and pushes it through manifest, features, folds, training, explainability and report. That is the
+test that catches the integration breaks the unit tests cannot see.
+`tests/test_notebooks.py` executes all three notebooks against the committed artifacts.
+
+`.pre-commit-config.yaml` runs the same lint and format checks locally if you want them:
+
+```bash
+uv run pre-commit install
+```
 
 ## Reading the output
 
