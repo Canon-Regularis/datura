@@ -1,8 +1,8 @@
-"""Residual CNN over log mel windows.
+"""Fitting the network, and predicting with it.
 
-Small on purpose. The species set survives on a few dozen independent tapes, so
-capacity is not the limiting factor and a larger network would only memorise tapes
-faster. Four stages at base width 32 comes to roughly two million parameters.
+The training loop, the learning rate schedule and the batching sit here. The
+architecture, the augmentation and the device flags are imported; this module is
+about the procedure rather than the parts.
 """
 
 from __future__ import annotations
@@ -21,164 +21,9 @@ from torch import nn
 
 from src.features.source import RowView
 from src.models.base import Batch, FoldContext, WindowClassifier, balanced_class_weights
-
-
-def resolve_device(requested: str) -> torch.device:
-    if requested == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return torch.device(requested)
-
-
-def configure_backend(device: torch.device, deterministic: bool) -> None:
-    """Trade throughput for identical runs, or the other way round.
-
-    Left off, cuDNN benchmarks its algorithms once for the fixed window shape and
-    keeps the fast one, which pays for itself across five folds but picks whichever
-    kernel is quickest on the day. Turned on, the same seed reproduces the same
-    weights on the same hardware, at roughly a third less throughput.
-
-    Deterministic CUDA matmul also wants CUBLAS_WORKSPACE_CONFIG=:4096:8 in the
-    environment before the process starts. Without it the run still works, it just
-    falls back on the operations that cannot be made deterministic.
-    """
-    if device.type == "cuda":
-        torch.backends.cudnn.benchmark = not deterministic
-        torch.backends.cudnn.deterministic = deterministic
-    torch.use_deterministic_algorithms(deterministic, warn_only=True)
-
-
-class _BasicBlock(nn.Module):
-    def __init__(self, in_channels: int, out_channels: int, stride: int):
-        super().__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride, 1, bias=False)
-        self.norm1 = nn.BatchNorm2d(out_channels)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, 3, 1, 1, bias=False)
-        self.norm2 = nn.BatchNorm2d(out_channels)
-        self.activation = nn.ReLU(inplace=True)
-        self.shortcut: nn.Module = nn.Identity()
-        if stride != 1 or in_channels != out_channels:
-            self.shortcut = nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, 1, stride, bias=False),
-                nn.BatchNorm2d(out_channels),
-            )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        residual = self.shortcut(x)
-        out = self.activation(self.norm1(self.conv1(x)))
-        out = self.norm2(self.conv2(out))
-        return self.activation(out + residual)
-
-
-class MelResNet(nn.Module):
-    """Stem, four residual stages, global pooling, linear head."""
-
-    def __init__(
-        self,
-        n_classes: int,
-        base_width: int = 32,
-        n_stages: int = 4,
-        blocks_per_stage: int = 2,
-        dropout: float = 0.2,
-    ):
-        super().__init__()
-        self.stem = nn.Sequential(
-            nn.Conv2d(1, base_width, 3, 1, 1, bias=False),
-            nn.BatchNorm2d(base_width),
-            nn.ReLU(inplace=True),
-        )
-        stages: list[nn.Module] = []
-        in_channels = base_width
-        for stage in range(n_stages):
-            out_channels = base_width * (2**stage)
-            for block in range(blocks_per_stage):
-                stride = 2 if (block == 0 and stage > 0) else 1
-                stages.append(_BasicBlock(in_channels, out_channels, stride))
-                in_channels = out_channels
-        self.stages = nn.Sequential(*stages)
-        self.pool = nn.AdaptiveAvgPool2d(1)
-        self.dropout = nn.Dropout(dropout)
-        self.classifier = nn.Linear(in_channels, n_classes)
-
-    @property
-    def final_stage(self) -> nn.Module:
-        """The block Grad-CAM hooks into."""
-        return self.stages[-1]
-
-    def features(self, x: torch.Tensor) -> torch.Tensor:
-        return self.stages(self.stem(x))
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        pooled = self.pool(self.features(x)).flatten(1)
-        return self.classifier(self.dropout(pooled))
-
-
-class SpectrogramAugment:
-    """Masking and shifting applied in mel space.
-
-    Gain jitter is absent by design. Windows are normalised individually during
-    extraction, so scaling one would be undone before the model ever sees it.
-    Pitch shifting is absent because it moves the frequency content the label
-    depends on.
-    """
-
-    def __init__(self, settings: dict[str, Any]):
-        self.enabled = bool(settings.get("enabled", True))
-        self.probability = float(settings.get("probability", 0.5))
-        self.max_time_shift = float(settings.get("max_time_shift", 0.2))
-        self.noise_std = float(settings.get("noise_std", 0.1))
-        self.freq_mask_bins = int(settings.get("freq_mask_bins", 8))
-        self.time_mask_frames = int(settings.get("time_mask_frames", 32))
-
-    def __call__(self, batch: torch.Tensor, generator: torch.Generator) -> torch.Tensor:
-        if not self.enabled:
-            return batch
-        n, _, n_mels, n_frames = batch.shape
-        device = batch.device
-
-        def coin() -> torch.Tensor:
-            return torch.rand(n, device=device, generator=generator) < self.probability
-
-        if self.max_time_shift > 0:
-            span = max(int(self.max_time_shift * n_frames), 1)
-            shifts = torch.randint(-span, span + 1, (n,), device=device, generator=generator)
-            shifts = torch.where(coin(), shifts, torch.zeros_like(shifts))
-            for i, shift in enumerate(shifts.tolist()):
-                if shift:
-                    batch[i] = torch.roll(batch[i], shifts=shift, dims=-1)
-
-        if self.noise_std > 0:
-            noise = torch.randn(batch.shape, device=device, generator=generator) * self.noise_std
-            batch = batch + noise * coin().view(n, 1, 1, 1)
-
-        batch = self._mask(batch, coin(), self.freq_mask_bins, n_mels, 2, generator)
-        batch = self._mask(batch, coin(), self.time_mask_frames, n_frames, 3, generator)
-        return batch
-
-    @staticmethod
-    def _mask(
-        batch: torch.Tensor,
-        selected: torch.Tensor,
-        max_width: int,
-        axis_size: int,
-        axis: int,
-        generator: torch.Generator,
-    ) -> torch.Tensor:
-        if max_width <= 0:
-            return batch
-        width = int(min(max_width, axis_size - 1))
-        positions = torch.arange(axis_size, device=batch.device)
-        for i in torch.nonzero(selected).flatten().tolist():
-            size = int(torch.randint(1, width + 1, (1,), generator=generator, device=batch.device))
-            start = int(
-                torch.randint(
-                    0, axis_size - size + 1, (1,), generator=generator, device=batch.device
-                )
-            )
-            span = (positions >= start) & (positions < start + size)
-            shape = [1, 1, 1, 1]
-            shape[axis] = axis_size
-            batch[i] = batch[i].masked_fill(span.view(shape[1:]), 0.0)
-        return batch
+from src.models.cnn.augment import SpectrogramAugment
+from src.models.cnn.network import MelResNet
+from src.models.cnn.runtime import configure_backend, resolve_device
 
 
 def _batches(
