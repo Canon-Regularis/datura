@@ -136,8 +136,9 @@ def model_comparison(table: pd.DataFrame, path: Path, metric: str = "macro_f1") 
         error_kw={"ecolor": MUTED, "elinewidth": 1.2, "capsize": 4},
     )
     for y, (mean, std) in enumerate(zip(ordered["mean"], ordered["std"], strict=True)):
-        ax.text(mean + std + 0.015, y, f"{mean:.3f} ± {std:.3f}", va="center",
-                color=INK, fontsize=9)
+        ax.text(
+            mean + std + 0.015, y, f"{mean:.3f} ± {std:.3f}", va="center", color=INK, fontsize=9
+        )
 
     if not control.empty:
         floor = float(control["mean"].iloc[0])
@@ -248,22 +249,29 @@ def ambiguity_comparison(table: pd.DataFrame, path: Path) -> Path:
             error_kw={"ecolor": MUTED, "elinewidth": 1.0, "capsize": 3},
         )
         for x, clips in zip(offsets, rows["clips"], strict=True):
-            ax.text(x, 0.02, f"n={int(clips)}", ha="center", va="bottom", fontsize=7.5,
-                    color=SURFACE, rotation=90)
+            ax.text(
+                x,
+                0.02,
+                f"n={int(clips)}",
+                ha="center",
+                va="bottom",
+                fontsize=7.5,
+                color=SURFACE,
+                rotation=90,
+            )
 
     ax.set_xticks(positions, models, color=INK)
     ax.set_ylim(0, 1.05)
-    _style(ax, "Macro-F1 split by whether the sample rate identifies the species",
-           ylabel="macro-F1")
+    _style(
+        ax, "Macro-F1 split by whether the sample rate identifies the species", ylabel="macro-F1"
+    )
     ax.grid(axis="x", visible=False)
     ax.legend(frameon=False, fontsize=9, labelcolor=INK)
     return _save(figure, path)
 
 
 def feature_importance(table: pd.DataFrame, path: Path, top_n: int = 25) -> Path:
-    aggregated = (
-        table.groupby("feature", as_index=False)["gain"].mean().nlargest(top_n, "gain")
-    )
+    aggregated = table.groupby("feature", as_index=False)["gain"].mean().nlargest(top_n, "gain")
     figure, ax = plt.subplots(figsize=(7, 0.26 * len(aggregated) + 1.4))
     positions = np.arange(len(aggregated))[::-1]
     ax.barh(positions, aggregated["gain"], color=SERIES[0], height=0.65)
@@ -283,13 +291,29 @@ def occlusion_profile(table: pd.DataFrame, path: Path, class_names: list[str]) -
     figure, ax = plt.subplots(figsize=(8, 4.2))
     centres = table["band_center_hz"].to_numpy()
 
-    ax.plot(centres, table["macro_f1_drop"], color=INK, linewidth=2.0, marker="o",
-            markersize=5, label="macro-F1", zorder=3)
+    ax.plot(
+        centres,
+        table["macro_f1_drop"],
+        color=INK,
+        linewidth=2.0,
+        marker="o",
+        markersize=5,
+        label="macro-F1",
+        zorder=3,
+    )
     for name in class_names:
         column = f"recall_{name}_drop"
         if column in table.columns:
-            ax.plot(centres, table[column], color=colors[name], linewidth=1.6,
-                    marker="o", markersize=4, label=name, alpha=0.9)
+            ax.plot(
+                centres,
+                table[column],
+                color=colors[name],
+                linewidth=1.6,
+                marker="o",
+                markersize=4,
+                label=name,
+                alpha=0.9,
+            )
 
     ax.axhline(0, color=GRID, linewidth=1.0)
     _style(ax, "Score lost when a frequency band is masked", "band centre (Hz)", "drop")
@@ -320,12 +344,21 @@ def gradcam_panel(
             ax.axis("off")
             continue
         heat = heatmaps[position]
-        ax.imshow(spectrograms[position], origin="lower", aspect="auto", cmap="gray_r",
-                  extent=extent)
+        ax.imshow(
+            spectrograms[position], origin="lower", aspect="auto", cmap="gray_r", extent=extent
+        )
         # Alpha tracks the map itself, so the spectrogram stays readable wherever the
         # model was not looking instead of being washed out by a flat overlay.
-        ax.imshow(heat, origin="lower", aspect="auto", cmap="inferno",
-                  alpha=np.clip(heat, 0.0, 1.0) * 0.8, extent=extent, vmin=0, vmax=1)
+        ax.imshow(
+            heat,
+            origin="lower",
+            aspect="auto",
+            cmap="inferno",
+            alpha=np.clip(heat, 0.0, 1.0) * 0.8,
+            extent=extent,
+            vmin=0,
+            vmax=1,
+        )
         ax.set_title(labels[position], color=INK, fontsize=9, loc="left")
         ax.tick_params(colors=MUTED, labelsize=8, length=2)
         for spine in ax.spines.values():
@@ -342,8 +375,13 @@ def gradcam_panel(
 def training_history(table: pd.DataFrame, path: Path) -> Path:
     figure, ax = plt.subplots(figsize=(7, 4.0))
     for fold, group in table.groupby("fold"):
-        ax.plot(group["epoch"], group["val_macro_f1"], linewidth=1.8,
-                color=SERIES[int(fold) % len(SERIES)], label=f"fold {fold}")
+        ax.plot(
+            group["epoch"],
+            group["val_macro_f1"],
+            linewidth=1.8,
+            color=SERIES[int(fold) % len(SERIES)],
+            label=f"fold {fold}",
+        )
     _style(ax, "Validation macro-F1 per epoch", "epoch", "macro-F1")
     ax.legend(frameon=False, fontsize=9, labelcolor=INK, ncols=3)
     return _save(figure, path)
