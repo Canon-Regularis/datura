@@ -1,7 +1,7 @@
 """Turn kept clips into cached feature arrays.
 
 The same walk drives every representation. Adding one means registering it in
-``build_extractor``; nothing else in this module changes.
+``src.features.registry``; nothing else in this module changes.
 
 Usage:
     python -m src.features.extract --config configs/base.yaml [--extractor acoustic|logmel|all]
@@ -9,22 +9,23 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
+import logging
 import sys
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from src import cli
 from src.audio.io import load as load_audio
 from src.audio.resample import to_target_rate
 from src.audio.windows import split_into_windows
-from src.config import Config, load_config
+from src.config import Config
 from src.data.manifest import load_manifest
-from src.features import cache
-from src.features.acoustic import AcousticFeatures
+from src.features import cache, registry
 from src.features.base import FeatureExtractor
-from src.features.spectrogram import LogMelSpectrogram
+
+logger = logging.getLogger(__name__)
 
 _INDEX_COLUMNS = [
     "clip_id",
@@ -37,23 +38,6 @@ _INDEX_COLUMNS = [
     "bytes_on_disk",
     "window_index",
 ]
-
-
-def build_extractor(kind: str, cfg: Config) -> FeatureExtractor:
-    """Resolve a representation name to a configured extractor."""
-    shared = {
-        "n_fft": cfg.spectrogram.n_fft,
-        "hop_length": cfg.spectrogram.hop_length,
-        "n_mels": cfg.spectrogram.n_mels,
-        "fmin": cfg.spectrogram.fmin,
-        "fmax": cfg.spectrogram.fmax,
-        "sample_rate": cfg.audio.target_sample_rate,
-    }
-    if kind == "acoustic":
-        return AcousticFeatures(**shared)
-    if kind == "logmel":
-        return LogMelSpectrogram(**shared)
-    raise ValueError(f"unknown extractor {kind!r}; expected 'acoustic' or 'logmel'")
 
 
 def extract(cfg: Config, extractor: FeatureExtractor, manifest: pd.DataFrame) -> cache.FeatureStore:
@@ -105,9 +89,9 @@ def extract(cfg: Config, extractor: FeatureExtractor, manifest: pd.DataFrame) ->
     store = writer.close(pd.DataFrame(index_rows, columns=_INDEX_COLUMNS))
 
     if failures:
-        print(f"\n{len(failures)} clip(s) could not be processed:")
+        logger.info("\n%d clip(s) could not be processed:", len(failures))
         for clip_id, reason in failures[:10]:
-            print(f"  {clip_id}: {reason}")
+            logger.info("  %s: %s", clip_id, reason)
     return store
 
 
@@ -121,30 +105,33 @@ def _summarise(store: cache.FeatureStore, extractor: FeatureExtractor) -> None:
         )
         .reset_index()
     )
-    print(f"\n{extractor.name}: {store.features.shape} {store.features.dtype}")
-    print(per_species.to_string(index=False))
+    logger.info("\n%s: %s %s", extractor.name, store.features.shape, store.features.dtype)
+    logger.info(per_species.to_string(index=False))
     size_mb = np.prod(store.features.shape) * store.features.dtype.itemsize / 1e6
-    print(f"cache size {size_mb:.0f} MB")
+    logger.info("cache size %.0f MB", size_mb)
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/base.yaml")
-    parser.add_argument("--extractor", default="all", choices=["acoustic", "logmel", "all"])
+    parser = cli.parser_for(__doc__)
+    parser.add_argument(
+        "--extractor",
+        default="all",
+        choices=["all", *registry.kinds()],
+        help="which representation to build",
+    )
     parser.add_argument("--force", action="store_true", help="rebuild even if cached")
     args = parser.parse_args(argv)
 
-    cfg = load_config(args.config)
-    cfg.paths.ensure()
+    cfg = cli.prepare(args)
     manifest = load_manifest(cfg, kept_only=True)
-    print(f"{len(manifest)} kept clips across {manifest['tape_id'].nunique()} tapes")
+    logger.info("%d kept clips across %d tapes", len(manifest), manifest["tape_id"].nunique())
 
-    kinds = ["acoustic", "logmel"] if args.extractor == "all" else [args.extractor]
+    kinds = list(registry.kinds()) if args.extractor == "all" else [args.extractor]
     for kind in kinds:
         if cache.exists(cfg, kind) and not args.force:
-            print(f"{kind}: cache present, skipping (use --force to rebuild)")
+            logger.info("%s: cache present, skipping (use --force to rebuild)", kind)
             continue
-        extractor = build_extractor(kind, cfg)
+        extractor = registry.build_extractor(kind, cfg)
         store = extract(cfg, extractor, manifest)
         _summarise(store, extractor)
     return 0

@@ -1,6 +1,6 @@
-"""Hand-engineered acoustic descriptors, the interpretable baseline.
+"""Hand engineered acoustic descriptors, the interpretable baseline.
 
-One short-time Fourier transform is computed per window and every descriptor is
+One short time Fourier transform is computed per window and every descriptor is
 derived from it, which keeps extraction to a single transform instead of eight.
 
 Recording metadata is deliberately absent. Native sample rate, year, file size and
@@ -172,7 +172,7 @@ def _odd_below(n_frames: int) -> int:
 
 
 def _spectral_entropy(power: np.ndarray) -> np.ndarray:
-    """Per-frame Shannon entropy of the normalised power spectrum, in [0, 1].
+    """Per frame Shannon entropy of the normalised power spectrum, in [0, 1].
 
     Separates tonal calls, whose energy sits in few bins, from broadband clicks,
     whose energy spreads across the spectrum.

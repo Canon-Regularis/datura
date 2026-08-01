@@ -1,11 +1,11 @@
 """Where a model's input matrix comes from.
 
-The cross-validation runner works against this interface, so cached spectrograms,
+The cross validation runner works against this interface, so cached spectrograms,
 cached acoustic descriptors and the metadata control all flow through one code path
 and produce directly comparable numbers.
 
 Rows are handed out as a lazy view rather than a materialised array. A fold of
-log-mel windows runs to hundreds of megabytes and the cache is memory-mapped, so
+log mel windows runs to hundreds of megabytes and the cache is memory mapped, so
 copying a whole fold into RAM to hand it to a model would be the largest allocation
 in the project for no benefit.
 """
@@ -100,7 +100,7 @@ class FeatureSource(ABC):
 
 
 class CachedFeatureSource(FeatureSource):
-    """Reads from a memory-mapped cache produced by ``src.features.extract``."""
+    """Reads from a memory mapped cache produced by ``src.features.extract``."""
 
     def __init__(self, store: FeatureStore, name: str, feature_names: list[str] | None = None):
         self._store = store

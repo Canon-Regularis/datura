@@ -1,4 +1,4 @@
-"""Log-mel spectrograms, the learned-representation input.
+"""Log mel spectrograms, the learned representation input.
 
 Each window is normalised on its own. That removes absolute recording level, which
 varies with tape stock and gain staging rather than with the animal, so the CNN
@@ -44,7 +44,7 @@ class LogMelSpectrogram(FeatureExtractor):
     @property
     def storage_dtype(self) -> np.dtype:
         # Values span roughly 80 dB after normalisation, far inside float16 range,
-        # and halving the cache keeps the whole set memory-mappable.
+        # and halving the cache keeps the whole set memory mappable.
         return np.dtype(np.float16)
 
     def output_shape(self, window_samples: int) -> tuple[int, ...]:

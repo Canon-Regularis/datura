@@ -1,4 +1,4 @@
-"""On-disk cache for extracted features.
+"""On disk cache for extracted features.
 
 Cache filenames carry a hash of every configuration section that affects the
 arrays, so changing the target sample rate or the mel settings produces a new key

@@ -13,7 +13,7 @@ import numpy as np
 
 
 class FeatureExtractor(ABC):
-    """Turns one fixed-length window of audio into an array."""
+    """Turns one fixed length window of audio into an array."""
 
     @property
     @abstractmethod
@@ -29,7 +29,7 @@ class FeatureExtractor(ABC):
         """Extract from a single window."""
 
     def feature_names(self) -> list[str] | None:
-        """Column names for flat representations, or None for image-shaped ones."""
+        """Column names for flat representations, or None for image shaped ones."""
         return None
 
     @property
