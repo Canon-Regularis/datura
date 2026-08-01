@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.data.manifest import ManifestError, parse_relative_path
+from src.data.clips import ClipPathError, parse_relative_path
 
 
 def test_letter_suffixed_and_digit_suffixed_ids_share_a_tape():
@@ -39,10 +39,10 @@ def test_accepts_windows_separators():
     ],
 )
 def test_rejects_malformed_paths(relative):
-    with pytest.raises(ManifestError):
+    with pytest.raises(ClipPathError):
         parse_relative_path(relative, 5)
 
 
 def test_rejects_clip_id_shorter_than_tape_key():
-    with pytest.raises(ManifestError):
+    with pytest.raises(ClipPathError):
         parse_relative_path("KillerWhale/1964/640.wav", 5)
