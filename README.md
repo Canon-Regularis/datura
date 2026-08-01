@@ -5,7 +5,7 @@ is mostly wrong, and figuring out why is what this repo actually contains.
 
 Three species, chosen because they sound nothing alike: humpback (structured tonal song), sperm
 whale (broadband clicks), killer whale (whistles and pulsed calls). Two ways of representing the
-audio, hand-engineered acoustic descriptors into gradient boosted trees and log-mel spectrograms
+audio, hand engineered acoustic descriptors into gradient boosted trees and log mel spectrograms
 into a small residual CNN, both run through identical folds. Plus a third model that gets no audio
 at all.
 
@@ -45,22 +45,22 @@ clips at random and you put copies of one recording on both sides of the test bo
 The tape is sitting in the filename. `5401800A` and `54018001` are both cuts of tape `54018`, and
 the two id formats resolve the same way. Folds are `StratifiedGroupKFold` over tapes, applied across
 species so a tape carrying two labels never gets torn in half. Everything is reported as a mean and
-spread over five folds, because with twelve humpback tapes a single held-out score is close to a
-two-sample estimate.
+spread over five folds, because with twelve humpback tapes a single held out score is close to a
+two sample estimate.
 
 `tests/test_splits.py` fails loudly if a tape lands on both sides of a fold. If you touch one thing
 in this repo, do not let it be that.
 
 ## What came out of it
 
-Macro-F1 on held-out tapes, five folds, 10 kHz band:
+Macro-F1 on held out tapes, five folds, 10 kHz band:
 
 | model | macro-F1 | margin over control |
 | --- | --- | --- |
 | metadata only, no audio | 0.884 ± 0.139 | |
-| log-mel CNN, 0.15 M params | 0.744 ± 0.165 | -0.140 |
+| log mel CNN, 0.15 M params | 0.744 ± 0.165 | -0.140 |
 | acoustic features, XGBoost | 0.725 ± 0.050 | -0.158 |
-| log-mel CNN, 2.8 M params | 0.692 ± 0.134 | -0.191 |
+| log mel CNN, 2.8 M params | 0.692 ± 0.134 | -0.191 |
 
 The control wins, which is the entire reason for having built it. Recording metadata beats both
 audio models, and native sample rate alone accounts for 58% of its gain. Without that row in the
@@ -73,14 +73,14 @@ species or is shared between several:
 | model | rate gives it away | rate is shared |
 | --- | --- | --- |
 | metadata | 0.893 | 0.692 |
-| log-mel CNN | 0.690 | 0.678 |
+| log mel CNN | 0.690 | 0.678 |
 | acoustic, XGBoost | 0.671 | 0.630 |
 
 Take the giveaway away and the control loses 20 points. The CNN loses one. On that subset they are
 level. So the audio models are worse on average and better where it counts, which is a more useful
 outcome than either number on its own.
 
-The spectrogram barely beats hand-engineered features, and only after the network got smaller. At
+The spectrogram barely beats hand engineered features, and only after the network got smaller. At
 2.8 M parameters the CNN hit its best validation score between epochs 0 and 4 on every single fold
 and got worse from there. It was memorising tapes, and more epochs would not have helped. At 0.15 M
 it peaks between epochs 9 and 21 and scores better. I chose between the two on validation curves
@@ -88,7 +88,7 @@ alone, with no test fold involved. Even the better one sits inside the noise of 
 and with roughly 135 independent recordings behind the whole thing, that is the honest answer to how
 much a learned representation buys you here.
 
-The CNN does look at sensible things, at least. Masking frequency bands on held-out tapes costs
+The CNN does look at sensible things, at least. Masking frequency bands on held out tapes costs
 humpback recall 0.12 below 330 Hz and nothing at all above 650 Hz. Killer whale loses most in the
 top band above 3.7 kHz. Sperm whale loses a little everywhere and a lot nowhere, which is what you
 would expect if the model is keying on broadband clicks. Grad-CAM lands in the same places on its
@@ -106,25 +106,36 @@ Full numbers live in `data/metadata/report/base_10k/REPORT.md` and
 
 ```text
 .github/          CI, and the dependency update schedule
-configs/          base.yaml drives the pipeline; base_5k.yaml is the narrow-band variant
+configs/          base.yaml drives the pipeline; base_5k.yaml is the narrow band variant
 data/raw/         the archive and the extracted species (gitignored)
 data/metadata/    manifest, audit tables and every report
 data/processed/   cached feature arrays (gitignored)
+
 src/pipeline.py   every stage in order, skipping whatever is already done
+src/cli.py        the options every command shares
 src/config.py     YAML validated once into typed objects; nothing else reads a raw dict
+src/results.py    where results live on disk; every report path is built here
 src/provenance.py what produced a result: commit, versions, accelerator, config digests
-src/data/         download, manifest, splits
+src/errors.py     the base every deliberate failure inherits from
+
 src/audio/        decode, resample, window
-src/features/     the extractor interface and its two implementations, plus the cache
-src/models/       the classifier interface and its three implementations
-src/train/        one cross-validation runner shared by every model
-src/evaluate/     metrics, figures, occlusion, Grad-CAM, report
+src/data/         download, manifest, and the fold grouping rule
+src/features/     the extractor interface, its implementations, the cache and the registry
+src/models/       the classifier interface, its implementations and the registry
+src/train/        folds, one cross validation runner, and one training session
+src/evaluate/     metrics, tables, figures, occlusion, Grad-CAM, report
 experiments/      notebooks that read artifacts and plot, no training code
 ```
 
-Adding a representation is a new file under `src/features/` plus a line in the registry. Adding a
-model is a new file under `src/models/`. Neither touches the runner, the metrics or the split, which
-is the only reason the three models produce numbers you can put in the same table.
+Two registries carry the extension points. `src/features/registry.py` maps a representation name to
+its extractor and its cache; `src/models/registry.py` declares each model's features, hyperparameter
+file and trainer. Adding a representation is a new extractor plus one line; adding a model is one
+entry. Neither touches the runner, the metrics or the split, which is the only reason four models
+produce numbers you can put in the same table.
+
+Models report on themselves through `artifacts`: the trees return which features carried the fit,
+the network returns its learning curve and writes its weights. That is why the runner has no branch
+in it for either.
 
 ## Running it
 
@@ -141,12 +152,17 @@ Then the whole thing in one command:
 
 ```bash
 uv run python -m src.pipeline --config configs/base.yaml
-uv run python -m src.pipeline --config configs/base_5k.yaml   # narrow-band check
+uv run python -m src.pipeline --config configs/base_5k.yaml   # narrow band check
 ```
 
-That runs download, manifest, features, both tree models, both CNN sizes, explainability and the
-report, in that order. Stages whose output already exists are skipped, so a rerun after a failure
-picks up where it stopped. Add `--force` to redo everything or `--only report` to run one stage.
+The stage list comes from the model registry, so adding a model adds a stage:
+
+```text
+download -> manifest -> features -> trees -> cnn -> cnn_small -> explain -> report
+```
+
+Stages whose output already exists are skipped, so a rerun after a failure picks up where it
+stopped. Add `--force` to redo everything, or `--only report` to run one stage.
 
 The stages are also individual commands if you want them separately:
 
@@ -154,17 +170,19 @@ The stages are also individual commands if you want them separately:
 uv run python -m src.data.download                                  # 6.7 GB archive, resumable
 uv run python -m src.data.manifest    --config configs/base.yaml
 uv run python -m src.features.extract --config configs/base.yaml
-uv run python -m src.train.xgb        --config configs/base.yaml
-uv run python -m src.train.cnn        --config configs/base.yaml
-uv run python -m src.train.cnn        --config configs/base.yaml --name cnn_small \
-                                      --model-config configs/cnn_small.yaml
-uv run python -m src.evaluate.explain --config configs/base.yaml --name cnn_small --fold 3 \
-                                      --model-config configs/cnn_small.yaml
+uv run python -m src.train.xgb        --config configs/base.yaml   # baseline and control
+uv run python -m src.train.cnn        --config configs/base.yaml --name cnn
+uv run python -m src.train.cnn        --config configs/base.yaml --name cnn_small
+uv run python -m src.evaluate.explain --config configs/base.yaml --name cnn_small --fold 3
 uv run python -m src.evaluate.report  --config configs/base.yaml
 ```
 
-`--model-config` points the trainers at the hyperparameter files. Both CNN sizes get trained. The
-reported one is picked on validation macro-F1 while the test folds stay untouched.
+`--name` selects a model from the registry in `src/models/registry.py`, which is where each one
+declares its features, its hyperparameter file and the command that trains it. Both network sizes
+get trained; the reported one is picked on validation macro-F1 while the test folds stay untouched.
+
+Every command takes `-v` for debug detail and `-q` for warnings only. Set `DATURA_LOG_FORMAT=full`
+for timestamps and module names, which is what you want when a run is being archived.
 
 Results land in `data/metadata/report/<config name>/` as CSVs, figures and a `REPORT.md`. The
 notebooks only read those artifacts, so every figure can be regenerated from the command line
@@ -194,9 +212,9 @@ reused by accident.
 
 The CNN runs with cuDNN autotuning on by default, which is faster but picks whichever kernel is
 quickest on the day. Set `deterministic: true` in the CNN config, and export
-`CUBLAS_WORKSPACE_CONFIG=:4096:8`, for bit-identical reruns at about a third less throughput.
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`, for identical reruns at about a third less throughput.
 
-Manifests and per-clip predictions are committed, so both reports rebuild from a fresh clone with no
+Manifests and per clip predictions are committed, so both reports rebuild from a fresh clone with no
 download at all:
 
 ```bash
@@ -204,7 +222,8 @@ uv run python -m src.evaluate.report --config configs/base.yaml
 ```
 
 CI does exactly that on every push and fails if a regenerated table differs from the committed one.
-Figures are excluded from that check because matplotlib output is not byte-stable across versions.
+Figures are excluded from that check: matplotlib output is not stable byte for byte across
+versions.
 
 ## CI
 
@@ -261,5 +280,5 @@ curl ships its own CA bundle, so that was the shorter path.
 Species classification from one recording source, and that is all. No call detection, no
 segmentation, no sequence modelling, no claims about whale language. MobySound and DCLDE are
 deliberately left out, because mixing recording sources stacks a second equipment confound on top of
-the one documented above. Worth taking on eventually, but not before the single-source result is
+the one documented above. Worth taking on eventually, but not before the single source result is
 trustworthy.
