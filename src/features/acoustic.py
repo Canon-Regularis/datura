@@ -17,6 +17,8 @@ import numpy as np
 from src.features.base import FeatureExtractor
 
 _AGGREGATIONS = ("mean", "std", "p10", "p90")
+_LOW_PERCENTILE = 10
+_HIGH_PERCENTILE = 90
 _CONTRAST_FMIN = 100.0
 
 
@@ -34,13 +36,21 @@ def contrast_band_count(sample_rate: int, fmin: float = _CONTRAST_FMIN) -> int:
 
 
 def _aggregate(series: np.ndarray) -> np.ndarray:
-    """Collapse a ``(n_series, n_frames)`` block to four statistics per series."""
+    """Collapse a ``(n_series, n_frames)`` block to four statistics per series.
+
+    The two percentiles are computed separately on purpose. Asking numpy for both at
+    once partitions the array a single time and is measurably faster, but on real
+    MFCC blocks it picks a different representative among near equal values, and the
+    result moves by one float32 step. That is enough to invalidate the cached
+    features and every model fitted on them, which is a poor trade for two minutes
+    off a step that runs once.
+    """
     return np.concatenate(
         [
             series.mean(axis=1),
             series.std(axis=1),
-            np.percentile(series, 10, axis=1),
-            np.percentile(series, 90, axis=1),
+            np.percentile(series, _LOW_PERCENTILE, axis=1),
+            np.percentile(series, _HIGH_PERCENTILE, axis=1),
         ]
     )
 
@@ -128,7 +138,11 @@ class AcousticFeatures(FeatureExtractor):
         )
 
         centroid = librosa.feature.spectral_centroid(S=magnitude, sr=sample_rate)
-        bandwidth = librosa.feature.spectral_bandwidth(S=magnitude, sr=sample_rate)
+        # Bandwidth is measured about the centroid, and librosa recomputes it unless
+        # it is handed one. Passing it saves a second pass over the spectrogram.
+        bandwidth = librosa.feature.spectral_bandwidth(
+            S=magnitude, sr=sample_rate, centroid=centroid
+        )
         rolloff = librosa.feature.spectral_rolloff(S=magnitude, sr=sample_rate, roll_percent=0.85)
         flatness = librosa.feature.spectral_flatness(S=magnitude)
         zero_crossing = librosa.feature.zero_crossing_rate(
