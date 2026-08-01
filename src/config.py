@@ -29,10 +29,15 @@ class ConfigError(ValueError):
 class DatasetConfig:
     archive_url: str
     zip_name: str
+    archive_sha256: str
     archive_root: str
     species: tuple[str, ...]
 
     def __post_init__(self) -> None:
+        if len(self.archive_sha256) != 64 or not all(
+            c in "0123456789abcdef" for c in self.archive_sha256
+        ):
+            raise ConfigError("dataset.archive_sha256 must be a 64 character hex digest")
         if not self.species:
             raise ConfigError("dataset.species must list at least one species")
         if len(set(self.species)) != len(self.species):
@@ -41,6 +46,17 @@ class DatasetConfig:
     @property
     def label_to_index(self) -> dict[str, int]:
         return {name: i for i, name in enumerate(self.species)}
+
+    @property
+    def cache_identity(self) -> dict[str, Any]:
+        """Only the fields that change what gets extracted.
+
+        Where the audio came from, its filename and its checksum describe the
+        acquisition rather than the computation. Folding them into the cache key
+        would mean pinning a checksum or switching mirror throws away hundreds of
+        megabytes of perfectly valid features.
+        """
+        return {"species": list(self.species)}
 
 
 @dataclass(frozen=True)
@@ -158,7 +174,13 @@ class Config:
         payload: dict[str, Any] = {}
         for section in sections:
             value = getattr(self, section)
-            payload[section] = asdict(value) if hasattr(value, "__dataclass_fields__") else value
+            identity = getattr(value, "cache_identity", None)
+            if identity is not None:
+                payload[section] = identity
+            else:
+                payload[section] = (
+                    asdict(value) if hasattr(value, "__dataclass_fields__") else value
+                )
         blob = json.dumps(payload, sort_keys=True, default=str)
         return hashlib.sha256(blob.encode()).hexdigest()[:12]
 
@@ -206,7 +228,9 @@ def load_config(path: str | Path) -> Config:
         raise ConfigError("config must define a top-level 'name'")
 
     dataset_block = _require(
-        raw, "dataset", {"archive_url", "zip_name", "archive_root", "species"}
+        raw,
+        "dataset",
+        {"archive_url", "zip_name", "archive_sha256", "archive_root", "species"},
     )
     audio_block = _require(
         raw,
@@ -230,6 +254,7 @@ def load_config(path: str | Path) -> Config:
         dataset=DatasetConfig(
             archive_url=str(dataset_block["archive_url"]),
             zip_name=str(dataset_block["zip_name"]),
+            archive_sha256=str(dataset_block["archive_sha256"]).lower(),
             archive_root=str(dataset_block["archive_root"]),
             species=tuple(str(s) for s in dataset_block["species"]),
         ),

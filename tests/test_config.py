@@ -42,8 +42,9 @@ def test_rejects_missing_keys(tmp_path):
 def test_digest_changes_when_a_relevant_setting_changes(tmp_path):
     base = load_config(write_config(tmp_path / "a"))
     (tmp_path / "b").mkdir(parents=True, exist_ok=True)
-    other = load_config(write_config(tmp_path / "b", audio={"target_sample_rate": 8000},
-                                     spectrogram={"fmax": 3900}))
+    other = load_config(
+        write_config(tmp_path / "b", audio={"target_sample_rate": 8000}, spectrogram={"fmax": 3900})
+    )
 
     assert base.audio_digest != other.audio_digest
     assert base.spectrogram_digest != other.spectrogram_digest

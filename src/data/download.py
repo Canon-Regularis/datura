@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import subprocess
 import sys
@@ -40,7 +41,37 @@ def remote_size(url: str) -> int | None:
     return int(sizes[-1]) if sizes else None
 
 
-def download_archive(cfg: Config, *, force: bool = False) -> Path:
+def file_digest(path: Path, chunk_bytes: int = 8 << 20) -> str:
+    """SHA256 of a file, read in chunks so a 6.7 GB archive never lands in memory."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while block := handle.read(chunk_bytes):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def verify_archive(cfg: Config, path: Path) -> str:
+    """Check the archive against the digest pinned in the config.
+
+    Size alone is a weak check. A truncated resume or a mirror serving different
+    content can match on length, and everything downstream would then be measured
+    against data nobody can reproduce.
+    """
+    print(f"verifying {path.name}, this takes about half a minute")
+    actual = file_digest(path)
+    if actual != cfg.dataset.archive_sha256:
+        raise DownloadError(
+            f"archive digest mismatch for {path}\n"
+            f"  expected {cfg.dataset.archive_sha256}\n"
+            f"  actual   {actual}\n"
+            "delete the file and download it again, or update dataset.archive_sha256 "
+            "if the upstream release genuinely changed"
+        )
+    print(f"digest matches {actual[:16]}...")
+    return actual
+
+
+def download_archive(cfg: Config, *, force: bool = False, verify: bool = True) -> Path:
     """Fetch the zip, resuming a partial file rather than restarting it."""
     cfg.paths.ensure()
     destination = cfg.paths.raw / cfg.dataset.zip_name
@@ -48,11 +79,10 @@ def download_archive(cfg: Config, *, force: bool = False) -> Path:
 
     if destination.exists() and not force:
         actual = destination.stat().st_size
-        if expected is None:
-            print(f"archive present at {destination} ({actual / 1e9:.2f} GB), size unverified")
-            return destination
-        if actual == expected:
-            print(f"archive already complete at {destination} ({actual / 1e9:.2f} GB)")
+        if expected is None or actual == expected:
+            print(f"archive already present at {destination} ({actual / 1e9:.2f} GB)")
+            if verify:
+                verify_archive(cfg, destination)
             return destination
         print(f"resuming download at {actual / 1e9:.2f} of {expected / 1e9:.2f} GB")
 
@@ -77,6 +107,8 @@ def download_archive(cfg: Config, *, force: bool = False) -> Path:
         raise DownloadError(
             f"downloaded {destination.stat().st_size} bytes, expected {expected}; rerun to resume"
         )
+    if verify:
+        verify_archive(cfg, destination)
     return destination
 
 
@@ -115,14 +147,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--config", default="configs/base.yaml")
     parser.add_argument("--force", action="store_true", help="redownload and re-extract")
     parser.add_argument("--skip-download", action="store_true", help="extract an existing archive")
+    parser.add_argument(
+        "--skip-verify", action="store_true", help="skip the SHA256 check on an existing archive"
+    )
     args = parser.parse_args(argv)
 
     cfg = load_config(args.config)
     archive = cfg.paths.raw / cfg.dataset.zip_name
     if not args.skip_download:
-        archive = download_archive(cfg, force=args.force)
+        archive = download_archive(cfg, force=args.force, verify=not args.skip_verify)
     elif not archive.exists():
         raise DownloadError(f"--skip-download given but {archive} does not exist")
+    elif not args.skip_verify:
+        verify_archive(cfg, archive)
 
     root = extract_species(cfg, archive, force=args.force)
     print(f"dataset root: {root}")

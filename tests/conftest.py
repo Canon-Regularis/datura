@@ -12,6 +12,7 @@ _TEMPLATE = {
     "dataset": {
         "archive_url": "https://example.invalid/archive.zip",
         "zip_name": "archive.zip",
+        "archive_sha256": "0" * 64,
         "archive_root": "Watkins_Marine_Mammal_Sound_Database",
         "species": ["HumpbackWhale", "SpermWhale", "KillerWhale"],
     },
@@ -38,8 +39,9 @@ _TEMPLATE = {
 
 def write_config(directory: Path, **overrides) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
-    payload = {key: dict(value) if isinstance(value, dict) else value
-               for key, value in _TEMPLATE.items()}
+    payload = {
+        key: dict(value) if isinstance(value, dict) else value for key, value in _TEMPLATE.items()
+    }
     payload["paths"] = {
         "raw": str(directory / "raw"),
         "metadata": str(directory / "metadata"),

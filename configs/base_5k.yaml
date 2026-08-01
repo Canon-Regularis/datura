@@ -6,6 +6,7 @@ name: base_5k
 dataset:
   archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
   zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_sha256: 6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e
   archive_root: Watkins_Marine_Mammal_Sound_Database
   species:
     - HumpbackWhale
