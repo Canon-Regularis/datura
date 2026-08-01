@@ -20,10 +20,12 @@ from src.data.manifest import audit_tables, build_manifest, load_manifest
 from src.data.splits import assert_no_tape_leak, clips_from_index, make_folds, rows_for_clips
 from src.evaluate import metrics, report
 from src.features import cache
-from src.features.extract import build_extractor, extract
+from src.features import registry as features
+from src.features.extract import extract
 from src.features.source import CachedFeatureSource, MetadataFeatureSource
 from src.models.gbdt import GradientBoostedTrees
-from src.train.crossval import result_directory, run_cross_validation, save_result
+from src.results import model_directory
+from src.train.crossval import run_cross_validation, save_result
 from tests.conftest import write_config
 
 SPECIES = ("HumpbackWhale", "SpermWhale", "KillerWhale")
@@ -49,12 +51,12 @@ def _signal(species: str, rate: int, seed: int) -> np.ndarray:
     noise = 0.02 * rng.standard_normal(n)
 
     if species == "HumpbackWhale":
-        # Slow frequency-modulated tone low in the band.
+        # Slow frequency modulated tone low in the band.
         sweep = 200 + 300 * np.sin(2 * np.pi * 0.7 * t)
         return (0.5 * np.sin(2 * np.pi * np.cumsum(sweep) / rate) + noise).astype(np.float32)
 
     if species == "SpermWhale":
-        # Broadband impulses at a steady inter-click interval.
+        # Broadband impulses at a steady interval between clicks.
         signal = noise
         for start in range(0, n, int(0.25 * rate)):
             width = max(int(0.002 * rate), 4)
@@ -140,8 +142,8 @@ def test_manifest_drops_the_narrowband_tape(dataset, manifest):
 @pytest.mark.slow
 def test_features_cover_every_kept_clip(dataset, manifest):
     kept = load_manifest(dataset, kept_only=True)
-    for kind in ("acoustic", "logmel"):
-        extractor = build_extractor(kind, dataset)
+    for kind in features.kinds():
+        extractor = features.build_extractor(kind, dataset)
         store = extract(dataset, extractor, kept)
 
         assert len(store.index) == len(store.features)
@@ -150,18 +152,17 @@ def test_features_cover_every_kept_clip(dataset, manifest):
         assert np.isfinite(np.asarray(store.features[:], dtype=np.float32)).all()
         assert cache.exists(dataset, kind)
 
-    logmel = cache.load_cached(dataset, "logmel")
-    assert logmel.features.shape[1:] == build_extractor("logmel", dataset).output_shape(
-        dataset.audio.window_samples
-    )
+    logmel = cache.load_cached(dataset, features.LOGMEL)
+    extractor = features.build_extractor(features.LOGMEL, dataset)
+    assert logmel.features.shape[1:] == extractor.output_shape(dataset.audio.window_samples)
 
 
 @pytest.mark.slow
 def test_cross_validation_produces_a_report(dataset, manifest):
     source = CachedFeatureSource(
-        cache.load_cached(dataset, "acoustic"),
+        cache.load_cached(dataset, features.ACOUSTIC),
         name="acoustic",
-        feature_names=build_extractor("acoustic", dataset).feature_names(),
+        feature_names=features.build_extractor(features.ACOUSTIC, dataset).feature_names(),
     )
     clips = clips_from_index(source.index)
     folds = make_folds(clips, dataset)
@@ -173,13 +174,13 @@ def test_cross_validation_produces_a_report(dataset, manifest):
         assert len(set(train_rows) & set(test_rows)) == 0
 
     audio_result = run_cross_validation(
-        dataset, source, folds, lambda: GradientBoostedTrees(FAST_GBDT), "xgboost", verbose=False
+        dataset, source, folds, lambda: GradientBoostedTrees(FAST_GBDT), "xgboost"
     )
     save_result(dataset, audio_result)
 
     control = MetadataFeatureSource(source.index)
     control_result = run_cross_validation(
-        dataset, control, folds, lambda: GradientBoostedTrees(FAST_GBDT), "metadata", verbose=False
+        dataset, control, folds, lambda: GradientBoostedTrees(FAST_GBDT), "metadata"
     )
     save_result(dataset, control_result)
 
@@ -193,12 +194,12 @@ def test_cross_validation_produces_a_report(dataset, manifest):
         assert (directory / name).exists(), name
     for name in ("model_comparison.png", "per_class_recall.png", "ambiguity_breakdown.png"):
         assert (directory / name).stat().st_size > 0, name
-    assert (result_directory(dataset, "xgboost") / "provenance.json").exists()
+    assert (model_directory(dataset, "xgboost") / "provenance.json").exists()
 
 
 @pytest.mark.slow
 def test_same_seed_gives_the_same_folds_and_scores(dataset, manifest):
-    source = CachedFeatureSource(cache.load_cached(dataset, "acoustic"), name="acoustic")
+    source = CachedFeatureSource(cache.load_cached(dataset, features.ACOUSTIC), name="acoustic")
     clips = clips_from_index(source.index)
 
     first = make_folds(clips, dataset)
@@ -213,7 +214,6 @@ def test_same_seed_gives_the_same_folds_and_scores(dataset, manifest):
             folds,
             lambda: GradientBoostedTrees(FAST_GBDT),
             "xgboost",
-            verbose=False,
         )
         scores.append(result.clip_metrics["macro_f1"].to_numpy())
     np.testing.assert_allclose(scores[0], scores[1])
@@ -226,7 +226,7 @@ def test_cnn_trains_and_explains_on_synthetic_audio(dataset, manifest):
     from src.evaluate.occlusion import band_occlusion
     from src.models.cnn import SpectrogramCNN
 
-    source = CachedFeatureSource(cache.load_cached(dataset, "logmel"), name="logmel")
+    source = CachedFeatureSource(cache.load_cached(dataset, features.LOGMEL), name="logmel")
     folds = make_folds(clips_from_index(source.index), dataset)
     settings = {
         "model": {"base_width": 4, "n_stages": 2, "blocks_per_stage": 1, "dropout": 0.1},
@@ -265,7 +265,7 @@ def test_cnn_trains_and_explains_on_synthetic_audio(dataset, manifest):
     clips = metrics.aggregate_to_clips(index, test_rows, probabilities)
     assert len(clips) == len(fold.test_clips)
 
-    frequencies = build_extractor("logmel", dataset).mel_frequencies()
+    frequencies = features.build_extractor(features.LOGMEL, dataset).mel_frequencies()
     occlusion = band_occlusion(
         model, source.matrix(test_rows), index, test_rows, list(SPECIES), frequencies, n_groups=4
     )

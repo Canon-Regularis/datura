@@ -1,6 +1,6 @@
 """Execute the notebooks against the committed report artifacts.
 
-The notebooks are the human-facing view of the results, so a rename in the report
+The notebooks are the human facing view of the results, so a rename in the report
 layout that leaves them raising FileNotFoundError should fail the build rather than
 wait to be discovered by whoever opens them next.
 
