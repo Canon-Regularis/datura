@@ -11,8 +11,10 @@ from __future__ import annotations
 import numpy as np
 import soxr
 
+from src.errors import DaturaError
 
-class UpsamplingRejected(ValueError):
+
+class UpsamplingRejected(DaturaError, ValueError):
     """Raised when a signal's native rate is below the common target rate."""
 
     def __init__(self, native_rate: int, target_rate: int) -> None:
@@ -25,7 +27,7 @@ class UpsamplingRejected(ValueError):
 
 
 def to_target_rate(signal: np.ndarray, native_rate: int, target_rate: int) -> np.ndarray:
-    """Resample down to ``target_rate``, band-limiting as it goes."""
+    """Resample down to ``target_rate``, band limiting as it goes."""
     if native_rate < target_rate:
         raise UpsamplingRejected(native_rate, target_rate)
     if native_rate == target_rate:

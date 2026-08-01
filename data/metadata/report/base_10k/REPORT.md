@@ -7,8 +7,8 @@ Windows: 2.0 s, hop 1.0 s, at most 16 per clip
 
 ## Margin over the metadata control
 
-The control sees native sample rate, year, clip duration and file size, and no audio.
-Its score is the floor an audio model has to clear.
+The control sees native sample rate, year, clip duration and file size; it sees no
+audio. Its score is the floor an audio model has to clear.
 
 | model     |   mean |    std |   control |   margin |
 |:----------|-------:|-------:|----------:|---------:|
@@ -36,8 +36,8 @@ Its score is the floor an audio model has to clear.
 
 ## With and without the equipment giveaway
 
-Test clips split by whether their native sample rate is used by one species or
-several. On the shared-rate subset the recording cannot identify the species by
+Test clips split by whether their native sample rate is used by one species or by
+several. On the shared rate subset the recording cannot identify the species by
 itself, so that column is where audio has to earn its result.
 
 | model     | subset                   |   clips |   macro_f1_mean |   macro_f1_std |
@@ -66,4 +66,4 @@ itself, so that column is where audio has to earn its result.
 - `confusion_metadata.png`
 - `feature_importance_metadata.png`
 
-Every figure has a CSV of the same name beside it or in the model directory.
+Every figure has a CSV of the same name beside it, or in the model directory.

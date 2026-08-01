@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-07-31T23:56:48+00:00",
+  "recorded_at": "2026-08-01T01:12:51+00:00",
   "config": {
     "name": "base_10k",
     "source": "base.yaml",
@@ -14,7 +14,7 @@
     "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
   },
   "git": {
-    "commit": "40eae79a55eb1d83fe92afc7b664b806f218e1cf",
+    "commit": "3cf9a415ffac53badb22d44a7244ad01b1171cf3",
     "branch": "main",
     "dirty": true
   },
