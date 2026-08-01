@@ -23,16 +23,27 @@ from src.models.base import Batch, WindowClassifier, balanced_class_weights
 
 
 def resolve_device(requested: str) -> torch.device:
-    device = (
-        torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        if requested == "auto"
-        else torch.device(requested)
-    )
+    if requested == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device(requested)
+
+
+def configure_backend(device: torch.device, deterministic: bool) -> None:
+    """Trade throughput for bit-identical runs, or the other way round.
+
+    Left off, cuDNN benchmarks its algorithms once for the fixed window shape and
+    keeps the fast one, which pays for itself across five folds but picks whichever
+    kernel is quickest on the day. Turned on, the same seed reproduces the same
+    weights on the same hardware, at roughly a third less throughput.
+
+    Deterministic CUDA matmul also wants CUBLAS_WORKSPACE_CONFIG=:4096:8 in the
+    environment before the process starts. Without it the run still works, it just
+    falls back on the operations that cannot be made deterministic.
+    """
     if device.type == "cuda":
-        # Every window has the same shape, so letting cuDNN pick its algorithms once
-        # pays for itself many times over across five folds.
-        torch.backends.cudnn.benchmark = True
-    return device
+        torch.backends.cudnn.benchmark = not deterministic
+        torch.backends.cudnn.deterministic = deterministic
+    torch.use_deterministic_algorithms(deterministic, warn_only=True)
 
 
 class _BasicBlock(nn.Module):
@@ -179,8 +190,12 @@ def _batches(
 
 
 class SpectrogramCNN(WindowClassifier):
-    def __init__(self, model_settings: dict[str, Any], train_settings: dict[str, Any],
-                 augment_settings: dict[str, Any]):
+    def __init__(
+        self,
+        model_settings: dict[str, Any],
+        train_settings: dict[str, Any],
+        augment_settings: dict[str, Any],
+    ):
         self._model_settings = dict(model_settings)
         self._train_settings = dict(train_settings)
         self._augment = SpectrogramAugment(augment_settings)
@@ -197,6 +212,7 @@ class SpectrogramCNN(WindowClassifier):
 
     def fit(self, train: Batch, validation: Batch, n_classes: int) -> None:
         seed = int(self._train_settings.get("seed", 0))
+        configure_backend(self.device, bool(self._train_settings.get("deterministic", False)))
         torch.manual_seed(seed)
         rng = np.random.default_rng(seed)
         generator = torch.Generator(device=self.device).manual_seed(seed)
@@ -292,9 +308,7 @@ class SpectrogramCNN(WindowClassifier):
         )
 
     @classmethod
-    def load(
-        cls, path: Path, train_settings: dict[str, Any], n_classes: int
-    ) -> SpectrogramCNN:
+    def load(cls, path: Path, train_settings: dict[str, Any], n_classes: int) -> SpectrogramCNN:
         """Rebuild a fitted model from a checkpoint, for explainability runs."""
         checkpoint = torch.load(path.with_suffix(".pt"), map_location="cpu", weights_only=True)
         model = cls(checkpoint["settings"], train_settings, {"enabled": False})
