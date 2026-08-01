@@ -1,13 +1,18 @@
-"""The shared cross-validation runner.
+"""The shared cross validation runner.
 
 One loop fits every model in the project. It never learns what kind of model it is
-holding, so the acoustic baseline, the CNN and the metadata control are evaluated
-under identical folds, identical aggregation and identical metrics. The harness is the
-same for all of them, so any gap between their reported numbers came from the features.
+holding, so the acoustic baseline, the network and the metadata control are
+evaluated under identical folds, identical aggregation and identical metrics. The
+harness is the same for all of them; any gap between their reported numbers came
+from the features.
+
+Per fold extras come from the model itself, through ``artifacts``. That is why
+there is no branch here for feature importance or for learning curves.
 """
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -19,15 +24,19 @@ from src.config import Config
 from src.data.splits import Fold, rows_for_clips
 from src.evaluate import metrics
 from src.features.source import FeatureSource
-from src.models.base import Batch, WindowClassifier
+from src.models.base import Batch, FoldContext, WindowClassifier
 from src.provenance import write as write_provenance
+from src.results import checkpoint_path, model_directory
+
+logger = logging.getLogger(__name__)
 
 ModelFactory = Callable[[], WindowClassifier]
-FoldHook = Callable[[int, WindowClassifier], dict[str, pd.DataFrame]]
 
 
 @dataclass
 class CrossValidationResult:
+    """Everything one model produced across every fold."""
+
     model_name: str
     config_name: str
     source_name: str
@@ -55,13 +64,11 @@ def run_cross_validation(
     folds: list[Fold],
     build_model: ModelFactory,
     model_name: str,
-    fold_hook: FoldHook | None = None,
-    verbose: bool = True,
 ) -> CrossValidationResult:
+    """Fit one model on every fold, and score it on the tapes it never saw."""
     index = source.index
     labels = index["label"].to_numpy()
     class_names = list(cfg.dataset.species)
-    n_classes = len(class_names)
 
     clip_rows: list[dict] = []
     window_rows: list[dict] = []
@@ -79,7 +86,7 @@ def run_cross_validation(
         model.fit(
             _batch(source, train_rows, labels),
             _batch(source, validation_rows, labels),
-            n_classes,
+            len(class_names),
         )
 
         window_probabilities = model.predict_proba(source.matrix(test_rows))
@@ -90,27 +97,26 @@ def run_cross_validation(
             }
         )
 
-        clips = metrics.aggregate_to_clips(index, test_rows, window_probabilities)
-        clip_probabilities = clips[[f"p{i}" for i in range(n_classes)]].to_numpy()
-        clip_rows.append(
-            {
-                "fold": fold.index,
-                **metrics.score(clips["label"].to_numpy(), clip_probabilities, class_names),
-            }
-        )
+        clips, scores = metrics.evaluate_clips(index, test_rows, window_probabilities, class_names)
+        clip_rows.append({"fold": fold.index, **scores})
         predictions.append(clips.assign(fold=fold.index))
 
-        if fold_hook is not None:
-            for key, table in fold_hook(fold.index, model).items():
-                extras.setdefault(key, []).append(table.assign(fold=fold.index))
+        context = FoldContext(
+            fold_index=fold.index,
+            feature_names=source.feature_names(),
+            checkpoint=checkpoint_path(cfg, model_name, fold.index),
+        )
+        for key, table in model.artifacts(context).items():
+            extras.setdefault(key, []).append(table.assign(fold=fold.index))
 
-        if verbose:
-            print(
-                f"  fold {fold.index}: "
-                f"clip macro-F1 {clip_rows[-1]['macro_f1']:.3f}  "
-                f"acc {clip_rows[-1]['accuracy']:.3f}  "
-                f"({len(clips)} test clips, {len(test_rows)} windows)"
-            )
+        logger.info(
+            "  fold %d: clip macro-F1 %.3f  acc %.3f  (%d test clips, %d windows)",
+            fold.index,
+            scores["macro_f1"],
+            scores["accuracy"],
+            len(clips),
+            len(test_rows),
+        )
 
     all_predictions = pd.concat(predictions, ignore_index=True)
     return CrossValidationResult(
@@ -129,13 +135,9 @@ def run_cross_validation(
     )
 
 
-def result_directory(cfg: Config, model_name: str) -> Path:
-    return cfg.paths.reports / cfg.name / model_name
-
-
 def save_result(cfg: Config, result: CrossValidationResult) -> Path:
     """Write every artifact the report and the notebooks read."""
-    directory = result_directory(cfg, result.model_name)
+    directory = model_directory(cfg, result.model_name)
     directory.mkdir(parents=True, exist_ok=True)
 
     result.clip_metrics.to_csv(directory / "fold_metrics_clip.csv", index=False)
@@ -145,6 +147,7 @@ def save_result(cfg: Config, result: CrossValidationResult) -> Path:
     result.clip_predictions.to_parquet(directory / "clip_predictions.parquet", index=False)
     for key, table in result.extras.items():
         table.to_csv(directory / f"{key}.csv", index=False)
+
     write_provenance(
         cfg,
         directory,

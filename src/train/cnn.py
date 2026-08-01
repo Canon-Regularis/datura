@@ -1,85 +1,51 @@
-"""Train the log-mel CNN under the same folds as the baselines.
+"""Train the log mel network, on the same folds as the baselines.
 
 Usage:
-    python -m src.train.cnn [--config configs/base.yaml] [--model-config configs/cnn.yaml]
+    python -m src.train.cnn [--config configs/base.yaml] [--name cnn_small]
 """
 
 from __future__ import annotations
 
-import argparse
+import logging
 import sys
 
-import pandas as pd
 import torch
 
-from src.config import Config, load_config, load_yaml
-from src.data.splits import Fold
-from src.features import cache
-from src.features.source import CachedFeatureSource
-from src.models.cnn import SpectrogramCNN, resolve_device
-from src.train.crossval import result_directory, run_cross_validation, save_result
-from src.train.xgb import build_folds
+from src import cli
+from src.models import registry as models
+from src.models.cnn import resolve_device
+from src.models.registry import load_settings
+from src.train.session import Assembly, assemble, train
+
+logger = logging.getLogger(__name__)
 
 
-def load_spectrogram_source(cfg: Config) -> CachedFeatureSource:
-    return CachedFeatureSource(cache.load_cached(cfg, "logmel"), name="logmel")
-
-
-def _describe_device(settings: dict) -> torch.device:
+def log_device(settings: dict) -> torch.device:
+    """Say what the run is training on. Results shift slightly between the two."""
     device = resolve_device(str(settings.get("device", "auto")))
     if device.type == "cuda":
         properties = torch.cuda.get_device_properties(device)
-        print(f"training on {properties.name}, {properties.total_memory / 1e9:.1f} GB")
+        logger.info("training on %s, %.1f GB", properties.name, properties.total_memory / 1e9)
     else:
-        print(f"training on CPU with {torch.get_num_threads()} threads")
+        logger.info("training on CPU with %d threads", torch.get_num_threads())
     return device
 
 
-def train(
-    cfg: Config,
-    settings: dict,
-    folds: list[Fold],
-    source: CachedFeatureSource,
-    name: str = "cnn",
-) -> None:
-    _describe_device(settings["train"])
-
-    def build() -> SpectrogramCNN:
-        return SpectrogramCNN(settings["model"], settings["train"], settings["augment"])
-
-    histories: dict[int, pd.DataFrame] = {}
-
-    def hook(fold_index: int, model: SpectrogramCNN) -> dict[str, pd.DataFrame]:
-        histories[fold_index] = pd.DataFrame(model.history)
-        checkpoint = result_directory(cfg, name) / "checkpoints" / f"fold{fold_index}"
-        model.save(checkpoint)
-        return {"history": histories[fold_index]}
-
-    result = run_cross_validation(cfg, source, folds, build, name, fold_hook=hook)
-    directory = save_result(cfg, result)
-    print(result.headline())
-    print(f"  written to {directory}")
-
-
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/base.yaml", help="dataset and audio settings")
-    parser.add_argument("--model-config", default="configs/cnn.yaml", help="network settings")
+    parser = cli.parser_for(__doc__)
+    cli.add_variant_name(parser)
     parser.add_argument("--epochs", type=int, default=None, help="override the epoch count")
-    parser.add_argument("--name", default="cnn", help="result directory name for this variant")
     args = parser.parse_args(argv)
 
-    cfg = load_config(args.config)
-    cfg.paths.ensure()
-    (cfg.paths.reports / cfg.name).mkdir(parents=True, exist_ok=True)
+    cfg = cli.prepare(args)
+    spec = models.get(args.name)
 
-    settings = load_yaml(args.model_config)
-    if args.epochs is not None:
-        settings["train"]["epochs"] = args.epochs
+    overrides = {"train": {"epochs": args.epochs}} if args.epochs is not None else None
+    settings = load_settings(spec, overrides)
+    log_device(settings["train"])
 
-    source = load_spectrogram_source(cfg)
-    folds = build_folds(cfg, source)
-    train(cfg, settings, folds, source, name=args.name)
+    assembly: Assembly = assemble(cfg, spec.source)
+    train(cfg, spec, assembly, settings, name=args.name)
     return 0
 
 
