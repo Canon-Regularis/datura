@@ -1,4 +1,4 @@
-"""Grad-CAM over log-mel windows.
+"""Grad-CAM over log mel windows.
 
 Answers where in time and frequency the CNN's evidence sits. Treat it as a lead
 rather than a measurement: it shows what the last convolutional stage responded to,

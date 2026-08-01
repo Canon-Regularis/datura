@@ -22,7 +22,7 @@ from src.models.base import WindowClassifier
 
 
 def band_edges(n_mels: int, n_groups: int) -> list[tuple[int, int]]:
-    """Contiguous, near-equal groups of mel bins covering the whole axis."""
+    """Contiguous, near equal groups of mel bins covering the whole axis."""
     cuts = np.linspace(0, n_mels, n_groups + 1).round().astype(int)
     return [(int(a), int(b)) for a, b in pairwise(cuts) if b > a]
 
@@ -40,10 +40,9 @@ def _evaluate(
     rows: np.ndarray,
     class_names: list[str],
 ) -> dict[str, float]:
-    probabilities = model.predict_proba(view)
-    clips = metrics.aggregate_to_clips(index, rows, probabilities)
-    clip_probabilities = clips[[f"p{i}" for i in range(len(class_names))]].to_numpy()
-    return metrics.score(clips["label"].to_numpy(), clip_probabilities, class_names)
+    """Score the model through the same path the training runner uses."""
+    _, scores = metrics.evaluate_clips(index, rows, model.predict_proba(view), class_names)
+    return scores
 
 
 def band_occlusion(
@@ -58,7 +57,7 @@ def band_occlusion(
     """Score the model once per masked band and report the drop from baseline."""
     row_shape = source_matrix.row_shape
     if len(row_shape) != 2:
-        raise ValueError(f"occlusion needs image-shaped rows, got {row_shape}")
+        raise ValueError(f"occlusion needs image shaped rows, got {row_shape}")
     n_mels = row_shape[0]
     if len(mel_frequencies) != n_mels:
         raise ValueError(f"{len(mel_frequencies)} band frequencies for {n_mels} mel bins")

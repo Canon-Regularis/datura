@@ -3,7 +3,7 @@
 Two things here matter more than the metric list.
 
 Predictions are aggregated from windows to clips before scoring. Windows cut from
-one clip are not independent observations, so a window-level score counts the same
+one clip are not independent observations, so a window level score counts the same
 recording many times over.
 
 Results are summarised as a mean and a spread across folds. Humpback whale survives
@@ -24,6 +24,15 @@ from sklearn.metrics import (
 )
 
 
+def probability_columns(n_classes: int) -> list[str]:
+    """Column names holding per class scores in an aggregated frame.
+
+    Four call sites need this convention. Naming it once means a change to the
+    layout cannot leave one of them reading the wrong columns.
+    """
+    return [f"p{i}" for i in range(n_classes)]
+
+
 def aggregate_to_clips(
     index: pd.DataFrame, rows: np.ndarray, probabilities: np.ndarray
 ) -> pd.DataFrame:
@@ -35,24 +44,41 @@ def aggregate_to_clips(
         raise ValueError(f"{len(rows)} rows but {len(probabilities)} probability vectors")
 
     subset = index.iloc[rows].reset_index(drop=True)
-    scores = pd.DataFrame(probabilities, columns=[f"p{i}" for i in range(probabilities.shape[1])])
+    scores = pd.DataFrame(probabilities, columns=probability_columns(probabilities.shape[1]))
     joined = pd.concat([subset[["clip_id", "tape_id", "species", "label"]], scores], axis=1)
 
-    probability_columns = list(scores.columns)
+    score_columns = list(scores.columns)
     grouped = joined.groupby("clip_id", as_index=False).agg(
         {
             "tape_id": "first",
             "species": "first",
             "label": "first",
-            **{column: "mean" for column in probability_columns},
+            **{column: "mean" for column in score_columns},
         }
     )
-    grouped["prediction"] = grouped[probability_columns].to_numpy().argmax(axis=1)
+    grouped["prediction"] = grouped[score_columns].to_numpy().argmax(axis=1)
     return grouped
 
 
+def evaluate_clips(
+    index: pd.DataFrame,
+    rows: np.ndarray,
+    probabilities: np.ndarray,
+    class_names: list[str],
+) -> tuple[pd.DataFrame, dict[str, float]]:
+    """Aggregate window predictions to clips, then score them.
+
+    Every model is judged through this one path: the cross validation runner and the
+    occlusion test both call it, so a change to how clips are scored cannot apply to
+    one and not the other.
+    """
+    clips = aggregate_to_clips(index, rows, probabilities)
+    clip_probabilities = clips[probability_columns(len(class_names))].to_numpy()
+    return clips, score(clips["label"].to_numpy(), clip_probabilities, class_names)
+
+
 def _safe_roc_auc(labels: np.ndarray, probabilities: np.ndarray, n_classes: int) -> float:
-    """One-vs-rest AUC over the classes that appear, or NaN when it is undefined.
+    """One against the rest AUC over the classes that appear, or NaN when it is undefined.
 
     A class with no examples in a fold has no ROC curve, so its columns are dropped
     and the remainder renormalised rather than scoring an empty class as chance.
@@ -108,7 +134,7 @@ def score(
     )
 
     # The full class set is passed everywhere, so the averaged figures and the
-    # per-class table always describe the same classes. Without it a fold missing a
+    # per class table always describe the same classes. Without it a fold missing a
     # species would report a macro average over the survivors while the table below
     # still listed the absent one at zero.
     result: dict[str, float] = {
