@@ -1,4 +1,4 @@
-# Reduced-capacity variant, roughly 0.15 M parameters against the 2.8 M default.
+# Reduced capacity variant, roughly 0.15 M parameters against the 2.8 M default.
 #
 # The default network reaches its best validation score between epochs 0 and 4 on
 # every fold and declines from there. With around 135 independent tapes behind the
@@ -22,7 +22,7 @@ train:
   early_stopping_patience: 8
   seed: 1234
   device: auto
-  # Turn on for bit-identical reruns on the same hardware, at about a third
+  # Turn on for identical reruns on the same hardware, at about a third
   # less throughput. Also export CUBLAS_WORKSPACE_CONFIG=:4096:8.
   deterministic: false
 

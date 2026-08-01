@@ -1,4 +1,4 @@
-"""Residual CNN over log-mel windows.
+"""Residual CNN over log mel windows.
 
 Small on purpose. The species set survives on a few dozen independent tapes, so
 capacity is not the limiting factor and a larger network would only memorise tapes
@@ -14,12 +14,13 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pandas as pd
 import torch
 from sklearn.metrics import f1_score
 from torch import nn
 
 from src.features.source import RowView
-from src.models.base import Batch, WindowClassifier, balanced_class_weights
+from src.models.base import Batch, FoldContext, WindowClassifier, balanced_class_weights
 
 
 def resolve_device(requested: str) -> torch.device:
@@ -29,7 +30,7 @@ def resolve_device(requested: str) -> torch.device:
 
 
 def configure_backend(device: torch.device, deterministic: bool) -> None:
-    """Trade throughput for bit-identical runs, or the other way round.
+    """Trade throughput for identical runs, or the other way round.
 
     Left off, cuDNN benchmarks its algorithms once for the fixed window shape and
     keeps the fast one, which pays for itself across five folds but picks whichever
@@ -297,6 +298,15 @@ class SpectrogramCNN(WindowClassifier):
             logits = self.module(self._to_tensor(features.take(positions)))
             outputs.append(torch.softmax(logits.float(), dim=1).cpu().numpy())
         return np.concatenate(outputs).astype(np.float64)
+
+    def artifacts(self, context: FoldContext) -> dict[str, pd.DataFrame]:
+        """The learning curve, and the weights that produced it.
+
+        Saving here keeps the checkpoint beside the fold it belongs to, so the
+        explainability tools load exactly the model that was scored.
+        """
+        self.save(context.checkpoint)
+        return {"history": pd.DataFrame(self.history)}
 
     def save(self, path: Path) -> None:
         if self.module is None:

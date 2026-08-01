@@ -13,7 +13,7 @@ train:
   early_stopping_patience: 7
   seed: 1234
   device: auto
-  # Turn on for bit-identical reruns on the same hardware, at about a third
+  # Turn on for identical reruns on the same hardware, at about a third
   # less throughput. Also export CUBLAS_WORKSPACE_CONFIG=:4096:8.
   deterministic: false
 

@@ -13,6 +13,20 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
+
+
+@dataclass(frozen=True)
+class FoldContext:
+    """What a model may need beyond its training data, once per fold.
+
+    Passed to ``artifacts`` so each model can report on itself without the runner
+    knowing what kind of model it is holding.
+    """
+
+    fold_index: int
+    feature_names: list[str] | None
+    checkpoint: Path
 
 
 @dataclass(frozen=True)
@@ -45,7 +59,7 @@ def balanced_class_weights(labels: np.ndarray, n_classes: int) -> np.ndarray:
 
 
 class WindowClassifier(ABC):
-    """Fits on windows and returns per-window class probabilities."""
+    """Fits on windows and returns per window class probabilities."""
 
     @property
     @abstractmethod
@@ -61,3 +75,12 @@ class WindowClassifier(ABC):
 
     @abstractmethod
     def save(self, path: Path) -> None: ...
+
+    def artifacts(self, context: FoldContext) -> dict[str, pd.DataFrame]:
+        """Tables this model can report about one fold of itself.
+
+        Trees return which features carried the fit; the network returns its
+        learning curve and writes its weights. A model with nothing to add returns
+        nothing, which is why this is not abstract.
+        """
+        return {}
