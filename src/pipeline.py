@@ -1,9 +1,11 @@
 """Run the whole thing in one command.
 
-Each stage delegates to the CLI that owns it, so this file cannot drift away from
-what `python -m src.train.cnn` actually does. Stages are skipped when their output
-is already on disk, which makes a rerun cheap and makes resuming after a failure
-the default behaviour.
+Each stage delegates to the entry point that owns it, so this file cannot drift
+away from what those commands actually do. Stages are skipped when their output is
+already on disk, which makes a rerun cheap and makes resuming after a failure the
+default behaviour.
+
+The stage list is derived from the model registry: adding a model adds a stage.
 
 Usage:
     python -m src.pipeline --config configs/base.yaml
@@ -13,138 +15,154 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
+import logging
 import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from src.config import Config, load_config
+from src import cli
+from src.config import Config
 from src.data import download as download_cli
 from src.data import manifest as manifest_cli
+from src.errors import DaturaError
 from src.evaluate import explain as explain_cli
 from src.evaluate import report as report_cli
 from src.features import cache
 from src.features import extract as extract_cli
+from src.features import registry as features
+from src.models import registry as models
+from src.results import has_results, model_directory
 from src.train import cnn as cnn_cli
 from src.train import xgb as xgb_cli
-from src.train.crossval import result_directory
 
-# The CNN is trained at two capacities and the reported one is chosen on validation
-# macro-F1. Explainability runs against the variant named here.
-CNN_VARIANTS = (("cnn", "configs/cnn.yaml"), ("cnn_small", "configs/cnn_small.yaml"))
+logger = logging.getLogger(__name__)
+
+# Which trained variant the explainability stage runs against, and on which fold.
 EXPLAINED_VARIANT = "cnn_small"
 EXPLAINED_FOLD = "3"
 
 
+class UnknownStage(DaturaError):
+    """Raised when --only names a stage that does not exist."""
+
+
 @dataclass(frozen=True)
 class Stage:
+    """One step of the pipeline: what to run, and how to tell it already ran."""
+
     name: str
     run: Callable[[], object]
     done: Callable[[], bool]
 
 
-def build_stages(cfg: Config, config_path: str, *, skip_download: bool) -> list[Stage]:
+def _acquisition_stages(cfg: Config, config_path: str, skip_download: bool) -> list[Stage]:
     root = cfg.paths.raw / cfg.dataset.archive_root
-    stages: list[Stage] = []
-
     download_args = ["--config", config_path]
     if skip_download:
         download_args.append("--skip-download")
-    stages.append(
+
+    return [
         Stage(
             "download",
             lambda: download_cli.main(download_args),
             lambda: root.exists() and all((root / name).exists() for name in cfg.dataset.species),
-        )
-    )
-    stages.append(
+        ),
         Stage(
             "manifest",
             lambda: manifest_cli.main(["--config", config_path]),
             lambda: manifest_cli.manifest_path(cfg).exists(),
-        )
-    )
-    stages.append(
+        ),
         Stage(
             "features",
             lambda: extract_cli.main(["--config", config_path]),
-            lambda: cache.exists(cfg, "acoustic") and cache.exists(cfg, "logmel"),
-        )
-    )
-    stages.append(
+            lambda: all(cache.exists(cfg, kind) for kind in features.kinds()),
+        ),
+    ]
+
+
+def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
+    """One stage per model, taken straight from the registry.
+
+    The tree models share a single command, because the control has to be fitted on
+    the same folds as the baseline it is compared against.
+    """
+    trees = [spec.name for spec in models.trained_by(models.TREES)]
+    stages = [
         Stage(
-            "xgboost",
+            models.TREES,
             lambda: xgb_cli.main(["--config", config_path]),
-            lambda: (
-                (result_directory(cfg, "xgboost") / "summary.csv").exists()
-                and (result_directory(cfg, "metadata") / "summary.csv").exists()
-            ),
+            lambda: all(has_results(cfg, name) for name in trees),
         )
-    )
-    for name, model_config in CNN_VARIANTS:
+    ]
+    for spec in models.trained_by(models.NETWORK):
         stages.append(
             Stage(
-                name,
-                lambda n=name, m=model_config: cnn_cli.main(
-                    ["--config", config_path, "--model-config", m, "--name", n]
-                ),
-                lambda n=name: (result_directory(cfg, n) / "summary.csv").exists(),
+                spec.name,
+                lambda n=spec.name: cnn_cli.main(["--config", config_path, "--name", n]),
+                lambda n=spec.name: has_results(cfg, n),
             )
         )
-    stages.append(
+    return stages
+
+
+def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
+    return [
         Stage(
             "explain",
             lambda: explain_cli.main(
                 [
                     "--config",
                     config_path,
-                    "--model-config",
-                    dict(CNN_VARIANTS)[EXPLAINED_VARIANT],
                     "--name",
                     EXPLAINED_VARIANT,
                     "--fold",
                     EXPLAINED_FOLD,
                 ]
             ),
-            lambda: (result_directory(cfg, EXPLAINED_VARIANT) / "occlusion.csv").exists(),
-        )
-    )
-    stages.append(
+            lambda: (model_directory(cfg, EXPLAINED_VARIANT) / "occlusion.csv").exists(),
+        ),
         Stage(
             "report",
             lambda: report_cli.main(["--config", config_path]),
             # The report is cheap and summarises everything before it, so it always reruns.
             lambda: False,
-        )
-    )
-    return stages
+        ),
+    ]
+
+
+def build_stages(cfg: Config, config_path: str, *, skip_download: bool) -> list[Stage]:
+    return [
+        *_acquisition_stages(cfg, config_path, skip_download),
+        *_training_stages(cfg, config_path),
+        *_reporting_stages(cfg, config_path),
+    ]
 
 
 def run(stages: list[Stage], *, force: bool, only: str | None) -> int:
-    selected = [s for s in stages if only is None or s.name == only]
+    selected = [stage for stage in stages if only is None or stage.name == only]
     if only is not None and not selected:
-        names = ", ".join(s.name for s in stages)
-        raise SystemExit(f"unknown stage {only!r}; expected one of {names}")
+        names = ", ".join(stage.name for stage in stages)
+        raise UnknownStage(f"unknown stage {only!r}; expected one of {names}")
 
     for stage in selected:
         if not force and stage.done():
-            print(f"\n=== {stage.name}: already done, skipping ===")
+            logger.info("\n=== %s: already done, skipping ===", stage.name)
             continue
-        print(f"\n=== {stage.name} ===")
+
+        logger.info("\n=== %s ===", stage.name)
         started = time.perf_counter()
         code = stage.run()
         elapsed = time.perf_counter() - started
         if code:
-            print(f"{stage.name} failed with exit code {code}")
+            logger.error("%s failed with exit code %s", stage.name, code)
             return int(code)
-        print(f"--- {stage.name} finished in {elapsed / 60:.1f} min ---")
+        logger.info("--- %s finished in %.1f min ---", stage.name, elapsed / 60)
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/base.yaml")
+    parser = cli.parser_for(__doc__)
     parser.add_argument(
         "--skip-download", action="store_true", help="use an archive already on disk"
     )
@@ -152,14 +170,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--only", default=None, help="run a single stage by name")
     args = parser.parse_args(argv)
 
-    cfg = load_config(args.config)
-    cfg.paths.ensure()
+    cfg = cli.prepare(args)
     stages = build_stages(cfg, args.config, skip_download=args.skip_download)
+    logger.info("pipeline for %s: %s", cfg.name, " -> ".join(stage.name for stage in stages))
 
-    print(f"pipeline for {cfg.name}: {' -> '.join(s.name for s in stages)}")
     started = time.perf_counter()
     code = run(stages, force=args.force, only=args.only)
-    print(f"\ntotal {(time.perf_counter() - started) / 60:.1f} min")
+    logger.info("\ntotal %.1f min", (time.perf_counter() - started) / 60)
     return code
 
 
