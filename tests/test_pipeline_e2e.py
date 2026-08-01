@@ -15,10 +15,12 @@ import numpy as np
 import pytest
 import soundfile as sf
 
+from src import scoring
 from src.config import Config, load_config
-from src.data.manifest import audit_tables, build_manifest, load_manifest
+from src.data.audit import audit_tables
+from src.data.manifest import build_manifest, load_manifest
 from src.data.splits import assert_no_tape_leak, clips_from_index, make_folds, rows_for_clips
-from src.evaluate import metrics, report
+from src.evaluate import report
 from src.features import cache
 from src.features import registry as features
 from src.features.extract import extract
@@ -262,7 +264,7 @@ def test_cnn_trains_and_explains_on_synthetic_audio(dataset, manifest):
     assert probabilities.shape == (len(test_rows), len(SPECIES))
     np.testing.assert_allclose(probabilities.sum(axis=1), 1.0, atol=1e-5)
 
-    clips = metrics.aggregate_to_clips(index, test_rows, probabilities)
+    clips = scoring.aggregate_to_clips(index, test_rows, probabilities)
     assert len(clips) == len(fold.test_clips)
 
     frequencies = features.build_extractor(features.LOGMEL, dataset).mel_frequencies()
