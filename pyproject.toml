@@ -63,7 +63,8 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# G and LOG keep logging lazy and correctly parameterised.
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "G", "LOG"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
