@@ -122,6 +122,76 @@ class CachedFeatureSource(FeatureSource):
         return self._feature_names
 
 
+class DerivedSource(FeatureSource):
+    """A view of another source over some of its windows, under different labels.
+
+    The audio does not change between tasks, so neither should the cache. Asking
+    whether a sperm whale clip contains a coda uses exactly the windows the species
+    work already extracted; only the label and the selection differ.
+    """
+
+    def __init__(self, base: FeatureSource, index: pd.DataFrame, positions: np.ndarray, name: str):
+        if len(index) != len(positions):
+            raise ValueError(f"index has {len(index)} rows for {len(positions)} positions")
+        self._base = base
+        self._index = index.reset_index(drop=True)
+        self._positions = np.asarray(positions, dtype=np.int64)
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def index(self) -> pd.DataFrame:
+        return self._index
+
+    def matrix(self, rows: np.ndarray) -> RowView:
+        return self._base.matrix(self._positions[np.asarray(rows, dtype=np.int64)])
+
+    def feature_names(self) -> list[str] | None:
+        return self._base.feature_names()
+
+
+class ContextFeatureSource(FeatureSource):
+    """Where a recording was made and what else was audible, with no audio.
+
+    The control for a call type task, and the direct analogue of the metadata
+    control used for species. Site, coordinates and the noise conditions describe
+    the circumstances of a recording rather than the animal, so whatever this
+    reaches is the floor an audio model has to clear.
+    """
+
+    BASE_COLUMNS = ("latitude", "longitude")
+
+    def __init__(self, index: pd.DataFrame, condition_columns: list[str]):
+        missing = {"site", *self.BASE_COLUMNS} - set(index.columns)
+        if missing:
+            raise ValueError(f"window index is missing context columns: {sorted(missing)}")
+        self._index = index.reset_index(drop=True)
+        self._columns = [*self.BASE_COLUMNS, *condition_columns]
+
+        # Site is a name, so it is coded rather than measured. Trees split on the
+        # code as an identity, which is all this control needs it to be.
+        site_code = self._index["site"].astype("category").cat.codes.to_numpy()
+        rest = self._index.loc[:, self._columns].astype(float).fillna(0.0).to_numpy()
+        self._matrix = np.column_stack([site_code, rest]).astype(np.float32)
+
+    @property
+    def name(self) -> str:
+        return "context"
+
+    @property
+    def index(self) -> pd.DataFrame:
+        return self._index
+
+    def matrix(self, rows: np.ndarray) -> RowView:
+        return RowView(self._matrix, rows)
+
+    def feature_names(self) -> list[str]:
+        return ["site_code", *self._columns]
+
+
 class MetadataFeatureSource(FeatureSource):
     """Recording metadata only, with no audio content whatsoever.
 
