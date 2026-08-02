@@ -11,15 +11,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.data.annotations import (
-    CALL_PREFIX,
-    CONDITION_PREFIX,
-    Vocabulary,
-    annotate,
-    call_columns,
-    condition_columns,
-    tag_note,
-)
+from src.data.annotations import annotate, call_columns, condition_columns
+from src.data.notes import CALL_PREFIX, CONDITION_PREFIX, Vocabulary, tag_note
 
 VOCABULARY = Vocabulary(
     call_types={
