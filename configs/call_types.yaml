@@ -1,0 +1,42 @@
+# What the Watkins field notes call things, and what to label it.
+#
+# Every term is searched for anywhere in the note text, because the notes are free
+# prose rather than a fixed schema: "Squeal; chirp." and "Two calls; clicks." and
+# "Clicks (P. catodon); whistle (Delphinidae)." all appear. A clip carries every
+# label whose terms it matches, so call type is multi label.
+#
+# Order matters. Terms are matched longest first and each match consumes its span,
+# so "pulsed call" is recorded as a pulsed call and not also as a call.
+#
+# Counts below are occurrences across the 4630 clips of the three species under
+# study, measured from the notes rather than assumed.
+
+call_types:
+  pulsed_call: ["pulsed call"] # 169: humpback 91, killer 78
+  social_sound: ["social sound"] # 73: humpback only
+  coda: ["coda"] # 347: sperm whale only
+  click: ["click"] # 1597: sperm 1097, killer 500
+  whistle: ["whistle"] # 282: sperm 136, killer 144
+  squeal: ["squeal"] # 666: killer 654
+  chirp: ["chirp"] # 142: killer 110, humpback 28
+  tonal: ["tonal"] # 167: killer only
+  song: ["song"] # 95: humpback only
+  squeak: ["squeak"] # 41: killer only
+  moan: ["moan"] # 33: humpback 29
+  grunt: ["grunt"] # 30: humpback 17, killer 13
+  buzz: ["buzz"] # 22: killer 18
+  creak: ["creak"] # 8: killer only
+  growl: ["growl"] # 13: humpback 12
+  call: ["call"] # 1414: killer 915, humpback 494
+
+# Conditions describe the recording rather than the animal. They are the material
+# for a control model, in the same way native sample rate was for species: if the
+# conditions alone predict the call type, the audio result means very little.
+conditions:
+  ship_noise: ["ship noise", "propeller"]
+  engine_noise: ["engine", "generator"]
+  reverberation: ["reverberation"]
+  water_noise: ["water noise"]
+  night_recording: ["night recording"]
+  no_visual: ["no visual", "no animals seen"]
+  tape_speed_note: ["tape speed"]
