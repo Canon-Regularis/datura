@@ -3,8 +3,8 @@
 The WHOI original at cis.whoi.edu currently redirects to a maintenance page, so
 the Internet Archive mirror is the acquisition path.
 
-Downloads shell out to curl. Python's stdlib SSL rejects this machine's
-certificate chain, and curl carries its own CA bundle.
+Every network call goes through ``src.data.remote``, which is the one place in the
+project that builds a curl command.
 
 Usage:
     python -m src.data.download [--config configs/base.yaml] [--force]
@@ -14,14 +14,13 @@ from __future__ import annotations
 
 import hashlib
 import logging
-import re
-import subprocess
 import sys
 import zipfile
 from pathlib import Path
 
 from src import cli
 from src.config import Config
+from src.data import remote
 from src.errors import DaturaError
 
 logger = logging.getLogger(__name__)
@@ -29,20 +28,6 @@ logger = logging.getLogger(__name__)
 
 class DownloadError(DaturaError):
     """Raised when the archive cannot be fetched or does not match its digest."""
-
-
-def remote_size(url: str) -> int | None:
-    """Content length of the archive, or None if the server does not report one."""
-    result = subprocess.run(
-        ["curl", "-sIL", "--max-time", "60", url],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        return None
-    sizes = re.findall(r"(?im)^content-length:\s*(\d+)", result.stdout)
-    return int(sizes[-1]) if sizes else None
 
 
 def file_digest(path: Path, chunk_bytes: int = 8 << 20) -> str:
@@ -79,7 +64,7 @@ def download_archive(cfg: Config, *, force: bool = False, verify: bool = True) -
     """Fetch the zip, resuming a partial file rather than restarting it."""
     cfg.paths.ensure()
     destination = cfg.paths.raw / cfg.dataset.zip_name
-    expected = remote_size(cfg.dataset.archive_url)
+    expected = remote.optional_content_length(cfg.dataset.archive_url)
 
     if destination.exists() and not force:
         actual = destination.stat().st_size
@@ -90,22 +75,7 @@ def download_archive(cfg: Config, *, force: bool = False, verify: bool = True) -
             return destination
         logger.info("resuming download at %.2f of %.2f GB", actual / 1e9, expected / 1e9)
 
-    command = [
-        "curl",
-        "-L",
-        "-C",
-        "-",
-        "--retry",
-        "10",
-        "--retry-delay",
-        "5",
-        "--retry-all-errors",
-        "-o",
-        str(destination),
-        cfg.dataset.archive_url,
-    ]
-    if subprocess.run(command, check=False).returncode != 0:
-        raise DownloadError(f"curl failed to fetch {cfg.dataset.archive_url}")
+    remote.download(cfg.dataset.archive_url, destination)
 
     if expected is not None and destination.stat().st_size != expected:
         raise DownloadError(
