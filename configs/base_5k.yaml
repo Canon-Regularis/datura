@@ -33,6 +33,9 @@ split:
   n_folds: 5
   seed: 1234
   tape_id_length: 5
+  # Which manifest column folds are grouped over. Watkins fills it from the
+  # tape; a collection of continuous recordings would fill it from site and year.
+  group_column: tape_id
 
 paths:
   raw: data/raw

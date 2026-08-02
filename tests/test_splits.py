@@ -12,7 +12,7 @@ import pytest
 
 from src.data.splits import (
     SplitError,
-    assert_no_tape_leak,
+    assert_no_group_leak,
     clips_from_index,
     fold_summary,
     make_folds,
@@ -100,7 +100,7 @@ def test_leak_check_rejects_a_shared_tape(config):
     )
 
     with pytest.raises(SplitError, match="leaks"):
-        assert_no_tape_leak(clips, [tampered], config.split.tape_id_length)
+        assert_no_group_leak(clips, [tampered], config.split.group_column)
 
 
 def test_rejects_duplicate_clip_ids(config):

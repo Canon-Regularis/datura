@@ -60,9 +60,12 @@ def assemble(cfg: Config, source_kind: str) -> Assembly:
         source.name,
         len(source.index),
         source.index["clip_id"].nunique(),
-        source.index["tape_id"].nunique(),
+        source.index[cfg.split.group_column].nunique(),
     )
-    logger.info("\nTapes per species in each test fold\n%s", format_test_tapes(cfg, source, folds))
+    logger.info(
+        "\nIndependent recordings per class in each test fold\n%s",
+        format_test_tapes(cfg, source, folds),
+    )
     return Assembly(audio=source, folds=folds)
 
 

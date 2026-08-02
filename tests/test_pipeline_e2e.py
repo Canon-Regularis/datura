@@ -19,7 +19,12 @@ from src import scoring
 from src.config import Config, load_config
 from src.data.audit import audit_tables
 from src.data.manifest import build_manifest, load_manifest
-from src.data.splits import assert_no_tape_leak, clips_from_index, make_folds, rows_for_clips
+from src.data.splits import (
+    assert_no_group_leak,
+    clips_from_index,
+    make_folds,
+    rows_for_clips,
+)
 from src.evaluate import report
 from src.features import cache
 from src.features import registry as features
@@ -168,7 +173,7 @@ def test_cross_validation_produces_a_report(dataset, manifest):
     )
     clips = clips_from_index(source.index)
     folds = make_folds(clips, dataset)
-    assert_no_tape_leak(clips, folds, dataset.split.tape_id_length)
+    assert_no_group_leak(clips, folds, dataset.split.group_column)
 
     for fold in folds:
         train_rows = rows_for_clips(source.index, fold.train_clips)

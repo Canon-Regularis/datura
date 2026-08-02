@@ -26,21 +26,25 @@ def folds_for(cfg: Config, source: FeatureSource) -> list[Fold]:
     return folds_for_index(source.index, cfg)
 
 
+def _clips(cfg: Config, source: FeatureSource) -> pd.DataFrame:
+    return clips_from_index(source.index, cfg.split.group_column)
+
+
 def save_summary(cfg: Config, source: FeatureSource, folds: list[Fold]) -> Path:
-    """Write clip and tape counts per fold, per species, per part."""
-    summary = fold_summary(clips_from_index(source.index), folds)
+    """Write clip and group counts per fold, per class, per part."""
+    summary = fold_summary(_clips(cfg, source), folds, cfg.split.group_column)
     path = fold_summary_path(cfg)
     summary.to_csv(path, index=False)
     return path
 
 
 def format_test_tapes(cfg: Config, source: FeatureSource, folds: list[Fold]) -> str:
-    """Tapes per species in each test fold.
+    """Independent recordings per class in each test fold.
 
     This is the table that shows how thin the scarcest class really is; it belongs
     in front of anyone reading a score.
     """
-    summary = fold_summary(clips_from_index(source.index), folds)
+    summary = fold_summary(_clips(cfg, source), folds, cfg.split.group_column)
     held_out = summary[summary["part"] == "test"]
     pivot = held_out.pivot(index="fold", columns="species", values="tapes")
     return pivot.to_string()
@@ -52,11 +56,12 @@ def describe(cfg: Config, source: FeatureSource, folds: list[Fold]) -> tuple[lis
     return folds, format_test_tapes(cfg, source, folds)
 
 
-def clip_counts(source: FeatureSource) -> pd.DataFrame:
-    """Clips and tapes per species behind the current feature cache."""
-    clips = clips_from_index(source.index)
+def clip_counts(cfg: Config, source: FeatureSource) -> pd.DataFrame:
+    """Clips and independent recordings per class behind the current feature cache."""
+    group_column = cfg.split.group_column
     return (
-        clips.groupby("species")
-        .agg(clips=("clip_id", "size"), tapes=("tape_id", "nunique"))
+        _clips(cfg, source)
+        .groupby("species")
+        .agg(clips=("clip_id", "size"), tapes=(group_column, "nunique"))
         .reset_index()
     )

@@ -120,12 +120,15 @@ class SplitConfig:
     n_folds: int
     seed: int
     tape_id_length: int
+    group_column: str
 
     def __post_init__(self) -> None:
         if self.n_folds < 2:
             raise ConfigError("split.n_folds must be at least 2")
         if self.tape_id_length <= 0:
             raise ConfigError("split.tape_id_length must be positive")
+        if not self.group_column:
+            raise ConfigError("split.group_column must name a column in the manifest")
 
 
 @dataclass(frozen=True)

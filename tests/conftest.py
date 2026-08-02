@@ -32,7 +32,7 @@ _TEMPLATE = {
         "fmin": 50,
         "fmax": 4900,
     },
-    "split": {"n_folds": 5, "seed": 1234, "tape_id_length": 5},
+    "split": {"n_folds": 5, "seed": 1234, "tape_id_length": 5, "group_column": "tape_id"},
     "paths": {},
 }
 

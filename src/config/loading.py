@@ -78,7 +78,7 @@ def load_config(path: str | Path) -> Config:
         },
     )
     spec_block = _require(raw, "spectrogram", {"n_fft", "hop_length", "n_mels", "fmin", "fmax"})
-    split_block = _require(raw, "split", {"n_folds", "seed", "tape_id_length"})
+    split_block = _require(raw, "split", {"n_folds", "seed", "tape_id_length", "group_column"})
     paths_block = _require(raw, "paths", {"raw", "metadata", "processed", "reports"})
 
     return Config(
@@ -110,6 +110,7 @@ def load_config(path: str | Path) -> Config:
             n_folds=int(split_block["n_folds"]),
             seed=int(split_block["seed"]),
             tape_id_length=int(split_block["tape_id_length"]),
+            group_column=str(split_block["group_column"]),
         ),
         paths=PathsConfig(
             raw=_resolve(paths_block["raw"]),
