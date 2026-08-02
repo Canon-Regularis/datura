@@ -64,11 +64,17 @@ def run_cross_validation(
     folds: list[Fold],
     build_model: ModelFactory,
     model_name: str,
+    class_names: list[str] | None = None,
 ) -> CrossValidationResult:
-    """Fit one model on every fold, and score it on the tapes it never saw."""
+    """Fit one model on every fold, and score it on the recordings it never saw.
+
+    ``class_names`` defaults to the species under study. A task with a different
+    label space, such as whether a clip contains a coda, passes its own; the runner
+    otherwise has no way to know what the labels mean.
+    """
     index = source.index
     labels = index["label"].to_numpy()
-    class_names = list(cfg.dataset.species)
+    class_names = list(class_names or cfg.dataset.species)
 
     clip_rows: list[dict] = []
     window_rows: list[dict] = []
