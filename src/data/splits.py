@@ -8,6 +8,10 @@ protection cannot drift between experiments.
 
 Humpback whale survives on roughly a dozen tapes, which is why the project reports
 a spread across folds instead of a single held out score.
+
+Nothing here knows how a group id is formed. The config names the column and the
+manifest fills it, so the same code groups Watkins by tape and a collection of
+continuous recordings by site and year.
 """
 
 from __future__ import annotations
@@ -41,13 +45,6 @@ class Fold:
     def fitting_clips(self) -> tuple[str, ...]:
         """Clips a model may look at while fitting, training plus validation."""
         return self.train_clips + self.validation_clips
-
-
-def tape_id_of(clip_id: str, tape_id_length: int) -> str:
-    """``5401800A`` and ``54018001`` are both cuts from tape ``54018``."""
-    if len(clip_id) < tape_id_length:
-        raise SplitError(f"clip id {clip_id!r} is shorter than the tape id length")
-    return clip_id[:tape_id_length]
 
 
 def _check_manifest(manifest: pd.DataFrame, group_column: str = DEFAULT_GROUP_COLUMN) -> None:

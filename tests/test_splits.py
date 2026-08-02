@@ -10,6 +10,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+from src.data.clips import tape_id_of
 from src.data.splits import (
     SplitError,
     assert_no_group_leak,
@@ -17,7 +18,6 @@ from src.data.splits import (
     fold_summary,
     make_folds,
     rows_for_clips,
-    tape_id_of,
 )
 
 SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]

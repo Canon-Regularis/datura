@@ -28,12 +28,22 @@ class ClipIdentity:
     cut_id: str
 
 
-def parse_relative_path(relative: str | PurePosixPath, tape_id_length: int) -> ClipIdentity:
-    """Decode ``<Species>/<Year>/<ClipId>.wav``.
+def tape_id_of(clip_id: str, tape_id_length: int) -> str:
+    """The recording a cut came from.
 
     Clip ids come in two forms, seven digits plus a letter (``5401800A``) and eight
     digits (``54018001``). Both encode the same tape in their leading characters, so
     both resolve to tape ``54018``.
+    """
+    if len(clip_id) < tape_id_length:
+        raise ClipPathError(f"clip id {clip_id!r} is shorter than the tape id length")
+    return clip_id[:tape_id_length]
+
+
+def parse_relative_path(relative: str | PurePosixPath, tape_id_length: int) -> ClipIdentity:
+    """Decode ``<Species>/<Year>/<ClipId>.wav``.
+
+    The tape a cut belongs to is read by :func:`tape_id_of`.
     """
     parts = PurePosixPath(str(relative).replace("\\", "/")).parts
     if len(parts) != 3:
@@ -46,13 +56,10 @@ def parse_relative_path(relative: str | PurePosixPath, tape_id_length: int) -> C
         raise ClipPathError(f"not a numeric year directory in {relative!r}")
 
     clip_id = filename[: -len(".wav")]
-    if len(clip_id) < tape_id_length:
-        raise ClipPathError(f"clip id {clip_id!r} is shorter than the tape id length")
-
     return ClipIdentity(
         species=species,
         year=int(year_text),
         clip_id=clip_id,
-        tape_id=clip_id[:tape_id_length],
+        tape_id=tape_id_of(clip_id, tape_id_length),
         cut_id=clip_id[tape_id_length:],
     )
