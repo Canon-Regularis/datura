@@ -10,21 +10,16 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src import scoring
+from src import scoring, uncertainty
 from src.config import Config
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
-from src.models import registry as models
-from src.results import has_results, model_directory, predictions_path
+from src.evaluate import families
+from src.results import model_directory, predictions_path
 
 
 class MissingResults(DaturaError):
     """Raised when a report is asked for before anything has been trained."""
-
-
-def available_models(cfg: Config) -> list[str]:
-    """Models with results on disk, in the order the registry declares them."""
-    return [name for name in models.names() if has_results(cfg, name)]
 
 
 def comparison(cfg: Config, model_names: list[str]) -> pd.DataFrame:
@@ -47,28 +42,75 @@ def headline(table: pd.DataFrame, metric: str = "macro_f1") -> pd.DataFrame:
     return frame
 
 
-def margin_over_control(table: pd.DataFrame, metric: str = "macro_f1") -> pd.DataFrame:
-    """Each audio model's distance from the floor.
+def _fold_scores(cfg: Config, name: str, metric: str) -> pd.Series:
+    return uncertainty.fold_scores(
+        pd.read_csv(model_directory(cfg, name) / "fold_metrics_clip.csv"), metric
+    )
 
-    The control sees no audio, so its score is what recording metadata alone
-    achieves. An audio result is only evidence about whales to the extent it clears
-    that number.
+
+def family_margins(cfg: Config, family: families.Family, metric: str = "macro_f1") -> pd.DataFrame:
+    """Every model in one family against its control, with what the design resolves.
+
+    The margin alone invites more confidence than a handful of recordings supports.
+    The three columns beside it say how much: the interval the paired folds allow,
+    the p value, and how many of those folds pointed the same way. That last one is
+    worth its space, because a direction holding in most folds is informative even
+    where the p value settles nothing.
     """
-    control_name = models.control().name
-    control = table[table["model"] == control_name]
-    if control.empty:
-        raise MissingResults(
-            f"no {control_name} results found; rerun python -m src.train.xgb without --skip-control"
-        )
-    floor = float(control[f"{metric}_mean"].iloc[0])
+    control = _fold_scores(cfg, family.control, metric)
 
-    frame = table[table["model"] != control_name][
-        ["model", f"{metric}_mean", f"{metric}_std"]
-    ].copy()
-    frame.columns = ["model", "mean", "std"]
-    frame["control"] = floor
-    frame["margin"] = frame["mean"] - floor
-    return frame.sort_values("margin", ascending=False)
+    rows = []
+    for name in family.members:
+        left, right = uncertainty.shared_folds(_fold_scores(cfg, name, metric), control)
+        difference = uncertainty.paired_difference(left, right)
+        rows.append(
+            {
+                "model": name,
+                "mean": float(left.mean()),
+                "control": float(right.mean()),
+                "margin": difference.difference,
+                "low": difference.low,
+                "high": difference.high,
+                "p_value": difference.p_value,
+                "agreeing": difference.folds_agreeing,
+                "folds": difference.n_folds,
+            }
+        )
+    return pd.DataFrame(rows).sort_values("margin", ascending=False)
+
+
+def family_intervals(
+    cfg: Config,
+    family: families.Family,
+    metric: str = "macro_f1",
+    resamples: int = uncertainty.DEFAULT_RESAMPLES,
+) -> pd.DataFrame:
+    """Each model's own score with the range the recordings support.
+
+    The interval comes from resampling tapes rather than clips, so it answers what
+    a different draw of recordings would have produced. That is a wider and more
+    honest question than the spread across folds.
+    """
+    rows = []
+    for name in family.names:
+        predictions = pd.read_parquet(predictions_path(cfg, name))
+        if "repeat" in predictions.columns:
+            # One prediction per clip. A repeated run holds a full pass per repeat,
+            # and pooling them would score some clips ten times over.
+            predictions = predictions[predictions["repeat"] == 0].reset_index(drop=True)
+        interval = uncertainty.bootstrap_metric(
+            predictions, list(family.class_names), metric=metric, resamples=resamples
+        )
+        rows.append(
+            {
+                "model": name,
+                "estimate": interval.estimate,
+                "low": interval.low,
+                "high": interval.high,
+                "tapes": predictions[uncertainty.GROUP_COLUMN].nunique(),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
@@ -91,6 +133,12 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
     for name in model_names:
         predictions = pd.read_parquet(predictions_path(cfg, name))
         predictions["shared_rate"] = predictions["clip_id"].map(rate_of_clip).isin(shared_rates)
+
+        # One score per split, and a repeated run has a split per repeat per fold.
+        # Grouping on the fold alone would pool ten different splits into each of five
+        # rows and report the spread across folds as if it were the spread across runs.
+        split = [key for key in ("repeat", "fold") if key in predictions.columns]
+
         for shared, subset in predictions.groupby("shared_rate"):
             per_fold = [
                 scoring.score(
@@ -98,13 +146,16 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
                     fold_subset[columns].to_numpy(),
                     class_names,
                 )["macro_f1"]
-                for _, fold_subset in subset.groupby("fold")
+                for _, fold_subset in subset.groupby(split)
             ]
             rows.append(
                 {
                     "model": name,
                     "subset": "rate shared by species" if shared else "rate unique to a species",
-                    "clips": len(subset),
+                    # Distinct clips, not prediction rows. A repeated run holds one row per
+                    # clip per repeat, so counting rows would put a ten repeat model and a
+                    # single split model on different scales in the same column.
+                    "clips": subset["clip_id"].nunique(),
                     "macro_f1_mean": float(np.mean(per_fold)),
                     "macro_f1_std": float(np.std(per_fold, ddof=1)) if len(per_fold) > 1 else 0.0,
                 }
