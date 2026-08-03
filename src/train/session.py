@@ -18,7 +18,7 @@ from src.features import registry as features
 from src.features.source import FeatureSource, MetadataFeatureSource
 from src.models.registry import METADATA_SOURCE, ModelSpec
 from src.train.crossval import run_cross_validation, save_result
-from src.train.folds import folds_for, format_test_tapes, save_summary
+from src.train.folds import FoldPlan, folds_for, format_test_tapes, save_summary
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,7 @@ class Assembly:
 
     audio: FeatureSource
     folds: list[Fold]
+    plan: FoldPlan
 
     def source_for(self, spec: ModelSpec) -> FeatureSource:
         """The features a given model consumes.
@@ -49,8 +50,13 @@ class Assembly:
         return self.audio
 
 
-def assemble(cfg: Config, source_kind: str) -> Assembly:
-    """Open a feature cache, build the folds, and log the shape of both."""
+def assemble(cfg: Config, source_kind: str, repeats: int = 1) -> Assembly:
+    """Open a feature cache, build the folds, and log the shape of both.
+
+    ``repeats`` reruns the whole split under fresh seeds. Five folds over a dozen
+    recordings cannot separate the differences this project reports, and repeating
+    the split is the cheap way to get more estimates of the same quantity.
+    """
     source = features.load_source(source_kind, cfg)
     folds = folds_for(cfg, source)
     save_summary(cfg, source, folds)
@@ -66,7 +72,10 @@ def assemble(cfg: Config, source_kind: str) -> Assembly:
         "\nIndependent recordings per class in each test fold\n%s",
         format_test_tapes(cfg, source, folds),
     )
-    return Assembly(audio=source, folds=folds)
+    if repeats > 1:
+        logger.info("scoring on %d repeats of the split, %d folds each", repeats, len(folds))
+    plan = FoldPlan.repeated(cfg, source.index, repeats) if repeats > 1 else FoldPlan.single(folds)
+    return Assembly(audio=source, folds=folds, plan=plan)
 
 
 def train(
@@ -88,7 +97,7 @@ def train(
     result = run_cross_validation(
         cfg,
         source,
-        assembly.folds,
+        assembly.plan,
         lambda: spec.build(cfg, settings),
         result_name,
     )

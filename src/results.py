@@ -29,9 +29,15 @@ def model_directory(cfg: Config, model_name: str) -> Path:
     return config_directory(cfg) / model_name
 
 
-def checkpoint_path(cfg: Config, model_name: str, fold_index: int) -> Path:
-    """The weights saved for one fold. The suffix is added by the writer."""
-    return model_directory(cfg, model_name) / CHECKPOINTS / f"fold{fold_index}"
+def checkpoint_path(cfg: Config, model_name: str, fold_index: int, repeat: int = 0) -> Path:
+    """The weights saved for one fold of one repeat.
+
+    Repeat zero keeps the plain name, so a single split writes exactly where it
+    always did and the explainability tools keep finding it. The suffix is added by
+    the writer.
+    """
+    stem = f"fold{fold_index}" if repeat == 0 else f"repeat{repeat}_fold{fold_index}"
+    return model_directory(cfg, model_name) / CHECKPOINTS / stem
 
 
 def summary_path(cfg: Config, model_name: str) -> Path:

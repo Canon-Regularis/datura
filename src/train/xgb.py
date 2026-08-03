@@ -22,10 +22,16 @@ from src.train.session import assemble, train
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     parser.add_argument("--skip-control", action="store_true", help="omit the metadata control")
+    parser.add_argument(
+        "--repeats",
+        type=int,
+        default=1,
+        help="rerun the whole split under fresh seeds, for more estimates of the same quantity",
+    )
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
-    assembly = assemble(cfg, features.ACOUSTIC)
+    assembly = assemble(cfg, features.ACOUSTIC, repeats=args.repeats)
 
     wanted = [models.get("xgboost")]
     if not args.skip_control:

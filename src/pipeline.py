@@ -42,6 +42,12 @@ logger = logging.getLogger(__name__)
 EXPLAINED_VARIANT = "cnn_small"
 EXPLAINED_FOLD = "3"
 
+# How many times the tree models rerun the whole split under a shifted seed. Five
+# folds cannot separate the differences this project reports, and the trees are
+# cheap enough to answer that with repetition. The networks stay on one split
+# because ten of them is most of a day of GPU for the same question.
+TREE_REPEATS = "10"
+
 
 class UnknownStage(DaturaError):
     """Raised when --only names a stage that does not exist."""
@@ -91,7 +97,7 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
     stages = [
         Stage(
             models.TREES,
-            lambda: xgb_cli.main(["--config", config_path]),
+            lambda: xgb_cli.main(["--config", config_path, "--repeats", TREE_REPEATS]),
             lambda: all(has_results(cfg, name) for name in trees),
         )
     ]

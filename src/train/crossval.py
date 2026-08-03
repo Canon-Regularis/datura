@@ -27,6 +27,7 @@ from src.features.source import FeatureSource
 from src.models.base import Batch, FoldContext, WindowClassifier
 from src.provenance import write as write_provenance
 from src.results import checkpoint_path, model_directory
+from src.train.folds import FoldPlan
 
 logger = logging.getLogger(__name__)
 
@@ -58,20 +59,97 @@ def _batch(source: FeatureSource, rows: np.ndarray, labels: np.ndarray) -> Batch
     return Batch(features=source.matrix(rows), labels=labels[rows])
 
 
+@dataclass(frozen=True)
+class FoldOutcome:
+    """Everything one fold of one repeat produced."""
+
+    clip_metrics: dict
+    window_metrics: dict
+    predictions: pd.DataFrame
+    extras: dict[str, pd.DataFrame]
+
+
+def _run_fold(
+    cfg: Config,
+    source: FeatureSource,
+    fold: Fold,
+    repeat: int,
+    build_model: ModelFactory,
+    model_name: str,
+    class_names: list[str],
+    labels: np.ndarray,
+) -> FoldOutcome:
+    """Fit on one fold and score the recordings it was never shown.
+
+    Every row it returns carries both the repeat and the fold, because a comparison
+    is paired on the pair: repeat three fold two of a model belongs with repeat three
+    fold two of its control, since those are the same split.
+    """
+    index = source.index
+    train_rows = rows_for_clips(index, fold.train_clips)
+    validation_rows = rows_for_clips(index, fold.validation_clips)
+    test_rows = rows_for_clips(index, fold.test_clips)
+    if len(train_rows) == 0 or len(test_rows) == 0:
+        raise RuntimeError(f"fold {fold.index} has an empty train or test partition")
+
+    model = build_model()
+    model.fit(
+        _batch(source, train_rows, labels),
+        _batch(source, validation_rows, labels),
+        len(class_names),
+    )
+
+    window_probabilities = model.predict_proba(source.matrix(test_rows))
+    clips, scores = scoring.evaluate_clips(index, test_rows, window_probabilities, class_names)
+
+    context = FoldContext(
+        fold_index=fold.index,
+        feature_names=source.feature_names(),
+        checkpoint=checkpoint_path(cfg, model_name, fold.index, repeat),
+    )
+    stamp = {"repeat": repeat, "fold": fold.index}
+
+    logger.info(
+        "  repeat %d fold %d: clip macro-F1 %.3f  acc %.3f  (%d test clips, %d windows)",
+        repeat,
+        fold.index,
+        scores["macro_f1"],
+        scores["accuracy"],
+        len(clips),
+        len(test_rows),
+    )
+    return FoldOutcome(
+        clip_metrics={**stamp, **scores},
+        window_metrics={
+            **stamp,
+            **scoring.score(labels[test_rows], window_probabilities, class_names),
+        },
+        predictions=clips.assign(**stamp),
+        extras={key: table.assign(**stamp) for key, table in model.artifacts(context).items()},
+    )
+
+
 def run_cross_validation(
     cfg: Config,
     source: FeatureSource,
-    folds: list[Fold],
+    plan: FoldPlan | list[Fold],
     build_model: ModelFactory,
     model_name: str,
     class_names: list[str] | None = None,
 ) -> CrossValidationResult:
-    """Fit one model on every fold, and score it on the recordings it never saw.
+    """Fit one model on every fold of every repeat, scoring it on unseen recordings.
 
     ``class_names`` defaults to the species under study. A task with a different
     label space, such as whether a clip contains a coda, passes its own; the runner
     otherwise has no way to know what the labels mean.
+
+    ``plan`` may be a bare list of folds, which is one split, or a ``FoldPlan``
+    carrying several. Repeats exist because five folds cannot separate differences
+    of the size this project reports.
     """
+    if isinstance(plan, list):
+        plan = FoldPlan.single(plan)
+
     index = source.index
     labels = index["label"].to_numpy()
     class_names = list(class_names or cfg.dataset.species)
@@ -81,48 +159,16 @@ def run_cross_validation(
     predictions: list[pd.DataFrame] = []
     extras: dict[str, list[pd.DataFrame]] = {}
 
-    for fold in folds:
-        train_rows = rows_for_clips(index, fold.train_clips)
-        validation_rows = rows_for_clips(index, fold.validation_clips)
-        test_rows = rows_for_clips(index, fold.test_clips)
-        if len(train_rows) == 0 or len(test_rows) == 0:
-            raise RuntimeError(f"fold {fold.index} has an empty train or test partition")
-
-        model = build_model()
-        model.fit(
-            _batch(source, train_rows, labels),
-            _batch(source, validation_rows, labels),
-            len(class_names),
-        )
-
-        window_probabilities = model.predict_proba(source.matrix(test_rows))
-        window_rows.append(
-            {
-                "fold": fold.index,
-                **scoring.score(labels[test_rows], window_probabilities, class_names),
-            }
-        )
-
-        clips, scores = scoring.evaluate_clips(index, test_rows, window_probabilities, class_names)
-        clip_rows.append({"fold": fold.index, **scores})
-        predictions.append(clips.assign(fold=fold.index))
-
-        context = FoldContext(
-            fold_index=fold.index,
-            feature_names=source.feature_names(),
-            checkpoint=checkpoint_path(cfg, model_name, fold.index),
-        )
-        for key, table in model.artifacts(context).items():
-            extras.setdefault(key, []).append(table.assign(fold=fold.index))
-
-        logger.info(
-            "  fold %d: clip macro-F1 %.3f  acc %.3f  (%d test clips, %d windows)",
-            fold.index,
-            scores["macro_f1"],
-            scores["accuracy"],
-            len(clips),
-            len(test_rows),
-        )
+    for repeat, folds in plan:
+        for fold in folds:
+            outcome = _run_fold(
+                cfg, source, fold, repeat, build_model, model_name, class_names, labels
+            )
+            window_rows.append(outcome.window_metrics)
+            clip_rows.append(outcome.clip_metrics)
+            predictions.append(outcome.predictions)
+            for key, table in outcome.extras.items():
+                extras.setdefault(key, []).append(table)
 
     all_predictions = pd.concat(predictions, ignore_index=True)
     return CrossValidationResult(
@@ -141,8 +187,16 @@ def run_cross_validation(
     )
 
 
-def save_result(cfg: Config, result: CrossValidationResult) -> Path:
-    """Write every artifact the report and the notebooks read."""
+def save_result(
+    cfg: Config, result: CrossValidationResult, extra: dict[str, object] | None = None
+) -> Path:
+    """Write every artifact the report and the notebooks read.
+
+    ``extra`` records anything about the run that the config alone does not say. A
+    call type task that dropped its long clips has to write that down, or the
+    directory looks like a run over every clip of that type and nothing contradicts
+    it.
+    """
     directory = model_directory(cfg, result.model_name)
     directory.mkdir(parents=True, exist_ok=True)
 
@@ -157,6 +211,11 @@ def save_result(cfg: Config, result: CrossValidationResult) -> Path:
     write_provenance(
         cfg,
         directory,
-        extra={"model": result.model_name, "feature_source": result.source_name},
+        extra={
+            "model": result.model_name,
+            "feature_source": result.source_name,
+            "splits": len(result.clip_metrics),
+            **(extra or {}),
+        },
     )
     return directory
