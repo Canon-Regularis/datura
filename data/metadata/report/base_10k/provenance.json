@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-08-02T17:41:36+00:00",
+  "recorded_at": "2026-08-03T18:11:43+00:00",
   "config": {
     "name": "base_10k",
     "source": "base.yaml",
@@ -14,7 +14,7 @@
     "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
   },
   "git": {
-    "commit": "b04c8cc4951cd160f74d323298d52a02c7d9ab11",
+    "commit": "d1165e74c5c8e3477b3041621a0f5fdb158b956a",
     "branch": "main",
     "dirty": true
   },
@@ -41,10 +41,15 @@
     "total_memory_gb": 4.29,
     "cuda": "12.6"
   },
-  "models": [
-    "xgboost",
-    "cnn",
-    "cnn_small",
-    "metadata"
+  "families": [
+    "species",
+    "calltype_killerwhale_call",
+    "calltype_killerwhale_chirp",
+    "calltype_killerwhale_click",
+    "calltype_killerwhale_squeal",
+    "calltype_killerwhale_whistle",
+    "calltype_spermwhale_click",
+    "calltype_spermwhale_coda",
+    "calltype_spermwhale_whistle"
   ]
 }
