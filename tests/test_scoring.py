@@ -5,7 +5,9 @@ from itertools import pairwise
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.metrics import accuracy_score, f1_score
 
+from src import scoring
 from src.evaluate.occlusion import band_edges
 from src.scoring import aggregate_to_clips, confusion, score, summarise_folds
 
@@ -111,3 +113,35 @@ def test_band_edges_cover_every_mel_bin_once():
 def test_band_edges_handle_more_groups_than_bins():
     edges = band_edges(4, 8)
     assert sum(high - low for low, high in edges) == 4
+
+
+def test_the_count_metrics_match_sklearn_exactly():
+    """The bootstrap scores from confusion counts rather than through sklearn.
+
+    It runs thousands of times, and the ranking metrics it never asks for cost more
+    than everything else together. That shortcut is only safe while it agrees with
+    the library to the last digit, including where a class is absent from a fold.
+    """
+    rng = np.random.default_rng(0)
+    for n_classes in (2, 3, 5):
+        all_labels = list(range(n_classes))
+        for _ in range(50):
+            size = int(rng.integers(5, 200))
+            labels = rng.integers(0, n_classes, size)
+            predictions = rng.integers(0, n_classes, size)
+
+            counted = scoring.from_counts(labels, predictions, n_classes)
+            assert counted["accuracy"] == pytest.approx(accuracy_score(labels, predictions))
+            assert counted["macro_f1"] == pytest.approx(
+                f1_score(labels, predictions, labels=all_labels, average="macro", zero_division=0)
+            )
+            assert counted["weighted_f1"] == pytest.approx(
+                f1_score(
+                    labels, predictions, labels=all_labels, average="weighted", zero_division=0
+                )
+            )
+
+
+def test_an_empty_set_of_predictions_scores_zero_rather_than_dividing_by_nothing():
+    counted = scoring.from_counts(np.array([], dtype=int), np.array([], dtype=int), 3)
+    assert counted == {"accuracy": 0.0, "macro_f1": 0.0, "weighted_f1": 0.0}
