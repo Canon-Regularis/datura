@@ -44,28 +44,65 @@ clips at random and you put copies of one recording on both sides of the test bo
 
 The tape is sitting in the filename. `5401800A` and `54018001` are both cuts of tape `54018`, and
 the two id formats resolve the same way. Folds are `StratifiedGroupKFold` over tapes, applied across
-species so a tape carrying two labels never gets torn in half. Everything is reported as a mean and
-spread over five folds, because with twelve humpback tapes a single held out score is close to a
-two sample estimate.
+species so a tape carrying two labels never gets torn in half. Nothing is reported as a single held
+out score, because with twelve humpback tapes that is close to a two sample estimate.
 
 `tests/test_splits.py` fails loudly if a tape lands on both sides of a fold. If you touch one thing
 in this repo, do not let it be that.
 
+## How much any of this settles
+
+Five folds over roughly 135 recordings is a very small design, and for a while this repo reported
+margins from it as though they were findings. They were not.
+
+The trees are cheap, so the whole split is now rerun under shifted seeds. Ten repeats give fifty
+estimates of the same quantity instead of five, and a model and its control run the identical plan
+so repeat three fold two of one pairs with repeat three fold two of the other. The two networks stay
+on their single split, since retraining them ten times is most of a day of GPU for a question the
+trees answer more cheaply, and the fold count is printed beside every number so a five fold
+comparison is never read as a fifty fold one.
+
+Fifty numbers is not fifty pieces of evidence, though, and this is the part worth reading twice. Any
+two folds of a five fold split are fitted on training sets that share three quarters of their data,
+and each repeat runs over the same clips again. The differences are correlated, so the usual
+standard error of the mean is far too small. Running a plain paired t test over the fifty species
+differences returns p = 0.00008. The corrected resampled test, which replaces `1/n` with
+`1/n + 1/(k-1)` to account for that overlap, returns p = 0.25 on the same numbers. One of those is a
+headline and the other is nothing of the kind, and the second one is right. Every p value in this
+repo is the corrected one, and `tests/test_uncertainty.py` fails if repeating a split ever turns an
+unresolved comparison into a resolved one.
+
+Intervals come from resampling whole tapes with replacement, not clips. Cuts from one tape are near
+duplicates, so resampling clips counts the same recording many times and returns an interval several
+times too narrow. That is asserted directly: build one interval each way on the same predictions and
+the clip version has to come out narrower, which is what stops the distinction being lost quietly
+later.
+
+Every margin in the report carries three columns beside it. The interval, the p value, and how many
+folds pointed the same way. That last one earns its space, because a direction holding in four folds
+of five is worth knowing even where the p value settles nothing.
+
 ## What came out of it
 
-Macro-F1 on held out tapes, five folds, 10 kHz band:
+Macro-F1 on held out tapes, 10 kHz band. The trees and the control ran ten repeats of the split, so
+fifty estimates; the networks ran one split, so five:
 
-| model | macro-F1 | margin over control |
-| --- | --- | --- |
-| metadata only, no audio | 0.884 ± 0.139 | |
-| log mel CNN, 0.15 M params | 0.744 ± 0.165 | -0.140 |
-| acoustic features, XGBoost | 0.725 ± 0.050 | -0.158 |
-| log mel CNN, 2.8 M params | 0.692 ± 0.134 | -0.191 |
+| model | macro-F1 | margin over control | 95% interval | p | folds agreeing |
+| --- | --- | --- | --- | --- | --- |
+| metadata only, no audio | 0.868 ± 0.136 | | | | |
+| acoustic features, XGBoost | 0.757 ± 0.067 | -0.112 | -0.303 to +0.080 | 0.25 | 38 of 50 |
+| log mel CNN, 0.15 M params | 0.744 ± 0.165 | -0.140 | -0.626 to +0.346 | 0.47 | 4 of 5 |
+| log mel CNN, 2.8 M params | 0.692 ± 0.134 | -0.191 | -0.676 to +0.293 | 0.33 | 4 of 5 |
 
-The control wins, which is the entire reason for having built it. Recording metadata beats both
-audio models, and native sample rate alone accounts for 58% of its gain. Without that row in the
-table this repo would be reporting 0.82 accuracy as a finding about whales, when most of what it
-measures is tape machines.
+The control wins on all three, and that is the entire reason for having built it. Native sample rate
+alone accounts for 58% of its gain. Without that row in the table this repo would be reporting 0.82
+accuracy as a finding about whales, when most of what it measures is tape machines.
+
+None of those three margins resolves at 10 kHz. The direction is consistent and it is not weak: the
+trees lose to the control in 38 splits of 50, both networks in 4 folds of 5, and every point estimate
+sits well below zero. What the design cannot do is separate a gap of 0.11 from noise on 134
+recordings, and saying so is not the same as saying the gap is absent. The narrow band run does
+resolve it, which is the next section.
 
 That is not the end of it, though. Split the test clips by whether their native rate belongs to one
 species or is shared between several:
@@ -95,12 +132,58 @@ would expect if the model is keying on broadband clicks. Grad-CAM lands in the s
 own: below 500 Hz for humpback, on individual click impulses for sperm whale, following the whistle
 contour near 2 kHz for killer whale.
 
-None of this hinges on the band. Rerun at 5120 Hz, which keeps all 14 humpback tapes instead of 12,
-and the control goes to 0.927, XGBoost to 0.775, the CNN to 0.754. Same ordering, same margin of
-roughly 0.15.
+None of this hinges on the band, and the narrow band puts it beyond doubt. Rerun at 5120 Hz, which
+keeps all 14 humpback tapes instead of 12, on the same ten repeats and the same corrected test: the
+trees land 0.152 below the control at p = 0.010, with the direction holding in 45 splits of 50. Same
+ordering as the wide band, a larger margin, and this time it resolves.
+
+That is the strongest single result in the repo, and it is a result about recording metadata rather
+than about whales. Two bands, a hundred splits between them, and the model that never hears the
+animal wins both.
+
+## Where audio does win
+
+Species is the wrong question to ask of this dataset, because the recording answers it. So ask a
+question the recording cannot: given that this is a sperm whale, does the clip contain a click?
+
+Every call type is posed inside one species, and every one gets its own binary model against a
+context control that sees the site, the coordinates and the noise conditions and no audio. Site
+alone identifies the species for 98% of clips here, so that control is the same kind of floor the
+metadata model was. Eight tasks clear the minimum of 60 clips over 10 independent tapes. All on ten
+repeats of the split, macro-F1:
+
+| task | audio | control | margin | p | agreeing |
+| --- | --- | --- | --- | --- | --- |
+| sperm whale, whistle | 0.712 | 0.508 | +0.204 | 0.17 | 35 of 50 |
+| sperm whale, click | 0.705 | 0.564 | +0.141 | 0.044 | 45 of 50 |
+| killer whale, click | 0.601 | 0.485 | +0.116 | 0.19 | 36 of 50 |
+| killer whale, squeal | 0.768 | 0.653 | +0.116 | 0.24 | 35 of 50 |
+| killer whale, whistle | 0.564 | 0.463 | +0.101 | 0.022 | 41 of 50 |
+| sperm whale, coda | 0.570 | 0.528 | +0.042 | 0.71 | 24 of 50 |
+| killer whale, chirp | 0.557 | 0.548 | +0.010 | 0.84 | 21 of 50 |
+| killer whale, call | 0.689 | 0.769 | -0.079 | 0.52 | 30 of 50 |
+
+Seven of eight are positive and two resolve. Sperm whale click and killer whale whistle are the only
+places in this repo where listening to the recording beats not listening to it by an amount the
+design can separate. Both are calls with an obvious acoustic signature, and both hold their
+direction in more than 40 splits of 50.
+
+Sperm whale whistle has the largest margin of any comparison here and does not resolve, which is
+worth sitting with: +0.204 with a fold spread of 0.221. It rests on 11 tapes, and a task carried by
+11 recordings has an effective sample size of 11 however many clips it spans. That is the shape of
+almost everything in this dataset.
+
+Coda is the instructive failure. Its clips run to a median of 64 seconds while a coda lasts a few, so
+most windows of a coda labelled recording inherit a label they do not deserve. Dropping clips over
+eight seconds lifted the margin from +0.012 to +0.105 on one split, which looked like a finding.
+Across fifty it is +0.042 with the direction holding in 24, which is a coin flip. The guard stayed
+anyway, because training on labels known to be false is worse than a flat result, and it now lives
+beside the call type in `configs/call_types.yaml` rather than as a command line flag.
 
 Full numbers live in `data/metadata/report/base_10k/REPORT.md` and
-`data/metadata/report/base_5k/REPORT.md`.
+`data/metadata/report/base_5k/REPORT.md`. Every comparison in a configuration is listed together at
+the top of its report, sorted by how well it resolves, so the ones that settle nothing are as easy
+to find as the ones that do.
 
 ## Layout
 
@@ -116,6 +199,7 @@ src/cli.py        the options every command shares
 src/config/       sections declare the shape and validate it; loading reads the YAML
 src/results.py    where results live on disk; every report path is built here
 src/scoring.py    how a prediction becomes a number, shared by training and reporting
+src/uncertainty.py  intervals over tapes, and the paired test a margin needs
 src/provenance.py what produced a result: commit, versions, accelerator, config digests
 src/errors.py     the base every deliberate failure inherits from
 src/logging_config.py  configured by entry points only, never by a library module
@@ -125,8 +209,9 @@ src/data/         clips parses identity, manifest lists them, audit describes th
                   splits holds the fold grouping rule
 src/features/     the extractor interface, its implementations, the cache and the registry
 src/models/       the classifier interface, the trees, the cnn package, the registry
-src/train/        folds, one cross validation runner, and one training session
-src/evaluate/     tables, figures, occlusion, Grad-CAM, report
+src/train/        folds and the repeat plan, one cross validation runner, one session,
+                  and the within species call type tasks
+src/evaluate/     families, tables, figures, occlusion, Grad-CAM, report
 experiments/      notebooks that read artifacts and plot, no training code
 ```
 
@@ -173,12 +258,18 @@ The stages are also individual commands if you want them separately:
 uv run python -m src.data.download                                  # 6.7 GB archive, resumable
 uv run python -m src.data.manifest    --config configs/base.yaml
 uv run python -m src.features.extract --config configs/base.yaml
-uv run python -m src.train.xgb        --config configs/base.yaml   # baseline and control
+uv run python -m src.train.xgb        --config configs/base.yaml --repeats 10  # and control
 uv run python -m src.train.cnn        --config configs/base.yaml --name cnn
 uv run python -m src.train.cnn        --config configs/base.yaml --name cnn_small
+uv run python -m src.train.calltypes  --config configs/base.yaml --species SpermWhale --repeats 10
 uv run python -m src.evaluate.explain --config configs/base.yaml --name cnn_small --fold 3
 uv run python -m src.evaluate.report  --config configs/base.yaml
 ```
+
+`--repeats N` reruns the whole split under `seed + repeat` and tags every row with which repeat
+produced it. Repeat zero is the original split, so a repeated run contains the single split rather
+than replacing it, and a result from before repeats existed still pairs against repeat zero of one
+that has ten. It defaults to 1.
 
 `--name` selects a model from the registry in `src/models/registry.py`, which is where each one
 declares its features, its hyperparameter file and the command that trains it. Both network sizes
@@ -261,11 +352,13 @@ order:
    folds.
 3. The metadata control's macro-F1 gets printed before the audio results. Read everything else
    relative to it, and read the ambiguity breakdown before the headline.
-4. Audio scores carry a spread. A single number over a dozen humpback tapes is not a result.
-5. Check humpback recall on its own. It is the class the fold structure stresses hardest.
-6. Compare the 5120 Hz run against the 10 kHz run. If they diverge badly, the conclusion depends on
+4. Read the p value and the fold count before the margin. Most comparisons here do not resolve, and
+   a margin from five folds over a dozen recordings is a direction rather than a result.
+5. Audio scores carry a spread. A single number over a dozen humpback tapes is not a result.
+6. Check humpback recall on its own. It is the class the fold structure stresses hardest.
+7. Compare the 5120 Hz run against the 10 kHz run. If they diverge badly, the conclusion depends on
    the band choice and has to be written up that way.
-7. Read occlusion and Grad-CAM against the call bands each species is known to use.
+8. Read occlusion and Grad-CAM against the call bands each species is known to use.
 
 ## Data
 
