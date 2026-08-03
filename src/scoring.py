@@ -19,10 +19,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
-    accuracy_score,
     average_precision_score,
     confusion_matrix,
-    f1_score,
     precision_recall_fscore_support,
     roc_auc_score,
 )
@@ -124,6 +122,45 @@ def _safe_average_precision(labels: np.ndarray, probabilities: np.ndarray, n_cla
         return float("nan")
 
 
+COUNT_METRICS = ("accuracy", "macro_f1", "weighted_f1")
+
+
+def from_counts(labels: np.ndarray, predictions: np.ndarray, n_classes: int) -> dict[str, float]:
+    """Accuracy and the F1 averages, from the confusion counts alone.
+
+    ``score`` also computes ranking metrics, and those cost more than everything
+    else together. The bootstrap rescores thousands of times and asks for one number,
+    so it needs the cheap path. ``score`` is built on the same function rather than
+    on its own copy, because two implementations of macro F1 would eventually
+    disagree and only one of them would be in the report.
+
+    A class with no support and no predictions scores zero rather than dividing by
+    nothing, which is what sklearn does with ``zero_division=0``.
+    """
+    matrix = np.bincount(
+        labels.astype(np.int64) * n_classes + predictions.astype(np.int64),
+        minlength=n_classes * n_classes,
+    ).reshape(n_classes, n_classes)
+
+    correct = np.diag(matrix).astype(float)
+    predicted = matrix.sum(axis=0).astype(float)
+    actual = matrix.sum(axis=1).astype(float)
+
+    denominator = predicted + actual
+    per_class = np.divide(
+        2.0 * correct, denominator, out=np.zeros(n_classes), where=denominator > 0
+    )
+
+    total = float(actual.sum())
+    if total == 0.0:
+        return {"accuracy": 0.0, "macro_f1": 0.0, "weighted_f1": 0.0}
+    return {
+        "accuracy": float(correct.sum() / total),
+        "macro_f1": float(per_class.mean()),
+        "weighted_f1": float(np.dot(per_class, actual) / total),
+    }
+
+
 def score(
     labels: np.ndarray,
     probabilities: np.ndarray,
@@ -142,13 +179,7 @@ def score(
     # species would report a macro average over the survivors while the table below
     # still listed the absent one at zero.
     result: dict[str, float] = {
-        "accuracy": float(accuracy_score(labels, predictions)),
-        "macro_f1": float(
-            f1_score(labels, predictions, labels=all_labels, average="macro", zero_division=0)
-        ),
-        "weighted_f1": float(
-            f1_score(labels, predictions, labels=all_labels, average="weighted", zero_division=0)
-        ),
+        **from_counts(labels, predictions, n_classes),
         "roc_auc_ovr_macro": _safe_roc_auc(labels, probabilities, n_classes),
         "average_precision_macro": _safe_average_precision(labels, probabilities, n_classes),
         "n_items": float(len(labels)),
@@ -167,8 +198,12 @@ def confusion(labels: np.ndarray, predictions: np.ndarray, class_names: list[str
 
 
 def summarise_folds(fold_metrics: pd.DataFrame) -> pd.DataFrame:
-    """Mean and standard deviation of every metric across folds."""
-    numeric = fold_metrics.drop(columns=["fold"], errors="ignore").select_dtypes("number")
+    """Mean and standard deviation of every metric across folds and repeats.
+
+    A repeated run has as many rows as repeats times folds, and every one of them is
+    an estimate of the same quantity, so they are summarised together.
+    """
+    numeric = fold_metrics.drop(columns=["fold", "repeat"], errors="ignore").select_dtypes("number")
     summary = pd.DataFrame(
         {
             "metric": numeric.columns,
