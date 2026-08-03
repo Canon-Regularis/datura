@@ -8,19 +8,34 @@
 # Order matters. Terms are matched longest first and each match consumes its span,
 # so "pulsed call" is recorded as a pulsed call and not also as a call.
 #
+# An entry is either a bare list of terms, or a mapping carrying those terms plus
+# a max_clip_seconds guard. The guard belongs to the call rather than to the run,
+# because whether it is needed depends on the call being episodic.
+#
 # Counts below are occurrences across the 4630 clips of the three species under
 # study, measured from the notes rather than assumed.
 
 call_types:
   pulsed_call: ["pulsed call"] # 169: humpback 91, killer 78
   social_sound: ["social sound"] # 73: humpback only
-  coda: ["coda"] # 347: sperm whale only
+  # A note is written against a whole cut. Coda labelled clips run to a median of
+  # 64 seconds and a maximum of 24 minutes, while a coda itself lasts a few, so
+  # windows taken across such a recording inherit a label most of them do not
+  # deserve. The guard is here because those labels are wrong, not because it
+  # scores better: on one split it looked worth +0.105, and across fifty the coda
+  # margin is +0.042 with the direction holding in 24 of them, which is a coin
+  # flip. Training on labels known to be false would be the worse of the two.
+  coda:
+    terms: ["coda"] # 347: sperm whale only
+    max_clip_seconds: 8
   click: ["click"] # 1597: sperm 1097, killer 500
   whistle: ["whistle"] # 282: sperm 136, killer 144
   squeal: ["squeal"] # 666: killer 654
   chirp: ["chirp"] # 142: killer 110, humpback 28
   tonal: ["tonal"] # 167: killer only
-  song: ["song"] # 95: humpback only
+  song:
+    terms: ["song"] # 95: humpback only
+    max_clip_seconds: 30 # song is episodic; its clips are long
   squeak: ["squeak"] # 41: killer only
   moan: ["moan"] # 33: humpback 29
   grunt: ["grunt"] # 30: humpback 17, killer 13

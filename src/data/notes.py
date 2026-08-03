@@ -12,7 +12,7 @@ here touches the network, so the parsing rules can be tested on strings.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from src.config import load_yaml
 from src.errors import DaturaError
@@ -37,6 +37,7 @@ class Vocabulary:
 
     call_types: dict[str, list[str]]
     conditions: dict[str, list[str]]
+    max_clip_seconds: dict[str, float] = field(default_factory=dict)
 
     @property
     def call_labels(self) -> list[str]:
@@ -46,9 +47,39 @@ class Vocabulary:
     def condition_labels(self) -> list[str]:
         return list(self.conditions)
 
+    def guard_for(self, call_type: str) -> float | None:
+        """The longest clip whose label can still describe a window of it.
+
+        A note is written against a whole cut, not against a moment in it. That is
+        harmless for a call that runs throughout a recording, and misleading for one
+        that does not: coda labelled clips have a median duration of 64 seconds while
+        a coda lasts a few, so most windows of such a clip inherit a label they do
+        not deserve. Where a guard is declared, the long clips are left out.
+        """
+        return self.max_clip_seconds.get(call_type)
+
     def ordered_terms(self, groups: dict[str, list[str]]) -> list[tuple[str, str]]:
         pairs = [(term, label) for label, terms in groups.items() for term in terms]
         return sorted(pairs, key=lambda pair: -len(pair[0]))
+
+
+def _parse_group(label: str, entry: object, path: str) -> tuple[list[str], float | None]:
+    """Read one vocabulary entry, in either of the two shapes it may take.
+
+    A bare list is just terms. A mapping carries the terms plus whatever else that
+    call type needs, which at present is only a clip length guard.
+    """
+    if isinstance(entry, list):
+        return [str(term) for term in entry], None
+    if isinstance(entry, dict):
+        if "terms" not in entry:
+            raise VocabularyError(f"{path}: {label} is a mapping but has no 'terms'")
+        unknown = set(entry) - {"terms", "max_clip_seconds"}
+        if unknown:
+            raise VocabularyError(f"{path}: {label} has unknown keys {sorted(unknown)}")
+        guard = entry.get("max_clip_seconds")
+        return [str(term) for term in entry["terms"]], None if guard is None else float(guard)
+    raise VocabularyError(f"{path}: {label} must be a list of terms or a mapping")
 
 
 def load_vocabulary(path: str = VOCABULARY_FILE) -> Vocabulary:
@@ -56,7 +87,19 @@ def load_vocabulary(path: str = VOCABULARY_FILE) -> Vocabulary:
     missing = {"call_types", "conditions"} - set(raw)
     if missing:
         raise VocabularyError(f"{path} is missing sections: {sorted(missing)}")
-    return Vocabulary(call_types=raw["call_types"], conditions=raw["conditions"])
+
+    call_types: dict[str, list[str]] = {}
+    guards: dict[str, float] = {}
+    for label, entry in raw["call_types"].items():
+        terms, guard = _parse_group(label, entry, path)
+        call_types[label] = terms
+        if guard is not None:
+            guards[label] = guard
+
+    conditions = {
+        label: _parse_group(label, entry, path)[0] for label, entry in raw["conditions"].items()
+    }
+    return Vocabulary(call_types=call_types, conditions=conditions, max_clip_seconds=guards)
 
 
 def tag_note(note: str | None, vocabulary: Vocabulary) -> tuple[set[str], set[str]]:

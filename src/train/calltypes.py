@@ -31,7 +31,7 @@ from src import cli
 from src.config import Config
 from src.data import annotations as ann
 from src.data.manifest import load_manifest
-from src.data.notes import CALL_PREFIX
+from src.data.notes import CALL_PREFIX, Vocabulary, load_vocabulary
 from src.data.splits import folds_for_index
 from src.errors import DaturaError
 from src.features import registry as features
@@ -39,6 +39,7 @@ from src.features.source import ContextFeatureSource, DerivedSource, FeatureSour
 from src.models import registry as models
 from src.models.registry import load_settings
 from src.train.crossval import run_cross_validation, save_result
+from src.train.folds import FoldPlan
 
 logger = logging.getLogger(__name__)
 
@@ -60,11 +61,19 @@ class CallTypeError(DaturaError):
 class Task:
     """One binary question: does this clip contain this call type?"""
 
-    def __init__(self, species: str, call_type: str, positives: int, tapes: int):
+    def __init__(
+        self,
+        species: str,
+        call_type: str,
+        positives: int,
+        tapes: int,
+        max_clip_seconds: float | None = None,
+    ):
         self.species = species
         self.call_type = call_type
         self.positives = positives
         self.tapes = tapes
+        self.max_clip_seconds = max_clip_seconds
 
     @property
     def name(self) -> str:
@@ -75,7 +84,11 @@ class Task:
         return f"{self.name}_context"
 
     def __repr__(self) -> str:
-        return f"Task({self.species}, {self.call_type}, {self.positives} clips, {self.tapes} tapes)"
+        guard = "" if self.max_clip_seconds is None else f", clips under {self.max_clip_seconds:g}s"
+        return (
+            f"Task({self.species}, {self.call_type}, "
+            f"{self.positives} clips, {self.tapes} tapes{guard})"
+        )
 
 
 def clip_labels(cfg: Config, species: str, max_clip_seconds: float | None = None) -> pd.DataFrame:
@@ -111,19 +124,28 @@ def clip_labels(cfg: Config, species: str, max_clip_seconds: float | None = None
     return subset
 
 
-def viable_tasks(cfg: Config, species: str, labels: pd.DataFrame) -> list[Task]:
+def viable_tasks(
+    cfg: Config, species: str, labels: pd.DataFrame, vocabulary: Vocabulary | None = None
+) -> list[Task]:
     """Call types with enough clips and enough tapes on the positive side.
 
     Tapes are the binding count, not clips. Cuts from one tape are near duplicates,
     so a type carried by two recordings has an effective sample size of two however
     many clips it spans.
+
+    Viability is judged after the call type's own guard is applied, so a type is
+    counted on the clips it will actually be trained on.
     """
     tasks = []
     for column in ann.call_columns(labels):
-        positive = labels[labels[column].fillna(False)]
+        call_type = column.removeprefix(CALL_PREFIX)
+        guard = vocabulary.guard_for(call_type) if vocabulary else None
+        eligible = labels if guard is None else labels[labels["duration_seconds"] <= guard]
+
+        positive = eligible[eligible[column].fillna(False)]
         tapes = positive["tape_id"].nunique()
         if len(positive) >= MINIMUM_CLIPS and tapes >= MINIMUM_TAPES:
-            tasks.append(Task(species, column.removeprefix(CALL_PREFIX), len(positive), tapes))
+            tasks.append(Task(species, call_type, len(positive), tapes, guard))
     if not tasks:
         raise CallTypeError(
             f"no call type in {species} reaches {MINIMUM_CLIPS} clips over {MINIMUM_TAPES} tapes"
@@ -134,7 +156,14 @@ def viable_tasks(cfg: Config, species: str, labels: pd.DataFrame) -> list[Task]:
 def _window_index(
     base: FeatureSource, labels: pd.DataFrame, task: Task
 ) -> tuple[pd.DataFrame, np.ndarray]:
-    """Windows of this species, relabelled by whether the call type is present."""
+    """Windows of this species, relabelled by whether the call type is present.
+
+    A guard declared against this call type drops the clips too long for their own
+    label to describe a window of them.
+    """
+    if task.max_clip_seconds is not None:
+        labels = labels[labels["duration_seconds"] <= task.max_clip_seconds]
+
     flags = labels.set_index("clip_id")[f"{CALL_PREFIX}{task.call_type}"].fillna(False)
     index = base.index
     positions = np.flatnonzero(index["clip_id"].isin(set(flags.index)).to_numpy())
@@ -166,14 +195,20 @@ def run_task(
     task: Task,
     model_name: str = "xgboost",
     suffix: str = "",
+    repeats: int = 1,
 ) -> None:
     """Fit the audio model and its context control on identical folds.
 
     The control is always trees. It is a floor rather than a contender, and holding
     it fixed keeps the margin comparable across whichever model is on trial.
+
+    Both sides run the same plan, so repeat three fold two of the audio model is the
+    same split as repeat three fold two of the control. That pairing is what the
+    comparison rests on.
     """
     subset, positions = _window_index(base, labels, task)
     folds = folds_for_index(subset, cfg)
+    plan = FoldPlan.repeated(cfg, subset, repeats) if repeats > 1 else FoldPlan.single(folds)
 
     audio = DerivedSource(base, subset, positions, name=f"{base.name}_{task.call_type}")
     context_index = _context_index(subset, labels)
@@ -201,12 +236,12 @@ def run_task(
         result = run_cross_validation(
             cfg,
             source,
-            folds,
+            plan,
             lambda sp=spec, st=settings: sp.build(cfg, st),
             name,
             class_names=list(CLASS_NAMES),
         )
-        save_result(cfg, result)
+        save_result(cfg, result, extra={"max_clip_seconds": task.max_clip_seconds})
         logger.info("%s", result.headline())
 
 
@@ -232,11 +267,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--suffix", default="", help="tag appended to result names, to keep runs side by side"
     )
+    parser.add_argument(
+        "--repeats",
+        type=int,
+        default=1,
+        help="how many times to rerun the whole split under a shifted seed",
+    )
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
+    vocabulary = load_vocabulary()
     labels = clip_labels(cfg, args.species, args.max_clip_seconds)
-    tasks = viable_tasks(cfg, args.species, labels)
+    tasks = viable_tasks(cfg, args.species, labels, vocabulary)
     logger.info(
         "%s: %d viable call types\n%s",
         args.species,
@@ -249,7 +291,15 @@ def main(argv: list[str] | None = None) -> int:
     for task in tasks:
         if args.only and task.call_type != args.only:
             continue
-        run_task(cfg, base, labels, task, model_name=args.model, suffix=args.suffix)
+        run_task(
+            cfg,
+            base,
+            labels,
+            task,
+            model_name=args.model,
+            suffix=args.suffix,
+            repeats=args.repeats,
+        )
     return 0
 
 
