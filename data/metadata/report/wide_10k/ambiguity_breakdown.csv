@@ -1,0 +1,13 @@
+giveaway,model,subset,clips,macro_f1_mean,macro_f1_std
+native sample rate,xgboost,native sample rate unique to a species,2482,0.189435149244253,0.06513092714312242
+native sample rate,xgboost,native sample rate shared by species,5241,0.41752094559814945,0.10477916893835874
+collection code,xgboost,collection code unique to a species,4781,0.3803151150000304,0.09313541821763535
+collection code,xgboost,collection code shared by species,2942,0.16601307164523427,0.03815207039732401
+native sample rate,logbook,native sample rate unique to a species,2482,0.35435212898600843,0.08375697633722352
+native sample rate,logbook,native sample rate shared by species,5241,0.8993001185645982,0.09182672018276099
+collection code,logbook,collection code unique to a species,4781,0.7208193567123273,0.06854452826620294
+collection code,logbook,collection code shared by species,2942,0.3106235076518649,0.04832410276980654
+native sample rate,metadata,native sample rate unique to a species,2482,0.2709867525971676,0.10443373050531216
+native sample rate,metadata,native sample rate shared by species,5241,0.5488793913329194,0.133070679494084
+collection code,metadata,collection code unique to a species,4781,0.4949532383337584,0.10534503129751294
+collection code,metadata,collection code shared by species,2942,0.1991503340539831,0.05298356502534888

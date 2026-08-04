@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-08-03T17:45:23+00:00",
+  "recorded_at": "2026-08-03T22:25:32+00:00",
   "config": {
     "name": "base_10k",
     "source": "base.yaml",
@@ -14,7 +14,7 @@
     "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
   },
   "git": {
-    "commit": "d1165e74c5c8e3477b3041621a0f5fdb158b956a",
+    "commit": "a41fa6efe20f253036874ba9b348f274c00217b7",
     "branch": "main",
     "dirty": true
   },
@@ -42,5 +42,7 @@
     "cuda": "12.6"
   },
   "model": "calltype_killerwhale_whistle_context",
-  "feature_source": "context"
+  "feature_source": "context",
+  "splits": 50,
+  "max_clip_seconds": null
 }

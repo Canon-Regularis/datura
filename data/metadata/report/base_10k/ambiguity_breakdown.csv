@@ -1,9 +1,21 @@
-model,subset,clips,macro_f1_mean,macro_f1_std
-xgboost,rate unique to a species,3313,0.7105391396488809,0.1323126032131357
-xgboost,rate shared by species,847,0.6634635133165054,0.13661469609083982
-cnn,rate unique to a species,3313,0.6236771238683667,0.13884673709853218
-cnn,rate shared by species,847,0.6630771925658914,0.14152996586147326
-cnn_small,rate unique to a species,3313,0.6902570805752085,0.1903335059295775
-cnn_small,rate shared by species,847,0.6776496333098546,0.1642903759051776
-metadata,rate unique to a species,3313,0.8780801899817473,0.1888706701802286
-metadata,rate shared by species,847,0.6887908808933422,0.1912852403926484
+giveaway,model,subset,clips,macro_f1_mean,macro_f1_std
+native sample rate,xgboost,native sample rate unique to a species,3313,0.7105391396488809,0.1323126032131357
+native sample rate,xgboost,native sample rate shared by species,847,0.6634635133165054,0.13661469609083982
+collection code,xgboost,collection code unique to a species,3801,0.7544277045489188,0.06910942972610026
+collection code,xgboost,collection code shared by species,359,0.4107935452056329,0.18805477812297555
+native sample rate,cnn,native sample rate unique to a species,3313,0.6236771238683667,0.13884673709853218
+native sample rate,cnn,native sample rate shared by species,847,0.6630771925658914,0.14152996586147326
+collection code,cnn,collection code unique to a species,3801,0.6883144513692645,0.13534138159839967
+collection code,cnn,collection code shared by species,359,0.4042513319053111,0.14260596870203582
+native sample rate,cnn_small,native sample rate unique to a species,3313,0.6902570805752085,0.1903335059295775
+native sample rate,cnn_small,native sample rate shared by species,847,0.6776496333098546,0.1642903759051776
+collection code,cnn_small,collection code unique to a species,3801,0.7437908261983088,0.16902686551508903
+collection code,cnn_small,collection code shared by species,359,0.3617835671738478,0.05767196579799717
+native sample rate,logbook,native sample rate unique to a species,3313,0.9320487403669807,0.13411413407834868
+native sample rate,logbook,native sample rate shared by species,847,0.8636469115865592,0.16545075639284518
+collection code,logbook,collection code unique to a species,3801,0.9977561006940904,0.004443406738010289
+collection code,logbook,collection code shared by species,359,0.4255828663048115,0.19635589641142775
+native sample rate,metadata,native sample rate unique to a species,3313,0.8780801899817473,0.1888706701802286
+native sample rate,metadata,native sample rate shared by species,847,0.6887908808933422,0.1912852403926484
+collection code,metadata,collection code unique to a species,3801,0.8675924497037107,0.1361051641056723
+collection code,metadata,collection code shared by species,359,0.4651162790697674,0.16490393040517168
