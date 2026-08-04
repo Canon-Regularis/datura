@@ -1,0 +1,16 @@
+species,drop_reason,clips,tapes
+Beluga_WhiteWhale,clip_too_short,19,4
+HumpbackWhale,clip_too_short,1,1
+HumpbackWhale,native_rate_below_target,57,3
+KillerWhale,clip_too_short,46,15
+Long_FinnedPilotWhale,clip_too_short,37,5
+NorthernRightWhale,clip_too_short,2,1
+NorthernRightWhale,native_rate_below_target,142,6
+Short_Finned(Pacific)PilotWhale,clip_too_short,49,4
+SpermWhale,clip_too_short,366,19
+SpinnerDolphin,clip_too_short,81,4
+StripedDolphin,clip_too_short,23,5
+Walrus,clip_too_short,1,1
+Walrus,native_rate_below_target,10,1
+WeddellSeal,clip_too_short,28,4
+WeddellSeal,native_rate_below_target,3,1

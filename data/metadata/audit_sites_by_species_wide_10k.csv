@@ -1,0 +1,115 @@
+species,site,clips,tapes
+Beluga_WhiteWhale,"Saguenay River, Canada",48,2
+Beluga_WhiteWhale,"New York Aquarium, NY",26,2
+Beluga_WhiteWhale,"Ile aux Coudres, PQ, Canada",17,1
+Beluga_WhiteWhale,"Baie Ste. Catherine, CanadaX ",14,1
+Beluga_WhiteWhale,"Baie Ste. Catherine, Canada",11,3
+Beluga_WhiteWhale,"New York Aquarium, New York",6,2
+Beluga_WhiteWhale,"E Cumins Inlet, Stratton Is.",4,1
+Beluga_WhiteWhale,"Saguenay River, Quebec, Canada",3,1
+Beluga_WhiteWhale,"Passe Pierre, Saguenay River, Canada",2,1
+HumpbackWhale,"Tortola, British Virgin IslandsO  ",254,1
+HumpbackWhale,"Off Maui, HI",70,1
+HumpbackWhale,"Argus Island, Bermuda",37,1
+HumpbackWhale,"1-1.5 miles North of Tortola, British Virgin Islands",35,1
+HumpbackWhale,"Plantagenet Bank, Bermuda",31,1
+HumpbackWhale,"3 miles N of San Juan, Puerto Rico",29,1
+HumpbackWhale,"Off Gibbs Hill Light, Bermuda",27,1
+HumpbackWhale,"Castle Harbour, Bermuda",24,1
+HumpbackWhale,"St. David's Island, Bermuda",20,1
+HumpbackWhale,"Three to four miles N. of Crafton Is., Prince William Sound, Alaska",6,1
+HumpbackWhale,,5,2
+HumpbackWhale,"over Plantagenet Banks, Bermuda",3,1
+HumpbackWhale,Bermuda,2,1
+HumpbackWhale,"Off Maui, HIBD",2,1
+HumpbackWhale,"off Gibbs Hill Light, Bermuda",1,1
+KillerWhale,Oregon Coast Aquarium,993,41
+KillerWhale,"Kikvika, Norway",471,5
+KillerWhale,"Oregon Coastal Aquarium, Newport, OR",431,8
+KillerWhale,"80 mi. south of Martha's Vineyard, Massachusetts",272,1
+KillerWhale,"Vancouver, British Columbia",227,5
+KillerWhale,"Andenes, Norway",140,1
+KillerWhale,"Dabob Bay, Seattle, Washington",33,1
+KillerWhale,"Outside St. John's Hbr., Newfoundland",25,1
+KillerWhale,"Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",5,1
+KillerWhale,"T3 Ice Island, Canada",3,1
+KillerWhale,"Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",1,1
+Long_FinnedPilotWhale,"South of Sable Island, North Atlantic",247,1
+Long_FinnedPilotWhale,,225,2
+Long_FinnedPilotWhale,W of Browns Bank,135,4
+Long_FinnedPilotWhale,SE Sable Island,127,1
+Long_FinnedPilotWhale,"Gully, SE Sable I., Canada",96,1
+Long_FinnedPilotWhale,"Dildo Arm, Trinity Bay, Newfoundland, Canada",62,1
+Long_FinnedPilotWhale,Western North Atlantic,51,1
+Long_FinnedPilotWhale,90 miles E of Gibraltar,46,1
+Long_FinnedPilotWhale,"Near San Remo, Italy",25,1
+Long_FinnedPilotWhale,"Northern edge of Georges Bank, western North Atlantic",23,2
+Long_FinnedPilotWhale,"Western North Atlantic, between Block Canyon and Atlantis Canyon",14,1
+Long_FinnedPilotWhale,"Trinity Bay, Newfoundland",13,1
+Long_FinnedPilotWhale,"Sasuit Harbor, Dennis, Cape Cod MA",2,1
+Long_FinnedPilotWhale,SE Sable Islandx,1,1
+NorthernRightWhale,"Bay of Fundy, near Wolves Is.",113,4
+NorthernRightWhale,"Race Point, Cape Cod Bay, MA",78,4
+NorthernRightWhale,"Vineyard Sound, Ma.",75,4
+NorthernRightWhale,"Cape Cod Bay, MA",53,4
+NorthernRightWhale,"3 1/2 mi. ENE of canal, Cape Cod Bay, MA",23,1
+Short_Finned(Pacific)PilotWhale,Dominica,461,4
+Short_Finned(Pacific)PilotWhale,"11 mi. WSW West Cay, Bequia",29,1
+Short_Finned(Pacific)PilotWhale,"Marineland of the Pacific, Los Angeles, CA",26,1
+Short_Finned(Pacific)PilotWhale,"11 miles NW of Bimini, Northern Bahamas",17,1
+Short_Finned(Pacific)PilotWhale,"1 mi. off SE tip of Santa Catalina, Calif.",12,1
+Short_Finned(Pacific)PilotWhale,"NW arm of Tongue of the Ocean, Northern Bahamas",6,1
+Short_Finned(Pacific)PilotWhale,"10 mi. SE of San Pedro Light, Santa Cruz Island, California",3,2
+Short_Finned(Pacific)PilotWhale,"West end of Catalina Island, California",3,1
+Short_Finned(Pacific)PilotWhale,"Bimini, Bahamas",1,1
+SpermWhale,Dominica,339,26
+SpermWhale,50 mi. NE Malta,124,4
+SpermWhale,"Ligurian Sea, NW Italy",95,1
+SpermWhale,DOMINICA,86,5
+SpermWhale,,67,3
+SpermWhale,Madeira,63,1
+SpermWhale,W of Browns Bank,31,2
+SpermWhale,"N of Selina, Sicily",29,1
+SpermWhale,Delaware,24,1
+SpermWhale,N end of Dominica,24,2
+SpermWhale,"Gully, SE Sable I., Canada  BD",22,1
+SpermWhale,"Near Filicudi, Italy",21,1
+SpermWhale,"Lower end of Lanzarote Is., Canary I.",17,1
+SpermWhale,"South of Sable Island, North Atlantic",17,1
+SpermWhale,"Sable Island, Nova Scotia",12,2
+SpermWhale,"3-4 mi. off Roseau, Dominica",11,1
+SpermWhale,Bequia,11,1
+SpermWhale,N of Selina,7,1
+SpermWhale,Dominica Is,5,1
+SpermWhale,"3-4 mi. off Roseau, Dominica  BD",2,1
+SpermWhale,Bermuda,2,1
+SpermWhale,Dominica IsBD,2,1
+SpermWhale,BermudaBD,1,1
+SpermWhale,Dominica  E,1,1
+SpinnerDolphin,"Kealakekua Bay, Hawaii",399,9
+SpinnerDolphin,3 mi. WSW St. Vincent,30,1
+SpinnerDolphin,Off St. Vincent,10,1
+SpinnerDolphin,"W of Wallilabu Bay, Bequia",4,1
+StripedDolphin,15 mi. E. Sicily,250,1
+StripedDolphin,Delaware,120,1
+StripedDolphin,"SSE Sable I., Canada",93,1
+StripedDolphin,,81,3
+StripedDolphin,"19 mi NNW of Alicudi Island, Italy",56,1
+StripedDolphin,"Near Capraia, Italy",45,1
+StripedDolphin,SE of Ustica,11,1
+StripedDolphin,"Gully, SE Sable I., Canada",2,1
+Walrus,"Marineland, Los Angeles, Calif.",149,1
+Walrus,60 - 70 nautical mi. S of St. Lawrence I.,55,4
+Walrus,South of St. Lawrence Island,29,1
+Walrus,60-70 nautical mi. S of St. Lawrence I.,9,1
+Walrus,"Gambell, St. Lawrence I., Alaska",9,1
+Walrus,"New York Aquarium, NY",4,1
+Walrus,"15 mi. W of Gambell, St. Lawrence I., Alaska",3,1
+Walrus,60- 70 nautical mi. S of St. Lawrence I.,3,1
+Walrus,Bering Strait,1,1
+WeddellSeal,"1/2 mile South of Castle Rock Sulphur Cones, Antarctica",39,3
+WeddellSeal,"2.25 mi. W of Castle Rock, McMurdo Sound, Antarctica",29,4
+WeddellSeal,"2.25 mi. west of Castle Rock, McMurdo Sound, Antarctica",18,2
+WeddellSeal,"Razor Back Rock, Antarctica",10,1
+WeddellSeal,"McMurdo Sound, Antarctica",5,1
+WeddellSeal,"2.25 mi. W of Castle Rock, McMurdo Sound",1,1

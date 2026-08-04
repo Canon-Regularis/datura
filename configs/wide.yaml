@@ -1,0 +1,69 @@
+# Breadth variant. Same band and same split as base.yaml; eleven species instead of
+# three. Compare against base.yaml to see whether a conclusion drawn on 134
+# recordings survives 243 of them.
+#
+# The eleven are every species in the archive carrying at least ten tapes that
+# survive the 10 kHz filter, measured by reading the header of all 15,248 wavs. Ten
+# is the same bar src/train/calltypes.py already uses for a call type: five folds
+# then put two test tapes per fold behind the thinnest class, which is what humpback
+# already gets. At eight tapes it would be 1.6, and a fold with no test tape for a
+# class makes macro-F1 undefined in places.
+#
+#   KillerWhale                      65 tapes   Short_Finned(Pacific)PilotWhale  12
+#   SpermWhale                       63         Beluga_WhiteWhale                12
+#   Long_FinnedPilotWhale            18         WeddellSeal                      11
+#   NorthernRightWhale               17         Walrus                           11
+#   HumpbackWhale                    12         StripedDolphin                   10
+#   SpinnerDolphin                   12
+#
+# Fin whale is still out. 569 of its 580 clips run between 320 and 640 Hz, so it
+# shares no usable band with anything here.
+name: wide_10k
+
+dataset:
+  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_sha256: 6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e
+  archive_root: Watkins_Marine_Mammal_Sound_Database
+  species:
+    - HumpbackWhale
+    - SpermWhale
+    - KillerWhale
+    - Long_FinnedPilotWhale
+    - NorthernRightWhale
+    - SpinnerDolphin
+    - Short_Finned(Pacific)PilotWhale
+    - Beluga_WhiteWhale
+    - WeddellSeal
+    - Walrus
+    - StripedDolphin
+
+audio:
+  # Identical to base.yaml. The species list is the only thing that differs, so any
+  # gap between the two runs is breadth and nothing else.
+  target_sample_rate: 10000
+  min_native_sample_rate: 10000
+  window_seconds: 2.0
+  hop_seconds: 1.0
+  min_clip_seconds: 0.5
+  pad_mode: reflect
+  max_windows_per_clip: 16
+
+spectrogram:
+  n_fft: 512
+  hop_length: 64
+  n_mels: 64
+  fmin: 50
+  fmax: 4900
+
+split:
+  n_folds: 5
+  seed: 1234
+  tape_id_length: 5
+  group_column: tape_id
+
+paths:
+  raw: data/raw
+  metadata: data/metadata
+  processed: data/processed
+  reports: data/metadata/report
