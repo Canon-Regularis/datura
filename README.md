@@ -330,4 +330,4 @@ reporting that it cannot read it.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+Apache 2.0. See [LICENSE](LICENSE).
