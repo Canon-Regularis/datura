@@ -50,6 +50,38 @@ class Family:
         """Every result in the family, control last."""
         return (*self.members, self.control)
 
+    @property
+    def floors(self) -> tuple[str, ...]:
+        """Every result in the family that is never given the recording."""
+        silent = {spec.name for spec in models.specs() if not spec.hears_audio}
+        return tuple(name for name in self.names if name in silent)
+
+
+def strongest_floor(cfg: Config, family: Family) -> str | None:
+    """The highest scoring model in this family that hears no audio.
+
+    A control is only a floor while nothing else that ignores the recording beats
+    it, and the metadata control was built before anyone knew what else the
+    paperwork carried. Where a family holds two such models, the higher one is the
+    number an audio result actually has to clear, and the gap between them says how
+    much of the floor was equipment and how much was everything else written down.
+
+    ``None`` when the family has nothing better than the control it already names,
+    which is every family that was never given a second one.
+    """
+    floors = family.floors
+    if len(floors) < 2:
+        return None
+
+    scores = {name: _headline_score(cfg, name) for name in floors}
+    best = max(scores, key=scores.get)
+    return None if best == family.control else best
+
+
+def _headline_score(cfg: Config, name: str, metric: str = "macro_f1") -> float:
+    summary = pd.read_csv(config_directory(cfg) / name / SUMMARY_FILE)
+    return float(summary.loc[summary["metric"] == metric, "mean"].iloc[0])
+
 
 def result_names(cfg: Config) -> list[str]:
     """Every directory under this configuration that a model actually wrote."""
