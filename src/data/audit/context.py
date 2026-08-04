@@ -13,6 +13,57 @@ import pandas as pd
 from src.data.annotations import call_columns
 from src.data.notes import CALL_PREFIX
 
+# The fields a held out score is split on, and what to call each one in a report.
+# Native sample rate was the first field found to hand over the species; the
+# collection code the field note opens with is the second and the stronger. Site is
+# measured by ``site_giveaway`` but not split on, because it is nearly constant
+# within a collection and would say the same thing twice.
+GIVEAWAY_FIELDS = {
+    "native_sample_rate": "native sample rate",
+    "collection_code": "collection code",
+}
+
+
+def species_per_value(frame: pd.DataFrame, column: str) -> pd.Series:
+    """How many species each value of one column is used by."""
+    return frame.groupby(column)["species"].nunique()
+
+
+def shared_values(frame: pd.DataFrame, column: str) -> set:
+    """The values of one column that more than one species uses.
+
+    A value used by exactly one species names that species. Everything asking how
+    much a field gives away is asking about this set, or about its complement, so it
+    is computed once.
+    """
+    counts = species_per_value(frame, column)
+    return set(counts[counts > 1].index)
+
+
+def giveaway_masks(
+    manifest: pd.DataFrame, annotations: pd.DataFrame | None = None
+) -> dict[str, pd.Series]:
+    """Per field, a clip indexed flag saying whether its value is shared.
+
+    Splitting held out clips on this asks the question a headline score cannot: where
+    the recording does not name the species by itself, does listening to it still
+    help? A field the notes do not carry is left out rather than guessed at, so a
+    collection whose annotations were never fetched still gets the sample rate split.
+    """
+    joined = manifest
+    if annotations is not None:
+        joined = manifest.merge(
+            annotations[["clip_id", "collection_code"]], on="clip_id", how="left"
+        )
+
+    masks = {}
+    for column, label in GIVEAWAY_FIELDS.items():
+        if column not in joined.columns:
+            continue
+        shared = shared_values(joined, column)
+        masks[label] = joined.set_index("clip_id")[column].isin(shared)
+    return masks
+
 
 def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
     """How much of the species label the recording site hands over on its own.
@@ -23,7 +74,7 @@ def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     call type work can be built to avoid repeating the mistake.
     """
     joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")
-    species_per_site = joined.groupby("site")["species"].nunique()
+    species_per_site = species_per_value(joined, "site")
     joined["site_species_count"] = joined["site"].map(species_per_site)
 
     unique_sites = int((species_per_site == 1).sum())
@@ -51,7 +102,7 @@ def code_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     joined = manifest.merge(annotations[["clip_id", "collection_code"]], on="clip_id", how="left")
     coded = joined[joined["collection_code"].fillna("") != ""]
 
-    species_per_code = coded.groupby("collection_code")["species"].nunique()
+    species_per_code = species_per_value(coded, "collection_code")
     unique_codes = species_per_code[species_per_code == 1].index
     unique_clips = int(coded["collection_code"].isin(unique_codes).sum())
 

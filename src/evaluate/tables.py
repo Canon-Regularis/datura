@@ -13,6 +13,7 @@ import pandas as pd
 from src import scoring, uncertainty
 from src.config import Config
 from src.data import annotations
+from src.data.audit import context as audit
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
 from src.evaluate import families
@@ -123,40 +124,18 @@ def family_intervals(
     return pd.DataFrame(rows)
 
 
-def _shared_values(frame: pd.DataFrame, column: str) -> set:
-    """The values of one column that more than one species uses."""
-    per_value = frame.groupby(column)["species"].nunique()
-    return set(per_value[per_value > 1].index)
-
-
 def giveaways(cfg: Config) -> dict[str, pd.Series]:
     """Each field that can hand over the species, mapped clip to giveaway or not.
 
-    Native sample rate was the first one found. The collection code the field note
-    opens with is the second, and it is the stronger of the two. Both are properties
-    of how a recording was made rather than of the animal, so both deserve the same
-    treatment: split the test clips on whether the field is a giveaway, and see
-    whether listening still helps where it is not.
+    The calculation belongs with the audit tables that report the same thing in
+    summary; this loads what it needs and hands off.
     """
     manifest = load_manifest(cfg, kept_only=True)
-    fields = {"native sample rate": manifest.set_index("clip_id")["native_sample_rate"]}
-
     try:
         parsed = annotations.load(cfg)
     except annotations.AnnotationError:
-        return {
-            name: series.isin(_shared_values(manifest, "native_sample_rate"))
-            for name, series in fields.items()
-        }
-
-    coded = manifest.merge(parsed[["clip_id", "collection_code"]], on="clip_id", how="left")
-    fields["collection code"] = coded.set_index("clip_id")["collection_code"]
-
-    shared = {
-        "native sample rate": _shared_values(manifest, "native_sample_rate"),
-        "collection code": _shared_values(coded, "collection_code"),
-    }
-    return {name: series.isin(shared[name]) for name, series in fields.items()}
+        return audit.giveaway_masks(manifest)
+    return audit.giveaway_masks(manifest, parsed)
 
 
 def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
