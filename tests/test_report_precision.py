@@ -17,7 +17,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.evaluate.report import CSV_DECIMALS, write_table
+from src.evaluate.artifacts import DECIMALS, write_table
 
 
 def test_a_table_is_written_at_the_declared_precision(tmp_path):
@@ -46,8 +46,8 @@ def test_the_rounding_is_far_coarser_than_the_disagreement_and_far_finer_than_th
     libm_disagreement = 1.3e-17
     finest_the_repo_ever_prints = 1e-4
 
-    assert libm_disagreement * 100 < 10.0**-CSV_DECIMALS
-    assert finest_the_repo_ever_prints > 10.0**-CSV_DECIMALS
+    assert libm_disagreement * 100 < 10.0**-DECIMALS
+    assert finest_the_repo_ever_prints > 10.0**-DECIMALS
 
 
 def test_rounding_leaves_every_reported_figure_intact(tmp_path):
@@ -61,7 +61,7 @@ def test_rounding_leaves_every_reported_figure_intact(tmp_path):
     )
     written = pd.read_csv(write_table(quoted, tmp_path / "m.csv"))
 
-    assert np.allclose(written.to_numpy(), quoted.to_numpy(), atol=10.0**-CSV_DECIMALS)
+    assert np.allclose(written.to_numpy(), quoted.to_numpy(), atol=10.0**-DECIMALS)
     assert written.round(4).equals(quoted.round(4)), "the printed precision is untouched"
 
 
