@@ -32,11 +32,6 @@ def parser_for(description: str | None) -> argparse.ArgumentParser:
     return parser
 
 
-def add_model_config(parser: argparse.ArgumentParser, default: str) -> None:
-    """Where a model's hyperparameters come from."""
-    parser.add_argument("--model-config", default=default, help="model hyperparameters")
-
-
 def add_variant_name(parser: argparse.ArgumentParser, default: str = "cnn") -> None:
     """Which result directory a trained variant writes to."""
     parser.add_argument("--name", default=default, help="result directory for this variant")

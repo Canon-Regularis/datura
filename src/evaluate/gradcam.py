@@ -12,7 +12,6 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from src.features.source import RowView
 from src.models.cnn import SpectrogramCNN
 
 
@@ -66,12 +65,3 @@ class GradCam:
         peak = flat.max(dim=1, keepdim=True).values.clamp(min=1e-8)
         normalised = (flat / peak).view(maps.shape[0], *inputs.shape[-2:])
         return normalised.cpu().numpy(), predicted.cpu().numpy()
-
-
-def sample_windows(
-    view: RowView, index_positions: np.ndarray, per_group: int, rng: np.random.Generator
-) -> np.ndarray:
-    """Pick a bounded, reproducible sample of window positions."""
-    if len(index_positions) <= per_group:
-        return index_positions
-    return rng.choice(index_positions, size=per_group, replace=False)

@@ -91,20 +91,3 @@ def format_test_tapes(cfg: Config, source: FeatureSource, folds: list[Fold]) -> 
     held_out = summary[summary["part"] == "test"]
     pivot = held_out.pivot(index="fold", columns="species", values="tapes")
     return pivot.to_string()
-
-
-def describe(cfg: Config, source: FeatureSource, folds: list[Fold]) -> tuple[list[Fold], str]:
-    """Build folds, save their shape, and return them with a table to log."""
-    save_summary(cfg, source, folds)
-    return folds, format_test_tapes(cfg, source, folds)
-
-
-def clip_counts(cfg: Config, source: FeatureSource) -> pd.DataFrame:
-    """Clips and independent recordings per class behind the current feature cache."""
-    group_column = cfg.split.group_column
-    return (
-        _clips(cfg, source)
-        .groupby("species")
-        .agg(clips=("clip_id", "size"), tapes=(group_column, "nunique"))
-        .reset_index()
-    )

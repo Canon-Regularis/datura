@@ -91,13 +91,14 @@ jobs:
 
       - run: uv sync --extra cpu
 
-      # The manifests and per-clip predictions are committed, so both reports rebuild
+      # The manifests and per-clip predictions are committed, so every report rebuilds
       # without the 6.7 GB archive. If a table stops regenerating, or regenerates
       # differently, this job is where it surfaces.
-      - name: Rebuild both reports
+      - name: Rebuild every report
         run: |
           uv run python -m src.evaluate.report --config configs/base.yaml
           uv run python -m src.evaluate.report --config configs/base_5k.yaml
+          uv run python -m src.evaluate.report --config configs/wide.yaml
 
       # Figures and provenance are excluded. Matplotlib output is not byte-stable
       # across versions, and provenance carries a timestamp by design.

@@ -23,16 +23,17 @@ from dataclasses import dataclass
 
 from src import cli
 from src.config import Config
+from src.data import annotations as annotations_cli
 from src.data import download as download_cli
 from src.data import manifest as manifest_cli
 from src.errors import DaturaError
 from src.evaluate import explain as explain_cli
 from src.evaluate import report as report_cli
-from src.features import cache
 from src.features import extract as extract_cli
 from src.features import registry as features
 from src.models import registry as models
-from src.results import has_results, model_directory
+from src.results import config_directory, has_results, model_directory
+from src.train import calltypes as calltypes_cli
 from src.train import cnn as cnn_cli
 from src.train import xgb as xgb_cli
 
@@ -47,6 +48,10 @@ EXPLAINED_FOLD = "3"
 # cheap enough to answer that with repetition. The networks stay on one split
 # because ten of them is most of a day of GPU for the same question.
 TREE_REPEATS = "10"
+
+# Which species the call type tasks are posed inside. Every other species in the
+# study has no call type reaching the minimum of 60 clips over 10 tapes.
+CALL_TYPE_SPECIES = ("SpermWhale", "KillerWhale")
 
 
 class UnknownStage(DaturaError):
@@ -75,6 +80,13 @@ def _acquisition_stages(cfg: Config, config_path: str, skip_download: bool) -> l
             lambda: root.exists() and all((root / name).exists() for name in cfg.dataset.species),
         ),
         Stage(
+            # Before the manifest, because the audit tables describing the field
+            # notes are built as part of it.
+            "annotations",
+            lambda: annotations_cli.main(["--config", config_path]),
+            lambda: annotations_cli.annotations_path(cfg).exists(),
+        ),
+        Stage(
             "manifest",
             lambda: manifest_cli.main(["--config", config_path]),
             lambda: manifest_cli.manifest_path(cfg).exists(),
@@ -82,7 +94,7 @@ def _acquisition_stages(cfg: Config, config_path: str, skip_download: bool) -> l
         Stage(
             "features",
             lambda: extract_cli.main(["--config", config_path]),
-            lambda: all(cache.exists(cfg, kind) for kind in features.kinds()),
+            lambda: all(features.cache_exists(kind, cfg) for kind in features.kinds()),
         ),
     ]
 
@@ -110,6 +122,33 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
             )
         )
     return stages
+
+
+def _call_type_stages(cfg: Config, config_path: str) -> list[Stage]:
+    """The within species call type tasks, one stage per species.
+
+    These were run by hand for a long time, which meant a full pipeline run
+    reproduced the species results and none of the call type ones, while the report
+    printed both.
+    """
+    return [
+        Stage(
+            f"calltypes_{species.lower()}",
+            lambda s=species: calltypes_cli.main(
+                ["--config", config_path, "--species", s, "--repeats", TREE_REPEATS]
+            ),
+            lambda s=species: any(
+                name.startswith(f"calltype_{s.lower()}_") and has_results(cfg, name)
+                for name in _existing_results(cfg)
+            ),
+        )
+        for species in CALL_TYPE_SPECIES
+    ]
+
+
+def _existing_results(cfg: Config) -> list[str]:
+    directory = config_directory(cfg)
+    return [child.name for child in directory.iterdir()] if directory.exists() else []
 
 
 def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
@@ -141,6 +180,7 @@ def build_stages(cfg: Config, config_path: str, *, skip_download: bool) -> list[
     return [
         *_acquisition_stages(cfg, config_path, skip_download),
         *_training_stages(cfg, config_path),
+        *_call_type_stages(cfg, config_path),
         *_reporting_stages(cfg, config_path),
     ]
 

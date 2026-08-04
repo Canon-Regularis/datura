@@ -23,7 +23,7 @@ from src import cli
 from src.config import Config
 from src.data.splits import Fold, folds_for_index, rows_for_clips
 from src.errors import DaturaError
-from src.evaluate import plots
+from src.evaluate import families, plots
 from src.evaluate.gradcam import GradCam
 from src.evaluate.occlusion import band_occlusion
 from src.features import registry as features
@@ -96,6 +96,20 @@ def peak_frequencies(heatmaps: np.ndarray, frequencies: np.ndarray, labels: list
     )
 
 
+def _class_names(cfg: Config, name: str) -> list[str]:
+    """What this result's labels mean, read from the result rather than assumed.
+
+    The species set was hardcoded here, so a call type model could not be explained
+    even though the occlusion test never cared what the classes were. Every result
+    writes its classes into its own confusion matrix, which is where families reads
+    them from too.
+    """
+    try:
+        return list(families.class_names_of(cfg, name))
+    except families.FamilyError:
+        return list(cfg.dataset.species)
+
+
 def run(
     cfg: Config,
     settings: dict,
@@ -103,7 +117,7 @@ def run(
     source: CachedFeatureSource,
     name: str,
 ) -> None:
-    class_names = list(cfg.dataset.species)
+    class_names = _class_names(cfg, name)
     directory = model_directory(cfg, name)
     model = load_fold_model(cfg, settings, fold.index, len(class_names), name)
     rows = rows_for_clips(source.index, fold.test_clips)
