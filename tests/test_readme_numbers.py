@@ -110,23 +110,36 @@ def report_exists() -> None:
 
 
 SPECIES_ROWS = {
-    "logbook, no audio": "logbook",
-    "metadata only, no audio": "metadata",
-    "acoustic features, XGBoost": "xgboost",
-    "log mel CNN, 0.15 M params": "cnn_small",
-    "log mel CNN, 2.8 M params": "cnn",
+    "logbook": "logbook",
+    "metadata": "metadata",
+    "acoustic descriptors, XGBoost": "xgboost",
+    "log mel CNN, 0.15 M": "cnn_small",
+    "log mel CNN, 2.8 M": "cnn",
 }
 
 AGAINST_LOGBOOK = {
-    "XGBoost against the logbook": "xgboost",
-    "CNN 2.8 M against the logbook": "cnn",
-    "CNN 0.15 M against the logbook": "cnn_small",
-    "logbook against the metadata control": "logbook",
+    "XGBoost": "xgboost",
+    "CNN 2.8 M": "cnn",
+    "CNN 0.15 M": "cnn_small",
+    "logbook against metadata": "logbook",
+}
+
+WIDE_ROWS = {
+    "logbook": "logbook",
+    "metadata": "metadata",
+    "acoustic, XGBoost": "xgboost",
+}
+
+AMBIGUITY_ROWS = {
+    "logbook": "logbook",
+    "metadata": "metadata",
+    "acoustic, XGBoost": "xgboost",
+    "log mel CNN": "cnn_small",
 }
 
 
 def test_the_species_scores_match_the_artifact(report_exists):
-    for cells in rows_of("The trees and both no-audio models ran ten repeats"):
+    for cells in rows_of("| model | macro-F1 | audio |"):
         label, score = cells[0], cells[1]
         name = SPECIES_ROWS[label]
         summary = pd.read_csv(REPORTS / "base_10k" / name / "summary.csv")
@@ -138,7 +151,7 @@ def test_the_species_scores_match_the_artifact(report_exists):
 
 
 def test_the_species_table_lists_every_model(report_exists):
-    printed = {cells[0] for cells in rows_of("The trees and both no-audio models ran ten repeats")}
+    printed = {cells[0] for cells in rows_of("| model | macro-F1 | audio |")}
     on_disk = {
         label
         for label, name in SPECIES_ROWS.items()
@@ -157,7 +170,7 @@ def test_the_margins_against_the_logbook_match_the_artifact(report_exists):
     against_logbook = margins("base_10k", control="logbook")
     against_control = margins("base_10k")
 
-    for cells in rows_of("| comparison | margin | 95% interval |"):
+    for cells in rows_of("| comparison | margin | 95% interval | p | agreeing |"):
         label, margin, interval, p_value, agreeing = cells[:5]
         name = AGAINST_LOGBOOK[label]
         table = against_control if name == "logbook" else against_logbook
@@ -172,14 +185,6 @@ def test_the_margins_against_the_logbook_match_the_artifact(report_exists):
         assert agreeing.split(" of ")[1] == str(row["folds"]), f"{label}: fold count"
 
 
-AMBIGUITY_ROWS = {
-    "logbook": "logbook",
-    "metadata": "metadata",
-    "acoustic, XGBoost": "xgboost",
-    "log mel CNN": "cnn_small",
-}
-
-
 def test_the_ambiguity_table_matches_the_artifact(report_exists):
     """One row per model, one column per giveaway on each side of its split."""
     table = pd.read_csv(REPORTS / "base_10k" / "ambiguity_breakdown.csv")
@@ -189,7 +194,7 @@ def test_the_ambiguity_table_matches_the_artifact(report_exists):
         rows = table[(table["giveaway"] == field) & (table["subset"] == f"{field} {side}")]
         return float(rows.set_index("model").loc[model, "macro_f1_mean"])
 
-    for cells in rows_of("| rate gives it away | rate is shared |"):
+    for cells in rows_of("| model | rate unique | rate shared | code unique | code shared |"):
         label, rate_unique, rate_shared, code_unique, code_shared = cells[:5]
         name = AMBIGUITY_ROWS[label]
         assert matches(rate_unique, score("native sample rate", False, name)), f"{label}: rate"
@@ -235,26 +240,19 @@ def test_the_narrow_band_claims_match_the_artifact(report_exists):
     text = README.read_text(encoding="utf-8")
     table = margins("base_5k")
 
-    trees = table.loc["xgboost"]
-    assert f"{abs(trees['margin']):.3f} below the control" in text
-    assert f"p = {trees['p_value']:.3f}" in text
-    assert f"{trees['agreeing']} splits of {trees['folds']}" in text
+    floor = margins("base_5k", control="logbook").loc["xgboost"]
+    assert f"{abs(floor['margin']):.3f} below the logbook" in text
+    assert f"p = {floor['p_value']:.1e}" in text
 
-    network = table.loc["cnn_small"]
-    assert f"{network['margin']:.3f}" in text, "the 5 kHz network result is missing from the README"
-    assert f"p = {network['p_value']:.3f}" in text
-
-
-WIDE_ROWS = {
-    "logbook, no audio": "logbook",
-    "metadata only, no audio": "metadata",
-    "acoustic features, XGBoost": "xgboost",
-}
+    control = table.loc["xgboost"]
+    assert f"{abs(control['margin']):.3f} below the metadata control" in text
+    assert f"p = {control['p_value']:.3f}" in text
+    assert f"{control['agreeing']} of {control['folds']}" in text
 
 
 def test_the_wide_species_table_matches_both_artifacts(report_exists):
     """One column per configuration, so a stale figure in either shows up here."""
-    for cells in rows_of("| model | three species | eleven species |"):
+    for cells in rows_of("| model | 3 species | 11 species |"):
         label, narrow, wide = cells[:3]
         name = WIDE_ROWS[label]
         for config, printed in (("base_10k", narrow), ("wide_10k", wide)):
@@ -270,8 +268,10 @@ def test_the_wide_margins_match_the_artifact(report_exists):
     against_control = margins("wide_10k").loc["logbook"]
 
     assert f"{abs(against_logbook['margin']):.3f} below the logbook" in text
-    assert f"in {against_logbook['agreeing']} splits of {against_logbook['folds']}" in text
+    assert f"p = {against_logbook['p_value']:.1e}" in text
+    assert f"{against_logbook['agreeing']} of {against_logbook['folds']} agreeing" in text
     assert f"gap of {against_control['margin']:.3f}" in text
+    assert f"p = {against_control['p_value']:.1e}" in text
 
 
 def test_the_epoch_claims_match_the_training_curves(report_exists):
