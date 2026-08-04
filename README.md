@@ -282,11 +282,16 @@ src/audio/        decode, resample, window
 src/data/         clips parses identity, notes reads a field note, annotations fetches
                   and parses them, manifest lists the audio, audit describes it,
                   splits holds the fold grouping rule
-src/features/     the extractor interface, its implementations, the cache and the registry
+src/features/     views hands out rows without copying them, source reads the cache,
+                  controls are the models given no audio, plus the extractor
+                  interface, its implementations, the cache and the registry
 src/models/       the classifier interface, the trees, the cnn package, the registry
 src/train/        folds and the repeat plan, one cross validation runner, one session,
-                  and the within species call type tasks
-src/evaluate/     families, tables, figures, occlusion, Grad-CAM, report
+                  tasks decides which call type questions are worth asking and
+                  calltypes answers one
+src/evaluate/     families groups results, tables builds them, sections composes the
+                  document, figures draws it, artifacts writes it, report runs the
+                  lot, plus occlusion and Grad-CAM
 experiments/      notebooks that read artifacts and plot, no training code
 ```
 
