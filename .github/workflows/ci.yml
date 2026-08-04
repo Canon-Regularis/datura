@@ -14,12 +14,16 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Pinned to the uv that wrote uv.lock. The lock is written in a versioned format,
-  # and a uv too old to read the current revision does not fail: it discards the
-  # lock and resolves the dependency tree from scratch. That is how this workflow
-  # came to build a numba from 2021 against Python 3.14 and fall over, when the
-  # numba in the lock ships a wheel for exactly that interpreter. Dependabot bumps
-  # this alongside the actions.
+  # Pinned to the uv that wrote uv.lock, and it has to be at least that version.
+  # The lock is written in a versioned format, and a uv too old to read the current
+  # revision does not fail: it discards the lock and resolves the dependency tree
+  # from scratch. That is how this workflow came to build a numba from 2021 against
+  # Python 3.14 and fall over, when the numba in the lock ships a wheel for exactly
+  # that interpreter.
+  #
+  # Bump this by hand after `uv lock` writes a newer revision; `uv --version` says
+  # what wrote the one in the repo. Dependabot does not maintain it, because it
+  # updates action references and dependencies rather than workflow variables.
   #
   # Every install is `uv sync --locked`, which refuses to run at all unless the lock
   # is present and current. UV_FROZEN would also stop the lock being rewritten, but
