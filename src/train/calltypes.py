@@ -31,133 +31,39 @@ import pandas as pd
 from src import cli
 from src.config import Config
 from src.data import annotations as ann
-from src.data.manifest import load_manifest
-from src.data.notes import CALL_PREFIX, Vocabulary, load_vocabulary
+from src.data.notes import CALL_PREFIX, load_vocabulary
 from src.data.splits import folds_for_index
-from src.errors import DaturaError
 from src.features import registry as features
-from src.features.source import ContextFeatureSource, DerivedSource, FeatureSource
+from src.features.controls import ContextFeatureSource
+from src.features.source import DerivedSource, FeatureSource
 from src.models import registry as models
 from src.models.registry import load_settings
 from src.train.crossval import run_cross_validation, save_result
 from src.train.folds import FoldPlan
+from src.train.tasks import (
+    ABSENT,
+    CLASS_NAMES,
+    PRESENT,
+    CallTypeError,
+    Task,
+    clip_labels,
+    viable_tasks,
+)
 
 logger = logging.getLogger(__name__)
 
-ABSENT = "absent"
-PRESENT = "present"
-CLASS_NAMES = (ABSENT, PRESENT)
-
-# A call type needs enough independent recordings on both sides to be worth fitting.
-# Humpback song sits on two tapes and social sound on one, which would measure
-# memorisation of a single recording rather than anything about the call.
-MINIMUM_TAPES = 10
-MINIMUM_CLIPS = 60
-
-
-class CallTypeError(DaturaError):
-    """Raised when no call type in a species has enough independent recordings."""
-
-
-class Task:
-    """One binary question: does this clip contain this call type?"""
-
-    def __init__(
-        self,
-        species: str,
-        call_type: str,
-        positives: int,
-        tapes: int,
-        max_clip_seconds: float | None = None,
-    ):
-        self.species = species
-        self.call_type = call_type
-        self.positives = positives
-        self.tapes = tapes
-        self.max_clip_seconds = max_clip_seconds
-
-    @property
-    def name(self) -> str:
-        return f"calltype_{self.species.lower()}_{self.call_type}"
-
-    @property
-    def control_name(self) -> str:
-        return f"{self.name}_context"
-
-    def __repr__(self) -> str:
-        guard = "" if self.max_clip_seconds is None else f", clips under {self.max_clip_seconds:g}s"
-        return (
-            f"Task({self.species}, {self.call_type}, "
-            f"{self.positives} clips, {self.tapes} tapes{guard})"
-        )
-
-
-def clip_labels(cfg: Config, species: str, max_clip_seconds: float | None = None) -> pd.DataFrame:
-    """One row per kept clip of this species, carrying every call type flag.
-
-    ``max_clip_seconds`` drops the long recordings, and it exists because the labels
-    are written against a whole cut rather than against a moment in it. A coda
-    labelled clip runs to a median of 64 seconds and a maximum of 24 minutes, while
-    a coda itself lasts a few seconds. Windows sampled across such a recording
-    inherit a label that most of them do not deserve, so a short clip carries a far
-    more honest label than a long one.
-    """
-    manifest = load_manifest(cfg, kept_only=True)
-    parsed = ann.load(cfg)
-    columns = ann.call_columns(parsed)
-    context = [
-        "site",
-        "latitude",
-        "longitude",
-        "collection_code",
-        *ann.condition_columns(parsed),
-    ]
-
-    joined = manifest.merge(parsed[["clip_id", *columns, *context]], on="clip_id", how="left")
-    subset = joined[joined["species"] == species]
-    if max_clip_seconds is not None:
-        before = len(subset)
-        subset = subset[subset["duration_seconds"] <= max_clip_seconds]
-        logger.info(
-            "clips of %s seconds or less: %d of %d kept",
-            max_clip_seconds,
-            len(subset),
-            before,
-        )
-
-    subset = subset.reset_index(drop=True)
-    if subset.empty:
-        raise CallTypeError(f"no kept clips for {species}")
-    return subset
-
-
-def viable_tasks(
-    cfg: Config, species: str, labels: pd.DataFrame, vocabulary: Vocabulary | None = None
-) -> list[Task]:
-    """Call types with enough clips and enough tapes on the positive side.
-
-    Tapes are the binding count, not clips. Cuts from one tape are near duplicates,
-    so a type carried by two recordings has an effective sample size of two however
-    many clips it spans.
-
-    Viability is judged after the call type's own guard is applied, so a type is
-    counted on the clips it will actually be trained on.
-    """
-    tasks = []
-    for column in ann.call_columns(labels):
-        call_type = column.removeprefix(CALL_PREFIX)
-        guard = vocabulary.guard_for(call_type) if vocabulary else None
-        eligible = labels if guard is None else labels[labels["duration_seconds"] <= guard]
-
-        positive = eligible[eligible[column].fillna(False)]
-        tapes = positive["tape_id"].nunique()
-        if len(positive) >= MINIMUM_CLIPS and tapes >= MINIMUM_TAPES:
-            tasks.append(Task(species, call_type, len(positive), tapes, guard))
-    if not tasks:
-        raise CallTypeError(
-            f"no call type in {species} reaches {MINIMUM_CLIPS} clips over {MINIMUM_TAPES} tapes"
-        )
-    return sorted(tasks, key=lambda task: -task.tapes)
+# Re-exported so the entry point stays the one name a reader looks for, while the
+# question of which tasks are viable can be asked without the training stack.
+__all__ = [
+    "ABSENT",
+    "CLASS_NAMES",
+    "PRESENT",
+    "CallTypeError",
+    "Task",
+    "clip_labels",
+    "run_task",
+    "viable_tasks",
+]
 
 
 def _window_index(
@@ -182,18 +88,6 @@ def _window_index(
         species=np.where(present, PRESENT, ABSENT),
     )
     return subset, positions
-
-
-def _context_index(subset: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
-    """The same windows, described by where and under what conditions they were made."""
-    columns = [
-        "site",
-        "latitude",
-        "longitude",
-        "collection_code",
-        *[c for c in labels.columns if c.startswith("cond_")],
-    ]
-    return subset.merge(labels[["clip_id", *columns]], on="clip_id", how="left")
 
 
 def run_task(
@@ -225,7 +119,7 @@ def run_task(
     plan = FoldPlan.repeated(cfg, subset, repeats) if repeats > 1 else FoldPlan.single(folds)
 
     audio = DerivedSource(base, subset, positions, name=f"{base.name}_{task.call_type}")
-    context_index = _context_index(subset, labels)
+    context_index = ann.attach_context(subset, labels)
     control = ContextFeatureSource(
         context_index, [c for c in context_index.columns if c.startswith("cond_")]
     )

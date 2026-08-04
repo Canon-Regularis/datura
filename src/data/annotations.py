@@ -194,6 +194,34 @@ def condition_columns(frame: pd.DataFrame) -> list[str]:
     return [c for c in frame.columns if c.startswith(CONDITION_PREFIX)]
 
 
+# What a note says about the circumstances of a recording, as opposed to what it
+# says about the call. Named here because this module is what parses them, and
+# because the controls that consume them were each carrying their own copy of this
+# list: the collection code went unmeasured for months partly because adding a
+# field meant remembering three separate merges.
+CONTEXT_COLUMNS = ("site", "latitude", "longitude", "collection_code")
+
+
+def context_columns(frame: pd.DataFrame) -> list[str]:
+    """Every note derived column that describes the recording rather than the call."""
+    return [*CONTEXT_COLUMNS, *condition_columns(frame)]
+
+
+def attach_context(index: pd.DataFrame, parsed: pd.DataFrame) -> pd.DataFrame:
+    """Join the circumstances of each recording onto a frame of windows or clips.
+
+    The cached window index carries what the extractor wrote and nothing else, and
+    adding a column to it would invalidate every cached feature array. Joining here
+    costs one merge and leaves the cache alone, which is why every control that sees
+    the notes is built this way.
+    """
+    columns = context_columns(parsed)
+    missing = set(columns) - set(parsed.columns)
+    if missing:
+        raise AnnotationError(f"parsed notes are missing context columns: {sorted(missing)}")
+    return index.merge(parsed[["clip_id", *columns]], on="clip_id", how="left")
+
+
 def _log_summary(frame: pd.DataFrame, species: tuple[str, ...]) -> None:
     subset = frame[frame["species"].isin(species)]
     logger.info(

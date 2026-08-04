@@ -18,7 +18,8 @@ from src.config import Config
 from src.data import annotations as ann
 from src.data.splits import Fold
 from src.features import registry as features
-from src.features.source import FeatureSource, LogbookFeatureSource, MetadataFeatureSource
+from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
+from src.features.source import FeatureSource
 from src.models.registry import LOGBOOK_SOURCE, METADATA_SOURCE, ModelSpec
 from src.train.crossval import run_cross_validation, save_result
 from src.train.folds import FoldPlan, folds_for, format_test_tapes, save_summary
@@ -63,23 +64,13 @@ class Assembly:
 
 
 def _logbook_index(cfg: Config, source: FeatureSource) -> pd.DataFrame | None:
-    """The window index with the field note columns merged onto it.
-
-    The cached index carries what the extractor wrote and nothing else, and adding a
-    column to it would invalidate every cached feature array. Merging here costs one
-    join and leaves hundreds of megabytes of cache alone. The call type control has
-    always been built this way.
-    """
+    """The window index with the circumstances of each recording joined onto it."""
     try:
         parsed = ann.load(cfg)
     except ann.AnnotationError:
         logger.info("no parsed field notes; the logbook model will not be available")
         return None
-
-    columns = ["clip_id", "site", "latitude", "longitude", "collection_code"]
-    return source.index.merge(
-        parsed[[*columns, *ann.condition_columns(parsed)]], on="clip_id", how="left"
-    )
+    return ann.attach_context(source.index, parsed)
 
 
 def assemble(cfg: Config, source_kind: str, repeats: int = 1) -> Assembly:

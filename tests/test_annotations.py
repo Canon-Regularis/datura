@@ -11,7 +11,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.data.annotations import annotate, call_columns, condition_columns
+from src.data.annotations import (
+    AnnotationError,
+    annotate,
+    attach_context,
+    call_columns,
+    condition_columns,
+    context_columns,
+)
 from src.data.notes import CALL_PREFIX, CONDITION_PREFIX, Vocabulary, tag_note
 
 VOCABULARY = Vocabulary(
@@ -151,3 +158,50 @@ def test_column_helpers_select_the_right_prefixes():
         f"{CONDITION_PREFIX}{n}" for n in VOCABULARY.condition_labels
     }
     assert not set(call_columns(frame)) & set(condition_columns(frame))
+
+
+def context_frame() -> pd.DataFrame:
+    return pd.DataFrame(
+        {
+            "clip_id": ["5401800A", "54018001"],
+            "site": ["Bermuda", ""],
+            "latitude": [32.3, None],
+            "longitude": [-64.8, None],
+            "collection_code": ["BA2A", ""],
+            "cond_ship_noise": [True, False],
+            "call_click": [True, True],
+        }
+    )
+
+
+def test_context_columns_are_the_circumstances_and_not_the_call():
+    columns = condition_columns(context_frame())
+    context = context_columns(context_frame())
+
+    assert context == ["site", "latitude", "longitude", "collection_code", *columns]
+    assert not any(name.startswith(CALL_PREFIX) for name in context), (
+        "a call type describes the animal, so no control may see one"
+    )
+
+
+def test_attaching_context_joins_every_circumstance_and_nothing_else():
+    """One list, one merge. Three copies of it is how a field goes unmeasured."""
+    parsed = context_frame()
+    index = pd.DataFrame(
+        {"clip_id": ["5401800A", "5401800A", "54018001"], "window_index": [0, 1, 0]}
+    )
+
+    joined = attach_context(index, parsed)
+
+    assert list(joined.columns) == ["clip_id", "window_index", *context_columns(parsed)]
+    assert len(joined) == 3, "one row per window, not per clip"
+    assert joined["collection_code"].tolist() == ["BA2A", "BA2A", ""]
+    assert CALL_PREFIX + "click" not in joined.columns
+
+
+def test_attaching_context_refuses_notes_that_were_parsed_without_it():
+    stale = context_frame().drop(columns=["collection_code"])
+    index = pd.DataFrame({"clip_id": ["5401800A"]})
+
+    with pytest.raises(AnnotationError, match="collection_code"):
+        attach_context(index, stale)
