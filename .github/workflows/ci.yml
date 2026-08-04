@@ -102,6 +102,11 @@ jobs:
 
       # Figures and provenance are excluded. Matplotlib output is not byte-stable
       # across versions, and provenance carries a timestamp by design.
+      #
+      # The tables are byte-stable because report.py rounds them before writing.
+      # Full float64 repr is not reproducible across platforms: scipy reaches the
+      # t distribution through the platform's libm, and this job caught Windows
+      # and Linux disagreeing in the seventeenth significant figure of a p value.
       - name: Fail if a rebuilt table drifted from the committed one
         run: |
           git diff --stat -- data/metadata/report

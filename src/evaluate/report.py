@@ -33,6 +33,19 @@ from src.results import config_directory, ensure, model_directory, report_path
 
 logger = logging.getLogger(__name__)
 
+# Committed tables get regenerated on another machine and diffed against what is in
+# the repo, so a number has to survive the trip. Most of them do, because they are
+# sums and divisions. The p value and its interval do not: scipy reaches them through
+# the platform's libm, and the same comparison came out as 0.010063775865938413 on
+# Windows and 0.010063775865938426 on Linux. That is a real byte difference and a
+# meaningless numeric one, and it failed the build.
+#
+# Ten decimal places is five orders of magnitude coarser than that disagreement and
+# still far more precision than any number here is read at. A p value written to
+# seventeen significant figures was claiming a precision this design does not have,
+# which is the argument the rest of the repo makes about everything else.
+CSV_DECIMALS = 10
+
 MARGIN_COLUMNS = (
     "Columns beside the margin say what the design resolves. `folds` counts every fold of "
     "every repeat, so a run of ten repeats over five folds shows 50. `low` and `high` bound "
@@ -112,6 +125,16 @@ def _overview(margins: dict[str, pd.DataFrame]) -> pd.DataFrame:
     )
     columns = ["family", "model", "margin", "low", "high", "p_value", "agreeing", "folds"]
     return table[columns].sort_values("p_value").reset_index(drop=True)
+
+
+def write_table(frame: pd.DataFrame, path: Path) -> Path:
+    """Write one table at a precision that regenerates identically elsewhere.
+
+    Every committed CSV goes through here, so none of them can reintroduce the
+    platform dependent last digit that the reproduce job exists to catch.
+    """
+    frame.round(CSV_DECIMALS).to_csv(path, index=False)
+    return path
 
 
 def _no_audio_models() -> set[str]:
@@ -258,7 +281,7 @@ def build(cfg: Config) -> Path:
     intervals = {family.key: tables.family_intervals(cfg, family) for family in discovered}
 
     overview = _overview(margins)
-    overview.to_csv(directory / "family_margins.csv", index=False)
+    write_table(overview, directory / "family_margins.csv")
 
     sections = [
         *_header(cfg, len(discovered)),
@@ -277,11 +300,11 @@ def build(cfg: Config) -> Path:
             continue
 
         comparison = tables.comparison(cfg, list(family.names))
-        comparison.to_csv(directory / "comparison.csv", index=False)
-        margins[family.key].to_csv(directory / "margin_over_control.csv", index=False)
+        write_table(comparison, directory / "comparison.csv")
+        write_table(margins[family.key], directory / "margin_over_control.csv")
 
         ambiguity = tables.ambiguity(cfg, list(family.names))
-        ambiguity.to_csv(directory / "ambiguity_breakdown.csv", index=False)
+        write_table(ambiguity, directory / "ambiguity_breakdown.csv")
 
         figures = _figures(cfg, list(family.names), comparison, ambiguity)
         sections += _species_section(
