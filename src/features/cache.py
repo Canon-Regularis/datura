@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import Config
+from src.features.base import FeatureExtractor
 
 
 @dataclass(frozen=True)
@@ -33,29 +34,33 @@ class FeatureStore:
             )
 
 
-def _digest_for(cfg: Config, extractor_name: str) -> str:
-    return cfg.spectrogram_digest if extractor_name == "logmel" else cfg.audio_digest
+def cache_paths(cfg: Config, extractor: FeatureExtractor) -> tuple[Path, Path]:
+    """Array path and index path for this configuration and extractor.
 
-
-def cache_paths(cfg: Config, extractor_name: str) -> tuple[Path, Path]:
-    """Array path and index path for this configuration and extractor."""
-    stem = f"{cfg.name}_{extractor_name}_{_digest_for(cfg, extractor_name)}"
+    The digest comes from whichever config sections the extractor says it depends
+    on, so this module never needs to know one representation from another. Testing
+    the name here instead would mean a new spectrogram derived representation
+    silently reused a cache built under different mel settings.
+    """
+    stem = f"{cfg.name}_{extractor.name}_{cfg.digest(*extractor.cache_sections)}"
     return (
         cfg.paths.processed / f"{stem}.npy",
         cfg.paths.processed / f"{stem}_index.parquet",
     )
 
 
-def exists(cfg: Config, extractor_name: str) -> bool:
-    array_path, index_path = cache_paths(cfg, extractor_name)
+def exists(cfg: Config, extractor: FeatureExtractor) -> bool:
+    array_path, index_path = cache_paths(cfg, extractor)
     return array_path.exists() and index_path.exists()
 
 
 class FeatureWriter:
     """Streams feature blocks to disk, then seals them into a .npy file."""
 
-    def __init__(self, cfg: Config, extractor_name: str, shape: tuple[int, ...], dtype: np.dtype):
-        self.array_path, self.index_path = cache_paths(cfg, extractor_name)
+    def __init__(
+        self, cfg: Config, extractor: FeatureExtractor, shape: tuple[int, ...], dtype: np.dtype
+    ):
+        self.array_path, self.index_path = cache_paths(cfg, extractor)
         self.array_path.parent.mkdir(parents=True, exist_ok=True)
         self._scratch = self.array_path.with_suffix(".partial")
         self._handle = self._scratch.open("wb")
@@ -93,11 +98,11 @@ def load(array_path: Path, index_path: Path) -> FeatureStore:
     )
 
 
-def load_cached(cfg: Config, extractor_name: str) -> FeatureStore:
-    array_path, index_path = cache_paths(cfg, extractor_name)
+def load_cached(cfg: Config, extractor: FeatureExtractor) -> FeatureStore:
+    array_path, index_path = cache_paths(cfg, extractor)
     if not (array_path.exists() and index_path.exists()):
         raise FileNotFoundError(
-            f"no cached {extractor_name} features for config {cfg.name}; "
+            f"no cached {extractor.name} features for config {cfg.name}; "
             f"run python -m src.features.extract --config {cfg.source.name}"
         )
     return load(array_path, index_path)

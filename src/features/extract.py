@@ -44,7 +44,7 @@ def extract(cfg: Config, extractor: FeatureExtractor, manifest: pd.DataFrame) ->
     """Run one extractor over every kept clip and write the result to the cache."""
     root = cfg.paths.raw / cfg.dataset.archive_root
     shape = extractor.output_shape(cfg.audio.window_samples)
-    writer = cache.FeatureWriter(cfg, extractor.name, shape, extractor.storage_dtype)
+    writer = cache.FeatureWriter(cfg, extractor, shape, extractor.storage_dtype)
 
     index_rows: list[dict] = []
     failures: list[tuple[str, str]] = []
@@ -128,10 +128,10 @@ def main(argv: list[str] | None = None) -> int:
 
     kinds = list(registry.kinds()) if args.extractor == "all" else [args.extractor]
     for kind in kinds:
-        if cache.exists(cfg, kind) and not args.force:
+        extractor = registry.build_extractor(kind, cfg)
+        if cache.exists(cfg, extractor) and not args.force:
             logger.info("%s: cache present, skipping (use --force to rebuild)", kind)
             continue
-        extractor = registry.build_extractor(kind, cfg)
         store = extract(cfg, extractor, manifest)
         _summarise(store, extractor)
     return 0

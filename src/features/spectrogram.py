@@ -42,6 +42,10 @@ class LogMelSpectrogram(FeatureExtractor):
         return "logmel"
 
     @property
+    def cache_sections(self) -> tuple[str, ...]:
+        return ("dataset", "audio", "spectrogram")
+
+    @property
     def storage_dtype(self) -> np.dtype:
         # Values span roughly 80 dB after normalisation, far inside float16 range,
         # and halving the cache keeps the whole set memory mappable.

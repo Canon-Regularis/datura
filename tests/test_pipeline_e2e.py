@@ -157,9 +157,9 @@ def test_features_cover_every_kept_clip(dataset, manifest):
         assert store.index["clip_id"].nunique() == len(kept)
         assert store.index.groupby("clip_id").size().max() <= dataset.audio.max_windows_per_clip
         assert np.isfinite(np.asarray(store.features[:], dtype=np.float32)).all()
-        assert cache.exists(dataset, kind)
+        assert features.cache_exists(kind, dataset)
 
-    logmel = cache.load_cached(dataset, features.LOGMEL)
+    logmel = cache.load_cached(dataset, features.build_extractor(features.LOGMEL, dataset))
     extractor = features.build_extractor(features.LOGMEL, dataset)
     assert logmel.features.shape[1:] == extractor.output_shape(dataset.audio.window_samples)
 
@@ -167,7 +167,7 @@ def test_features_cover_every_kept_clip(dataset, manifest):
 @pytest.mark.slow
 def test_cross_validation_produces_a_report(dataset, manifest):
     source = CachedFeatureSource(
-        cache.load_cached(dataset, features.ACOUSTIC),
+        cache.load_cached(dataset, features.build_extractor(features.ACOUSTIC, dataset)),
         name="acoustic",
         feature_names=features.build_extractor(features.ACOUSTIC, dataset).feature_names(),
     )
@@ -199,14 +199,21 @@ def test_cross_validation_produces_a_report(dataset, manifest):
     directory = dataset.paths.reports / dataset.name
     for name in ("REPORT.md", "comparison.csv", "margin_over_control.csv", "provenance.json"):
         assert (directory / name).exists(), name
-    for name in ("model_comparison.png", "per_class_recall.png", "ambiguity_breakdown.png"):
+    for name in (
+        "model_comparison.png",
+        "per_class_recall.png",
+        "ambiguity_native_sample_rate.png",
+    ):
         assert (directory / name).stat().st_size > 0, name
     assert (model_directory(dataset, "xgboost") / "provenance.json").exists()
 
 
 @pytest.mark.slow
 def test_same_seed_gives_the_same_folds_and_scores(dataset, manifest):
-    source = CachedFeatureSource(cache.load_cached(dataset, features.ACOUSTIC), name="acoustic")
+    source = CachedFeatureSource(
+        cache.load_cached(dataset, features.build_extractor(features.ACOUSTIC, dataset)),
+        name="acoustic",
+    )
     clips = clips_from_index(source.index)
 
     first = make_folds(clips, dataset)
@@ -233,7 +240,10 @@ def test_cnn_trains_and_explains_on_synthetic_audio(dataset, manifest):
     from src.evaluate.occlusion import band_occlusion
     from src.models.cnn import SpectrogramCNN
 
-    source = CachedFeatureSource(cache.load_cached(dataset, features.LOGMEL), name="logmel")
+    source = CachedFeatureSource(
+        cache.load_cached(dataset, features.build_extractor(features.LOGMEL, dataset)),
+        name="logmel",
+    )
     folds = make_folds(clips_from_index(source.index), dataset)
     settings = {
         "model": {"base_width": 4, "n_stages": 2, "blocks_per_stage": 1, "dropout": 0.1},

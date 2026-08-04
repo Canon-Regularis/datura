@@ -71,3 +71,42 @@ def test_split_settings_do_not_touch_either_cache(tmp_path):
     base = _digests(tmp_path, "base")
     reseeded = _digests(tmp_path, "reseeded", split={"n_folds": 4, "seed": 99})
     assert base == reseeded
+
+
+def test_an_extractor_declares_which_settings_its_cache_depends_on(tmp_path):
+    """The cache asks the extractor rather than testing its name.
+
+    Choosing the digest by comparing against the literal "logmel" meant a second
+    spectrogram derived representation would key off the audio settings alone, and
+    changing the mel grid would hand it a stale array with no warning.
+    """
+    import numpy as np
+
+    from src.features.base import FeatureExtractor
+    from src.features.cache import cache_paths
+
+    class Plain(FeatureExtractor):
+        @property
+        def name(self) -> str:
+            return "plain"
+
+        def output_shape(self, window_samples: int) -> tuple[int, ...]:
+            return (4,)
+
+        def transform(self, window: np.ndarray, sample_rate: int) -> np.ndarray:
+            return np.zeros(4, dtype=np.float32)
+
+    class Melly(Plain):
+        @property
+        def name(self) -> str:
+            return "melly"
+
+        @property
+        def cache_sections(self) -> tuple[str, ...]:
+            return ("dataset", "audio", "spectrogram")
+
+    base = load_config(write_config(tmp_path / "base"))
+    finer = load_config(write_config(tmp_path / "finer", spectrogram={"n_mels": 96}))
+
+    assert cache_paths(base, Plain())[0].name == cache_paths(finer, Plain())[0].name
+    assert cache_paths(base, Melly())[0].name != cache_paths(finer, Melly())[0].name

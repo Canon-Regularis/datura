@@ -20,6 +20,12 @@ from src.features import registry as features
 from src.models.base import WindowClassifier
 
 METADATA_SOURCE = "metadata"
+LOGBOOK_SOURCE = "logbook"
+
+# Neither of these hears the recording. The metadata control is the floor every
+# published margin is measured from; the logbook sees the rest of the paperwork
+# besides, and exists to say how much of the floor that paperwork was carrying.
+NO_AUDIO_SOURCES = (METADATA_SOURCE, LOGBOOK_SOURCE)
 
 Builder = Callable[[Config, dict[str, Any]], WindowClassifier]
 
@@ -46,6 +52,11 @@ class ModelSpec:
     trainer: str
     build: Builder
     summary: str
+
+    @property
+    def hears_audio(self) -> bool:
+        """Whether this model is given the recording at all."""
+        return self.source not in NO_AUDIO_SOURCES
 
     @property
     def is_control(self) -> bool:
@@ -102,6 +113,14 @@ _SPECS: tuple[ModelSpec, ...] = (
         build=_build_trees,
         summary="recording metadata only, the floor every audio model must clear",
     ),
+    ModelSpec(
+        name=LOGBOOK_SOURCE,
+        trainer=TREES,
+        source=LOGBOOK_SOURCE,
+        config_file="configs/logbook.yaml",
+        build=_build_trees,
+        summary="everything written down about a recording, and none of the recording",
+    ),
 )
 
 _BY_NAME = {spec.name: spec for spec in _SPECS}
@@ -135,15 +154,14 @@ def get(name: str) -> ModelSpec:
 
 
 def control() -> ModelSpec:
-    """The metadata control. Reports are written relative to it."""
-    return next(spec for spec in _SPECS if spec.is_control)
+    """The metadata control. Reports are written relative to it.
+
+    Named rather than found, because there is now a second model that hears no
+    audio and picking whichever came first would silently move every margin.
+    """
+    return _BY_NAME[METADATA_SOURCE]
 
 
 def trained_by(trainer: str) -> tuple[ModelSpec, ...]:
     """Every model one entry point is responsible for."""
     return tuple(spec for spec in _SPECS if spec.trainer == trainer)
-
-
-def audio_models() -> tuple[ModelSpec, ...]:
-    """Everything that actually listens to the recording."""
-    return tuple(spec for spec in _SPECS if not spec.is_control)

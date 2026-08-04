@@ -28,6 +28,17 @@ class FeatureExtractor(ABC):
     def transform(self, window: np.ndarray, sample_rate: int) -> np.ndarray:
         """Extract from a single window."""
 
+    @property
+    def cache_sections(self) -> tuple[str, ...]:
+        """Config sections whose contents change what this extractor produces.
+
+        The cache filename carries a digest of these, so editing one of them yields
+        a new key and a stale array can never be read back by accident. A
+        representation built off the spectrogram settings has to say so, or changing
+        the mel bands would silently reuse the old cache.
+        """
+        return ("dataset", "audio")
+
     def feature_names(self) -> list[str] | None:
         """Column names for flat representations, or None for image shaped ones."""
         return None
