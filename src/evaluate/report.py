@@ -27,6 +27,7 @@ import pandas as pd
 from src import cli
 from src.config import Config
 from src.evaluate import families, plots, tables
+from src.models import registry as models
 from src.provenance import write as write_provenance
 from src.results import config_directory, ensure, model_directory, report_path
 
@@ -69,8 +70,12 @@ def _figures(
     figures = [
         plots.model_comparison(tables.headline(comparison), directory / "model_comparison.png"),
         plots.per_class_recall(comparison, directory / "per_class_recall.png", class_names),
-        plots.ambiguity_comparison(ambiguity, directory / "ambiguity_breakdown.png"),
     ]
+    for field, rows in ambiguity.groupby("giveaway", sort=False):
+        stem = field.replace(" ", "_")
+        figures.append(
+            plots.ambiguity_comparison(rows, directory / f"ambiguity_{stem}.png"),
+        )
 
     optional = {
         "feature_importance.csv": lambda path, name: plots.feature_importance(
@@ -109,6 +114,51 @@ def _overview(margins: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return table[columns].sort_values("p_value").reset_index(drop=True)
 
 
+def _no_audio_models() -> set[str]:
+    """Every registered model that is never given the recording."""
+    return {spec.name for spec in models.specs() if not spec.hears_audio}
+
+
+def _strongest_floor_section(cfg: Config, family: families.Family) -> list[str]:
+    """Every model against the best a model with no audio manages.
+
+    The metadata control was built before anyone knew what else the paperwork
+    carried, so it is a floor rather than the floor. Reporting the higher one beside
+    it says how much of the gap was equipment and how much was everything else
+    written down about the recording.
+    """
+    floors = [name for name in family.names if name in _no_audio_models()]
+    if len(floors) < 2:
+        return []
+
+    strongest = _best_floor(cfg, family, floors)
+    if strongest == family.control:
+        return []
+
+    against = tables.family_margins(cfg, family, control=strongest)
+    return [
+        f"### Margin over {strongest}, the strongest model that hears no audio",
+        "",
+        f"`{strongest}` also sees the site, the coordinates, the noise conditions and the",
+        "collection code the field note opens with. None of that is the animal, so this is the",
+        "number an audio result has to clear before it is evidence about whales.",
+        "",
+        against.round(4).to_markdown(index=False),
+        "",
+    ]
+
+
+def _best_floor(cfg: Config, family: families.Family, floors: list[str]) -> str:
+    """Whichever no-audio model scores highest, which is the real floor."""
+    scores = {
+        name: pd.read_csv(model_directory(cfg, name) / "summary.csv")
+        .query("metric == 'macro_f1'")["mean"]
+        .iloc[0]
+        for name in floors
+    }
+    return max(scores, key=scores.get)
+
+
 def _species_section(
     cfg: Config,
     family: families.Family,
@@ -129,6 +179,7 @@ def _species_section(
         "",
         margins.round(4).to_markdown(index=False),
         "",
+        *_strongest_floor_section(cfg, family),
         "### Every model, with the range the recordings support",
         "",
         "The interval comes from resampling whole tapes with replacement. Cuts from one tape",

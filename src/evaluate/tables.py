@@ -12,6 +12,7 @@ import pandas as pd
 
 from src import scoring, uncertainty
 from src.config import Config
+from src.data import annotations
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
 from src.evaluate import families
@@ -48,8 +49,14 @@ def _fold_scores(cfg: Config, name: str, metric: str) -> pd.Series:
     )
 
 
-def family_margins(cfg: Config, family: families.Family, metric: str = "macro_f1") -> pd.DataFrame:
-    """Every model in one family against its control, with what the design resolves.
+def family_margins(
+    cfg: Config,
+    family: families.Family,
+    metric: str = "macro_f1",
+    *,
+    control: str | None = None,
+) -> pd.DataFrame:
+    """Every model in one family against a control, with what the design resolves.
 
     The margin alone invites more confidence than a handful of recordings supports.
     The three columns beside it say how much: the interval the paired folds allow,
@@ -57,11 +64,14 @@ def family_margins(cfg: Config, family: families.Family, metric: str = "macro_f1
     worth its space, because a direction holding in most folds is informative even
     where the p value settles nothing.
     """
-    control = _fold_scores(cfg, family.control, metric)
+    floor = control or family.control
+    control_scores = _fold_scores(cfg, floor, metric)
 
     rows = []
     for name in family.members:
-        left, right = uncertainty.shared_folds(_fold_scores(cfg, name, metric), control)
+        if name == floor:
+            continue
+        left, right = uncertainty.shared_folds(_fold_scores(cfg, name, metric), control_scores)
         difference = uncertainty.paired_difference(left, right)
         rows.append(
             {
@@ -113,53 +123,91 @@ def family_intervals(
     return pd.DataFrame(rows)
 
 
-def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
-    """Each model scored with and without the equipment giveaway.
+def _shared_values(frame: pd.DataFrame, column: str) -> set:
+    """The values of one column that more than one species uses."""
+    per_value = frame.groupby(column)["species"].nunique()
+    return set(per_value[per_value > 1].index)
 
-    A native sample rate used by one species hands the answer to anything that can
-    see it; a rate shared by several does not. Splitting the test clips that way
-    asks the question the headline number cannot: when the recording is not a
-    giveaway, does listening to it still help?
+
+def giveaways(cfg: Config) -> dict[str, pd.Series]:
+    """Each field that can hand over the species, mapped clip to giveaway or not.
+
+    Native sample rate was the first one found. The collection code the field note
+    opens with is the second, and it is the stronger of the two. Both are properties
+    of how a recording was made rather than of the animal, so both deserve the same
+    treatment: split the test clips on whether the field is a giveaway, and see
+    whether listening still helps where it is not.
     """
     manifest = load_manifest(cfg, kept_only=True)
-    species_per_rate = manifest.groupby("native_sample_rate")["species"].nunique()
-    shared_rates = set(species_per_rate[species_per_rate > 1].index)
-    rate_of_clip = manifest.set_index("clip_id")["native_sample_rate"]
+    fields = {"native sample rate": manifest.set_index("clip_id")["native_sample_rate"]}
 
+    try:
+        parsed = annotations.load(cfg)
+    except annotations.AnnotationError:
+        return {
+            name: series.isin(_shared_values(manifest, "native_sample_rate"))
+            for name, series in fields.items()
+        }
+
+    coded = manifest.merge(parsed[["clip_id", "collection_code"]], on="clip_id", how="left")
+    fields["collection code"] = coded.set_index("clip_id")["collection_code"]
+
+    shared = {
+        "native sample rate": _shared_values(manifest, "native_sample_rate"),
+        "collection code": _shared_values(coded, "collection_code"),
+    }
+    return {name: series.isin(shared[name]) for name, series in fields.items()}
+
+
+def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
+    """Each model scored with and without each giveaway.
+
+    A native sample rate used by one species hands the answer to anything that can
+    see it; a rate shared by several does not. The same is true of the collection a
+    cut came from. Splitting the test clips that way asks the question the headline
+    number cannot: when the recording is not a giveaway, does listening to it help?
+    """
     class_names = list(cfg.dataset.species)
     columns = scoring.probability_columns(len(class_names))
+    shared_by_field = giveaways(cfg)
 
     rows = []
     for name in model_names:
         predictions = pd.read_parquet(predictions_path(cfg, name))
-        predictions["shared_rate"] = predictions["clip_id"].map(rate_of_clip).isin(shared_rates)
 
         # One score per split, and a repeated run has a split per repeat per fold.
         # Grouping on the fold alone would pool ten different splits into each of five
         # rows and report the spread across folds as if it were the spread across runs.
         split = [key for key in ("repeat", "fold") if key in predictions.columns]
 
-        for shared, subset in predictions.groupby("shared_rate"):
-            per_fold = [
-                scoring.score(
-                    fold_subset["label"].to_numpy(),
-                    fold_subset[columns].to_numpy(),
-                    class_names,
-                )["macro_f1"]
-                for _, fold_subset in subset.groupby(split)
-            ]
-            rows.append(
-                {
-                    "model": name,
-                    "subset": "rate shared by species" if shared else "rate unique to a species",
-                    # Distinct clips, not prediction rows. A repeated run holds one row per
-                    # clip per repeat, so counting rows would put a ten repeat model and a
-                    # single split model on different scales in the same column.
-                    "clips": subset["clip_id"].nunique(),
-                    "macro_f1_mean": float(np.mean(per_fold)),
-                    "macro_f1_std": float(np.std(per_fold, ddof=1)) if len(per_fold) > 1 else 0.0,
-                }
-            )
+        for field, is_shared in shared_by_field.items():
+            predictions["shared"] = predictions["clip_id"].map(is_shared).fillna(False)
+            for shared, subset in predictions.groupby("shared"):
+                per_fold = [
+                    scoring.score(
+                        fold_subset["label"].to_numpy(),
+                        fold_subset[columns].to_numpy(),
+                        class_names,
+                    )["macro_f1"]
+                    for _, fold_subset in subset.groupby(split)
+                ]
+                rows.append(
+                    {
+                        "giveaway": field,
+                        "model": name,
+                        "subset": f"{field} shared by species"
+                        if shared
+                        else f"{field} unique to a species",
+                        # Distinct clips, not prediction rows. A repeated run holds one row
+                        # per clip per repeat, so counting rows would put a ten repeat model
+                        # and a single split model on different scales in the same column.
+                        "clips": subset["clip_id"].nunique(),
+                        "macro_f1_mean": float(np.mean(per_fold)),
+                        "macro_f1_std": float(np.std(per_fold, ddof=1))
+                        if len(per_fold) > 1
+                        else 0.0,
+                    }
+                )
     return pd.DataFrame(rows)
 
 
