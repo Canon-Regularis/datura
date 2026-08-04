@@ -57,6 +57,7 @@ def build_labels(tapes_per_type: dict[str, int], clips_per_tape: int = 8) -> pd.
                     "tape_id": tape_id,
                     "species": "SpermWhale",
                     "site": f"site {type_index}",
+                    "collection_code": f"BE{type_index}A",
                     "latitude": 10.0 + type_index,
                     "longitude": -20.0 - type_index,
                     "cond_ship_noise": cut % 2 == 0,
@@ -137,15 +138,40 @@ def test_the_context_control_sees_place_and_conditions_but_no_audio():
     labels = build_labels({"coda": 12, "click": 12})
     control = ContextFeatureSource(labels, ["cond_ship_noise"])
 
-    assert control.feature_names() == ["site_code", "latitude", "longitude", "cond_ship_noise"]
+    assert control.feature_names() == [
+        "site_code",
+        "collection_code",
+        "latitude",
+        "longitude",
+        "cond_ship_noise",
+    ]
 
     matrix = control.matrix(np.arange(len(labels))).to_numpy()
-    assert matrix.shape == (len(labels), 4)
-    # Two sites in this fixture, so the code takes exactly two values.
+    assert matrix.shape == (len(labels), 5)
+    # Two sites and two collections in this fixture, so each code takes two values.
     assert len(np.unique(matrix[:, 0])) == 2
+    assert len(np.unique(matrix[:, 1])) == 2
 
 
 def test_the_context_control_refuses_an_index_without_a_site():
     frame = pd.DataFrame({"latitude": [1.0], "longitude": [2.0]})
     with pytest.raises(ValueError, match="context columns"):
         ContextFeatureSource(frame, [])
+
+
+def test_a_second_model_on_a_task_can_be_told_to_leave_the_control_alone():
+    """One control serves every model on a task, so refitting it is destructive.
+
+    Fitting a network on a task that already has a tree result would otherwise refit
+    the shared control, and a run with fewer repeats than the first would replace
+    fifty splits with five without saying so. Every model on that task then gets
+    compared on the five they share, which reads as a weaker design rather than as a
+    mistake.
+    """
+    import inspect
+
+    from src.train.calltypes import run_task
+
+    signature = inspect.signature(run_task)
+    assert "skip_control" in signature.parameters
+    assert signature.parameters["skip_control"].default is False

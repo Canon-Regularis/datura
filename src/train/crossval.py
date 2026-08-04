@@ -44,6 +44,7 @@ class CrossValidationResult:
     clip_metrics: pd.DataFrame
     window_metrics: pd.DataFrame
     clip_predictions: pd.DataFrame
+    window_predictions: pd.DataFrame
     confusion: pd.DataFrame
     extras: dict[str, pd.DataFrame] = field(default_factory=dict)
 
@@ -66,6 +67,7 @@ class FoldOutcome:
     clip_metrics: dict
     window_metrics: dict
     predictions: pd.DataFrame
+    window_predictions: pd.DataFrame
     extras: dict[str, pd.DataFrame]
 
 
@@ -125,8 +127,32 @@ def _run_fold(
             **scoring.score(labels[test_rows], window_probabilities, class_names),
         },
         predictions=clips.assign(**stamp),
+        window_predictions=_window_frame(index, test_rows, window_probabilities, stamp),
         extras={key: table.assign(**stamp) for key, table in model.artifacts(context).items()},
     )
+
+
+def _window_frame(
+    index: pd.DataFrame, rows: np.ndarray, probabilities: np.ndarray, stamp: dict
+) -> pd.DataFrame:
+    """One row per test window, before anything is averaged up to the clip.
+
+    Scoring happens on clips, because windows of one clip are not independent. The
+    per window scores were being computed and thrown away, and the position of a
+    window inside its clip is a time coordinate nothing has ever read. Keeping both
+    costs one small parquet and is what any later work on where in a recording a
+    call happens would have to start from.
+
+    A caveat that belongs with the file: ``max_windows_per_clip`` thins long clips
+    to an even spread, so ``window_index`` is a position among the windows that were
+    kept rather than a uniform grid over the recording.
+    """
+    columns = [name for name in ("clip_id", "tape_id", "window_index", "label") if name in index]
+    frame = index.iloc[rows].loc[:, columns].reset_index(drop=True)
+    scores = pd.DataFrame(
+        probabilities, columns=scoring.probability_columns(probabilities.shape[1])
+    )
+    return pd.concat([frame, scores], axis=1).assign(**stamp)
 
 
 def run_cross_validation(
@@ -157,6 +183,7 @@ def run_cross_validation(
     clip_rows: list[dict] = []
     window_rows: list[dict] = []
     predictions: list[pd.DataFrame] = []
+    window_predictions: list[pd.DataFrame] = []
     extras: dict[str, list[pd.DataFrame]] = {}
 
     for repeat, folds in plan:
@@ -167,6 +194,10 @@ def run_cross_validation(
             window_rows.append(outcome.window_metrics)
             clip_rows.append(outcome.clip_metrics)
             predictions.append(outcome.predictions)
+            if repeat == 0:
+                # One complete pass is enough. Every repeat partitions the same
+                # clips, so ten of them would be ten copies of the same windows.
+                window_predictions.append(outcome.window_predictions)
             for key, table in outcome.extras.items():
                 extras.setdefault(key, []).append(table)
 
@@ -178,6 +209,7 @@ def run_cross_validation(
         clip_metrics=pd.DataFrame(clip_rows),
         window_metrics=pd.DataFrame(window_rows),
         clip_predictions=all_predictions,
+        window_predictions=pd.concat(window_predictions, ignore_index=True),
         confusion=scoring.confusion(
             all_predictions["label"].to_numpy(),
             all_predictions["prediction"].to_numpy(),
@@ -205,6 +237,7 @@ def save_result(
     result.summary.to_csv(directory / "summary.csv", index=False)
     result.confusion.to_csv(directory / "confusion.csv")
     result.clip_predictions.to_parquet(directory / "clip_predictions.parquet", index=False)
+    result.window_predictions.to_parquet(directory / "window_predictions.parquet", index=False)
     for key, table in result.extras.items():
         table.to_csv(directory / f"{key}.csv", index=False)
 

@@ -42,7 +42,7 @@ call_types:
   buzz: ["buzz"] # 22: killer 18
   creak: ["creak"] # 8: killer only
   growl: ["growl"] # 13: humpback 12
-  call: ["call"] # 1414: killer 915, humpback 494
+  call: ["call"] # 1353: killer 863, humpback 485
 
 # Conditions describe the recording rather than the animal. They are the material
 # for a control model, in the same way native sample rate was for species: if the
