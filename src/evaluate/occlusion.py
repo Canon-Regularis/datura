@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 from src import scoring
-from src.features.source import MaskedRowView, RowView
+from src.features.views import MaskedRowView, RowView
 from src.models.base import WindowClassifier
 
 

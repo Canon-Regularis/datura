@@ -11,7 +11,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.features.source import ContextFeatureSource, LogbookFeatureSource, MetadataFeatureSource
+from src.features.controls import (
+    ContextFeatureSource,
+    LogbookFeatureSource,
+    MetadataFeatureSource,
+)
 
 
 def window_index(rows: int = 6) -> pd.DataFrame:

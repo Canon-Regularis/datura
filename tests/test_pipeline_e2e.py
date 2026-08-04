@@ -28,8 +28,9 @@ from src.data.splits import (
 from src.evaluate import report
 from src.features import cache
 from src.features import registry as features
+from src.features.controls import MetadataFeatureSource
 from src.features.extract import extract
-from src.features.source import CachedFeatureSource, MetadataFeatureSource
+from src.features.source import CachedFeatureSource
 from src.models.gbdt import GradientBoostedTrees
 from src.results import model_directory
 from src.train.crossval import run_cross_validation, save_result

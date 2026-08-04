@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from xgboost import XGBClassifier
 
-from src.features.source import RowView
+from src.features.views import RowView
 from src.models.base import Batch, FoldContext, WindowClassifier, balanced_class_weights
 
 # The tail of a gain ranking is noise; only the top of it is worth reporting.

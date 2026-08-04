@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from src.data.splits import folds_for_index, rows_for_clips
-from src.features.source import LogbookFeatureSource, MetadataFeatureSource
+from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
 
 SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
 

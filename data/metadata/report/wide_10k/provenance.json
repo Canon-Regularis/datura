@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-08-04T12:41:32+00:00",
+  "recorded_at": "2026-08-04T20:28:45+00:00",
   "config": {
     "name": "wide_10k",
     "source": "wide.yaml",
@@ -22,7 +22,7 @@
     "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
   },
   "git": {
-    "commit": "0cf7082b6ffe51a982b3c9df752d495ab2d10bb2",
+    "commit": "9c8a4c679d9109c1fc39d8ba3057cad05bd7de5a",
     "branch": "main",
     "dirty": true
   },

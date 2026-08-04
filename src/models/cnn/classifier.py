@@ -19,7 +19,7 @@ import torch
 from sklearn.metrics import f1_score
 from torch import nn
 
-from src.features.source import RowView
+from src.features.views import RowView
 from src.models.base import Batch, FoldContext, WindowClassifier, balanced_class_weights
 from src.models.cnn.augment import SpectrogramAugment
 from src.models.cnn.network import MelResNet

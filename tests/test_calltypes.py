@@ -12,7 +12,9 @@ import pandas as pd
 import pytest
 
 from src.data.notes import CALL_PREFIX
-from src.features.source import ContextFeatureSource, DerivedSource, FeatureSource, RowView
+from src.features.controls import ContextFeatureSource
+from src.features.source import DerivedSource, FeatureSource
+from src.features.views import RowView
 from src.train.calltypes import (
     ABSENT,
     PRESENT,
