@@ -13,7 +13,13 @@ import pandas as pd
 from src.config import Config
 from src.data import annotations
 from src.data.audit.collection import audit_tables, cross_species_tapes
-from src.data.audit.context import call_types_by_species, site_giveaway, sites_by_species
+from src.data.audit.context import (
+    call_types_by_species,
+    code_giveaway,
+    codes_by_species,
+    site_giveaway,
+    sites_by_species,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +27,8 @@ __all__ = [
     "annotation_tables",
     "audit_tables",
     "call_types_by_species",
+    "code_giveaway",
+    "codes_by_species",
     "cross_species_tapes",
     "log_summary",
     "site_giveaway",
@@ -47,6 +55,8 @@ def annotation_tables(cfg: Config, manifest: pd.DataFrame) -> dict[str, pd.DataF
     return {
         "audit_site_giveaway": site_giveaway(kept, parsed),
         "audit_sites_by_species": sites_by_species(kept, parsed),
+        "audit_code_giveaway": code_giveaway(kept, parsed),
+        "audit_codes_by_species": codes_by_species(kept, parsed),
         "audit_call_types": call_types_by_species(kept, parsed),
     }
 

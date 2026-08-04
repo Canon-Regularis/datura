@@ -41,6 +41,58 @@ def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     )
 
 
+def code_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
+    """How much of the species label the collection code hands over on its own.
+
+    The same measurement as ``site_giveaway`` against a field nobody had looked at.
+    Every note opens with the code of the collection the cut came from, and it turns
+    out to separate the species better than either the site or the audio does.
+    """
+    joined = manifest.merge(annotations[["clip_id", "collection_code"]], on="clip_id", how="left")
+    coded = joined[joined["collection_code"].fillna("") != ""]
+
+    species_per_code = coded.groupby("collection_code")["species"].nunique()
+    unique_codes = species_per_code[species_per_code == 1].index
+    unique_clips = int(coded["collection_code"].isin(unique_codes).sum())
+
+    return pd.DataFrame(
+        [
+            {
+                "codes": len(species_per_code),
+                "codes_used_by_one_species": int((species_per_code == 1).sum()),
+                "clips": len(joined),
+                "clips_carrying_a_code": len(coded),
+                "clips_with_a_single_species_code": unique_clips,
+                "share_of_clips_given_away": round(unique_clips / max(len(joined), 1), 4),
+            }
+        ]
+    )
+
+
+def codes_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
+    """Clips, tapes and species behind each collection code.
+
+    The tapes column is the one that matters. A code sitting on a single tape would
+    be a tape id under another name, and tape grouped folds would already handle it.
+    These span dozens of tapes each, which is why they cross the fold boundary and
+    why the control has to see them.
+    """
+    joined = manifest.merge(annotations[["clip_id", "collection_code"]], on="clip_id", how="left")
+    coded = joined[joined["collection_code"].fillna("") != ""]
+
+    table = (
+        coded.groupby("collection_code")
+        .agg(
+            clips=("clip_id", "size"),
+            tapes=("tape_id", "nunique"),
+            species=("species", "nunique"),
+            carried=("species", lambda names: ", ".join(sorted(set(names)))),
+        )
+        .reset_index()
+    )
+    return table.sort_values("clips", ascending=False)
+
+
 def sites_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
     """Clips and tapes per site per species, largest sites first."""
     joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")

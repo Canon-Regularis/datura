@@ -22,6 +22,11 @@ VOCABULARY_FILE = "configs/call_types.yaml"
 CALL_PREFIX = "call_"
 CONDITION_PREFIX = "cond_"
 
+# Almost every note opens with the code of the collection the cut came from, for
+# example "BE7A  Squeal.  Reverberation present." It describes the paperwork rather
+# than the animal, and it is read here so a control can be measured against it.
+COLLECTION_CODE = re.compile(r"^\s*([A-Z]{1,3}\d{1,3}[A-Z]?)\b")
+
 
 class VocabularyError(DaturaError):
     """Raised when the call type vocabulary is missing or malformed."""
@@ -120,6 +125,22 @@ def tag_note(note: str | None, vocabulary: Vocabulary) -> tuple[set[str], set[st
                 found[kind].add(label)
                 remaining = pattern.sub(" " * len(term), remaining)
     return found["call"], found["condition"]
+
+
+def collection_code(note: str | None) -> str:
+    """The collection a cut came from, taken off the front of its note.
+
+    Three codes carry 98% of the clips under study and each of them appears in
+    exactly one species, so this string is close to a species label. It is not a
+    tape id: ``BE7A`` spans 61 killer whale tapes and ``BA2A`` spans 51 sperm whale
+    ones, which is why grouping folds by tape gives no protection against it.
+
+    Empty when a note does not open with one, matching how a missing site is
+    reported. Only the leading token counts; a code appearing later in the prose is
+    part of a sentence rather than a heading.
+    """
+    match = COLLECTION_CODE.match(note or "")
+    return match.group(1) if match else ""
 
 
 def first_of(value: object) -> object:

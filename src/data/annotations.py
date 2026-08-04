@@ -29,6 +29,7 @@ from src.data.notes import (
     CALL_PREFIX,
     CONDITION_PREFIX,
     Vocabulary,
+    collection_code,
     coordinates_of,
     load_vocabulary,
     site_of,
@@ -91,6 +92,7 @@ def annotate(metadata: pd.DataFrame, vocabulary: Vocabulary) -> pd.DataFrame:
             "latitude": latitude,
             "longitude": longitude,
             "note": record.note or "",
+            "collection_code": collection_code(record.note),
             "n_call_types": len(calls),
         }
         row.update({f"{CALL_PREFIX}{label}": label in calls for label in vocabulary.call_labels})
@@ -108,12 +110,49 @@ def annotations_path(cfg: Config) -> Path:
     return cfg.paths.metadata / "watkins_annotations.parquet"
 
 
+def note_columns(vocabulary: Vocabulary) -> list[str]:
+    """Every column derived from the note text, in the order ``annotate`` writes them."""
+    return [
+        "collection_code",
+        "n_call_types",
+        *[f"{CALL_PREFIX}{label}" for label in vocabulary.call_labels],
+        *[f"{CONDITION_PREFIX}{label}" for label in vocabulary.condition_labels],
+    ]
+
+
+def reparse(frame: pd.DataFrame, vocabulary: Vocabulary) -> pd.DataFrame:
+    """Recompute every note derived column from the notes already on disk.
+
+    The parquet stores the raw note, so a vocabulary change costs a reparse rather
+    than a refetch. Nothing here touches the network.
+    """
+    parsed = []
+    for note in frame["note"].fillna(""):
+        calls, conditions = tag_note(note, vocabulary)
+        row: dict[str, object] = {
+            "collection_code": collection_code(note),
+            "n_call_types": len(calls),
+        }
+        row.update({f"{CALL_PREFIX}{label}": label in calls for label in vocabulary.call_labels})
+        row.update(
+            {
+                f"{CONDITION_PREFIX}{label}": label in conditions
+                for label in vocabulary.condition_labels
+            }
+        )
+        parsed.append(row)
+
+    columns = note_columns(vocabulary)
+    kept = frame.drop(columns=[c for c in frame.columns if c in columns])
+    return pd.concat([kept.reset_index(drop=True), pd.DataFrame(parsed, columns=columns)], axis=1)
+
+
 def build(cfg: Config, *, refresh: bool = False) -> pd.DataFrame:
     """Read the annotations from disk, fetching and parsing them the first time."""
     path = annotations_path(cfg)
     if path.exists() and not refresh:
         logger.info("annotations already built at %s", path)
-        return pd.read_parquet(path)
+        return load(cfg)
 
     vocabulary = load_vocabulary()
     frame = annotate(fetch_metadata(), vocabulary)
@@ -123,10 +162,28 @@ def build(cfg: Config, *, refresh: bool = False) -> pd.DataFrame:
 
 
 def load(cfg: Config) -> pd.DataFrame:
+    """The annotations, reparsed in place if the vocabulary has moved since.
+
+    One file serves every configuration, because it covers all 15,248 clips of all
+    54 species and nothing in it depends on which species are under study. What it
+    does depend on is the vocabulary, and a stale parse feeding a control is the
+    failure worth guarding. The note is stored, so healing costs a reparse and no
+    network at all.
+    """
     path = annotations_path(cfg)
     if not path.exists():
         raise AnnotationError(f"{path} not found; run python -m src.data.annotations first")
-    return pd.read_parquet(path)
+
+    frame = pd.read_parquet(path)
+    vocabulary = load_vocabulary()
+    missing = [column for column in note_columns(vocabulary) if column not in frame.columns]
+    if not missing:
+        return frame
+
+    logger.info("vocabulary has moved since %s was written; reparsing %s", path.name, missing)
+    frame = reparse(frame, vocabulary)
+    frame.to_parquet(path, index=False)
+    return frame
 
 
 def call_columns(frame: pd.DataFrame) -> list[str]:
