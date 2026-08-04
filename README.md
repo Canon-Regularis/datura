@@ -416,6 +416,13 @@ versions.
 - **reproduce**: rebuilds all three reports from committed results and diffs them against what is in
   the repo
 
+Every job installs with `uv sync --locked` against a pinned uv. Both matter. A uv older than the one
+that wrote `uv.lock` cannot read the current lock revision, and rather than saying so it throws the
+lock away and resolves from scratch: that is how this workflow once spent six minutes building a
+numba from 2021 against Python 3.14, when the numba in the lock ships a wheel for that exact
+interpreter. `--locked` turns any future version of that into an immediate error instead of a long
+walk backwards through package history.
+
 The suite finishes in well under a minute because nothing in it needs the archive.
 `tests/test_pipeline_e2e.py` generates its own audio, three species with distinct acoustic regimes,
 and pushes it through manifest, features, folds, training, explainability and report. That is the
