@@ -457,6 +457,19 @@ through the Internet Archive mirror at
 Downloads shell out to curl. Python's stdlib SSL rejected the certificate chain on my machine and
 curl ships its own CA bundle, so that was the shorter path.
 
+The audio and the text come from two different places, which is worth knowing before trusting any of
+it. The archive above carries the WAV files and nothing else. Every field note, site name and
+coordinate comes from a HuggingFace mirror of the same database,
+`huggingface.co/datasets/ivangtorre/watkins-marine-mammal-full-cuts`, read by
+`python -m src.data.annotations`. It fetches four text columns out of parquet shards using HTTP range
+requests, about a fifth of a megabyte out of each 587 MB shard, and writes
+`data/metadata/watkins_annotations.parquet` once.
+
+Everything in this repo that is not a species score rests on that second source: the call type
+labels, the site giveaway, and the collection code that turned out to sit above every audio model.
+The parquet is committed, so nothing needs refetching, and it is reparsed in place whenever
+`configs/call_types.yaml` changes rather than trusted to still match.
+
 ## What this is not
 
 Species and call type classification from one recording source, and that is all.
