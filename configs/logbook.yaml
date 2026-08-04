@@ -1,0 +1,17 @@
+# The second no-audio model. It is given everything written down about a recording
+# and none of the recording: the site, the coordinates, the noise conditions and the
+# collection code the field note opens with, on top of what the metadata control
+# already sees.
+#
+# Same estimator and same settings as configs/metadata.yaml, so the gap between the
+# two is the paperwork and nothing else.
+model:
+  n_estimators: 400
+  max_depth: 4
+  learning_rate: 0.05
+  subsample: 0.9
+  colsample_bytree: 1.0
+  reg_lambda: 1.0
+  early_stopping_rounds: 40
+  tree_method: hist
+  n_jobs: -1

@@ -54,6 +54,16 @@ def build_extractor(kind: str, cfg: Config) -> FeatureExtractor:
     )
 
 
+def cache_exists(kind: str, cfg: Config) -> bool:
+    """Whether one representation has already been extracted under this config.
+
+    Callers name a representation; only the extractor knows which config sections
+    its cache key is built from. Asking here keeps ``cache`` from having to import
+    this module, which would be a cycle.
+    """
+    return cache.exists(cfg, build_extractor(kind, cfg))
+
+
 def load_source(kind: str, cfg: Config) -> CachedFeatureSource:
     """Open the cached features for one representation, ready to train on.
 
@@ -63,7 +73,7 @@ def load_source(kind: str, cfg: Config) -> CachedFeatureSource:
     """
     extractor = build_extractor(kind, cfg)
     return CachedFeatureSource(
-        cache.load_cached(cfg, kind),
+        cache.load_cached(cfg, extractor),
         name=kind,
         feature_names=extractor.feature_names(),
     )

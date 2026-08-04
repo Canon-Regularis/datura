@@ -12,11 +12,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
+
 from src.config import Config
+from src.data import annotations as ann
 from src.data.splits import Fold
 from src.features import registry as features
-from src.features.source import FeatureSource, MetadataFeatureSource
-from src.models.registry import METADATA_SOURCE, ModelSpec
+from src.features.source import FeatureSource, LogbookFeatureSource, MetadataFeatureSource
+from src.models.registry import LOGBOOK_SOURCE, METADATA_SOURCE, ModelSpec
 from src.train.crossval import run_cross_validation, save_result
 from src.train.folds import FoldPlan, folds_for, format_test_tapes, save_summary
 
@@ -34,20 +37,49 @@ class Assembly:
     audio: FeatureSource
     folds: list[Fold]
     plan: FoldPlan
+    logbook_index: pd.DataFrame | None = None
 
     def source_for(self, spec: ModelSpec) -> FeatureSource:
         """The features a given model consumes.
 
-        The control is derived from the audio source's index: it sees the same
-        clips, in the same folds, described only by their recording metadata.
+        Both no-audio models are derived from the audio source's index, so they see
+        the same clips in the same folds and only the description differs.
         """
         if spec.source == METADATA_SOURCE:
             return MetadataFeatureSource(self.audio.index)
+        if spec.source == LOGBOOK_SOURCE:
+            index = self.logbook_index
+            if index is None:
+                raise ValueError(
+                    f"{spec.name} needs the parsed field notes; "
+                    "run python -m src.data.annotations first"
+                )
+            return LogbookFeatureSource(index, ann.condition_columns(index))
         if spec.source != self.audio.name:
             raise ValueError(
                 f"{spec.name} needs {spec.source} features; this assembly holds {self.audio.name}"
             )
         return self.audio
+
+
+def _logbook_index(cfg: Config, source: FeatureSource) -> pd.DataFrame | None:
+    """The window index with the field note columns merged onto it.
+
+    The cached index carries what the extractor wrote and nothing else, and adding a
+    column to it would invalidate every cached feature array. Merging here costs one
+    join and leaves hundreds of megabytes of cache alone. The call type control has
+    always been built this way.
+    """
+    try:
+        parsed = ann.load(cfg)
+    except ann.AnnotationError:
+        logger.info("no parsed field notes; the logbook model will not be available")
+        return None
+
+    columns = ["clip_id", "site", "latitude", "longitude", "collection_code"]
+    return source.index.merge(
+        parsed[[*columns, *ann.condition_columns(parsed)]], on="clip_id", how="left"
+    )
 
 
 def assemble(cfg: Config, source_kind: str, repeats: int = 1) -> Assembly:
@@ -75,7 +107,7 @@ def assemble(cfg: Config, source_kind: str, repeats: int = 1) -> Assembly:
     if repeats > 1:
         logger.info("scoring on %d repeats of the split, %d folds each", repeats, len(folds))
     plan = FoldPlan.repeated(cfg, source.index, repeats) if repeats > 1 else FoldPlan.single(folds)
-    return Assembly(audio=source, folds=folds, plan=plan)
+    return Assembly(audio=source, folds=folds, plan=plan, logbook_index=_logbook_index(cfg, source))
 
 
 def train(
