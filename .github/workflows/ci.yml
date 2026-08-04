@@ -14,9 +14,17 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The default torch wheel drags in the whole CUDA stack. No runner here has a GPU,
-  # so every job installs the CPU build and saves several gigabytes per run.
-  UV_FROZEN: "1"
+  # Pinned to the uv that wrote uv.lock. The lock is written in a versioned format,
+  # and a uv too old to read the current revision does not fail: it discards the
+  # lock and resolves the dependency tree from scratch. That is how this workflow
+  # came to build a numba from 2021 against Python 3.14 and fall over, when the
+  # numba in the lock ships a wheel for exactly that interpreter. Dependabot bumps
+  # this alongside the actions.
+  #
+  # Every install is `uv sync --locked`, which refuses to run at all unless the lock
+  # is present and current. UV_FROZEN would also stop the lock being rewritten, but
+  # it tolerates a stale one silently, and silence is what cost a day here.
+  UV_VERSION: "0.12.0"
 
 jobs:
   lint:
@@ -29,13 +37,15 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
+          version: ${{ env.UV_VERSION }}
           enable-cache: true
           cache-dependency-glob: uv.lock
+          python-version: "3.14"
 
       - name: Check the lockfile matches pyproject
         run: uv lock --check
 
-      - run: uv sync --extra cpu
+      - run: uv sync --locked --extra cpu
       - run: uv run ruff check --output-format=github .
       - run: uv run ruff format --check .
 
@@ -59,11 +69,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
+          version: ${{ env.UV_VERSION }}
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: ${{ matrix.python }}
 
-      - run: uv sync --extra cpu
+      - run: uv sync --locked --extra cpu
 
       - name: Unit and pipeline tests
         run: uv run pytest --cov=src --cov-report=term-missing --cov-report=xml
@@ -86,10 +97,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
+          version: ${{ env.UV_VERSION }}
           enable-cache: true
           cache-dependency-glob: uv.lock
+          python-version: "3.14"
 
-      - run: uv sync --extra cpu
+      - run: uv sync --locked --extra cpu
 
       # The manifests and per-clip predictions are committed, so every report rebuilds
       # without the 6.7 GB archive. If a table stops regenerating, or regenerates
