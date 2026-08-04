@@ -145,3 +145,32 @@ def test_the_count_metrics_match_sklearn_exactly():
 def test_an_empty_set_of_predictions_scores_zero_rather_than_dividing_by_nothing():
     counted = scoring.from_counts(np.array([], dtype=int), np.array([], dtype=int), 3)
     assert counted == {"accuracy": 0.0, "macro_f1": 0.0, "weighted_f1": 0.0}
+
+
+def test_window_predictions_keep_the_position_inside_the_clip():
+    """The only time coordinate this pipeline produces, and nothing read it before.
+
+    Scoring is done on clips because windows of one clip are not independent, but
+    the per window scores were computed and discarded. Keeping them, with the
+    window's position in its clip, is what any later work on where in a recording a
+    call happens would start from.
+    """
+    from src.train.crossval import _window_frame
+
+    index = pd.DataFrame(
+        {
+            "clip_id": ["a", "a", "b"],
+            "tape_id": ["t", "t", "t"],
+            "species": ["x", "x", "y"],
+            "label": [0, 0, 1],
+            "window_index": [0, 1, 0],
+        }
+    )
+    probabilities = np.array([[0.9, 0.1], [0.6, 0.4], [0.2, 0.8]])
+
+    frame = _window_frame(index, np.array([0, 1, 2]), probabilities, {"repeat": 0, "fold": 3})
+
+    assert list(frame["window_index"]) == [0, 1, 0]
+    assert list(frame["clip_id"]) == ["a", "a", "b"]
+    assert frame["p1"].tolist() == pytest.approx([0.1, 0.4, 0.8])
+    assert set(frame["fold"]) == {3}

@@ -10,10 +10,11 @@ Call types overlap, so the task is multi label rather than multi class: 145 sper
 whale clips are both click and coda. Each type therefore gets its own binary model,
 which keeps every type comparable to every other and reuses the runner unchanged.
 
-Each task is reported against a context control that sees the site, the coordinates
-and the noise conditions, and no audio at all. Location alone identifies the
-species for 98% of clips in this collection, so a call type result that does not
-clear the same bar is not evidence about the animal.
+Each task is reported against a context control that sees the site, the coordinates,
+the collection the cut came from and the noise conditions, and no audio at all.
+Location alone identifies the species for 98% of clips in this collection and the
+collection code does better still, so a call type result that does not clear the
+same bar is not evidence about the animal.
 
 Usage:
     python -m src.train.calltypes [--config configs/base.yaml] [--species SpermWhale]
@@ -104,7 +105,13 @@ def clip_labels(cfg: Config, species: str, max_clip_seconds: float | None = None
     manifest = load_manifest(cfg, kept_only=True)
     parsed = ann.load(cfg)
     columns = ann.call_columns(parsed)
-    context = ["site", "latitude", "longitude", *ann.condition_columns(parsed)]
+    context = [
+        "site",
+        "latitude",
+        "longitude",
+        "collection_code",
+        *ann.condition_columns(parsed),
+    ]
 
     joined = manifest.merge(parsed[["clip_id", *columns, *context]], on="clip_id", how="left")
     subset = joined[joined["species"] == species]
@@ -183,6 +190,7 @@ def _context_index(subset: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
         "site",
         "latitude",
         "longitude",
+        "collection_code",
         *[c for c in labels.columns if c.startswith("cond_")],
     ]
     return subset.merge(labels[["clip_id", *columns]], on="clip_id", how="left")
@@ -196,6 +204,7 @@ def run_task(
     model_name: str = "xgboost",
     suffix: str = "",
     repeats: int = 1,
+    skip_control: bool = False,
 ) -> None:
     """Fit the audio model and its context control on identical folds.
 
@@ -205,6 +214,11 @@ def run_task(
     Both sides run the same plan, so repeat three fold two of the audio model is the
     same split as repeat three fold two of the control. That pairing is what the
     comparison rests on.
+
+    ``skip_control`` matters more than it looks. One control serves every model on a
+    task, so fitting a second model would otherwise refit it, and a run with fewer
+    repeats than the first would quietly replace fifty splits with five. Every model
+    on that task then gets compared on the five they share.
     """
     subset, positions = _window_index(base, labels, task)
     folds = folds_for_index(subset, cfg)
@@ -228,10 +242,11 @@ def run_task(
     audio_spec = models.get(model_name)
     tag = suffix + ("" if model_name == "xgboost" else f"_{model_name}")
 
-    for spec, source, name in (
-        (audio_spec, audio, f"{task.name}{tag}"),
-        (models.control(), control, f"{task.control_name}{suffix}"),
-    ):
+    wanted = [(audio_spec, audio, f"{task.name}{tag}")]
+    if not skip_control:
+        wanted.append((models.control(), control, f"{task.control_name}{suffix}"))
+
+    for spec, source, name in wanted:
         settings = load_settings(spec)
         result = run_cross_validation(
             cfg,
@@ -273,6 +288,11 @@ def main(argv: list[str] | None = None) -> int:
         default=1,
         help="how many times to rerun the whole split under a shifted seed",
     )
+    parser.add_argument(
+        "--skip-control",
+        action="store_true",
+        help="leave the context control alone, for fitting a second model on a task",
+    )
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
@@ -299,6 +319,7 @@ def main(argv: list[str] | None = None) -> int:
             model_name=args.model,
             suffix=args.suffix,
             repeats=args.repeats,
+            skip_control=args.skip_control,
         )
     return 0
 

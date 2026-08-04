@@ -16,6 +16,7 @@ CHECKPOINTS = "checkpoints"
 SUMMARY_FILE = "summary.csv"
 PROVENANCE_FILE = "provenance.json"
 PREDICTIONS_FILE = "clip_predictions.parquet"
+WINDOW_PREDICTIONS_FILE = "window_predictions.parquet"
 REPORT_FILE = "REPORT.md"
 
 
@@ -46,6 +47,16 @@ def summary_path(cfg: Config, model_name: str) -> Path:
 
 def predictions_path(cfg: Config, model_name: str) -> Path:
     return model_directory(cfg, model_name) / PREDICTIONS_FILE
+
+
+def window_predictions_path(cfg: Config, model_name: str) -> Path:
+    """Per window scores before they are averaged up to a clip.
+
+    Nothing reads this yet. It carries ``window_index``, which is the only time
+    coordinate the pipeline produces, so it is where anything about when in a
+    recording a call happens would have to begin.
+    """
+    return model_directory(cfg, model_name) / WINDOW_PREDICTIONS_FILE
 
 
 def fold_summary_path(cfg: Config) -> Path:
