@@ -65,7 +65,7 @@ and produce an interval several times too narrow.
 | logbook  |          1      |       0.9132 |        0.981  |                  0.9629 |               1      |           0.8756 |                            0.8    |              0.8683 |        1      |   0.9929 |           0.7621 |
 | metadata |          0.4948 |       0.5711 |        0.7536 |                  0.7414 |               0.8535 |           0.9362 |                            0.0707 |              0.8505 |        0.8652 |   0.6238 |           0.2877 |
 
-9 of these recordings carry more than one of the classes above, across HumpbackWhale, Long_FinnedPilotWhale, SpermWhale and StripedDolphin. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
+8 of these recordings carry more than one of the classes above, across HumpbackWhale, Long_FinnedPilotWhale, SpermWhale and StripedDolphin. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
 
 ### With and without the giveaway
 

@@ -132,6 +132,10 @@ def _shared_tape_caveat(shared_tapes: pd.DataFrame | None) -> list[str]:
         return []
 
     mixed = shared_tapes[shared_tapes["n_under_study"] >= 2]
+    if "kept" in mixed.columns:
+        # Count what was scored. A tape whose second species is filtered out reaches
+        # the folds with one label and belongs in no caveat about a recall.
+        mixed = mixed[mixed["kept"]]
     if mixed.empty:
         return []
 

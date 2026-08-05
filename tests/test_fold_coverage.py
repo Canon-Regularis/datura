@@ -4,7 +4,7 @@
 both sides of a boundary. This checks the other half: that the folds together cover
 the collection rather than quietly dropping part of it.
 
-It matters most on the wide species set. Eleven classes over 238 recordings is where
+It matters most on the wide species set. Eleven classes over 228 recordings is where
 a class first gets thin enough to land a fold with no test tape at all, and macro-F1
 would then average over a class that was never scored without saying so.
 
@@ -121,3 +121,48 @@ def test_the_readme_quotes_recordings_rather_than_species_tapes():
 
     assert f"{WIDE_KEPT_CLIPS:,} clips over {WIDE_RECORDINGS} recordings" in prose
     assert f"{WIDE_RECORDINGS} across eleven species" in prose
+
+
+def shared_tapes(name: str) -> pd.DataFrame:
+    path = PROJECT_ROOT / "data" / "metadata" / f"audit_cross_species_tapes_{name}.csv"
+    if not path.exists():
+        pytest.skip(f"{path.name} absent; run python -m src.data.manifest first")
+    return pd.read_csv(path)
+
+
+def test_the_cross_species_table_is_about_the_config_it_is_named_after():
+    """It was byte identical for every configuration until it carried these columns.
+
+    The archive holds 35 tapes with more than one species, and that is the same fact
+    whichever three or eleven are under study. What differs, and what bears on a per
+    class score, is how many of them carry two of the classes actually being told
+    apart.
+    """
+    narrow = shared_tapes("base_10k")
+    wide = shared_tapes("wide_10k")
+
+    assert len(narrow) == len(wide), "both list every shared tape in the archive"
+    assert (narrow["n_under_study"] >= 2).sum() == 1
+    assert (wide["n_under_study"] >= 2).sum() > 1, "the wide set is where this became material"
+
+
+def test_a_caveat_counts_tapes_that_survived_the_filters():
+    """One wide tape loses its whole second species to the short clip filter.
+
+    It reaches the folds with a single label, so it belongs in no statement about a
+    recall. Counting the archive rather than the manifest overstated the caveat by
+    one tape, which is the same class of error as quoting the wrong tape total.
+    """
+    wide = shared_tapes("wide_10k")
+    mixed = wide[wide["n_under_study"] >= 2]
+
+    assert len(mixed) == 9, "nine in the archive"
+    assert int(mixed["kept"].sum()) == 8, "eight once the filters have run"
+
+    manifest = PROJECT_ROOT / "data" / "metadata" / "manifest_wide_10k.parquet"
+    if not manifest.exists():
+        pytest.skip("manifest_wide_10k.parquet absent")
+
+    kept = pd.read_parquet(manifest).query("keep")
+    per_tape = kept.groupby("tape_id")["species"].nunique()
+    assert (per_tape > 1).sum() == int(mixed["kept"].sum())

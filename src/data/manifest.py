@@ -88,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest = build_manifest(cfg)
     tables = audit.audit_tables(manifest)
-    tables["audit_cross_species_tapes"] = audit.cross_species_tapes(cfg)
+    tables["audit_cross_species_tapes"] = audit.cross_species_tapes(cfg, manifest)
     tables.update(audit.annotation_tables(cfg, manifest))
 
     destination = cfg.paths.metadata / f"manifest_{cfg.name}.parquet"

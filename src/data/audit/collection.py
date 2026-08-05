@@ -16,7 +16,7 @@ from src.config import Config
 from src.data.clips import ClipPathError, parse_relative_path
 
 
-def cross_species_tapes(cfg: Config) -> pd.DataFrame:
+def cross_species_tapes(cfg: Config, manifest: pd.DataFrame | None = None) -> pd.DataFrame:
     """Tapes carrying more than one species label, read from the zip's index.
 
     Every row covers all 54 species, because a tape shared with an unused species
@@ -28,12 +28,18 @@ def cross_species_tapes(cfg: Config) -> pd.DataFrame:
     Without those columns this table was byte identical for every configuration, so
     the file named after the wide set could not answer the question the wide set
     raises. The zip is only indexed here, never decompressed.
+
+    ``kept`` says whether the tape still carries two of them once the filters have
+    run. One wide tape does not: every sperm whale clip on it is shorter than the
+    minimum, so it reaches the folds as a single label. A caveat about a score has to
+    count what was scored, not what the archive holds.
     """
     studied = set(cfg.dataset.species)
+    surviving = _surviving_species(manifest)
     archive = cfg.paths.raw / cfg.dataset.zip_name
     if not archive.exists():
         return pd.DataFrame(
-            columns=["tape_id", "n_species", "species", "n_under_study", "under_study"]
+            columns=["tape_id", "n_species", "species", "n_under_study", "under_study", "kept"]
         )
 
     prefix = f"{cfg.dataset.archive_root}/"
@@ -55,12 +61,21 @@ def cross_species_tapes(cfg: Config) -> pd.DataFrame:
             "species": ", ".join(sorted(names)),
             "n_under_study": len(names & studied),
             "under_study": ", ".join(sorted(names & studied)),
+            "kept": len(surviving.get(tape, names & studied)) > 1,
         }
         for tape, names in sorted(tapes.items())
         if len(names) > 1
     ]
-    columns = ["tape_id", "n_species", "species", "n_under_study", "under_study"]
+    columns = ["tape_id", "n_species", "species", "n_under_study", "under_study", "kept"]
     return pd.DataFrame(shared, columns=columns)
+
+
+def _surviving_species(manifest: pd.DataFrame | None) -> dict[str, set[str]]:
+    """Which species each tape still carries after the filters have run."""
+    if manifest is None:
+        return {}
+    kept = manifest[manifest["keep"]]
+    return {tape: set(names) for tape, names in kept.groupby("tape_id")["species"]}
 
 
 def audit_tables(manifest: pd.DataFrame) -> dict[str, pd.DataFrame]:

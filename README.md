@@ -114,8 +114,8 @@ reaches 0.995 and the model splits mostly on sample rate and latitude. On eleven
 `cond_water_noise` and `cond_reverberation`, the noise conditions the recordist wrote down, with the
 collection code at 8%. The confound is the written description as a whole rather than any one field.
 
-Two things temper the per class numbers here. Nine of the 228 recordings carry more than one of the
-eleven classes, and long finned pilot whale is the worst affected: 7 of its 18 tapes and 690 of its
+Two things temper the per class numbers here. Eight of the 228 recordings carry more than one of the
+eleven classes, and long finned pilot whale is the worst affected: 6 of its 18 tapes and 639 of its
 1,067 clips sit on tapes it shares with sperm whale. Grouping keeps each tape whole so nothing
 crosses a fold boundary, but those two classes are not scored on independent evidence. Separately,
 eleven classes over 228 recordings leaves one test tape behind some classes in some folds, so a per
