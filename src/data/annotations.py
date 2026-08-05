@@ -41,7 +41,10 @@ logger = logging.getLogger(__name__)
 
 MIRROR = "ivangtorre/watkins-marine-mammal-full-cuts"
 SHARD_INDEX = f"https://huggingface.co/api/datasets/{MIRROR}/parquet/default/train"
-WANTED_COLUMNS = ("record_number", "display_name", "note", "location", "observation_date")
+# Only what the parse reads. The shards carry an observation_date too, and it was
+# fetched for months without anything looking at it: the recording year already
+# comes off the clip path, so the column paid for bandwidth and reached no artifact.
+WANTED_COLUMNS = ("record_number", "display_name", "note", "location")
 
 
 class AnnotationError(DaturaError):

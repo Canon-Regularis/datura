@@ -82,7 +82,6 @@ def test_annotate_builds_one_row_per_clip_with_flag_columns():
                 "display_name": "SpermWhale",
                 "note": "BA2A  Clicks; ship noise.",
                 "location": {"name": ["Bermuda"], "coordinates": [{"lat": 32.0, "lon": -64.0}]},
-                "observation_date": None,
             }
         ]
     )
@@ -112,7 +111,6 @@ def test_site_survives_arrow_handing_back_numpy_arrays():
                     "name": np.array(["Biscayne Bay, Florida"], dtype=object),
                     "coordinates": np.array([{"lat": 25.0, "lon": -80.0}], dtype=object),
                 },
-                "observation_date": None,
             }
         ]
     )
@@ -129,7 +127,6 @@ def test_a_missing_location_is_empty_rather_than_an_error():
                 "display_name": "Beluga_WhiteWhale",
                 "note": "Squeals.",
                 "location": None,
-                "observation_date": None,
             }
         ]
     )
@@ -147,7 +144,6 @@ def test_column_helpers_select_the_right_prefixes():
                     "display_name": "X",
                     "note": "Clicks.",
                     "location": None,
-                    "observation_date": None,
                 }
             ]
         ),
