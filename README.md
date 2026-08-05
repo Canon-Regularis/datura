@@ -293,7 +293,9 @@ src/train/        folds and the repeat plan, one cross validation runner, one se
 src/evaluate/     families groups results, tables builds them, sections composes the
                   document, figures draws it, artifacts writes it, report runs the lot,
                   plus occlusion and Grad-CAM
-experiments/      notebooks that read artifacts and plot, no training code
+experiments/      five notebooks reading committed artifacts, one argument each:
+                  the corpus and its confounds, the species results, how much
+                  they settle, call types and breadth, what the network used
 ```
 
 Two registries carry the extension points. `src/features/registry.py` maps a representation name to
