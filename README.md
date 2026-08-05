@@ -90,8 +90,13 @@ case.
 ## Eleven species
 
 `configs/wide.yaml` differs from `configs/base.yaml` in the species list alone: 11 species carrying
-at least 10 surviving tapes, 7,723 clips over 238 recordings against 4,160 over 134. Same band,
+at least 10 surviving tapes, 7,723 clips over 228 recordings against 4,160 over 134. Same band,
 window, seed and fold rule.
+
+Two tape counts appear in the wide artifacts and they answer different questions. Summing the
+surviving tapes of each species gives 238, which is the right figure for a per class statement. Ten
+of those are counted twice, because eight tapes carry two of the eleven species, so the number of
+independent recordings is 228. Sample size claims use the second.
 
 | model | 3 species | 11 species |
 | --- | --- | --- |
@@ -109,8 +114,16 @@ reaches 0.995 and the model splits mostly on sample rate and latitude. On eleven
 `cond_water_noise` and `cond_reverberation`, the noise conditions the recordist wrote down, with the
 collection code at 8%. The confound is the written description as a whole rather than any one field.
 
+Two things temper the per class numbers here. Nine of the 228 recordings carry more than one of the
+eleven classes, and long finned pilot whale is the worst affected: 7 of its 18 tapes and 690 of its
+1,067 clips sit on tapes it shares with sperm whale. Grouping keeps each tape whole so nothing
+crosses a fold boundary, but those two classes are not scored on independent evidence. Separately,
+eleven classes over 228 recordings leaves one test tape behind some classes in some folds, so a per
+fold score for northern right whale or walrus rests on a single recording.
+
 The networks were not run on the wide set. `python -m src.train.cnn --config configs/wide.yaml
---name cnn_small` adds them.
+--name cnn_small` adds them, and `configs/wide.yaml` declares trees only so a pipeline run does not
+train them by surprise.
 
 ## Call types
 
@@ -317,9 +330,9 @@ reporting that it cannot read it.
 
 - Every number describes one recording source. Results are about the Watkins corpus, and the
   strongest effect measured is a property of its paperwork.
-- 134 independent recordings at 10 kHz, 238 across eleven species. Eleven classes over 238 tapes
-  leaves one test tape behind some classes in some folds, so those per fold scores rest on a single
-  recording.
+- 134 independent recordings at 10 kHz, 228 across eleven species. Eleven classes over 238 species
+  tapes leaves one test tape behind some classes in some folds, so those per fold scores rest on a
+  single recording.
 - The networks ran one split each. Their comparisons carry five estimates against the trees' fifty.
 - No call detection or segmentation: a Watkins note is written against a whole cut, so there are no
   onsets. No individual identification: nothing in the corpus names an animal. Per window predictions
