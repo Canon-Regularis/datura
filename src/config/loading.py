@@ -18,6 +18,7 @@ from src.config.sections import (
     ConfigError,
     DatasetConfig,
     PathsConfig,
+    PipelineConfig,
     SpectrogramConfig,
     SplitConfig,
 )
@@ -38,6 +39,35 @@ def _require(mapping: dict[str, Any], section: str, allowed: set[str]) -> dict[s
     if missing:
         raise ConfigError(f"missing keys in {section}: {sorted(missing)}")
     return block
+
+
+def _optional(mapping: dict[str, Any], section: str, allowed: set[str]) -> dict[str, Any]:
+    """A section a config may leave out entirely.
+
+    Absent means the default, so the configs that predate the section need no edit.
+    Present is validated exactly as a required one: an unknown key is refused rather
+    than ignored, because a typo here would silently restore the behaviour the
+    section exists to restrict.
+    """
+    if section not in mapping:
+        return {}
+    block = mapping[section]
+    if not isinstance(block, dict):
+        raise ConfigError(f"config section {section} must be a mapping")
+    unknown = set(block) - allowed
+    if unknown:
+        raise ConfigError(f"unknown keys in {section}: {sorted(unknown)}")
+    return block
+
+
+def _names(block: dict[str, Any], key: str) -> tuple[str, ...] | None:
+    """A declared list of names, or None when the section leaves it out."""
+    if key not in block:
+        return None
+    value = block[key]
+    if not isinstance(value, list):
+        raise ConfigError(f"pipeline.{key} must be a list of names")
+    return tuple(str(name) for name in value)
 
 
 def _resolve(value: str) -> Path:
@@ -80,6 +110,7 @@ def load_config(path: str | Path) -> Config:
     spec_block = _require(raw, "spectrogram", {"n_fft", "hop_length", "n_mels", "fmin", "fmax"})
     split_block = _require(raw, "split", {"n_folds", "seed", "tape_id_length", "group_column"})
     paths_block = _require(raw, "paths", {"raw", "metadata", "processed", "reports"})
+    pipeline_block = _optional(raw, "pipeline", {"models", "call_types"})
 
     return Config(
         name=str(raw["name"]),
@@ -111,6 +142,10 @@ def load_config(path: str | Path) -> Config:
             seed=int(split_block["seed"]),
             tape_id_length=int(split_block["tape_id_length"]),
             group_column=str(split_block["group_column"]),
+        ),
+        pipeline=PipelineConfig(
+            models=_names(pipeline_block, "models"),
+            call_types=_names(pipeline_block, "call_types"),
         ),
         paths=PathsConfig(
             raw=_resolve(paths_block["raw"]),

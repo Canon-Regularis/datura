@@ -144,6 +144,28 @@ class PathsConfig:
 
 
 @dataclass(frozen=True)
+class PipelineConfig:
+    """Which models a full pipeline run is allowed to train.
+
+    ``None`` on either field means the default, which is what the two band variants
+    want: every registered model, and call types inside the two species that carry
+    enough of them. The wide species set declares less, because at eleven classes
+    the networks cost hours of GPU to answer a question about the floor and its
+    committed results are trees. A run that trained them anyway would rewrite a
+    committed report with sections that were never meant to be in it.
+    """
+
+    models: tuple[str, ...] | None = None
+    call_types: tuple[str, ...] | None = None
+
+    def allows(self, model_name: str) -> bool:
+        return self.models is None or model_name in self.models
+
+    def call_type_species(self, default: tuple[str, ...]) -> tuple[str, ...]:
+        return default if self.call_types is None else self.call_types
+
+
+@dataclass(frozen=True)
 class Config:
     name: str
     dataset: DatasetConfig
@@ -151,6 +173,7 @@ class Config:
     spectrogram: SpectrogramConfig
     split: SplitConfig
     paths: PathsConfig
+    pipeline: PipelineConfig = field(compare=False, default_factory=PipelineConfig)
     source: Path = field(compare=False, default=Path())
 
     def __post_init__(self) -> None:

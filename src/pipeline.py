@@ -105,7 +105,11 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
     The tree models share a single command, because the control has to be fitted on
     the same folds as the baseline it is compared against.
     """
-    trees = [spec.name for spec in models.trained_by(models.TREES)]
+    trees = [
+        spec.name for spec in models.trained_by(models.TREES) if cfg.pipeline.allows(spec.name)
+    ]
+    if not trees:
+        return []
     stages = [
         Stage(
             models.TREES,
@@ -114,6 +118,8 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
         )
     ]
     for spec in models.trained_by(models.NETWORK):
+        if not cfg.pipeline.allows(spec.name):
+            continue
         stages.append(
             Stage(
                 spec.name,
@@ -142,7 +148,7 @@ def _call_type_stages(cfg: Config, config_path: str) -> list[Stage]:
                 for name in _existing_results(cfg)
             ),
         )
-        for species in CALL_TYPE_SPECIES
+        for species in cfg.pipeline.call_type_species(CALL_TYPE_SPECIES)
     ]
 
 
@@ -152,28 +158,37 @@ def _existing_results(cfg: Config) -> list[str]:
 
 
 def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
-    return [
-        Stage(
-            "explain",
-            lambda: explain_cli.main(
-                [
-                    "--config",
-                    config_path,
-                    "--name",
-                    EXPLAINED_VARIANT,
-                    "--fold",
-                    EXPLAINED_FOLD,
-                ]
-            ),
-            lambda: (model_directory(cfg, EXPLAINED_VARIANT) / "occlusion.csv").exists(),
-        ),
+    stages = []
+
+    # Explaining a model this configuration never trains would ask for a checkpoint
+    # that cannot exist, so the stage is only built where the model is.
+    if cfg.pipeline.allows(EXPLAINED_VARIANT):
+        stages.append(
+            Stage(
+                "explain",
+                lambda: explain_cli.main(
+                    [
+                        "--config",
+                        config_path,
+                        "--name",
+                        EXPLAINED_VARIANT,
+                        "--fold",
+                        EXPLAINED_FOLD,
+                    ]
+                ),
+                lambda: (model_directory(cfg, EXPLAINED_VARIANT) / "occlusion.csv").exists(),
+            )
+        )
+
+    stages.append(
         Stage(
             "report",
             lambda: report_cli.main(["--config", config_path]),
             # The report is cheap and summarises everything before it, so it always reruns.
             lambda: False,
-        ),
-    ]
+        )
+    )
+    return stages
 
 
 def build_stages(cfg: Config, config_path: str, *, skip_download: bool) -> list[Stage]:

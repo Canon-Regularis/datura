@@ -3,6 +3,14 @@
 # to see whether conclusions depend on the band choice.
 name: base_5k
 
+# What this variant has actually been run with. The full capacity network and the
+# call type tasks were only ever posed at 10 kHz, and a pipeline run that trained
+# them here would add sections to this configuration's report that are not in the
+# committed one.
+pipeline:
+  models: [xgboost, metadata, logbook, cnn_small]
+  call_types: []
+
 dataset:
   archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
   zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
