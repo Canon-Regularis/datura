@@ -50,14 +50,17 @@ def test_the_narrow_band_trains_only_what_it_has_results_for():
     assert not [name for name in built if name.startswith("calltypes_")]
 
 
-@pytest.mark.parametrize("name", sorted(CONFIGS))
-def test_a_full_run_would_rebuild_the_report_and_touch_nothing_else(name):
-    """Every committed configuration is finished, so only the report should rerun.
+# Stages a finished configuration may still report as pending. The archive and the
+# feature caches are large and fully derivable, so they are deliberately not
+# committed and a checkout without them has genuine work to do; the report is cheap
+# and reruns every time by design. Anything else pending means a stage would fit a
+# model whose results are already published, and the report it then wrote would
+# disagree with the one in the repository.
+DERIVABLE_OR_CHEAP = {"download", "annotations", "manifest", "features", "report"}
 
-    The report is cheap and always reruns by design. Anything else appearing here
-    means a stage would fit a model whose results are not committed, and the next
-    report build would then disagree with the one in the repository.
-    """
+
+@pytest.mark.parametrize("name", sorted(CONFIGS))
+def test_a_full_run_would_fit_no_model_that_is_already_published(name):
     filename = CONFIGS[name]
     cfg = load_config(f"configs/{filename}")
     if not (cfg.paths.reports / name).exists():
@@ -65,12 +68,14 @@ def test_a_full_run_would_rebuild_the_report_and_touch_nothing_else(name):
             f"no results for {name}; run python -m src.pipeline --config configs/{filename}"
         )
 
-    pending = [
+    pending = {
         stage.name
         for stage in build_stages(cfg, f"configs/{filename}", skip_download=True)
         if not stage.done()
-    ]
-    assert pending == ["report"], f"{name} would also run {[p for p in pending if p != 'report']}"
+    }
+    assert pending <= DERIVABLE_OR_CHEAP, (
+        f"{name} would refit {sorted(pending - DERIVABLE_OR_CHEAP)}"
+    )
 
 
 def test_an_unknown_key_in_the_section_is_refused(tmp_path):
