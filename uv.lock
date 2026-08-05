@@ -38,6 +38,12 @@ conflicts = [[
     { package = "datura", extra = "cuda" },
 ]]
 
+[options]
+prerelease-mode = "disallow"
+
+[manifest]
+constraints = [{ name = "numba", specifier = ">=0.59" }]
+
 [[package]]
 name = "appnope"
 version = "0.1.4"

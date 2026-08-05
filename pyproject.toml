@@ -42,6 +42,22 @@ dev = [
 package = false
 conflicts = [[{ extra = "cpu" }, { extra = "cuda" }]]
 
+# librosa pulls in numba, and every numba release caps the numpy it will accept. Raising
+# the numpy floor past that cap does not stop the resolve. uv walks back through numba
+# releases until it reaches one old enough to declare no cap at all, which is numba 0.53.1
+# from 2021, and that release ships no wheel for any interpreter this project runs on. Six
+# jobs then spend their time compiling a source tree from 2021 and fall over in the build.
+#
+# The floor below is the first numba with a Python 3.12 wheel, so it is the oldest one that
+# can run on the oldest interpreter in requires-python. Nothing older is selectable, and the
+# conflict surfaces at `uv lock` as a sentence naming numpy and numba.
+constraint-dependencies = ["numba>=0.59"]
+
+# The same walk otherwise ends on a numba release candidate. Every version in the lock is a
+# stable release, and a resolver that runs out of them should stop rather than reach for a
+# prerelease of the compiler that librosa decodes audio through.
+prerelease = "disallow"
+
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu" },
