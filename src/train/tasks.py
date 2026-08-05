@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import logging
 
+import numpy as np
 import pandas as pd
 
 from src.config import Config
@@ -21,6 +22,7 @@ from src.data import annotations as ann
 from src.data.manifest import load_manifest
 from src.data.notes import CALL_PREFIX, Vocabulary
 from src.errors import DaturaError
+from src.features.source import FeatureSource
 
 logger = logging.getLogger(__name__)
 
@@ -133,3 +135,32 @@ def viable_tasks(
             f"no call type in {species} reaches {MINIMUM_CLIPS} clips over {MINIMUM_TAPES} tapes"
         )
     return sorted(tasks, key=lambda task: -task.tapes)
+
+
+def window_index(
+    base: FeatureSource, labels: pd.DataFrame, task: Task
+) -> tuple[pd.DataFrame, np.ndarray]:
+    """Windows of this species, relabelled by whether the call type is present.
+
+    A guard declared against this call type drops the clips too long for their own
+    label to describe a window of them.
+
+    Returned alongside the positions it selected, so a caller can build a view over
+    the same rows of the audio cache. Posing the task and fitting it are separate
+    jobs: the explainability tools rebuild exactly this subset to read a trained
+    model back against the windows it actually saw.
+    """
+    if task.max_clip_seconds is not None:
+        labels = labels[labels["duration_seconds"] <= task.max_clip_seconds]
+
+    flags = labels.set_index("clip_id")[f"{CALL_PREFIX}{task.call_type}"].fillna(False)
+    index = base.index
+    positions = np.flatnonzero(index["clip_id"].isin(set(flags.index)).to_numpy())
+
+    subset = index.iloc[positions].reset_index(drop=True)
+    present = subset["clip_id"].map(flags).astype(bool)
+    subset = subset.assign(
+        label=present.astype(int),
+        species=np.where(present, PRESENT, ABSENT),
+    )
+    return subset, positions

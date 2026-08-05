@@ -20,8 +20,8 @@ from src.train.calltypes import (
     PRESENT,
     CallTypeError,
     Task,
-    _window_index,
     viable_tasks,
+    window_index,
 )
 
 
@@ -96,7 +96,7 @@ def test_relabelling_marks_the_right_windows_present():
     windows = labels.loc[labels.index.repeat(3)].reset_index(drop=True)
     source = FakeSource(windows[["clip_id", "tape_id", "species"]].assign(label=0))
 
-    subset, positions = _window_index(source, labels, Task("SpermWhale", "coda", 96, 12))
+    subset, positions = window_index(source, labels, Task("SpermWhale", "coda", 96, 12))
 
     assert len(subset) == len(windows)
     assert set(subset["species"]) == {PRESENT, ABSENT}

@@ -25,13 +25,12 @@ from __future__ import annotations
 import logging
 import sys
 
-import numpy as np
 import pandas as pd
 
 from src import cli
 from src.config import Config
 from src.data import annotations as ann
-from src.data.notes import CALL_PREFIX, load_vocabulary
+from src.data.notes import load_vocabulary
 from src.data.splits import folds_for_index
 from src.features import registry as features
 from src.features.controls import ContextFeatureSource
@@ -48,6 +47,7 @@ from src.train.tasks import (
     Task,
     clip_labels,
     viable_tasks,
+    window_index,
 )
 
 logger = logging.getLogger(__name__)
@@ -63,31 +63,8 @@ __all__ = [
     "clip_labels",
     "run_task",
     "viable_tasks",
+    "window_index",
 ]
-
-
-def _window_index(
-    base: FeatureSource, labels: pd.DataFrame, task: Task
-) -> tuple[pd.DataFrame, np.ndarray]:
-    """Windows of this species, relabelled by whether the call type is present.
-
-    A guard declared against this call type drops the clips too long for their own
-    label to describe a window of them.
-    """
-    if task.max_clip_seconds is not None:
-        labels = labels[labels["duration_seconds"] <= task.max_clip_seconds]
-
-    flags = labels.set_index("clip_id")[f"{CALL_PREFIX}{task.call_type}"].fillna(False)
-    index = base.index
-    positions = np.flatnonzero(index["clip_id"].isin(set(flags.index)).to_numpy())
-
-    subset = index.iloc[positions].reset_index(drop=True)
-    present = subset["clip_id"].map(flags).astype(bool)
-    subset = subset.assign(
-        label=present.astype(int),
-        species=np.where(present, PRESENT, ABSENT),
-    )
-    return subset, positions
 
 
 def run_task(
@@ -114,7 +91,7 @@ def run_task(
     repeats than the first would quietly replace fifty splits with five. Every model
     on that task then gets compared on the five they share.
     """
-    subset, positions = _window_index(base, labels, task)
+    subset, positions = window_index(base, labels, task)
     folds = folds_for_index(subset, cfg)
     plan = FoldPlan.repeated(cfg, subset, repeats) if repeats > 1 else FoldPlan.single(folds)
 

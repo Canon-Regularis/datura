@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from src.config import Config, load_yaml
@@ -28,6 +29,11 @@ LOGBOOK_SOURCE = "logbook"
 NO_AUDIO_SOURCES = (METADATA_SOURCE, LOGBOOK_SOURCE)
 
 Builder = Callable[[Config, dict[str, Any]], WindowClassifier]
+
+# Reading a fitted model back off disk. Only the models that write a checkpoint
+# declare one, which is why it is optional: the trees are refitted in seconds and
+# never saved, so nothing can load them and nothing needs to.
+Loader = Callable[[Path, dict[str, Any], int], WindowClassifier]
 
 # Which command trains a model. The tree models share one, because the control has
 # to be fitted on the same folds as the baseline it is compared against.
@@ -52,6 +58,7 @@ class ModelSpec:
     trainer: str
     build: Builder
     summary: str
+    load: Loader | None = None
 
     @property
     def hears_audio(self) -> bool:
@@ -80,6 +87,12 @@ def _build_cnn(cfg: Config, settings: dict[str, Any]) -> WindowClassifier:
     return SpectrogramCNN(settings["model"], train, settings["augment"])
 
 
+def _load_cnn(checkpoint: Path, settings: dict[str, Any], n_classes: int) -> WindowClassifier:
+    from src.models.cnn import SpectrogramCNN
+
+    return SpectrogramCNN.load(checkpoint, settings["train"], n_classes)
+
+
 _SPECS: tuple[ModelSpec, ...] = (
     ModelSpec(
         name="xgboost",
@@ -95,6 +108,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=features.LOGMEL,
         config_file="configs/cnn.yaml",
         build=_build_cnn,
+        load=_load_cnn,
         summary="residual CNN over log mel windows",
     ),
     ModelSpec(
@@ -103,6 +117,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=features.LOGMEL,
         config_file="configs/cnn_small.yaml",
         build=_build_cnn,
+        load=_load_cnn,
         summary="the same network at a tenth of the capacity",
     ),
     ModelSpec(

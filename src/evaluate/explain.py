@@ -21,21 +21,27 @@ import pandas as pd
 
 from src import cli
 from src.config import Config
+from src.data.notes import load_vocabulary
 from src.data.splits import Fold, folds_for_index, rows_for_clips
 from src.errors import DaturaError
 from src.evaluate import families, plots
 from src.evaluate.gradcam import GradCam
 from src.evaluate.occlusion import band_occlusion
 from src.features import registry as features
-from src.features.source import CachedFeatureSource
+from src.features.source import DerivedSource, FeatureSource
 from src.models import registry as models
-from src.models.cnn import SpectrogramCNN
-from src.models.registry import load_settings
+from src.models.base import WindowClassifier
+from src.models.registry import ModelSpec, load_settings
 from src.results import checkpoint_path, model_directory
+from src.train import tasks
 
 logger = logging.getLogger(__name__)
 
 EXAMPLES_PER_SPECIES = 2
+
+# What fitted a call type result whose directory names no model. run_task leaves the
+# default untagged, so the bare name means trees.
+DEFAULT_CALL_TYPE_MODEL = "xgboost"
 
 
 class ExplainError(DaturaError):
@@ -43,20 +49,32 @@ class ExplainError(DaturaError):
 
 
 def load_fold_model(
-    cfg: Config, settings: dict, fold_index: int, n_classes: int, name: str
-) -> SpectrogramCNN:
+    cfg: Config, spec: ModelSpec, settings: dict, fold_index: int, n_classes: int, name: str
+) -> WindowClassifier:
+    """Read one fold's weights back, through whichever model wrote them.
+
+    ``name`` is the result directory rather than the registry entry, so a call type
+    network is loaded by the same path as a species one: the checkpoint is keyed on
+    the result, and the spec only says how to read it.
+    """
+    if spec.load is None:
+        raise ExplainError(
+            f"{spec.name} writes no checkpoint, so there is nothing to explain; "
+            "the trees are refitted in seconds and never saved"
+        )
+
     checkpoint = checkpoint_path(cfg, name, fold_index)
     if not checkpoint.with_suffix(".pt").exists():
         raise ExplainError(
             f"no checkpoint at {checkpoint.with_suffix('.pt')}; "
             f"run python -m src.train.cnn --name {name} first"
         )
-    return SpectrogramCNN.load(checkpoint, settings["train"], n_classes)
+    return spec.load(checkpoint, settings, n_classes)
 
 
 def sample_correct_windows(
-    model: SpectrogramCNN,
-    source: CachedFeatureSource,
+    model: WindowClassifier,
+    source: FeatureSource,
     rows: np.ndarray,
     class_names: list[str],
     seed: int,
@@ -110,20 +128,37 @@ def _class_names(cfg: Config, name: str) -> list[str]:
         return list(cfg.dataset.species)
 
 
+def _frequencies(cfg: Config, spec: ModelSpec) -> np.ndarray:
+    """The frequency of each row of this model's input, for labelling a band.
+
+    Read off the representation the spec declares rather than assumed to be log mel.
+    A flat descriptor vector has no frequency axis, so occlusion by band means
+    nothing there and the error says which representation was asked.
+    """
+    extractor = features.build_extractor(spec.source, cfg)
+    axis = getattr(extractor, "mel_frequencies", None)
+    if axis is None:
+        raise ExplainError(
+            f"{spec.source} features have no frequency axis, so a band cannot be masked"
+        )
+    return axis()
+
+
 def run(
     cfg: Config,
+    spec: ModelSpec,
     settings: dict,
     fold: Fold,
-    source: CachedFeatureSource,
+    source: FeatureSource,
     name: str,
 ) -> None:
     class_names = _class_names(cfg, name)
     directory = model_directory(cfg, name)
-    model = load_fold_model(cfg, settings, fold.index, len(class_names), name)
+    model = load_fold_model(cfg, spec, settings, fold.index, len(class_names), name)
     rows = rows_for_clips(source.index, fold.test_clips)
     logger.info("explaining %s fold %d on %d held out windows", name, fold.index, len(rows))
 
-    frequencies = features.build_extractor(features.LOGMEL, cfg).mel_frequencies()
+    frequencies = _frequencies(cfg, spec)
 
     table = band_occlusion(model, source.matrix(rows), source.index, rows, class_names, frequencies)
     table.insert(0, "fold", fold.index)
@@ -153,6 +188,58 @@ def run(
     logger.info("figures written to %s", directory)
 
 
+def spec_for_result(name: str) -> ModelSpec:
+    """The registry entry behind a result directory.
+
+    A result is named after the question rather than after the model, so a call type
+    network lands in ``calltype_spermwhale_coda_cnn_small``. The model is whichever
+    registry name the directory ends with; a call type result with no such suffix was
+    fitted by the default tree model, which writes no checkpoint and will say so.
+    """
+    if name in models.names():
+        return models.get(name)
+
+    for candidate in sorted(models.names(), key=len, reverse=True):
+        if name.endswith(f"_{candidate}"):
+            return models.get(candidate)
+    return models.get(DEFAULT_CALL_TYPE_MODEL)
+
+
+def source_for_result(cfg: Config, spec: ModelSpec, name: str) -> FeatureSource:
+    """The windows this result was fitted on, rebuilt.
+
+    A species model saw the whole cache. A call type model saw a relabelled subset of
+    it, so explaining one against the full cache would feed it windows it was never
+    shown and score it on folds it never had. The task is posed again from the same
+    inputs rather than stored, which is what keeps the two in step.
+    """
+    base = features.load_source(spec.source, cfg)
+    if not name.startswith(families.CALL_TYPE_PREFIX):
+        return base
+
+    species, call_type = _task_of(cfg, name)
+    labels = tasks.clip_labels(cfg, species)
+    guard = load_vocabulary().guard_for(call_type)
+    task = tasks.Task(species, call_type, 0, 0, guard)
+
+    subset, positions = tasks.window_index(base, labels, task)
+    return DerivedSource(base, subset, positions, name=f"{base.name}_{call_type}")
+
+
+def _task_of(cfg: Config, name: str) -> tuple[str, str]:
+    """The species and call type a result directory is named after."""
+    body = name.removeprefix(families.CALL_TYPE_PREFIX)
+    for species in cfg.dataset.species:
+        prefix = f"{species.lower()}_"
+        if not body.startswith(prefix):
+            continue
+        call_type = body.removeprefix(prefix)
+        for candidate in models.names():
+            call_type = call_type.removesuffix(f"_{candidate}")
+        return species, call_type
+    raise ExplainError(f"{name} names no species in this configuration")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     cli.add_variant_name(parser, default="cnn_small")
@@ -160,13 +247,13 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
-    spec = models.get(args.name)
-    source = features.load_source(spec.source, cfg)
+    spec = spec_for_result(args.name)
+    source = source_for_result(cfg, spec, args.name)
     folds = folds_for_index(source.index, cfg)
     if not 0 <= args.fold < len(folds):
         raise ExplainError(f"fold {args.fold} is outside 0..{len(folds) - 1}")
 
-    run(cfg, load_settings(spec), folds[args.fold], source, args.name)
+    run(cfg, spec, load_settings(spec), folds[args.fold], source, args.name)
     return 0
 
 
