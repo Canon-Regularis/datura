@@ -1,36 +1,36 @@
-tape_id,n_species,species
-52008,2,"HumpbackWhale, SpermWhale"
-56006,2,"BottlenoseDolphin, HarbourSeal"
-58021,2,"LongBeaked(Pacific)CommonDolphin, Short_Finned(Pacific)PilotWhale"
-63021,2,"CommonDolphin, HarborPorpoise"
-66014,2,"Boutu_AmazonRiverDolphin, TucuxiDolphin"
-66038,2,"BeardedSeal, Walrus"
-66084,2,"LeopardSeal, RossSeal"
-66090,2,"LeopardSeal, RossSeal"
-67026,2,"GrayWhale, Short_Finned(Pacific)PilotWhale"
-68003,2,"Narwhal, RingedSeal"
-68005,2,"Narwhal, RingedSeal"
-68040,2,"Narwhal, RingedSeal"
-70014,2,"NorthernRightWhale, White_beakedDolphin"
-71012,3,"BeardedSeal, RibbonSeal, SpottedSeal"
-72021,2,"BowheadWhale, Walrus"
-75001,2,"Fin_FinbackWhale, White_sidedDolphin"
-75003,2,"CommonDolphin, StripedDolphin"
-75005,4,"Fin_FinbackWhale, Long_FinnedPilotWhale, SpermWhale, StripedDolphin"
-75010,2,"Long_FinnedPilotWhale, SpermWhale"
-75011,2,"Long_FinnedPilotWhale, SpermWhale"
-75012,2,"Long_FinnedPilotWhale, SpermWhale"
-77028,2,"Long_FinnedPilotWhale, SpermWhale"
-77035,2,"Long_FinnedPilotWhale, SpermWhale"
-78018,2,"BeardedSeal, BowheadWhale"
-79004,2,"Fin_FinbackWhale, White_sidedDolphin"
-79005,2,"Fin_FinbackWhale, White_sidedDolphin"
-79006,2,"Fin_FinbackWhale, White_sidedDolphin"
-83034,2,"ClymeneDolphin, SpinnerDolphin"
-85009,3,"Grampus_Risso'sDolphin, SpermWhale, StripedDolphin"
-90027,2,"PantropicalSpottedDolphin, SpermWhale"
-91012,2,"MelonHeadedWhale, SpermWhale"
-93001,2,"PantropicalSpottedDolphin, SpermWhale"
-94008,2,"PantropicalSpottedDolphin, Short_Finned(Pacific)PilotWhale"
-94009,2,"Fraser'sDolphin, Short_Finned(Pacific)PilotWhale"
-94201,6,"BottlenoseDolphin, CommonDolphin, Grampus_Risso'sDolphin, Long_FinnedPilotWhale, SpermWhale, StripedDolphin"
+tape_id,n_species,species,n_under_study,under_study
+52008,2,"HumpbackWhale, SpermWhale",2,"HumpbackWhale, SpermWhale"
+56006,2,"BottlenoseDolphin, HarbourSeal",0,
+58021,2,"LongBeaked(Pacific)CommonDolphin, Short_Finned(Pacific)PilotWhale",1,Short_Finned(Pacific)PilotWhale
+63021,2,"CommonDolphin, HarborPorpoise",0,
+66014,2,"Boutu_AmazonRiverDolphin, TucuxiDolphin",0,
+66038,2,"BeardedSeal, Walrus",1,Walrus
+66084,2,"LeopardSeal, RossSeal",0,
+66090,2,"LeopardSeal, RossSeal",0,
+67026,2,"GrayWhale, Short_Finned(Pacific)PilotWhale",1,Short_Finned(Pacific)PilotWhale
+68003,2,"Narwhal, RingedSeal",0,
+68005,2,"Narwhal, RingedSeal",0,
+68040,2,"Narwhal, RingedSeal",0,
+70014,2,"NorthernRightWhale, White_beakedDolphin",1,NorthernRightWhale
+71012,3,"BeardedSeal, RibbonSeal, SpottedSeal",0,
+72021,2,"BowheadWhale, Walrus",1,Walrus
+75001,2,"Fin_FinbackWhale, White_sidedDolphin",0,
+75003,2,"CommonDolphin, StripedDolphin",1,StripedDolphin
+75005,4,"Fin_FinbackWhale, Long_FinnedPilotWhale, SpermWhale, StripedDolphin",3,"Long_FinnedPilotWhale, SpermWhale, StripedDolphin"
+75010,2,"Long_FinnedPilotWhale, SpermWhale",2,"Long_FinnedPilotWhale, SpermWhale"
+75011,2,"Long_FinnedPilotWhale, SpermWhale",2,"Long_FinnedPilotWhale, SpermWhale"
+75012,2,"Long_FinnedPilotWhale, SpermWhale",2,"Long_FinnedPilotWhale, SpermWhale"
+77028,2,"Long_FinnedPilotWhale, SpermWhale",2,"Long_FinnedPilotWhale, SpermWhale"
+77035,2,"Long_FinnedPilotWhale, SpermWhale",2,"Long_FinnedPilotWhale, SpermWhale"
+78018,2,"BeardedSeal, BowheadWhale",0,
+79004,2,"Fin_FinbackWhale, White_sidedDolphin",0,
+79005,2,"Fin_FinbackWhale, White_sidedDolphin",0,
+79006,2,"Fin_FinbackWhale, White_sidedDolphin",0,
+83034,2,"ClymeneDolphin, SpinnerDolphin",1,SpinnerDolphin
+85009,3,"Grampus_Risso'sDolphin, SpermWhale, StripedDolphin",2,"SpermWhale, StripedDolphin"
+90027,2,"PantropicalSpottedDolphin, SpermWhale",1,SpermWhale
+91012,2,"MelonHeadedWhale, SpermWhale",1,SpermWhale
+93001,2,"PantropicalSpottedDolphin, SpermWhale",1,SpermWhale
+94008,2,"PantropicalSpottedDolphin, Short_Finned(Pacific)PilotWhale",1,Short_Finned(Pacific)PilotWhale
+94009,2,"Fraser'sDolphin, Short_Finned(Pacific)PilotWhale",1,Short_Finned(Pacific)PilotWhale
+94201,6,"BottlenoseDolphin, CommonDolphin, Grampus_Risso'sDolphin, Long_FinnedPilotWhale, SpermWhale, StripedDolphin",3,"Long_FinnedPilotWhale, SpermWhale, StripedDolphin"

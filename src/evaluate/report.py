@@ -22,6 +22,8 @@ import logging
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 from src import cli
 from src.config import Config
 from src.evaluate import families, sections, tables
@@ -31,6 +33,12 @@ from src.provenance import write as write_provenance
 from src.results import ensure, report_path
 
 logger = logging.getLogger(__name__)
+
+
+def _shared_tapes(cfg: Config) -> pd.DataFrame | None:
+    """Tapes carrying more than one species, when the audit has been written."""
+    path = cfg.paths.metadata / f"audit_cross_species_tapes_{cfg.name}.csv"
+    return pd.read_csv(path) if path.exists() else None
 
 
 def build(cfg: Config) -> Path:
@@ -82,6 +90,7 @@ def build(cfg: Config) -> Path:
             intervals[family.key],
             ambiguity,
             figures,
+            _shared_tapes(cfg),
         )
 
     resolved = overview[overview["p_value"] < 0.05]

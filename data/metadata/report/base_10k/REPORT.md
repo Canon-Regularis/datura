@@ -86,11 +86,13 @@ and produce an interval several times too narrow.
 | logbook   |          0.9952 |       0.9956 |        0.9996 |
 | metadata  |          0.6723 |       0.9889 |        0.9497 |
 
-### With and without the equipment giveaway
+One of these recordings carries more than one of the classes above, across HumpbackWhale and SpermWhale. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
 
-Test clips split by whether their native sample rate is used by one species or by
-several. On the shared rate subset the recording cannot identify the species by
-itself, so that column is where audio has to earn its result.
+### With and without the giveaway
+
+Test clips split by whether their native sample rate or their collection code is used by one species or
+by several. On the shared subset the recording cannot identify the species by itself,
+so those rows are where audio has to earn its result.
 
 | giveaway           | model     | subset                                 |   clips |   macro_f1_mean |   macro_f1_std |
 |:-------------------|:----------|:---------------------------------------|--------:|----------------:|---------------:|
@@ -137,8 +139,8 @@ Every figure has a CSV of the same name beside it, or in the model directory.
 
 ## KillerWhale, call
 
-Against `calltype_killerwhale_call_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_killerwhale_call_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                     |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:--------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -151,8 +153,8 @@ conditions, and no audio.
 
 ## KillerWhale, chirp
 
-Against `calltype_killerwhale_chirp_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_killerwhale_chirp_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                      |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:---------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -165,8 +167,8 @@ conditions, and no audio.
 
 ## KillerWhale, click
 
-Against `calltype_killerwhale_click_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_killerwhale_click_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                      |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:---------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -179,8 +181,8 @@ conditions, and no audio.
 
 ## KillerWhale, squeal
 
-Against `calltype_killerwhale_squeal_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_killerwhale_squeal_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                       |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:----------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -193,8 +195,8 @@ conditions, and no audio.
 
 ## KillerWhale, whistle
 
-Against `calltype_killerwhale_whistle_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_killerwhale_whistle_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                        |   mean |   control |   margin |    low |   high |   p_value |   agreeing |   folds |
 |:-----------------------------|-------:|----------:|---------:|-------:|-------:|----------:|-----------:|--------:|
@@ -207,8 +209,8 @@ conditions, and no audio.
 
 ## SpermWhale, click
 
-Against `calltype_spermwhale_click_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_spermwhale_click_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                     |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:--------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -221,8 +223,8 @@ conditions, and no audio.
 
 ## SpermWhale, coda
 
-Against `calltype_spermwhale_coda_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_spermwhale_coda_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                              |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:-----------------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|
@@ -237,8 +239,8 @@ conditions, and no audio.
 
 ## SpermWhale, whistle
 
-Against `calltype_spermwhale_whistle_context`, which sees the site, the coordinates and the noise
-conditions, and no audio.
+Against `calltype_spermwhale_whistle_context`, which sees the site, the coordinates, the collection
+the cut came from and the noise conditions, and no audio.
 
 | model                       |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds |
 |:----------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|

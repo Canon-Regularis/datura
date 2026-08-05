@@ -71,6 +71,7 @@ def species_section(
     intervals: pd.DataFrame,
     ambiguity: pd.DataFrame,
     figures: list[Path],
+    shared_tapes: pd.DataFrame | None = None,
 ) -> list[str]:
     class_names = list(cfg.dataset.species)
     return [
@@ -100,11 +101,12 @@ def species_section(
         "",
         tables.per_species_recall(comparison, class_names).round(4).to_markdown(index=False),
         "",
-        "### With and without the equipment giveaway",
+        *_shared_tape_caveat(shared_tapes),
+        "### With and without the giveaway",
         "",
-        "Test clips split by whether their native sample rate is used by one species or by",
-        "several. On the shared rate subset the recording cannot identify the species by",
-        "itself, so that column is where audio has to earn its result.",
+        f"Test clips split by whether {_giveaway_phrase(ambiguity)} is used by one species or",
+        "by several. On the shared subset the recording cannot identify the species by itself,",
+        "so those rows are where audio has to earn its result.",
         "",
         ambiguity.round(4).to_markdown(index=False),
         "",
@@ -117,14 +119,58 @@ def species_section(
     ]
 
 
+def _shared_tape_caveat(shared_tapes: pd.DataFrame | None) -> list[str]:
+    """How much of this recall rests on tapes carrying two of the classes.
+
+    Such a tape is one group with two labels. Grouping keeps it whole so nothing
+    leaks across a fold boundary, and it still contributes to both recalls, so a
+    reader comparing two classes that share recordings is not comparing independent
+    evidence. On three species that is one tape and barely worth a clause; on eleven
+    it reaches most of one class.
+    """
+    if shared_tapes is None or shared_tapes.empty:
+        return []
+
+    mixed = shared_tapes[shared_tapes["n_under_study"] >= 2]
+    if mixed.empty:
+        return []
+
+    involved = sorted({name.strip() for row in mixed["under_study"] for name in row.split(",")})
+    listed = ", ".join(involved[:-1]) + f" and {involved[-1]}" if len(involved) > 1 else involved[0]
+    opening = (
+        "One of these recordings carries"
+        if len(mixed) == 1
+        else f"{len(mixed)} of these recordings carry"
+    )
+    return [
+        f"{opening} more than one of the classes above, across {listed}. Grouping keeps each "
+        "tape whole, so none of them crosses a fold boundary, and they still contribute to two "
+        "recalls apiece: the classes sharing a tape are not scored on independent evidence.",
+        "",
+    ]
+
+
+def _giveaway_phrase(ambiguity: pd.DataFrame) -> str:
+    """Name the fields the split was actually made on.
+
+    Read off the table rather than restated beside it. The sentence described only
+    the sample rate for as long as the collection code had been in the table, which
+    is the drift this reads its way around.
+    """
+    fields = list(dict.fromkeys(ambiguity["giveaway"]))
+    if len(fields) == 1:
+        return f"their {fields[0]}"
+    return "their " + ", ".join(fields[:-1]) + f" or their {fields[-1]}"
+
+
 def call_type_section(
     family: families.Family, margins: pd.DataFrame, intervals: pd.DataFrame
 ) -> list[str]:
     return [
         f"## {family.title}",
         "",
-        f"Against `{family.control}`, which sees the site, the coordinates and the noise",
-        "conditions, and no audio.",
+        f"Against `{family.control}`, which sees the site, the coordinates, the collection",
+        "the cut came from and the noise conditions, and no audio.",
         "",
         margins.round(4).to_markdown(index=False),
         "",

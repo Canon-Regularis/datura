@@ -71,11 +71,13 @@ and produce an interval several times too narrow.
 | logbook   |          0.995  |       0.9929 |        0.9997 |
 | metadata  |          0.8697 |       0.9696 |        0.8839 |
 
-### With and without the equipment giveaway
+One of these recordings carries more than one of the classes above, across HumpbackWhale and SpermWhale. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
 
-Test clips split by whether their native sample rate is used by one species or by
-several. On the shared rate subset the recording cannot identify the species by
-itself, so that column is where audio has to earn its result.
+### With and without the giveaway
+
+Test clips split by whether their native sample rate or their collection code is used by one species or
+by several. On the shared subset the recording cannot identify the species by itself,
+so those rows are where audio has to earn its result.
 
 | giveaway           | model     | subset                                 |   clips |   macro_f1_mean |   macro_f1_std |
 |:-------------------|:----------|:---------------------------------------|--------:|----------------:|---------------:|

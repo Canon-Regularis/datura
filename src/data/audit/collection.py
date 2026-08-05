@@ -19,13 +19,22 @@ from src.data.clips import ClipPathError, parse_relative_path
 def cross_species_tapes(cfg: Config) -> pd.DataFrame:
     """Tapes carrying more than one species label, read from the zip's index.
 
-    This covers all 54 species rather than the three under study, because a tape
-    shared with an unused species still tells you how the collection was cut. The
-    zip is only indexed here, never decompressed.
+    Every row covers all 54 species, because a tape shared with an unused species
+    still says something about how the collection was cut. The last two columns then
+    narrow it to the configuration in hand, which is the part that bears on a per
+    class score: a tape carrying two species under study is a group with two labels,
+    kept whole so nothing leaks, but pooled in every recall it contributes to.
+
+    Without those columns this table was byte identical for every configuration, so
+    the file named after the wide set could not answer the question the wide set
+    raises. The zip is only indexed here, never decompressed.
     """
+    studied = set(cfg.dataset.species)
     archive = cfg.paths.raw / cfg.dataset.zip_name
     if not archive.exists():
-        return pd.DataFrame(columns=["tape_id", "n_species", "species"])
+        return pd.DataFrame(
+            columns=["tape_id", "n_species", "species", "n_under_study", "under_study"]
+        )
 
     prefix = f"{cfg.dataset.archive_root}/"
     tapes: dict[str, set[str]] = {}
@@ -40,11 +49,18 @@ def cross_species_tapes(cfg: Config) -> pd.DataFrame:
             tapes.setdefault(identity.tape_id, set()).add(identity.species)
 
     shared = [
-        {"tape_id": tape, "n_species": len(names), "species": ", ".join(sorted(names))}
+        {
+            "tape_id": tape,
+            "n_species": len(names),
+            "species": ", ".join(sorted(names)),
+            "n_under_study": len(names & studied),
+            "under_study": ", ".join(sorted(names & studied)),
+        }
         for tape, names in sorted(tapes.items())
         if len(names) > 1
     ]
-    return pd.DataFrame(shared, columns=["tape_id", "n_species", "species"])
+    columns = ["tape_id", "n_species", "species", "n_under_study", "under_study"]
+    return pd.DataFrame(shared, columns=columns)
 
 
 def audit_tables(manifest: pd.DataFrame) -> dict[str, pd.DataFrame]:
