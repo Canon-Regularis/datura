@@ -74,6 +74,16 @@ def _build_module(cfg: Config):
         raise EncoderUnavailable(
             "the encoder needs torchaudio; install with uv sync --extra cpu"
         ) from error
+    except OSError as error:  # pragma: no cover - same
+        # An ImportError means it is absent. An OSError means it is present and will
+        # not load, which on Linux is torchaudio's compiled extension refusing the
+        # installed libtorch. Both are named here because catching only the first one
+        # let this reach CI as three failing jobs and an undefined symbol.
+        raise EncoderUnavailable(
+            "torchaudio is installed but its native library will not load, which means "
+            "it was built against a different torch. Both must come from the same "
+            f"index; see tool.uv.sources in pyproject.toml. Underlying error: {error}"
+        ) from error
 
     settings = cfg.encoder
     if settings.architecture not in ARCHITECTURES:

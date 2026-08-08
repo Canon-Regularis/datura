@@ -68,6 +68,18 @@ torch = [
     { index = "pytorch-cpu", extra = "cpu" },
     { index = "pytorch-cu126", extra = "cuda" },
 ]
+# torchaudio has to come from the same index as torch, not from PyPI. Its Linux wheel
+# ships a compiled extension linked against a specific libtorch, and the PyPI build is
+# linked against the torch it was released beside rather than the one pinned here. That
+# combination installs cleanly and then fails at import with an undefined symbol.
+#
+# It cost three CI jobs to find, because the Windows wheel carries no such extension:
+# Windows passed, all three Linux jobs failed, and the two jobs that never import
+# torchaudio passed on Linux as well.
+torchaudio = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu126", extra = "cuda" },
+]
 
 [[tool.uv.index]]
 name = "pytorch-cpu"

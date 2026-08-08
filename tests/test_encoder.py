@@ -182,3 +182,26 @@ def test_every_committed_config_declares_the_encoder_explicitly(name):
     """Leaning on the dataclass default would hide the digest from the file that set it."""
     raw = yaml.safe_load((PROJECT_ROOT / "configs" / name).read_text(encoding="utf-8"))
     assert "encoder" in raw, f"{name} inherits the encoder section rather than stating it"
+
+
+def test_torchaudio_is_the_same_build_as_torch():
+    """Their native libraries have to match, so they must come from the same index.
+
+    torchaudio's Linux wheel links against a specific libtorch. Taking it from PyPI
+    while torch comes from the pytorch index installs cleanly, passes on Windows where
+    the wheel carries no such extension, and then fails at import on Linux with an
+    undefined symbol. That is how it reached CI as three red jobs.
+
+    The local version tag is what tells them apart. An index build carries ``+cpu`` or
+    ``+cu126``; a PyPI build carries nothing.
+    """
+    torch = pytest.importorskip("torch")
+    torchaudio = pytest.importorskip("torchaudio")
+
+    def build(version: str) -> str:
+        return version.partition("+")[2]
+
+    assert build(torchaudio.__version__) == build(torch.__version__), (
+        f"torch is {torch.__version__} and torchaudio is {torchaudio.__version__}, "
+        "so they came from different indexes and their native libraries will not match"
+    )
