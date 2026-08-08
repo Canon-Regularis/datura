@@ -18,7 +18,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.config import Config
-from src.evaluate import plots, tables
+from src.evaluate import families, plots, tables
 from src.results import config_directory, model_directory
 
 # Files a model may or may not write, and the figure each one becomes. The trees
@@ -54,16 +54,29 @@ def _per_model_drawing(cfg: Config, directory: Path) -> dict[str, Callable[[Path
 
 def draw_all(
     cfg: Config,
-    model_names: list[str],
+    family: families.Family,
     comparison: pd.DataFrame,
     ambiguity: pd.DataFrame,
 ) -> list[Path]:
-    """Every figure the species section links to, in the order it links to them."""
+    """Every figure the species section links to, in the order it links to them.
+
+    The family arrives whole rather than as a list of names, because the headline
+    chart has to know which model is the floor. Reading it off a hardcoded name drew
+    the reference line at the metadata control long after the project had established
+    that the line belonged higher.
+    """
     directory = config_directory(cfg)
     class_names = list(cfg.dataset.species)
+    model_names = list(family.names)
+    floor = families.strongest_floor(cfg, family) or family.control
 
     figures = [
-        plots.model_comparison(tables.headline(comparison), directory / "model_comparison.png"),
+        plots.model_comparison(
+            tables.headline(comparison),
+            directory / "model_comparison.png",
+            floor=floor,
+            silent=set(family.floors),
+        ),
         plots.per_class_recall(comparison, directory / "per_class_recall.png", class_names),
     ]
 
@@ -71,7 +84,9 @@ def draw_all(
     # hand over the species; the collection code is the second and the stronger.
     for field, rows in ambiguity.groupby("giveaway", sort=False):
         stem = str(field).replace(" ", "_")
-        figures.append(plots.ambiguity_comparison(rows, directory / f"ambiguity_{stem}.png"))
+        figures.append(
+            plots.ambiguity_comparison(rows, directory / f"ambiguity_{stem}.png", str(field))
+        )
 
     drawing = _per_model_drawing(cfg, directory)
     for name in model_names:

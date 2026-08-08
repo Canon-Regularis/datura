@@ -1,0 +1,4 @@
+species,clips_measured,share_below_nyquist,share_above_nyquist,encoder_rate,corpus_nyquist
+HumpbackWhale,40,0.99999505,4.97e-06,16000,5000.0
+KillerWhale,40,0.99999857,1.46e-06,16000,5000.0
+SpermWhale,40,0.99998873,1.133e-05,16000,5000.0
