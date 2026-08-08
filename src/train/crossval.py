@@ -13,6 +13,8 @@ there is no branch here for feature importance or for learning curves.
 from __future__ import annotations
 
 import logging
+import os
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -186,8 +188,14 @@ def run_cross_validation(
     window_predictions: list[pd.DataFrame] = []
     extras: dict[str, list[pd.DataFrame]] = {}
 
+    cooldown = float(os.environ.get("DATURA_FOLD_COOLDOWN", "0"))
+    if cooldown:
+        logger.info("pausing %.0fs between folds, so the machine can shed heat", cooldown)
+
     for repeat, folds in plan:
         for fold in folds:
+            if cooldown and (clip_rows or window_rows):
+                time.sleep(cooldown)
             outcome = _run_fold(
                 cfg, source, fold, repeat, build_model, model_name, class_names, labels
             )

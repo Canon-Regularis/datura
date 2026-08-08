@@ -8,8 +8,6 @@ about the procedure rather than the parts.
 from __future__ import annotations
 
 import copy
-import math
-from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -23,16 +21,7 @@ from src.features.views import RowView
 from src.models.base import Batch, FoldContext, WindowClassifier, balanced_class_weights
 from src.models.cnn.augment import SpectrogramAugment
 from src.models.cnn.network import MelResNet
-from src.models.cnn.runtime import configure_backend, resolve_device
-
-
-def _batches(
-    view: RowView, labels: np.ndarray, batch_size: int, shuffle: bool, rng: np.random.Generator
-) -> Iterator[tuple[np.ndarray, np.ndarray]]:
-    order = rng.permutation(len(view)) if shuffle else np.arange(len(view))
-    for start in range(0, len(order), batch_size):
-        positions = order[start : start + batch_size]
-        yield view.take(positions), labels[positions]
+from src.models.runtime import batches, breathe, configure_backend, resolve_device, schedule
 
 
 class SpectrogramCNN(WindowClassifier):
@@ -79,7 +68,7 @@ class SpectrogramCNN(WindowClassifier):
             weight_decay=float(self._train_settings.get("weight_decay", 0.01)),
         )
         scheduler = torch.optim.lr_scheduler.LambdaLR(
-            optimizer, lambda epoch: _schedule(epoch, warmup, epochs)
+            optimizer, lambda epoch: schedule(epoch, warmup, epochs)
         )
         use_amp = self.device.type == "cuda"
         scaler = torch.amp.GradScaler(self.device.type, enabled=use_amp)
@@ -92,7 +81,7 @@ class SpectrogramCNN(WindowClassifier):
             self.module.train()
             total_loss = 0.0
             seen = 0
-            for features, labels in _batches(train.features, train.labels, batch_size, True, rng):
+            for features, labels in batches(train.features, train.labels, batch_size, True, rng):
                 inputs = self._to_tensor(features)
                 inputs = self._augment(inputs, generator)
                 targets = torch.as_tensor(labels, dtype=torch.long, device=self.device)
@@ -115,6 +104,8 @@ class SpectrogramCNN(WindowClassifier):
             self.history.append(
                 {"epoch": epoch, "train_loss": total_loss / max(seen, 1), "val_macro_f1": score}
             )
+
+            breathe()
 
             if score > best_score:
                 best_score, stale = score, 0
@@ -171,11 +162,3 @@ class SpectrogramCNN(WindowClassifier):
         model.module.load_state_dict(checkpoint["state_dict"])
         model.module.eval()
         return model
-
-
-def _schedule(epoch: int, warmup_epochs: int, total_epochs: int) -> float:
-    """Linear warmup then cosine decay, as a multiplier on the base rate."""
-    if warmup_epochs > 0 and epoch < warmup_epochs:
-        return (epoch + 1) / warmup_epochs
-    progress = (epoch - warmup_epochs) / max(total_epochs - warmup_epochs, 1)
-    return 0.5 * (1.0 + math.cos(math.pi * min(progress, 1.0)))

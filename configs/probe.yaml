@@ -1,0 +1,26 @@
+# A head over frozen encoder embeddings. The encoder itself never moves, so this
+# file configures the only part that is fitted.
+#
+# hidden: 0 is a bare linear probe, which is the standard way to ask what a
+# pretrained representation already separates. Adding capacity here would start
+# answering a different question, about what can be learned from 134 recordings,
+# and the two networks already answer that one.
+model:
+  hidden: 0
+  dropout: 0.0
+
+# Vectors rather than spectrograms, so batches are large and epochs are cheap. The
+# whole fifty split run is minutes once the embeddings are cached, which is why this
+# model can carry ten repeats where the networks carry one.
+train:
+  epochs: 60
+  batch_size: 256
+  lr: 0.001
+  weight_decay: 0.01
+  warmup_epochs: 3
+  early_stopping_patience: 10
+  seed: 1234
+  device: auto
+  # Turn on for identical reruns on the same hardware, at about a third less
+  # throughput. Also export CUBLAS_WORKSPACE_CONFIG=:4096:8.
+  deterministic: false

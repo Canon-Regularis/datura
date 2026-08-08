@@ -47,9 +47,19 @@ def main(argv: list[str] | None = None) -> int:
     elif args.skip_control:
         wanted = [spec for spec in wanted if not spec.is_control]
 
-    assembly = assemble(cfg, features.ACOUSTIC, repeats=args.repeats)
+    # Group by the cached representation each model reads, rather than assuming every
+    # tree reads the acoustic descriptors. A model whose source is not cached audio
+    # takes its columns off the window index, which every assembly carries, so it can
+    # ride along with any of them.
+    by_source: dict[str, list] = {}
     for spec in wanted:
-        train(cfg, spec, assembly, load_settings(spec))
+        source = spec.source if spec.hears_audio else features.ACOUSTIC
+        by_source.setdefault(source, []).append(spec)
+
+    for source, specs in sorted(by_source.items()):
+        assembly = assemble(cfg, source, repeats=args.repeats)
+        for spec in specs:
+            train(cfg, spec, assembly, load_settings(spec))
     return 0
 
 

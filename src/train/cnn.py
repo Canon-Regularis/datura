@@ -35,6 +35,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     cli.add_variant_name(parser)
     parser.add_argument("--epochs", type=int, default=None, help="override the epoch count")
+    parser.add_argument(
+        "--repeats",
+        type=int,
+        default=None,
+        help="rerun the whole split under fresh seeds; defaults to what the registry declares",
+    )
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
@@ -44,7 +50,8 @@ def main(argv: list[str] | None = None) -> int:
     settings = load_settings(spec, overrides)
     log_device(settings["train"])
 
-    assembly: Assembly = assemble(cfg, spec.source)
+    repeats = args.repeats if args.repeats is not None else spec.repeats
+    assembly: Assembly = assemble(cfg, spec.source, repeats=repeats)
     train(cfg, spec, assembly, settings, name=args.name)
     return 0
 

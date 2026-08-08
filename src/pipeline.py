@@ -43,11 +43,10 @@ logger = logging.getLogger(__name__)
 EXPLAINED_VARIANT = "cnn_small"
 EXPLAINED_FOLD = "3"
 
-# How many times the tree models rerun the whole split under a shifted seed. Five
-# folds cannot separate the differences this project reports, and the trees are
-# cheap enough to answer that with repetition. The networks stay on one split
-# because ten of them is most of a day of GPU for the same question.
-TREE_REPEATS = "10"
+# How many times a call type task redraws its split. The tree models carry this in
+# the registry, beside the cost that decides it; a call type task is the same trees
+# on a subset, so it takes the same count from the model it fits.
+CALL_TYPE_REPEATS = str(models.get("xgboost").repeats)
 
 # Which species the call type tasks are posed inside. Every other species in the
 # study has no call type reaching the minimum of 60 clips over 10 tapes.
@@ -105,15 +104,23 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
     The tree models share a single command, because the control has to be fitted on
     the same folds as the baseline it is compared against.
     """
-    trees = [
-        spec.name for spec in models.trained_by(models.TREES) if cfg.pipeline.allows(spec.name)
-    ]
-    if not trees:
+    wanted = [spec for spec in models.trained_by(models.TREES) if cfg.pipeline.allows(spec.name)]
+    if not wanted:
         return []
+
+    # One command fits every tree on one assembly, so they have to agree on how many
+    # times the split is redrawn. Disagreeing would mean the control and the model it
+    # is compared against were scored on different numbers of splits.
+    counts = {spec.repeats for spec in wanted}
+    if len(counts) != 1:
+        raise ValueError(f"the tree models declare different repeat counts: {sorted(counts)}")
+    repeats = str(next(iter(counts)))
+
+    trees = [spec.name for spec in wanted]
     stages = [
         Stage(
             models.TREES,
-            lambda: xgb_cli.main(["--config", config_path, "--repeats", TREE_REPEATS]),
+            lambda n=repeats: xgb_cli.main(["--config", config_path, "--repeats", n]),
             lambda: all(has_results(cfg, name) for name in trees),
         )
     ]
@@ -123,7 +130,9 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
         stages.append(
             Stage(
                 spec.name,
-                lambda n=spec.name: cnn_cli.main(["--config", config_path, "--name", n]),
+                lambda n=spec.name, r=str(spec.repeats): cnn_cli.main(
+                    ["--config", config_path, "--name", n, "--repeats", r]
+                ),
                 lambda n=spec.name: has_results(cfg, n),
             )
         )
@@ -141,7 +150,7 @@ def _call_type_stages(cfg: Config, config_path: str) -> list[Stage]:
         Stage(
             f"calltypes_{species.lower()}",
             lambda s=species: calltypes_cli.main(
-                ["--config", config_path, "--species", s, "--repeats", TREE_REPEATS]
+                ["--config", config_path, "--species", s, "--repeats", CALL_TYPE_REPEATS]
             ),
             lambda s=species: any(
                 name.startswith(f"calltype_{s.lower()}_") and has_results(cfg, name)

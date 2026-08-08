@@ -59,6 +59,15 @@ class ModelSpec:
     build: Builder
     summary: str
     load: Loader | None = None
+    repeats: int = 1
+    """How many times the whole split is redrawn for this model.
+
+    A cost decision, so it belongs beside the model it costs. The trees refit in
+    seconds and the probe fits a linear map over cached vectors, so both can afford
+    ten repeats of the five fold split and the fifty estimates that buys. The larger
+    network is an hour and a half a run, and ten of those is most of a day of GPU for
+    a comparison that is already the weakest in the report.
+    """
 
     @property
     def hears_audio(self) -> bool:
@@ -93,6 +102,20 @@ def _load_cnn(checkpoint: Path, settings: dict[str, Any], n_classes: int) -> Win
     return SpectrogramCNN.load(checkpoint, settings["train"], n_classes)
 
 
+def _build_probe(cfg: Config, settings: dict[str, Any]) -> WindowClassifier:
+    from src.models.probe import EmbeddingProbe
+
+    train = dict(settings["train"])
+    train.setdefault("seed", cfg.split.seed)
+    return EmbeddingProbe(settings["model"], train)
+
+
+def _load_probe(checkpoint: Path, settings: dict[str, Any], n_classes: int) -> WindowClassifier:
+    from src.models.probe import EmbeddingProbe
+
+    return EmbeddingProbe.load(checkpoint, settings["train"], n_classes)
+
+
 _SPECS: tuple[ModelSpec, ...] = (
     ModelSpec(
         name="xgboost",
@@ -100,6 +123,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=features.ACOUSTIC,
         config_file="configs/xgb.yaml",
         build=_build_trees,
+        repeats=10,
         summary="gradient boosted trees over hand engineered descriptors",
     ),
     ModelSpec(
@@ -118,6 +142,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         config_file="configs/cnn_small.yaml",
         build=_build_cnn,
         load=_load_cnn,
+        repeats=10,
         summary="the same network at a tenth of the capacity",
     ),
     ModelSpec(
@@ -126,6 +151,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=METADATA_SOURCE,
         config_file="configs/metadata.yaml",
         build=_build_trees,
+        repeats=10,
         summary="recording metadata only, the floor every audio model must clear",
     ),
     ModelSpec(
@@ -134,7 +160,21 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=LOGBOOK_SOURCE,
         config_file="configs/logbook.yaml",
         build=_build_trees,
+        repeats=10,
         summary="everything written down about a recording, and none of the recording",
+    ),
+    # Appended rather than slotted beside the other audio models on purpose. The
+    # order here sets the row order of every committed table, so inserting in the
+    # middle would move rows that did not otherwise change.
+    ModelSpec(
+        name="probe",
+        trainer=NETWORK,
+        source=features.ENCODER,
+        config_file="configs/probe.yaml",
+        build=_build_probe,
+        load=_load_probe,
+        repeats=10,
+        summary="a linear probe over frozen pretrained encoder embeddings",
     ),
 )
 
