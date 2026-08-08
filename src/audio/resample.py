@@ -34,3 +34,25 @@ def to_target_rate(signal: np.ndarray, native_rate: int, target_rate: int) -> np
         return np.ascontiguousarray(signal, dtype=np.float32)
     converted = soxr.resample(signal.astype(np.float32), native_rate, target_rate, quality="HQ")
     return np.ascontiguousarray(converted, dtype=np.float32)
+
+
+def to_encoder_rate(signal: np.ndarray, current_rate: int, encoder_rate: int) -> np.ndarray:
+    """Resample in either direction, to meet what a pretrained encoder expects.
+
+    This is the one place in the project that upsamples, and the reason the rule above
+    does not apply here is worth stating rather than assuming.
+
+    ``to_target_rate`` refuses to upsample because it runs on the native file, and
+    native rates differ by species in this corpus. Upsampling there would leave one
+    species with an empty band another species filled, which is a label written into
+    the signal.
+
+    This function runs afterwards, on a window that has already been brought to the
+    one common rate every kept clip shares. Whatever empty band appears above the old
+    Nyquist appears identically for every window of every species, so it separates
+    nothing. ``src.features.encoder`` asserts that precondition before calling in.
+    """
+    if current_rate == encoder_rate:
+        return np.ascontiguousarray(signal, dtype=np.float32)
+    converted = soxr.resample(signal.astype(np.float32), current_rate, encoder_rate, quality="HQ")
+    return np.ascontiguousarray(converted, dtype=np.float32)

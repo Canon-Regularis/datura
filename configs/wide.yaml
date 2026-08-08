@@ -26,15 +26,18 @@
 # shares no usable band with anything here.
 name: wide_10k
 
-# Trees only, and deliberately. At eleven classes the networks cost hours of GPU to
-# answer a question about the floor rather than about the representation, and the
-# committed results here are trees. Without this the pipeline would train them, then
-# rewrite this configuration's report with sections that are not in it.
+# No from scratch networks here, and deliberately. At eleven classes each one costs
+# hours of GPU to answer a question about the floor rather than about the
+# representation, and the committed results here are trees.
 #
-# Add them by hand when they are wanted:
+# The probe is different in cost rather than in kind. Its encoder runs once and is
+# cached like any other representation, and fitting a linear map over the result is
+# minutes even at ten repeats, so the reason above does not cover it.
+#
+# Add a network by hand when it is wanted:
 #   python -m src.train.cnn --config configs/wide.yaml --name cnn_small
 pipeline:
-  models: [xgboost, metadata, logbook]
+  models: [xgboost, metadata, logbook, probe]
   call_types: []
 
 dataset:
@@ -72,6 +75,29 @@ spectrogram:
   n_mels: 64
   fmin: 50
   fmax: 4900
+
+# The pretrained encoder, used frozen. It is here to answer the obvious objection to
+# this project's headline: that a model given no audio wins because the audio models
+# are weak. Only a small head is fitted per fold; these weights never move.
+#
+# A 16 kHz encoder is fed audio band limited to 5000 Hz, so it sees an empty band
+# above that. Every window carries the same empty band, so it separates no species.
+# src/features/encoder.py states the argument and asserts the precondition it rests on.
+#
+# The layer is a prior rather than a tuned value. A speech pretrained transformer puts
+# phonetic structure in its upper layers and more general acoustic structure lower
+# down, and whales are not speech. Selecting it on a test fold would be the mistake
+# this repository exists to document, so it is pinned here.
+encoder:
+  architecture: wav2vec2_base
+  checkpoint: wav2vec2_fairseq_base_ls960.pth
+  url: https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960.pth
+  sha256: 1275f890a623b31b9915295dc01d5049c93dc6de8813406c16dfab9b6bd36056
+  sample_rate: 16000
+  layer: 6
+  pooling: mean
+  embedding_dim: 768
+  batch_size: 32
 
 split:
   n_folds: 5

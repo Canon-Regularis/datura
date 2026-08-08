@@ -7,20 +7,45 @@ cache and the explainability tools all pick it up without being edited.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from src.config import Config
 from src.errors import DaturaError
 from src.features import cache
 from src.features.acoustic import AcousticFeatures
 from src.features.base import FeatureExtractor
+from src.features.encoder import EncoderEmbedding
 from src.features.source import CachedFeatureSource
 from src.features.spectrogram import LogMelSpectrogram
 
 ACOUSTIC = "acoustic"
 LOGMEL = "logmel"
+ENCODER = "encoder"
 
-_EXTRACTORS: dict[str, type[FeatureExtractor]] = {
-    ACOUSTIC: AcousticFeatures,
-    LOGMEL: LogMelSpectrogram,
+
+def _spectral(extractor: type[FeatureExtractor]) -> Callable[[Config], FeatureExtractor]:
+    """The wiring the two hand written representations share."""
+
+    def build(cfg: Config) -> FeatureExtractor:
+        return extractor(
+            n_fft=cfg.spectrogram.n_fft,
+            hop_length=cfg.spectrogram.hop_length,
+            n_mels=cfg.spectrogram.n_mels,
+            fmin=cfg.spectrogram.fmin,
+            fmax=cfg.spectrogram.fmax,
+            sample_rate=cfg.audio.target_sample_rate,
+        )
+
+    return build
+
+
+# A factory per representation rather than a class per representation. The two
+# spectral extractors take the same six settings and the encoder takes none of them,
+# so a single constructor call could not describe all three.
+_EXTRACTORS: dict[str, Callable[[Config], FeatureExtractor]] = {
+    ACOUSTIC: _spectral(AcousticFeatures),
+    LOGMEL: _spectral(LogMelSpectrogram),
+    ENCODER: EncoderEmbedding,
 }
 
 
@@ -39,19 +64,13 @@ def kinds() -> tuple[str, ...]:
 def build_extractor(kind: str, cfg: Config) -> FeatureExtractor:
     """Configure the extractor for one representation.
 
-    Both extractors read the same window and spectrogram settings, so the wiring is
-    identical and lives in one place.
+    Building one is cheap and side effect free for every representation, including
+    the encoder, which defers its weights until the first window arrives. Callers
+    that only want a cache path or a feature name can rely on that.
     """
     if kind not in _EXTRACTORS:
         raise UnknownRepresentation(kind)
-    return _EXTRACTORS[kind](
-        n_fft=cfg.spectrogram.n_fft,
-        hop_length=cfg.spectrogram.hop_length,
-        n_mels=cfg.spectrogram.n_mels,
-        fmin=cfg.spectrogram.fmin,
-        fmax=cfg.spectrogram.fmax,
-        sample_rate=cfg.audio.target_sample_rate,
-    )
+    return _EXTRACTORS[kind](cfg)
 
 
 def cache_exists(kind: str, cfg: Config) -> bool:

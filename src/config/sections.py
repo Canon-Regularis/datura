@@ -116,6 +116,72 @@ class SpectrogramConfig:
 
 
 @dataclass(frozen=True)
+class EncoderConfig:
+    """A pretrained audio encoder, used frozen to turn a window into a vector.
+
+    Every other representation in this project is computed from the recording by code
+    in this repository. This one arrives as weights, so the settings that decide what
+    comes out of it are the architecture, the checkpoint behind it, and where the
+    embedding is read from.
+
+    ``sample_rate`` is what the encoder expects rather than what the corpus holds, and
+    the two differ. The extractor resamples to meet it, which is the one place this
+    project upsamples on purpose. See ``src.features.encoder`` for why that does not
+    reintroduce the leak ``audio.min_native_sample_rate`` exists to prevent.
+    """
+
+    architecture: str = "wav2vec2_base"
+    checkpoint: str = ""
+    url: str = ""
+    sha256: str = ""
+    sample_rate: int = 16000
+    layer: int = 1
+    pooling: str = "mean"
+    embedding_dim: int = 768
+    batch_size: int = 32
+
+    POOLINGS = ("mean", "max")
+
+    def __post_init__(self) -> None:
+        if self.sample_rate <= 0 or self.embedding_dim <= 0 or self.batch_size <= 0:
+            raise ConfigError("encoder sample rate, embedding width and batch must be positive")
+        if self.layer < 1:
+            raise ConfigError("encoder.layer counts transformer layers from one")
+        if self.pooling not in self.POOLINGS:
+            raise ConfigError(f"encoder.pooling must be one of {list(self.POOLINGS)}")
+        if self.sha256 and len(self.sha256) != 64:
+            raise ConfigError("encoder.sha256 must be a 64 character hex digest")
+        if self.checkpoint and not self.url:
+            raise ConfigError("encoder.checkpoint names weights, so encoder.url must say where")
+
+    @property
+    def is_trained(self) -> bool:
+        """Whether real weights back this, or it is a randomly initialised stand in.
+
+        An empty checkpoint is how the synthetic corpus in the tests exercises the
+        whole extraction path offline. Nothing under ``configs/`` may leave it empty.
+        """
+        return bool(self.checkpoint)
+
+    @property
+    def cache_identity(self) -> dict[str, Any]:
+        """Only what changes the numbers that come out.
+
+        The url and the digest describe where the weights were fetched from, in the
+        same way the archive url describes acquisition rather than computation.
+        Batching is excluded because a fixed length window makes it exact.
+        """
+        return {
+            "architecture": self.architecture,
+            "checkpoint": self.checkpoint,
+            "sample_rate": self.sample_rate,
+            "layer": self.layer,
+            "pooling": self.pooling,
+            "embedding_dim": self.embedding_dim,
+        }
+
+
+@dataclass(frozen=True)
 class SplitConfig:
     n_folds: int
     seed: int
@@ -173,6 +239,7 @@ class Config:
     spectrogram: SpectrogramConfig
     split: SplitConfig
     paths: PathsConfig
+    encoder: EncoderConfig = field(default_factory=EncoderConfig)
     pipeline: PipelineConfig = field(compare=False, default_factory=PipelineConfig)
     source: Path = field(compare=False, default=Path())
 
@@ -214,3 +281,7 @@ class Config:
     @property
     def spectrogram_digest(self) -> str:
         return self.digest("dataset", "audio", "spectrogram")
+
+    @property
+    def encoder_digest(self) -> str:
+        return self.digest("dataset", "audio", "encoder")

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 import pytest
 
+from src.features import registry
 from src.features.acoustic import AcousticFeatures, contrast_band_count
 from src.features.spectrogram import LogMelSpectrogram
 
@@ -117,3 +119,57 @@ def test_mel_frequencies_stay_inside_the_band(logmel):
     assert len(frequencies) == 64
     assert frequencies[0] >= 50
     assert frequencies[-1] <= 4900
+
+
+def test_a_cache_refuses_to_be_written_with_clips_missing(config, monkeypatch, caplog):
+    """A short cache is not visibly wrong later, and it breaks a shared fold set.
+
+    The probe and the networks are comparable because their two caches cover the same
+    clips. If one extractor silently dropped a file the other kept, two models would
+    be scored on different corpora under the same fold numbers.
+    """
+    from src.features.extract import ExtractionIncomplete, extract
+
+    manifest = pd.DataFrame(
+        {
+            "clip_id": ["a", "b"],
+            "tape_id": ["t0000", "t0000"],
+            "species": ["HumpbackWhale", "HumpbackWhale"],
+            "label": [0, 0],
+            "year": [1970, 1970],
+            "native_sample_rate": [10000, 10000],
+            "duration_seconds": [2.0, 2.0],
+            "bytes_on_disk": [1000, 1000],
+            "relative_path": ["missing_one.wav", "missing_two.wav"],
+        }
+    )
+    extractor = registry.build_extractor(registry.ACOUSTIC, config)
+
+    with pytest.raises(ExtractionIncomplete, match="2 of 2"):
+        extract(config, extractor, manifest)
+
+    record = config.paths.metadata / f"extract_failures_{config.name}_acoustic.csv"
+    assert record.exists(), "the clips that failed have to be named somewhere"
+    assert set(pd.read_csv(record)["clip_id"]) == {"a", "b"}
+
+
+def test_a_cache_can_be_built_without_the_missing_clips_on_request(config):
+    """The escape hatch, so a corrupt file does not stop the world without a decision."""
+    from src.features.extract import extract
+
+    manifest = pd.DataFrame(
+        {
+            "clip_id": ["a"],
+            "tape_id": ["t0000"],
+            "species": ["HumpbackWhale"],
+            "label": [0],
+            "year": [1970],
+            "native_sample_rate": [10000],
+            "duration_seconds": [2.0],
+            "bytes_on_disk": [1000],
+            "relative_path": ["missing.wav"],
+        }
+    )
+    extractor = registry.build_extractor(registry.ACOUSTIC, config)
+    store = extract(config, extractor, manifest, allow_failures=True)
+    assert len(store.index) == 0

@@ -39,25 +39,35 @@ def file_digest(path: Path, chunk_bytes: int = 8 << 20) -> str:
     return digest.hexdigest()
 
 
-def verify_archive(cfg: Config, path: Path) -> str:
-    """Check the archive against the digest pinned in the config.
+def verify_digest(path: Path, expected: str, what: str = "file", setting: str = "") -> str:
+    """Check one fetched file against the digest pinned beside its url.
 
     Size alone is a weak check. A truncated resume or a mirror serving different
     content can match on length, and everything downstream would then be measured
-    against data nobody can reproduce.
+    against data nobody can reproduce. Both the corpus and the encoder weights arrive
+    over the network, so both come through here.
     """
-    logger.info("verifying %s, this takes about half a minute", path.name)
+    logger.info("verifying %s", path.name)
     actual = file_digest(path)
-    if actual != cfg.dataset.archive_sha256:
+    if actual != expected:
+        named = setting or f"the digest for this {what}"
         raise DownloadError(
-            f"archive digest mismatch for {path}\n"
-            f"  expected {cfg.dataset.archive_sha256}\n"
+            f"{what} digest mismatch for {path}\n"
+            f"  expected {expected}\n"
             f"  actual   {actual}\n"
-            "delete the file and download it again, or update dataset.archive_sha256 "
-            "if the upstream release genuinely changed"
+            f"delete the file and fetch it again, or update {named} if the upstream "
+            "release genuinely changed"
         )
     logger.info("digest matches %s...", actual[:16])
     return actual
+
+
+def verify_archive(cfg: Config, path: Path) -> str:
+    """Check the archive against the digest pinned in the config."""
+    logger.info("this takes about half a minute for the archive")
+    return verify_digest(
+        path, cfg.dataset.archive_sha256, what="archive", setting="dataset.archive_sha256"
+    )
 
 
 def download_archive(cfg: Config, *, force: bool = False, verify: bool = True) -> Path:

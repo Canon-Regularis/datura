@@ -22,10 +22,22 @@ from src.audio.resample import to_target_rate
 from src.audio.windows import split_into_windows
 from src.config import Config
 from src.data.manifest import load_manifest
+from src.errors import DaturaError
 from src.features import cache, registry
 from src.features.base import FeatureExtractor
 
 logger = logging.getLogger(__name__)
+
+
+class ExtractionIncomplete(DaturaError):
+    """Raised when clips were dropped while building a cache.
+
+    A cache missing clips is not obviously wrong from the outside. It trains, it
+    scores, and it quietly compares two representations on different corpora if only
+    one of them dropped a file. The probe and the networks share folds because their
+    two caches cover the same clips, and that only holds while this raises.
+    """
+
 
 _INDEX_COLUMNS = [
     "clip_id",
@@ -40,7 +52,12 @@ _INDEX_COLUMNS = [
 ]
 
 
-def extract(cfg: Config, extractor: FeatureExtractor, manifest: pd.DataFrame) -> cache.FeatureStore:
+def extract(
+    cfg: Config,
+    extractor: FeatureExtractor,
+    manifest: pd.DataFrame,
+    allow_failures: bool = False,
+) -> cache.FeatureStore:
     """Run one extractor over every kept clip and write the result to the cache."""
     root = cfg.paths.raw / cfg.dataset.archive_root
     shape = extractor.output_shape(cfg.audio.window_samples)
@@ -89,9 +106,16 @@ def extract(cfg: Config, extractor: FeatureExtractor, manifest: pd.DataFrame) ->
     store = writer.close(pd.DataFrame(index_rows, columns=_INDEX_COLUMNS))
 
     if failures:
-        logger.info("\n%d clip(s) could not be processed:", len(failures))
+        record = cfg.paths.metadata / f"extract_failures_{cfg.name}_{extractor.name}.csv"
+        pd.DataFrame(failures, columns=["clip_id", "reason"]).to_csv(record, index=False)
+        logger.warning("\n%d clip(s) could not be processed, listed in %s:", len(failures), record)
         for clip_id, reason in failures[:10]:
-            logger.info("  %s: %s", clip_id, reason)
+            logger.warning("  %s: %s", clip_id, reason)
+        if not allow_failures:
+            raise ExtractionIncomplete(
+                f"{len(failures)} of {len(manifest)} clips failed for {extractor.name}; "
+                f"see {record.name}, or pass --allow-failures to build the cache without them"
+            )
     return store
 
 
@@ -120,6 +144,11 @@ def main(argv: list[str] | None = None) -> int:
         help="which representation to build",
     )
     parser.add_argument("--force", action="store_true", help="rebuild even if cached")
+    parser.add_argument(
+        "--allow-failures",
+        action="store_true",
+        help="write the cache even if some clips could not be read, rather than refusing",
+    )
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
@@ -132,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         if cache.exists(cfg, extractor) and not args.force:
             logger.info("%s: cache present, skipping (use --force to rebuild)", kind)
             continue
-        store = extract(cfg, extractor, manifest)
+        store = extract(cfg, extractor, manifest, args.allow_failures)
         _summarise(store, extractor)
     return 0
 

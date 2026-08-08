@@ -33,6 +33,16 @@ _TEMPLATE = {
         "fmax": 4900,
     },
     "split": {"n_folds": 5, "seed": 1234, "tape_id_length": 5, "group_column": "tape_id"},
+    # A two layer encoder with no checkpoint, so every test that walks the extractors
+    # exercises the real path offline in a second. The published configs name a 95
+    # million parameter model and real weights, and a test asserts they do.
+    "encoder": {
+        "architecture": "wav2vec2_tiny",
+        "checkpoint": "",
+        "embedding_dim": 32,
+        "layer": 1,
+        "batch_size": 4,
+    },
     "paths": {},
 }
 
@@ -50,7 +60,9 @@ def write_config(directory: Path, **overrides) -> Path:
     }
     for section, values in overrides.items():
         if isinstance(values, dict):
-            payload[section] = {**payload[section], **values}
+            # A section the template does not carry is legal, so an optional one such
+            # as the encoder can be declared by the test that needs it.
+            payload[section] = {**payload.get(section, {}), **values}
         else:
             payload[section] = values
 

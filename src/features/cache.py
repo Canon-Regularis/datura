@@ -81,10 +81,15 @@ class FeatureWriter:
         if len(index) != self._rows:
             raise ValueError(f"wrote {self._rows} rows but the index describes {len(index)}")
 
-        flat = np.memmap(self._scratch, dtype=self._dtype, mode="r")
-        array = flat.reshape((self._rows, *self._shape))
-        np.save(self.array_path, array)
-        del flat, array
+        if self._rows == 0:
+            # An empty file cannot be memory mapped, and a run where every clip failed
+            # would otherwise end on that rather than on the reason the clips failed.
+            np.save(self.array_path, np.empty((0, *self._shape), dtype=self._dtype))
+        else:
+            flat = np.memmap(self._scratch, dtype=self._dtype, mode="r")
+            array = flat.reshape((self._rows, *self._shape))
+            np.save(self.array_path, array)
+            del flat, array
         self._scratch.unlink()
 
         index.to_parquet(self.index_path, index=False)

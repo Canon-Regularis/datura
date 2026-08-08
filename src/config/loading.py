@@ -17,6 +17,7 @@ from src.config.sections import (
     Config,
     ConfigError,
     DatasetConfig,
+    EncoderConfig,
     PathsConfig,
     PipelineConfig,
     SpectrogramConfig,
@@ -70,6 +71,26 @@ def _names(block: dict[str, Any], key: str) -> tuple[str, ...] | None:
     return tuple(str(name) for name in value)
 
 
+def _encoder(block: dict[str, Any]) -> EncoderConfig:
+    """The encoder section, defaulted field by field so a partial block is legal.
+
+    A config that names nothing gets an untrained stand in, which is what the
+    synthetic corpus in the tests uses to exercise extraction without a download.
+    """
+    default = EncoderConfig()
+    return EncoderConfig(
+        architecture=str(block.get("architecture", default.architecture)),
+        checkpoint=str(block.get("checkpoint", default.checkpoint)),
+        url=str(block.get("url", default.url)),
+        sha256=str(block.get("sha256", default.sha256)),
+        sample_rate=int(block.get("sample_rate", default.sample_rate)),
+        layer=int(block.get("layer", default.layer)),
+        pooling=str(block.get("pooling", default.pooling)),
+        embedding_dim=int(block.get("embedding_dim", default.embedding_dim)),
+        batch_size=int(block.get("batch_size", default.batch_size)),
+    )
+
+
 def _resolve(value: str) -> Path:
     path = Path(value)
     return path if path.is_absolute() else (PROJECT_ROOT / path).resolve()
@@ -111,6 +132,21 @@ def load_config(path: str | Path) -> Config:
     split_block = _require(raw, "split", {"n_folds", "seed", "tape_id_length", "group_column"})
     paths_block = _require(raw, "paths", {"raw", "metadata", "processed", "reports"})
     pipeline_block = _optional(raw, "pipeline", {"models", "call_types"})
+    encoder_block = _optional(
+        raw,
+        "encoder",
+        {
+            "architecture",
+            "checkpoint",
+            "url",
+            "sha256",
+            "sample_rate",
+            "layer",
+            "pooling",
+            "embedding_dim",
+            "batch_size",
+        },
+    )
 
     return Config(
         name=str(raw["name"]),
@@ -143,6 +179,7 @@ def load_config(path: str | Path) -> Config:
             tape_id_length=int(split_block["tape_id_length"]),
             group_column=str(split_block["group_column"]),
         ),
+        encoder=_encoder(encoder_block),
         pipeline=PipelineConfig(
             models=_names(pipeline_block, "models"),
             call_types=_names(pipeline_block, "call_types"),

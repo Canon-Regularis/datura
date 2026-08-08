@@ -23,9 +23,14 @@ dependencies = [
 # so the choice is explicit and the lockfile records both resolutions:
 #   uv sync --extra cuda    a machine with an NVIDIA GPU and driver 560 or newer
 #   uv sync --extra cpu     CI, and anything without a GPU
+#
+# torchaudio supplies the pretrained encoder definition and nothing else. The floor is
+# 2.11 because every release before it pins an exact torch, and 2.10 would drag torch
+# back two minor versions to satisfy `torch==2.10.0`. It is used for model construction
+# rather than for its kernels, so one build serves both extras.
 [project.optional-dependencies]
-cpu = ["torch>=2.5,<3"]
-cuda = ["torch>=2.5,<3"]
+cpu = ["torch>=2.5,<3", "torchaudio>=2.11,<3"]
+cuda = ["torch>=2.5,<3", "torchaudio>=2.11,<3"]
 
 [dependency-groups]
 dev = [

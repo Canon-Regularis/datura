@@ -33,6 +33,29 @@ spectrogram:
   fmin: 50
   fmax: 4900
 
+# The pretrained encoder, used frozen. It is here to answer the obvious objection to
+# this project's headline: that a model given no audio wins because the audio models
+# are weak. Only a small head is fitted per fold; these weights never move.
+#
+# A 16 kHz encoder is fed audio band limited to 5000 Hz, so it sees an empty band
+# above that. Every window carries the same empty band, so it separates no species.
+# src/features/encoder.py states the argument and asserts the precondition it rests on.
+#
+# The layer is a prior rather than a tuned value. A speech pretrained transformer puts
+# phonetic structure in its upper layers and more general acoustic structure lower
+# down, and whales are not speech. Selecting it on a test fold would be the mistake
+# this repository exists to document, so it is pinned here.
+encoder:
+  architecture: wav2vec2_base
+  checkpoint: wav2vec2_fairseq_base_ls960.pth
+  url: https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960.pth
+  sha256: 1275f890a623b31b9915295dc01d5049c93dc6de8813406c16dfab9b6bd36056
+  sample_rate: 16000
+  layer: 6
+  pooling: mean
+  embedding_dim: 768
+  batch_size: 32
+
 split:
   n_folds: 5
   seed: 1234
