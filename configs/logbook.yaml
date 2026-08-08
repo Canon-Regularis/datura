@@ -14,4 +14,8 @@ model:
   reg_lambda: 1.0
   early_stopping_rounds: 40
   tree_method: hist
-  n_jobs: -1
+  # A fixed thread count rather than -1. XGBoost sums its histograms in whatever
+  # order the threads finish, so the fitted model is not thread count invariant, and
+  # -1 would make a committed score depend on how many cores the machine that wrote
+  # it happened to have. Four is available on the CI runners and on a laptop.
+  n_jobs: 4

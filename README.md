@@ -1,56 +1,68 @@
 # datura
 
-datura classifies whale species and call types from Watkins acoustic recordings. It extracts two
-representations of the audio, fits gradient boosted trees and a residual CNN on identical folds, and
-scores every result against a control that is given no audio at all. It reports each margin with the
-interval and the p value the design actually supports.
+datura classifies whale species and call types from Watkins acoustic recordings. It extracts three
+representations of the audio, fits gradient boosted trees, two residual CNNs and a probe over a
+frozen pretrained encoder on identical folds, and scores every result against a control that is given
+no audio at all. It reports each margin with the interval and the p value the design actually
+supports, and corrects across every comparison it makes.
 
 The headline finding is negative. A model given only what was written down about a recording, and no
-sound, beats every audio model on species by 0.241 macro-F1 in fifty splits of fifty. Read the
-results as a measurement of the corpus rather than of whales.
+sound, beats every audio model on species. Four audio representations were tried, from hand
+engineered spectral descriptors to a 94 million parameter encoder pretrained on speech, and all four
+lose by between 0.245 and 0.288 macro-F1 with every fold agreeing. Read the results as a measurement
+of the corpus rather than of whales.
 
 ## What it does
 
 - Builds a tape grouped cross validation over the Watkins full cuts release, so no recording appears
   on both sides of a fold boundary.
-- Extracts hand engineered acoustic descriptors and log mel spectrograms into a memory mapped cache.
-- Fits XGBoost and a `MelResNet` variant, plus two controls that see recording metadata and field
-  note text and never the audio.
-- Reports margins with a corrected resampled paired test, and intervals bootstrapped over whole
-  tapes.
-- Poses within species call type tasks against a context control, and audits which recording fields
-  identify the species on their own.
+- Extracts hand engineered acoustic descriptors, log mel spectrograms and frozen wav2vec2 embeddings
+  into a memory mapped cache.
+- Fits XGBoost, two `MelResNet` variants and a linear probe over the pretrained embeddings, plus two
+  controls that see recording metadata and field note text and never the audio.
+- Reports margins with a corrected resampled paired test, intervals bootstrapped over whole tapes,
+  and a false discovery rate across every comparison in every configuration at once.
+- Poses within species call type tasks against a control that sees everything written down, and
+  audits which recording fields identify the species on their own.
 - Explains the network with band occlusion and Grad-CAM.
 
 ## Result
 
-Macro-F1 on held out tapes, 10 kHz band. The trees and both controls ran ten repeats of the five
-fold split, so fifty estimates each; the networks ran one split, so five.
+Macro-F1 on held out tapes, 10 kHz band. Everything except the larger network ran ten repeats of the
+five fold split, so fifty estimates each; `log mel CNN, 2.8 M` ran one split, so five.
 
 | model | macro-F1 | audio |
 | --- | --- | --- |
-| logbook | 0.997 ± 0.004 | no |
-| metadata | 0.868 ± 0.136 | no |
-| acoustic descriptors, XGBoost | 0.757 ± 0.067 | yes |
-| log mel CNN, 0.15 M | 0.744 ± 0.165 | yes |
-| log mel CNN, 2.8 M | 0.692 ± 0.134 | yes |
+| logbook | 0.997 ± 0.005 | no |
+| metadata | 0.868 ± 0.134 | no |
+| acoustic descriptors, XGBoost | 0.752 ± 0.070 | yes |
+| wav2vec2 probe | 0.739 ± 0.090 | yes |
+| log mel CNN, 2.8 M | 0.713 ± 0.123 | yes |
+| log mel CNN, 0.15 M | 0.710 ± 0.142 | yes |
 
 Against the logbook, which is the highest scoring model that hears nothing:
 
 | comparison | margin | 95% interval | p | agreeing |
 | --- | --- | --- | --- | --- |
-| XGBoost | -0.241 | -0.311 to -0.171 | 9.5e-09 | 50 of 50 |
-| CNN 2.8 M | -0.306 | -0.557 to -0.055 | 0.028 | 5 of 5 |
-| CNN 0.15 M | -0.255 | -0.564 to +0.055 | 0.084 | 5 of 5 |
-| logbook against metadata | +0.129 | -0.014 to +0.272 | 0.076 | 44 of 50 |
+| XGBoost | -0.245 | -0.318 to -0.172 | 1.7e-08 | 50 of 50 |
+| wav2vec2 probe | -0.258 | -0.353 to -0.164 | 1.3e-06 | 50 of 50 |
+| CNN 0.15 M | -0.288 | -0.436 to -0.140 | 2.9e-04 | 50 of 50 |
+| CNN 2.8 M | -0.285 | -0.514 to -0.056 | 0.026 | 5 of 5 |
+| logbook against metadata | +0.130 | -0.012 to +0.271 | 0.072 | 45 of 50 |
 
-The first row is the only species comparison here that resolves at fifty splits. Measured against the
-metadata control instead, the same XGBoost comparison is -0.112 at p = 0.25, which settles nothing.
-The floor was in the wrong place until the logbook was built.
+Every audio comparison resolves, and every one of them is negative. Three carry the full fifty
+splits. The four representations share nothing but their input: spectral descriptors computed by
+hand, a network trained from scratch on log mel windows, the same network at twenty times the
+capacity, and a transformer pretrained on 960 hours of English speech and never fine tuned here. They
+land within 0.043 of one another and all of them lose to the paperwork.
+
+Measured against the metadata control instead, the same XGBoost comparison is -0.115 at p = 0.24,
+which settles nothing. The floor was in the wrong place until the logbook was built.
 
 Narrow band replication at 5120 Hz, which keeps all 14 humpback tapes instead of 12: XGBoost lands
-0.249 below the logbook at p = 2.3e-04 with 50 of 50 agreeing, and 0.152 below the metadata control
-at p = 0.010 with 45 of 50. Two bands, a hundred splits, the same ordering.
+0.247 below the logbook at p = 2.5e-04 with 50 of 50 agreeing, and 0.150 below the metadata control
+at p = 0.012 with 46 of 50. The probe lands 0.274 below the logbook at p = 4.0e-06. Two bands, the
+same ordering.
 
 ## Three fields that name the species
 
@@ -59,7 +71,7 @@ Every result above is explained by what the corpus records alongside the audio.
 | field | clips it identifies | detail |
 | --- | --- | --- |
 | collection code | 91.4% | 7 codes, each in exactly one species |
-| recording site | 98.2% | 46 of 48 sites visited for one species |
+| recording site | 98.2% | 46 of 47 sites visited for one species |
 | native sample rate | see below | 10.2k to 45.4k Hz for killer, 10k to 166.6k for sperm |
 
 The collection code is the field that had gone unmeasured. Every Watkins note opens with it, as in
@@ -68,19 +80,31 @@ tape grouped folds sufficient: `BE7A` spans 61 killer whale tapes, `BA2A` 51 spe
 `AC2A` 12 humpback tapes. A held out tape almost always carries a code the training tapes carried
 too, so the fold boundary does not hide it.
 
-Splitting held out clips on whether a field is a giveaway:
+Splitting held out clips on what a field does to the species:
 
-| model | rate unique | rate shared | code unique | code shared |
+| model | rate unique | rate shared | code unique | code absent |
 | --- | --- | --- | --- | --- |
-| logbook | 0.932 | 0.864 | 0.998 | 0.426 |
-| metadata | 0.878 | 0.689 | 0.868 | 0.465 |
-| acoustic, XGBoost | 0.711 | 0.663 | 0.754 | 0.411 |
-| log mel CNN | 0.690 | 0.678 | 0.744 | 0.362 |
+| logbook | 0.932 | 0.864 | 0.998 | 0.638 |
+| metadata | 0.878 | 0.683 | 0.867 | 0.698 |
+| acoustic, XGBoost | 0.705 | 0.661 | 0.750 | 0.616 |
+| wav2vec2 probe | 0.679 | 0.708 | 0.746 | 0.514 |
+| log mel CNN | 0.671 | 0.671 | 0.708 | 0.609 |
 
-On the 359 clips whose code is shared across species the logbook falls from 0.998 to 0.426, level
-with the audio models. Its 0.997 is that one field. Removing the sample rate giveaway costs the
-metadata control 19 points and the CNN one, so the audio models are worse on average and degrade
-less where the recording stops answering the question.
+There is no shared code column here, because across these three species no code is shared. All seven
+belong to one species each. The fourth column is the 359 clips carrying no code at all, and they
+span two species over eight tapes, so they are scored over the two they hold. `classes_scored` in
+`ambiguity_breakdown.csv` carries that denominator, and averaging a class that cannot appear into it
+caps the column at two thirds and reads as a collapse the predictions do not contain.
+
+The logbook falls from 0.998 to 0.638 there. Everything else falls too, and the metadata control
+finishes highest at 0.698 while never seeing a code at all, so the fall is a property of those 359
+clips rather than of the field they are missing. Removing the sample rate giveaway costs the metadata
+control 19 points and the CNN one, so the audio models are worse on average and degrade less where
+the recording stops answering the question.
+
+Eleven species is where a genuinely shared code exists. On the 2,581 clips whose code is used by more
+than one of them the logbook still reaches 0.666 against XGBoost's 0.304, so what the paperwork
+carries is more than any one field.
 
 Two checks separate this from a join artefact. `audit_codes_by_species_*.csv` records how many tapes
 each code spans, computed without a model. A test builds a corpus where every code sits on exactly
@@ -101,13 +125,18 @@ independent recordings is 228. Sample size claims use the second.
 | model | 3 species | 11 species |
 | --- | --- | --- |
 | logbook | 0.997 | 0.920 |
-| metadata | 0.868 | 0.577 |
-| acoustic, XGBoost | 0.757 | 0.424 |
+| metadata | 0.868 | 0.575 |
+| acoustic, XGBoost | 0.752 | 0.425 |
+| wav2vec2 probe | 0.739 | 0.437 |
 
-Every score falls, and the gap widens rather than narrowing. XGBoost lands 0.496 below the logbook
-at p = 7.7e-17 with 50 of 50 agreeing, against -0.241 on three species. The metadata control loses
-most of its standing: 0.577 against the logbook's 0.920, a gap of 0.343 at p = 4.9e-09, where on
-three species that gap was 0.129 and did not resolve.
+Every score falls, and the gap widens rather than narrowing. XGBoost lands 0.495 below the logbook
+at p = 3.4e-16 with 50 of 50 agreeing, against -0.245 on three species, and the probe 0.483 below at
+p = 3.8e-15. The pretrained encoder is fractionally ahead of the hand engineered features here,
+0.437 against 0.425, and both are less than half of what the paperwork reaches.
+
+The metadata control loses most of its standing: 0.575 against the logbook's 0.920, a gap of 0.345
+at p = 4.6e-09 with 50 of 50 agreeing, where on three species that gap was 0.130 and did not
+resolve.
 
 Which field carries the logbook changes with breadth. On three species the collection code alone
 reaches 0.995 and the model splits mostly on sample rate and latitude. On eleven, most gain goes to
@@ -135,18 +164,26 @@ a single split.
 
 | task | audio | control | margin | p | agreeing |
 | --- | --- | --- | --- | --- | --- |
-| sperm whale, whistle | 0.712 | 0.526 | +0.185 | 0.20 | 29 of 50 |
-| killer whale, click | 0.601 | 0.456 | +0.144 | 0.079 | 40 of 50 |
-| sperm whale, coda, CNN | 0.566 | 0.434 | +0.132 | 0.35 | 4 of 5 |
-| sperm whale, click | 0.705 | 0.580 | +0.125 | 0.084 | 43 of 50 |
-| killer whale, squeal | 0.768 | 0.652 | +0.116 | 0.24 | 36 of 50 |
-| killer whale, whistle | 0.564 | 0.463 | +0.101 | 0.022 | 41 of 50 |
-| sperm whale, coda | 0.570 | 0.545 | +0.026 | 0.80 | 23 of 50 |
-| killer whale, chirp | 0.557 | 0.547 | +0.010 | 0.83 | 21 of 50 |
-| killer whale, call | 0.689 | 0.712 | -0.023 | 0.88 | 29 of 50 |
+| killer whale, click | 0.597 | 0.472 | +0.125 | 0.13 | 37 of 50 |
+| killer whale, whistle | 0.567 | 0.523 | +0.045 | 0.19 | 36 of 50 |
+| sperm whale, whistle | 0.713 | 0.674 | +0.039 | 0.80 | 26 of 50 |
+| killer whale, call | 0.695 | 0.662 | +0.033 | 0.82 | 29 of 50 |
+| killer whale, squeal | 0.769 | 0.763 | +0.006 | 0.96 | 29 of 50 |
+| sperm whale, click | 0.710 | 0.740 | -0.030 | 0.61 | 25 of 50 |
+| killer whale, chirp | 0.556 | 0.607 | -0.052 | 0.28 | 32 of 50 |
+| sperm whale, coda | 0.577 | 0.739 | -0.162 | 0.023 | 46 of 50 |
+| sperm whale, coda, CNN | 0.453 | 0.678 | -0.224 | 0.19 | 5 of 5 |
 
-Eight of nine margins are positive and one resolves. Killer whale whistle is the only comparison in
-this repository where hearing the recording beats not hearing it by an amount the design separates.
+Five of nine margins are positive and not one of them resolves. The single comparison that does
+resolve runs the other way: on sperm whale coda the control beats the audio by 0.162 at p = 0.023
+with 46 of 50 folds agreeing.
+
+This table used to read the opposite way, and the reason is worth stating. The control was once
+denied the four header fields, clip duration among them. A Watkins note is written against a whole
+cut, so a longer cut is more likely to contain any given call whatever the animal was doing, and a
+control without that field was clearing a lower bar than the model beside it. Handing it over moved
+killer whale whistle from +0.101 at p = 0.022 to +0.045 at p = 0.19, and moved sperm whale coda from
++0.026 to -0.162. Nothing about any audio model changed.
 
 Sperm whale click resolved at +0.141 and p = 0.044 while the control could not see the collection
 code. Giving the control that field moved it to +0.125 and p = 0.084 with no change to the audio
@@ -179,7 +216,10 @@ Everything in this repository that is not a species score rests on the second so
 HTTP range requests, about a fifth of a megabyte out of each 587 MB shard, and the parsed result is
 committed so nothing needs refetching.
 
-The three species under study, before and after the sample rate filter:
+The three species under study, before and after the two filters that drop a clip. The sample rate
+floor removes 57 humpback clips across 3 tapes. The half second minimum removes 413 more, 366 of them
+sperm whale, which is the larger of the two and was for a long time the one the caption here did not
+mention. `audit_dropped_base_10k.csv` carries both.
 
 | species | clips | tapes | kept clips | kept tapes | hours |
 | --- | --- | --- | --- | --- | --- |
@@ -210,16 +250,26 @@ fold two of the other. Fold counts are printed beside every number.
 data, and each repeat reuses the same clips, so the differences are correlated and the ordinary
 standard error is far too small. A plain paired t test over the fifty species differences returns
 p = 0.00008; the corrected resampled test, replacing `1/n` with `1/n + 1/(k-1)`, returns p = 0.25 on
-the same numbers. Every p value here is the corrected one, and `tests/test_uncertainty.py` fails if
-repeating a split ever converts an unresolved comparison into a resolved one.
+the same numbers. Every p value here is the corrected one.
+
+The correction narrows what repeating a split can buy rather than forbidding it. The second term does
+not fall as repeats are added, so ten repeats are worth far less than fifty independent folds, and
+`tests/test_uncertainty.py` pins both halves of that: the species differences stay unresolved across
+ten repeats, and a second set that does cross the threshold on repeats alone is recorded beside them.
+
+**How many comparisons.** Thirty are reported across the three configurations, so reading each at
+0.05 on its own expects more than one to clear the bar carrying nothing.
+`data/metadata/report/MULTIPLICITY.md` adjusts across all of them at once. Eleven survive, and every
+one is either an audio model losing to a model that hears nothing or one no-audio model beating
+another. Not a single positive audio comparison survives, in any configuration.
 
 **Intervals.** Bootstrapped over whole tapes rather than clips. Resampling clips counts the same
 recording many times and returns an interval several times too narrow; a test builds one interval
 each way and asserts the clip version comes out narrower.
 
 **Model selection.** The two network capacities were chosen on validation curves alone, with no test
-fold involved. At 2.8 M parameters the CNN peaks at epochs 2, 4, 0, 10 and 4 across the five folds;
-at 0.15 M it peaks at 13, 12, 9, 21 and 13.
+fold involved. At 2.8 M parameters the CNN peaks at epochs 14, 16, 2, 6 and 20 across the five folds;
+at 0.15 M it peaks at 7, 13, 4, 8 and 13.
 
 ## Install
 
@@ -293,9 +343,10 @@ src/train/        folds and the repeat plan, one cross validation runner, one se
 src/evaluate/     families groups results, tables builds them, sections composes the
                   document, figures draws it, artifacts writes it, report runs the lot,
                   plus occlusion and Grad-CAM
-experiments/      five notebooks reading committed artifacts, one argument each:
+experiments/      six notebooks reading committed artifacts, one argument each:
                   the corpus and its confounds, the species results, how much
-                  they settle, call types and breadth, what the network used
+                  they settle, call types and breadth, what the network used,
+                  and what a pretrained encoder does not change
 ```
 
 Two registries carry the extension points. `src/features/registry.py` maps a representation name to
@@ -310,13 +361,16 @@ either.
 ## Reproducing
 
 Full numbers live in `data/metadata/report/{base_10k,base_5k,wide_10k}/REPORT.md`. Every comparison
-in a configuration is listed at the top of its report, sorted by how well it resolves.
+in a configuration is listed at the top of its report, sorted by how well it resolves, against its
+declared control and against the strongest model that hears nothing.
+`data/metadata/report/MULTIPLICITY.md` corrects across all three at once.
 
 The manifests, predictions and parsed notes are committed, so every report rebuilds without the 6.7 GB
 archive:
 
 ```bash
 uv run python -m src.evaluate.report --config configs/base.yaml
+uv run python -m src.evaluate.multiplicity
 ```
 
 `tests/test_readme_numbers.py` reads the tables out of this file and checks every figure against the
