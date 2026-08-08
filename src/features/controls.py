@@ -76,44 +76,27 @@ class TabularFeatureSource(FeatureSource):
         return coded + self._numeric
 
 
-class ContextFeatureSource(TabularFeatureSource):
-    """Where a recording was made and what else was audible, with no audio.
-
-    The control for a call type task. Site, coordinates, the collection a cut came
-    from and the noise conditions describe the circumstances of a recording rather
-    than the animal, so whatever this reaches is the floor an audio model has to
-    clear.
-
-    The collection code was added after it turned out to identify the species better
-    than the audio did. A call type task is posed inside one species so the code
-    cannot give the species away, but several collections sit inside each species and
-    a recordist who taped one behaviour on one trip would leave the same shape of
-    trace. Measuring it is cheaper than assuming it is absent.
-    """
-
-    BASE_COLUMNS = ("latitude", "longitude")
-
-    def __init__(self, index: pd.DataFrame, condition_columns: list[str]):
-        super().__init__(
-            index,
-            name="context",
-            categorical=["site", "collection_code"],
-            numeric=[*self.BASE_COLUMNS, *condition_columns],
-        )
-
-
 class LogbookFeatureSource(TabularFeatureSource):
     """Everything written down about a recording, and none of the recording.
 
-    The other two controls each miss something. The species control never sees the
-    site or the collection a cut came from; the call type control never sees the
-    sample rate or the year. This one sees the lot, so it is the floor rather than
-    a floor, and the gap between it and the narrower controls says how much each
-    piece of paperwork was worth.
+    Both the species task and the call type tasks are measured against this. There
+    used to be a narrower control for call types, seeing the site, the coordinates,
+    the collection and the noise conditions but not the four header fields. That was
+    a mistake and an expensive one. Clip duration alone predicts most call type
+    labels, because a note is written against a whole cut and a longer cut is more
+    likely to contain any given call, so the control was being asked to clear a bar
+    while blindfolded on the one field that mattered. Handing it back moved the only
+    call type result this project reported from +0.101 at p = 0.02 to +0.005 at
+    p = 0.77.
 
-    The collection code earns its place here on measurement. Three codes carry 98%
-    of the clips under study, each sits in exactly one species, and they span 61, 51
-    and 12 tapes, so a fold boundary drawn between tapes does nothing to hide them.
+    The metadata control is the one that still misses something, deliberately: the
+    gap between it and this says how much of the floor the rest of the paperwork was
+    carrying.
+
+    The collection code earns its place here on measurement. Three codes carry 97.6%
+    of the clips that have one, which is 89.2% of the clips under study, each sits in
+    exactly one species, and they span 61, 51 and 12 tapes, so a fold boundary drawn
+    between tapes does nothing to hide them.
     """
 
     CATEGORICAL = ("site", "collection_code")

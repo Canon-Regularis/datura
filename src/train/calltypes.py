@@ -10,11 +10,16 @@ Call types overlap, so the task is multi label rather than multi class: 145 sper
 whale clips are both click and coda. Each type therefore gets its own binary model,
 which keeps every type comparable to every other and reuses the runner unchanged.
 
-Each task is reported against a context control that sees the site, the coordinates,
-the collection the cut came from and the noise conditions, and no audio at all.
-Location alone identifies the species for 98% of clips in this collection and the
-collection code does better still, so a call type result that does not clear the
-same bar is not evidence about the animal.
+Each task is reported against a control that sees everything written down about the
+recording and no audio at all. Location alone identifies the species for 98% of clips
+in this collection and the collection code does better still, so a call type result
+that does not clear the same bar is not evidence about the animal.
+
+The control was narrower once, and it cost this project its only positive result. It
+saw the site, the coordinates, the collection and the noise conditions, but none of
+the four header fields, so it was denied clip duration. A note is written against a
+whole cut, so duration predicts most call type labels before anything is heard, and a
+control without it is clearing a lower bar than the audio model beside it.
 
 Usage:
     python -m src.train.calltypes [--config configs/base.yaml] [--species SpermWhale]
@@ -33,7 +38,7 @@ from src.data import annotations as ann
 from src.data.notes import load_vocabulary
 from src.data.splits import folds_for_index
 from src.features import registry as features
-from src.features.controls import ContextFeatureSource
+from src.features.controls import LogbookFeatureSource
 from src.features.source import DerivedSource, FeatureSource
 from src.models import registry as models
 from src.models.registry import load_settings
@@ -97,9 +102,11 @@ def run_task(
 
     audio = DerivedSource(base, subset, positions, name=f"{base.name}_{task.call_type}")
     context_index = ann.attach_context(subset, labels)
-    control = ContextFeatureSource(
-        context_index, [c for c in context_index.columns if c.startswith("cond_")]
-    )
+    # Everything written down about the recording, which is the same control the
+    # species task is measured against. A narrower one used to be used here and it
+    # was denied clip duration, the single field that most predicts whether a cut
+    # contains a given call.
+    control = LogbookFeatureSource(context_index, ann.condition_columns(context_index))
 
     positive_clips = subset[subset["label"] == 1]["clip_id"].nunique()
     logger.info(

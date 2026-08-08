@@ -12,7 +12,7 @@ import pandas as pd
 import pytest
 
 from src.data.notes import CALL_PREFIX
-from src.features.controls import ContextFeatureSource
+from src.features.controls import LogbookFeatureSource
 from src.features.source import DerivedSource, FeatureSource
 from src.features.views import RowView
 from src.train.calltypes import (
@@ -63,6 +63,13 @@ def build_labels(tapes_per_type: dict[str, int], clips_per_tape: int = 8) -> pd.
                     "latitude": 10.0 + type_index,
                     "longitude": -20.0 - type_index,
                     "cond_ship_noise": cut % 2 == 0,
+                    # The four header fields the window index carries. The call type
+                    # control is given them, because a longer cut is more likely to
+                    # contain any given call and a control denied that is blindfolded.
+                    "native_sample_rate": 10000,
+                    "year": 1970 + type_index,
+                    "duration_seconds": 1.0 + cut,
+                    "bytes_on_disk": 20000 * (1 + cut),
                 }
                 row.update({f"{CALL_PREFIX}{t}": t == call_type for t in tapes_per_type})
                 rows.append(row)
@@ -136,29 +143,34 @@ def test_a_derived_view_refuses_an_index_that_does_not_match_its_rows():
         DerivedSource(FakeSource(index), index, np.array([0]), name="bad")
 
 
-def test_the_context_control_sees_place_and_conditions_but_no_audio():
+def test_the_call_type_control_sees_every_field_the_species_control_sees():
+    """It used to be denied clip duration, which alone predicts most call type labels."""
     labels = build_labels({"coda": 12, "click": 12})
-    control = ContextFeatureSource(labels, ["cond_ship_noise"])
+    control = LogbookFeatureSource(labels, ["cond_ship_noise"])
 
     assert control.feature_names() == [
         "site_code",
         "collection_code",
+        "native_sample_rate",
+        "year",
+        "duration_seconds",
+        "bytes_on_disk",
         "latitude",
         "longitude",
         "cond_ship_noise",
     ]
 
     matrix = control.matrix(np.arange(len(labels))).to_numpy()
-    assert matrix.shape == (len(labels), 5)
+    assert matrix.shape == (len(labels), 9)
     # Two sites and two collections in this fixture, so each code takes two values.
     assert len(np.unique(matrix[:, 0])) == 2
     assert len(np.unique(matrix[:, 1])) == 2
 
 
-def test_the_context_control_refuses_an_index_without_a_site():
+def test_the_call_type_control_refuses_an_index_without_a_site():
     frame = pd.DataFrame({"latitude": [1.0], "longitude": [2.0]})
-    with pytest.raises(ValueError, match="context columns"):
-        ContextFeatureSource(frame, [])
+    with pytest.raises(ValueError, match="logbook columns"):
+        LogbookFeatureSource(frame, [])
 
 
 def test_a_second_model_on_a_task_can_be_told_to_leave_the_control_alone():

@@ -130,10 +130,11 @@ def tag_note(note: str | None, vocabulary: Vocabulary) -> tuple[set[str], set[st
 def collection_code(note: str | None) -> str:
     """The collection a cut came from, taken off the front of its note.
 
-    Three codes carry 98% of the clips under study and each of them appears in
-    exactly one species, so this string is close to a species label. It is not a
-    tape id: ``BE7A`` spans 61 killer whale tapes and ``BA2A`` spans 51 sperm whale
-    ones, which is why grouping folds by tape gives no protection against it.
+    Three codes carry 97.6% of the clips that have one, which is 89.2% of the clips
+    under study, and each of them appears in exactly one species, so this string is
+    close to a species label. It is not a tape id: ``BE7A`` spans 61 killer whale
+    tapes and ``BA2A`` spans 51 sperm whale ones, which is why grouping folds by tape
+    gives no protection against it.
 
     Empty when a note does not open with one, matching how a missing site is
     reported. Only the leading token counts; a code appearing later in the prose is

@@ -12,7 +12,6 @@ import pandas as pd
 import pytest
 
 from src.features.controls import (
-    ContextFeatureSource,
     LogbookFeatureSource,
     MetadataFeatureSource,
 )
@@ -42,34 +41,13 @@ def window_index(rows: int = 6) -> pd.DataFrame:
 CONDITIONS = ["cond_ship_noise", "cond_reverberation"]
 
 
-def test_the_context_control_sees_the_circumstances_of_a_recording():
-    """Pinned because nine call type margins are distances from this.
+def test_the_logbook_codes_names_and_fills_missing_coordinates():
+    matrix = LogbookFeatureSource(window_index(), CONDITIONS).matrix(np.arange(6)).to_numpy()
 
-    The collection code joined the list once it turned out to identify the species
-    better than the audio did. Changing this list changes those nine numbers, which
-    is the point of asserting it here.
-    """
-    source = ContextFeatureSource(window_index(), CONDITIONS)
-
-    assert source.name == "context"
-    assert source.feature_names() == [
-        "site_code",
-        "collection_code",
-        "latitude",
-        "longitude",
-        "cond_ship_noise",
-        "cond_reverberation",
-    ]
-
-
-def test_the_context_control_codes_names_and_fills_missing_coordinates():
-    matrix = ContextFeatureSource(window_index(), CONDITIONS).matrix(np.arange(6)).to_numpy()
-
-    assert matrix.shape == (6, 6)
+    assert matrix.shape == (6, 10)
     assert matrix[0, 0] == matrix[1, 0] == matrix[5, 0], "one site is one code"
     assert matrix[0, 0] != matrix[2, 0], "two sites are two codes"
-    assert matrix[4, 2] == 0.0 and matrix[4, 3] == 0.0, "a missing coordinate reads as zero"
-    assert matrix[0, 4] == 1.0 and matrix[1, 4] == 0.0
+    assert matrix[4, 6] == 0.0 and matrix[4, 7] == 0.0, "a missing coordinate reads as zero"
 
 
 def test_the_metadata_control_sees_exactly_what_it_always_saw():
@@ -114,12 +92,12 @@ def test_the_logbook_codes_the_collection_as_an_identity():
     assert len(set(codes)) == 3, "an absent code is its own category, not a missing value"
 
 
-def test_the_logbook_strictly_contains_both_of_the_narrower_controls():
-    """The point of it: one floor rather than two that each miss something."""
+def test_the_logbook_strictly_contains_the_metadata_control():
+    """The point of it: one floor, and the narrower one says what paperwork adds."""
     logbook = set(LogbookFeatureSource(window_index(), CONDITIONS).feature_names())
 
-    assert set(MetadataFeatureSource(window_index()).feature_names()) <= logbook
-    assert set(ContextFeatureSource(window_index(), CONDITIONS).feature_names()) <= logbook
+    assert set(MetadataFeatureSource(window_index()).feature_names()) < logbook
+    assert {"site_code", "collection_code", "latitude", "longitude"} <= logbook
 
 
 def test_a_control_refuses_an_index_that_cannot_support_it():
@@ -128,4 +106,4 @@ def test_a_control_refuses_an_index_that_cannot_support_it():
         LogbookFeatureSource(thin, CONDITIONS)
 
     with pytest.raises(ValueError, match="site"):
-        ContextFeatureSource(window_index().drop(columns=["site"]), CONDITIONS)
+        LogbookFeatureSource(window_index().drop(columns=["site"]), CONDITIONS)
