@@ -53,3 +53,25 @@ def test_digest_changes_when_a_relevant_setting_changes(tmp_path):
 def test_digest_is_stable_across_loads(tmp_path):
     path = write_config(tmp_path)
     assert load_config(path).spectrogram_digest == load_config(path).spectrogram_digest
+
+
+def test_no_committed_model_config_lets_the_machine_choose_its_thread_count():
+    """``n_jobs: -1`` makes a committed score depend on the cores that wrote it.
+
+    XGBoost sums its histograms in whatever order the threads finish, so the fitted
+    model is not thread count invariant. Every published tree number here was fitted
+    with this pinned, and a rerun on a machine with a different core count has to
+    reproduce it.
+    """
+    import yaml
+
+    from src.config import PROJECT_ROOT
+
+    offenders = []
+    for path in sorted((PROJECT_ROOT / "configs").glob("*.yaml")):
+        settings = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        model = settings.get("model")
+        if isinstance(model, dict) and model.get("n_jobs") == -1:
+            offenders.append(path.name)
+
+    assert not offenders, f"{offenders} would let the machine pick its own thread count"
