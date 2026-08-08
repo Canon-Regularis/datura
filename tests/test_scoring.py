@@ -174,3 +174,23 @@ def test_window_predictions_keep_the_position_inside_the_clip():
     assert list(frame["clip_id"]) == ["a", "a", "b"]
     assert frame["p1"].tolist() == pytest.approx([0.1, 0.4, 0.8])
     assert set(frame["fold"]) == {3}
+
+
+def test_a_summary_says_how_many_folds_each_metric_rests_on():
+    """A ranking metric is undefined on a fold holding one class.
+
+    pandas averages around the gap without saying so, which put two rows of the same
+    table on different numbers of folds and made them look alike.
+    """
+    folds = pd.DataFrame(
+        {
+            "fold": [0, 1, 2],
+            "macro_f1": [0.6, 0.7, 0.8],
+            "roc_auc_ovr_macro": [0.9, float("nan"), 0.7],
+        }
+    )
+    summary = summarise_folds(folds).set_index("metric")
+
+    assert summary.loc["macro_f1", "folds"] == 3
+    assert summary.loc["roc_auc_ovr_macro", "folds"] == 2
+    assert summary.loc["roc_auc_ovr_macro", "mean"] == pytest.approx(0.8)

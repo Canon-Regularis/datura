@@ -50,10 +50,24 @@ def build(cfg: Config) -> Path:
             f"no results under {directory}; run python -m src.pipeline --config {cfg.source.name}"
         )
 
-    margins = {family.key: tables.family_margins(cfg, family) for family in discovered}
+    # Two floors per family where they differ. A model is measured against the control
+    # it was declared with, and again against the best any model that hears nothing
+    # manages. Only the first used to reach this table, which is how the strongest
+    # comparison in this project stayed out of the list that claims to hold every one.
+    margins: dict[str, pd.DataFrame] = {}
+    against_floor: dict[str, pd.DataFrame] = {}
+    for family in discovered:
+        declared = tables.family_margins(cfg, family)
+        margins[family.key] = declared.assign(family=family.key, floor=family.control)
+
+        strongest = families.strongest_floor(cfg, family)
+        if strongest is not None and strongest != family.control:
+            against = tables.family_margins(cfg, family, control=strongest)
+            against_floor[family.key] = against.assign(family=family.key, floor=strongest)
+
     intervals = {family.key: tables.family_intervals(cfg, family) for family in discovered}
 
-    overview = sections.overview(margins)
+    overview = sections.overview([*margins.values(), *against_floor.values()])
     write_table(overview, directory / "family_margins.csv")
 
     document = [
@@ -62,7 +76,7 @@ def build(cfg: Config) -> Path:
         "",
         sections.MARGIN_COLUMNS,
         "",
-        overview.round(4).to_markdown(index=False),
+        sections.markdown(overview),
         "",
     ]
 
@@ -76,12 +90,15 @@ def build(cfg: Config) -> Path:
 
         comparison = tables.comparison(cfg, list(family.names))
         write_table(comparison, directory / "comparison.csv")
-        write_table(margins[family.key], directory / "margin_over_control.csv")
+        write_table(
+            margins[family.key].drop(columns=["family", "floor"]),
+            directory / "margin_over_control.csv",
+        )
 
         ambiguity = tables.ambiguity(cfg, list(family.names))
         write_table(ambiguity, directory / "ambiguity_breakdown.csv")
 
-        figures = figure_set.draw_all(cfg, list(family.names), comparison, ambiguity)
+        figures = figure_set.draw_all(cfg, family, comparison, ambiguity)
         document += sections.species_section(
             cfg,
             family,
@@ -91,11 +108,17 @@ def build(cfg: Config) -> Path:
             ambiguity,
             figures,
             _shared_tapes(cfg),
+            against_floor.get(family.key),
         )
 
     resolved = overview[overview["p_value"] < 0.05]
-    logger.info("\nEvery comparison, most resolved first\n%s", overview.round(4).to_string())
-    logger.info("%d of %d comparisons are resolved at p < 0.05", len(resolved), len(overview))
+    logger.info("\nEvery comparison, most resolved first\n%s", overview.to_string())
+    logger.info(
+        "%d of %d comparisons are resolved at an uncorrected p < 0.05; "
+        "run python -m src.evaluate.multiplicity for the adjusted verdict",
+        len(resolved),
+        len(overview),
+    )
 
     write_provenance(cfg, directory, extra={"families": [family.key for family in discovered]})
     path = report_path(cfg)

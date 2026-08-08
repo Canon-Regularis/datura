@@ -19,11 +19,35 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 # Five orders of magnitude coarser than the disagreement between platforms, and
 # still finer than any figure this project reports.
 DECIMALS = 10
+
+# Decimal places are the wrong unit for a p value. Ten of them turn 7.7e-17 into a
+# literal zero, which is how the strongest comparison in this project came to be
+# committed as 0.0 in the table that reports it. These columns keep a floor of
+# significant figures instead, and six of them sit far above the platform
+# disagreement the decimal rule was written for.
+SIGNIFICANT = 6
+SIGNIFICANT_COLUMNS = ("p_value", "q_value")
+
+
+def _rounded(values: pd.Series) -> pd.Series:
+    """One column rounded to whichever of the two rules keeps more of it.
+
+    Values large enough for the decimal rule are left exactly where they were, so
+    adding this changes nothing that was already surviving.
+    """
+    numbers = values.to_numpy(dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        magnitude = np.floor(np.log10(np.abs(numbers)))
+
+    places = np.where(np.isfinite(magnitude), SIGNIFICANT - 1 - magnitude, DECIMALS)
+    scale = np.power(10.0, np.maximum(places, DECIMALS))
+    return pd.Series(np.round(numbers * scale) / scale, index=values.index)
 
 
 def write_table(frame: pd.DataFrame, path: Path) -> Path:
@@ -32,5 +56,9 @@ def write_table(frame: pd.DataFrame, path: Path) -> Path:
     Every committed CSV goes through here, so none of them can quietly reintroduce
     the platform dependent last digit the reproduce job exists to catch.
     """
-    frame.round(DECIMALS).to_csv(path, index=False)
+    rounded = frame.round(DECIMALS)
+    for column in SIGNIFICANT_COLUMNS:
+        if column in frame.columns:
+            rounded[column] = _rounded(frame[column])
+    rounded.to_csv(path, index=False)
     return path

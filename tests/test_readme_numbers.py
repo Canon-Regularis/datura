@@ -113,12 +113,14 @@ SPECIES_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
     "acoustic descriptors, XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
     "log mel CNN, 0.15 M": "cnn_small",
     "log mel CNN, 2.8 M": "cnn",
 }
 
 AGAINST_LOGBOOK = {
     "XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
     "CNN 2.8 M": "cnn",
     "CNN 0.15 M": "cnn_small",
     "logbook against metadata": "logbook",
@@ -128,12 +130,14 @@ WIDE_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
     "acoustic, XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
 }
 
 AMBIGUITY_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
     "acoustic, XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
     "log mel CNN": "cnn_small",
 }
 
@@ -189,18 +193,37 @@ def test_the_ambiguity_table_matches_the_artifact(report_exists):
     """One row per model, one column per giveaway on each side of its split."""
     table = pd.read_csv(REPORTS / "base_10k" / "ambiguity_breakdown.csv")
 
-    def score(field: str, shared: bool, model: str) -> float:
-        side = "shared by species" if shared else "unique to a species"
+    def score(field: str, side: str, model: str) -> float:
         rows = table[(table["giveaway"] == field) & (table["subset"] == f"{field} {side}")]
         return float(rows.set_index("model").loc[model, "macro_f1_mean"])
 
-    for cells in rows_of("| model | rate unique | rate shared | code unique | code shared |"):
-        label, rate_unique, rate_shared, code_unique, code_shared = cells[:5]
+    for cells in rows_of("| model | rate unique | rate shared | code unique | code absent |"):
+        label, rate_unique, rate_shared, code_unique, code_absent = cells[:5]
         name = AMBIGUITY_ROWS[label]
-        assert matches(rate_unique, score("native sample rate", False, name)), f"{label}: rate"
-        assert matches(rate_shared, score("native sample rate", True, name)), f"{label}: rate"
-        assert matches(code_unique, score("collection code", False, name)), f"{label}: code"
-        assert matches(code_shared, score("collection code", True, name)), f"{label}: code"
+        rate, code = "native sample rate", "collection code"
+        assert matches(rate_unique, score(rate, "unique to a species", name)), f"{label}: rate"
+        assert matches(rate_shared, score(rate, "shared by species", name)), f"{label}: rate"
+        assert matches(code_unique, score(code, "unique to a species", name)), f"{label}: code"
+        assert matches(code_absent, score(code, "not recorded", name)), f"{label}: code"
+
+
+def test_no_collection_code_in_the_narrow_set_is_shared(report_exists):
+    """The claim the README makes about its own fourth column.
+
+    The subset used to be labelled as clips whose code several species share. No such
+    clip exists here, and the bucket held the clips carrying no code at all, so the
+    label described the opposite of its contents.
+    """
+    table = pd.read_csv(REPORTS / "base_10k" / "ambiguity_breakdown.csv")
+    code = table[table["giveaway"] == "collection code"]
+    subsets = set(code["subset"])
+
+    assert "collection code shared by species" not in subsets, sorted(subsets)
+    absent = code[code["subset"] == "collection code not recorded"]
+    assert not absent.empty, sorted(subsets)
+    assert set(absent["clips"]) == {359}
+    assert set(absent["classes_scored"]) == {2}, "two of the three species carry no code"
+    assert set(absent["classes_total"]) == {3}
 
 
 def call_type_key(label: str) -> str:
@@ -296,3 +319,22 @@ def test_no_number_is_quoted_without_the_artifact_that_backs_it():
     assert "0.626" not in text, "the pre-correction cnn_small interval is back"
     assert re.search(r"\b0\.893\b", text) is None, "the pre-repeats ambiguity figure is back"
     assert "between epochs 0 and 4 on every single fold" not in text
+
+
+def test_the_corpus_caption_names_both_filters(report_exists):
+    """The dominant exclusion is the clip length, and the caption used to omit it.
+
+    It read as though the sample rate floor were the only thing dropping clips, which
+    put the emphasis on the confound the project was already chasing and hid a filter
+    seven times larger.
+    """
+    dropped = pd.read_csv(PROJECT_ROOT / "data" / "metadata" / "audit_dropped_base_10k.csv")
+    by_reason = dropped.groupby("drop_reason")["clips"].sum()
+
+    short = int(by_reason["clip_too_short"])
+    low_rate = int(by_reason["native_rate_below_target"])
+    assert short > low_rate, "the caption below assumes the length filter is the larger one"
+
+    text = README.read_text(encoding="utf-8")
+    assert f"{low_rate} humpback clips" in text
+    assert f"{short} more" in text

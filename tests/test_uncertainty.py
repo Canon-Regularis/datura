@@ -16,6 +16,7 @@ from scipy import stats
 from src.uncertainty import (
     ComparisonError,
     Interval,
+    benjamini_hochberg,
     bootstrap_metric,
     fold_scores,
     paired_difference,
@@ -200,7 +201,68 @@ def test_identical_scores_do_not_blow_up():
     same = pd.Series([0.5, 0.5, 0.5], index=folds)
     result = paired_difference(same, same)
     assert result.difference == 0.0
+    assert result.p_value == 1.0
     assert not result.resolved
+
+
+def test_a_difference_that_never_varies_carries_no_p_value():
+    """Three folds apart by the same amount is not proof of anything.
+
+    This used to report p = 0, which claims a certainty no design can reach and would
+    have put a fabricated headline at the top of every table sorted by p value.
+    """
+    folds = [0, 1, 2]
+    control = pd.Series([0.5, 0.5, 0.5], index=folds)
+    result = paired_difference(control + 0.2, control)
+
+    assert result.difference == pytest.approx(0.2)
+    assert np.isnan(result.p_value)
+    assert not result.resolved
+    assert "no spread to test" in result.describe()
+
+
+def test_repeats_can_convert_an_unresolved_comparison_into_a_resolved_one():
+    """The limit of what the correction promises, pinned so nobody overstates it.
+
+    The correction keeps a term that does not fall as repeats are added, so repeating a
+    split buys far less than a naive test would claim. It does not buy nothing, and the
+    README said for a while that this file forbids the conversion outright. These
+    differences make the conversion happen, which is the honest version of the claim.
+    """
+    once = [0.14, 0.02, 0.16, 0.05, 0.08]
+
+    five = paired_difference(*repeated(once))
+    fifty = paired_difference(*repeated(once * 10))
+
+    assert not five.resolved and five.p_value == pytest.approx(0.08594, abs=1e-5)
+    assert fifty.resolved and fifty.p_value == pytest.approx(0.00215, abs=1e-5)
+    assert fifty.p_value < five.p_value
+
+
+def test_benjamini_hochberg_matches_a_hand_computed_vector():
+    """Five p values each scaled by m over their rank, then made monotone."""
+    adjusted = benjamini_hochberg([0.01, 0.02, 0.03, 0.04, 0.05])
+    assert adjusted == pytest.approx([0.05] * 5)
+
+
+def test_benjamini_hochberg_handles_ties_and_never_exceeds_one():
+    adjusted = benjamini_hochberg([0.01, 0.01, 0.5])
+    assert adjusted == pytest.approx([0.015, 0.015, 0.5])
+    assert benjamini_hochberg([0.9, 0.95]) == pytest.approx([0.95, 0.95])
+
+
+def test_benjamini_hochberg_skips_a_comparison_with_no_p_value():
+    """A constant difference cannot be rejected and must not lengthen the ranking."""
+    adjusted = benjamini_hochberg([0.01, np.nan, 0.5])
+    assert np.isnan(adjusted[1])
+    assert adjusted[0] == pytest.approx(0.02), "two tested comparisons, not three"
+    assert np.isnan(benjamini_hochberg([np.nan, np.nan])).all()
+
+
+def test_benjamini_hochberg_is_no_kinder_than_the_uncorrected_value():
+    values = np.array([0.001, 0.02, 0.04, 0.3, 0.7])
+    adjusted = benjamini_hochberg(values)
+    assert (adjusted >= values).all()
 
 
 def test_fold_scores_pair_on_repeat_and_fold_together():

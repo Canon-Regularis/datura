@@ -125,7 +125,12 @@ def _safe_average_precision(labels: np.ndarray, probabilities: np.ndarray, n_cla
 COUNT_METRICS = ("accuracy", "macro_f1", "weighted_f1")
 
 
-def from_counts(labels: np.ndarray, predictions: np.ndarray, n_classes: int) -> dict[str, float]:
+def from_counts(
+    labels: np.ndarray,
+    predictions: np.ndarray,
+    n_classes: int,
+    scored: np.ndarray | None = None,
+) -> dict[str, float]:
     """Accuracy and the F1 averages, from the confusion counts alone.
 
     ``score`` also computes ranking metrics, and those cost more than everything
@@ -136,6 +141,16 @@ def from_counts(labels: np.ndarray, predictions: np.ndarray, n_classes: int) -> 
 
     A class with no support and no predictions scores zero rather than dividing by
     nothing, which is what sklearn does with ``zero_division=0``.
+
+    ``scored`` names the classes that enter the macro average, and defaults to all of
+    them. It exists for slices of the test set that carry only some of the species. A
+    class absent from the slice scores zero and is divided by anyway, which caps a
+    three class macro F1 at two thirds on a two class slice and reads as a collapse
+    that the predictions do not contain. Accuracy and the weighted average need no
+    such argument, because an absent class carries no weight in either.
+
+    The prediction stays an argmax over every class. Renormalising over the classes
+    present would tell the model which species were possible, which it never knew.
     """
     matrix = np.bincount(
         labels.astype(np.int64) * n_classes + predictions.astype(np.int64),
@@ -154,9 +169,11 @@ def from_counts(labels: np.ndarray, predictions: np.ndarray, n_classes: int) -> 
     total = float(actual.sum())
     if total == 0.0:
         return {"accuracy": 0.0, "macro_f1": 0.0, "weighted_f1": 0.0}
+
+    averaged = per_class if scored is None else per_class[np.asarray(scored, dtype=int)]
     return {
         "accuracy": float(correct.sum() / total),
-        "macro_f1": float(per_class.mean()),
+        "macro_f1": float(averaged.mean()) if len(averaged) else 0.0,
         "weighted_f1": float(np.dot(per_class, actual) / total),
     }
 
@@ -165,8 +182,14 @@ def score(
     labels: np.ndarray,
     probabilities: np.ndarray,
     class_names: list[str],
+    scored_classes: np.ndarray | None = None,
 ) -> dict[str, float]:
-    """Headline metrics for one set of predictions."""
+    """Headline metrics for one set of predictions.
+
+    ``scored_classes`` reaches ``from_counts`` and narrows the macro average only. The
+    per class table below still covers every class, so a caller reading a recall by
+    name gets the same answer either way.
+    """
     n_classes = len(class_names)
     all_labels = list(range(n_classes))
     predictions = probabilities.argmax(axis=1)
@@ -179,7 +202,7 @@ def score(
     # species would report a macro average over the survivors while the table below
     # still listed the absent one at zero.
     result: dict[str, float] = {
-        **from_counts(labels, predictions, n_classes),
+        **from_counts(labels, predictions, n_classes, scored_classes),
         "roc_auc_ovr_macro": _safe_roc_auc(labels, probabilities, n_classes),
         "average_precision_macro": _safe_average_precision(labels, probabilities, n_classes),
         "n_items": float(len(labels)),
@@ -202,6 +225,11 @@ def summarise_folds(fold_metrics: pd.DataFrame) -> pd.DataFrame:
 
     A repeated run has as many rows as repeats times folds, and every one of them is
     an estimate of the same quantity, so they are summarised together.
+
+    ``folds`` counts the estimates that were defined. The ranking metrics return a NaN
+    on a fold that holds fewer than two classes, and pandas averages around a NaN
+    without saying so, so two rows of this table could otherwise rest on different
+    numbers of folds and look alike.
     """
     numeric = fold_metrics.drop(columns=["fold", "repeat"], errors="ignore").select_dtypes("number")
     summary = pd.DataFrame(
@@ -211,6 +239,7 @@ def summarise_folds(fold_metrics: pd.DataFrame) -> pd.DataFrame:
             "std": numeric.std(ddof=1).to_numpy(),
             "min": numeric.min().to_numpy(),
             "max": numeric.max().to_numpy(),
+            "folds": numeric.count().to_numpy(),
         }
     )
     return summary.reset_index(drop=True)

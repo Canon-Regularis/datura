@@ -125,7 +125,7 @@ def family_intervals(
 
 
 def giveaways(cfg: Config) -> dict[str, pd.Series]:
-    """Each field that can hand over the species, mapped clip to giveaway or not.
+    """Each field that can hand over the species, mapped clip to what it does.
 
     The calculation belongs with the audit tables that report the same thing in
     summary; this loads what it needs and hands off.
@@ -134,21 +134,34 @@ def giveaways(cfg: Config) -> dict[str, pd.Series]:
     try:
         parsed = annotations.load(cfg)
     except annotations.AnnotationError:
-        return audit.giveaway_masks(manifest)
-    return audit.giveaway_masks(manifest, parsed)
+        return audit.giveaway_labels(manifest)
+    return audit.giveaway_labels(manifest, parsed)
+
+
+SUBSET_WORDING = {
+    audit.UNIQUE: "unique to a species",
+    audit.SHARED: "shared by species",
+    audit.ABSENT: "not recorded",
+}
 
 
 def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
-    """Each model scored with and without each giveaway.
+    """Each model scored on clips the giveaway does and does not answer for.
 
     A native sample rate used by one species hands the answer to anything that can
-    see it; a rate shared by several does not. The same is true of the collection a
-    cut came from. Splitting the test clips that way asks the question the headline
+    see it; a rate shared by several does not; a clip carrying no value at all is a
+    third case. Splitting the test clips that way asks the question the headline
     number cannot: when the recording is not a giveaway, does listening to it help?
+
+    ``classes_scored`` is the column to read first. A slice of the test set can hold
+    fewer species than the task does, and a macro average over the missing ones scores
+    them zero and divides by them anyway. The base_10k clips with no collection code
+    carry two of three species, so a three class average there cannot exceed two
+    thirds, and 0.43 against 1.0 reads as a collapse that is mostly arithmetic.
     """
     class_names = list(cfg.dataset.species)
     columns = scoring.probability_columns(len(class_names))
-    shared_by_field = giveaways(cfg)
+    labels_by_field = giveaways(cfg)
 
     rows = []
     for name in model_names:
@@ -159,14 +172,23 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
         # rows and report the spread across folds as if it were the spread across runs.
         split = [key for key in ("repeat", "fold") if key in predictions.columns]
 
-        for field, is_shared in shared_by_field.items():
-            predictions["shared"] = predictions["clip_id"].map(is_shared).fillna(False)
-            for shared, subset in predictions.groupby("shared"):
+        for field, outcome in labels_by_field.items():
+            bucket = predictions["clip_id"].map(outcome)
+            if bucket.isna().any():
+                missing = int(bucket.isna().sum())
+                raise ValueError(f"{missing} {name} clips are absent from the {field} split")
+
+            for label, subset in predictions.groupby(bucket):
+                # The species present across the whole slice, rather than per fold. Most
+                # folds of a small slice carry one species, and a macro average over a
+                # single class is near one however the model did.
+                present = np.unique(subset["label"].to_numpy())
                 per_fold = [
-                    scoring.score(
+                    scoring.from_counts(
                         fold_subset["label"].to_numpy(),
-                        fold_subset[columns].to_numpy(),
-                        class_names,
+                        fold_subset[columns].to_numpy().argmax(axis=1),
+                        len(class_names),
+                        present,
                     )["macro_f1"]
                     for _, fold_subset in subset.groupby(split)
                 ]
@@ -174,13 +196,16 @@ def ambiguity(cfg: Config, model_names: list[str]) -> pd.DataFrame:
                     {
                         "giveaway": field,
                         "model": name,
-                        "subset": f"{field} shared by species"
-                        if shared
-                        else f"{field} unique to a species",
+                        "subset": f"{field} {SUBSET_WORDING[label]}",
                         # Distinct clips, not prediction rows. A repeated run holds one row
                         # per clip per repeat, so counting rows would put a ten repeat model
                         # and a single split model on different scales in the same column.
                         "clips": subset["clip_id"].nunique(),
+                        "classes_scored": len(present),
+                        "classes_total": len(class_names),
+                        # Splits this slice actually appeared in. A slice can miss a fold
+                        # entirely, so this is not the model's fold count.
+                        "folds": len(per_fold),
                         "macro_f1_mean": float(np.mean(per_fold)),
                         "macro_f1_std": float(np.std(per_fold, ddof=1))
                         if len(per_fold) > 1

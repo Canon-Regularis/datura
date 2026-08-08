@@ -82,11 +82,19 @@ class PairedComparison:
 
     @property
     def resolved(self) -> bool:
-        """Whether this design separates the two at the usual threshold."""
-        return self.p_value < 0.05
+        """Whether this design separates the two at the usual threshold.
+
+        A comparison with no spread across folds carries no p value, and a comparison
+        against nothing is not resolved.
+        """
+        return bool(self.p_value < 0.05)
 
     def describe(self) -> str:
         direction = "higher" if self.difference >= 0 else "lower"
+        if np.isnan(self.p_value):
+            verdict = f"every one of {self.n_folds} folds differed by the same amount, so "
+            verdict += "there is no spread to test"
+            return f"{abs(self.difference):.3f} {direction}, {verdict}"
         verdict = (
             "resolved at p < 0.05"
             if self.resolved
@@ -214,9 +222,12 @@ def paired_difference(
     would produce a number that looks like a margin and is not one.
 
     The test is the corrected resampled one rather than a plain paired t test, because
-    folds of a cross validation are not independent of each other. On the headline
-    species comparison the difference between the two is p = 0.00008 against p = 0.25,
-    which is the difference between a finding and nothing of the kind.
+    folds of a cross validation are not independent of each other. On XGBoost against
+    the metadata control the difference between the two is p = 0.00008 against
+    p = 0.25, which is the difference between a finding and nothing of the kind.
+
+    A p value from here is uncorrected for the number of comparisons the project
+    reports. ``benjamini_hochberg`` does that across all of them at once.
     """
     if not left.index.equals(right.index):
         raise ComparisonError(
@@ -229,13 +240,17 @@ def paired_difference(
     differences = (left - right).to_numpy(dtype=float)
     mean = float(differences.mean())
 
-    if np.allclose(differences, differences[0]):
-        # No spread at all, so a t test is undefined; the interval is the point.
+    if np.all(differences == differences[0]):
+        # No spread at all, so a t test is undefined and the interval is the point.
+        # Two folds that happen to differ by the same amount are not proof of
+        # anything, so this reports no p value rather than zero. The test is on exact
+        # equality, because a tolerance would send a merely narrow set of differences
+        # down here and hide a result the t path can measure.
         return PairedComparison(
             difference=mean,
             low=mean,
             high=mean,
-            p_value=0.0 if mean != 0 else 1.0,
+            p_value=1.0 if mean == 0 else float("nan"),
             folds_agreeing=len(differences) if mean != 0 else 0,
             n_folds=len(differences),
         )
@@ -257,6 +272,45 @@ def paired_difference(
         folds_agreeing=agreeing,
         n_folds=len(differences),
     )
+
+
+def benjamini_hochberg(p_values: np.ndarray) -> np.ndarray:
+    """Adjusted p values controlling the false discovery rate across a set of tests.
+
+    Every margin this project publishes is a test, and printing two dozen of them
+    beside each other at 0.05 apiece expects more than one to clear the bar carrying
+    nothing. The step up procedure asks what the individual p values cannot: of the
+    comparisons called resolved, how many are noise.
+
+    This is deliberately less severe than dividing the threshold by the number of
+    tests. Controlling the family wise error rate would ask that not one of two dozen
+    comparisons is a false positive, which is a stricter question than this project
+    needs to answer, and it would discard true findings to get there.
+
+    A NaN carries through. A comparison whose folds all differed by the same amount
+    has no p value, so it cannot be rejected and it does not lengthen the ranking for
+    everything else either.
+    """
+    values = np.asarray(p_values, dtype=float)
+    tested = ~np.isnan(values)
+    adjusted = np.full(values.shape, np.nan)
+
+    count = int(tested.sum())
+    if count == 0:
+        return adjusted
+
+    ranked = values[tested]
+    order = np.argsort(ranked, kind="stable")
+    scaled = ranked[order] * count / np.arange(1, count + 1)
+
+    # Walking back from the least significant keeps the result monotone, so a
+    # comparison never lands below one that started out stronger than it.
+    monotone = np.minimum.accumulate(scaled[::-1])[::-1]
+
+    result = np.empty(count)
+    result[order] = np.minimum(monotone, 1.0)
+    adjusted[tested] = result
+    return adjusted
 
 
 def shared_folds(left: pd.Series, right: pd.Series) -> tuple[pd.Series, pd.Series]:

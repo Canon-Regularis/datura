@@ -8,6 +8,7 @@ measured rather than assumed.
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from src.data.annotations import call_columns
@@ -24,13 +25,37 @@ GIVEAWAY_FIELDS = {
 }
 
 
+# What one field can do to the species label of a clip.
+UNIQUE = "unique"
+SHARED = "shared"
+ABSENT = "absent"
+
+
+def recorded(frame: pd.DataFrame, column: str) -> pd.Series:
+    """Rows where the field was actually written down.
+
+    A blank collection code is not a code that several species happen to share. It is
+    the absence of one. Counting the blank as a value put 359 base_10k clips in a
+    bucket labelled as though a code had been recorded and found ambiguous, when no
+    code in that configuration is used by more than one species at all.
+    """
+    values = frame[column]
+    if pd.api.types.is_numeric_dtype(values):
+        return values.notna()
+    # Asking whether the dtype is object would miss it. Text columns arrive from
+    # parquet as a string dtype, and every blank in one of those is not null, so a
+    # null check alone calls the empty string a recorded value.
+    return values.fillna("").astype(str).str.strip() != ""
+
+
 def species_per_value(frame: pd.DataFrame, column: str) -> pd.Series:
-    """How many species each value of one column is used by."""
-    return frame.groupby(column)["species"].nunique()
+    """How many species each recorded value of one column is used by."""
+    present = frame[recorded(frame, column)]
+    return present.groupby(column)["species"].nunique()
 
 
 def shared_values(frame: pd.DataFrame, column: str) -> set:
-    """The values of one column that more than one species uses.
+    """The recorded values of one column that more than one species uses.
 
     A value used by exactly one species names that species. Everything asking how
     much a field gives away is asking about this set, or about its complement, so it
@@ -40,10 +65,15 @@ def shared_values(frame: pd.DataFrame, column: str) -> set:
     return set(counts[counts > 1].index)
 
 
-def giveaway_masks(
+def giveaway_labels(
     manifest: pd.DataFrame, annotations: pd.DataFrame | None = None
 ) -> dict[str, pd.Series]:
-    """Per field, a clip indexed flag saying whether its value is shared.
+    """Per field, a clip indexed label saying what its value does to the species.
+
+    Three outcomes, because two cannot describe the data. A value used by one species
+    names it. A value used by several does not. A clip carrying no value at all is a
+    third case, and folding it into either of the others states something false about
+    every clip in the bucket.
 
     Splitting held out clips on this asks the question a headline score cannot: where
     the recording does not name the species by itself, does listening to it still
@@ -56,13 +86,20 @@ def giveaway_masks(
             annotations[["clip_id", "collection_code"]], on="clip_id", how="left"
         )
 
-    masks = {}
+    labels = {}
     for column, label in GIVEAWAY_FIELDS.items():
         if column not in joined.columns:
             continue
         shared = shared_values(joined, column)
-        masks[label] = joined.set_index("clip_id")[column].isin(shared)
-    return masks
+        outcome = np.where(
+            ~recorded(joined, column),
+            ABSENT,
+            np.where(joined[column].isin(shared), SHARED, UNIQUE),
+        )
+        labels[label] = pd.Series(
+            outcome, index=pd.Index(joined["clip_id"], name="clip_id"), name=label
+        )
+    return labels
 
 
 def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
@@ -72,6 +109,10 @@ def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     Location is the same shape of problem: a site visited for one species tells you
     the species before any audio is heard. This table measures that directly, so the
     call type work can be built to avoid repeating the mistake.
+
+    Clips with no site recorded are counted in ``clips`` and nowhere else. A blank is
+    not a site that happens to be visited for several species, and reporting it as one
+    put an empty pseudo site in the count: base_10k has 47 sites and used to say 48.
     """
     joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")
     species_per_site = species_per_value(joined, "site")
@@ -85,6 +126,7 @@ def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
                 "sites": len(species_per_site),
                 "sites_used_by_one_species": unique_sites,
                 "clips": len(joined),
+                "clips_carrying_a_site": int(recorded(joined, "site").sum()),
                 "clips_at_a_single_species_site": unique_clips,
                 "share_of_clips_given_away": round(unique_clips / max(len(joined), 1), 4),
             }
@@ -145,8 +187,12 @@ def codes_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.Da
 
 
 def sites_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataFrame:
-    """Clips and tapes per site per species, largest sites first."""
+    """Clips and tapes per site per species, largest sites first.
+
+    Clips with no site are left out, so every row here names a place.
+    """
     joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")
+    joined = joined[recorded(joined, "site")]
     return (
         joined.groupby(["species", "site"])
         .agg(clips=("clip_id", "size"), tapes=("tape_id", "nunique"))

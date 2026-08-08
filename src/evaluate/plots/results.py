@@ -20,17 +20,31 @@ from src.evaluate.plots.style import (
 )
 
 
-def model_comparison(table: pd.DataFrame, path: Path, metric: str = "macro_f1") -> Path:
-    """Mean and spread per model, with the control drawn as the reference line.
+def model_comparison(
+    table: pd.DataFrame,
+    path: Path,
+    floor: str,
+    silent: set[str] | None = None,
+    metric: str = "macro_f1",
+) -> Path:
+    """Mean and spread per model, with the floor drawn as the reference line.
 
     The bar heights are less important than the gap between each audio model and the
-    metadata control, so the control is also drawn across the whole axis.
+    highest score reached without hearing the recording, so that model is also drawn
+    across the whole axis.
+
+    ``floor`` is named by the caller rather than found here. This chart drew its line
+    at the metadata control for as long as the control was assumed to be the floor,
+    which put it a tenth of a point below where an audio model actually had to reach.
+    ``silent`` names every model that hears no audio, so all of them are greyed rather
+    than the one that happens to be called metadata.
     """
     ordered = table.sort_values("mean")
     figure, ax = plt.subplots(figsize=(7, 0.7 * len(ordered) + 1.6))
 
-    control = ordered[ordered["model"] == "metadata"]
-    colors = ["#8f8e88" if name == "metadata" else SERIES[0] for name in ordered["model"]]
+    silent = silent or {floor}
+    reference = ordered[ordered["model"] == floor]
+    colors = ["#8f8e88" if name in silent else SERIES[0] for name in ordered["model"]]
     positions = np.arange(len(ordered))
 
     ax.barh(
@@ -46,12 +60,12 @@ def model_comparison(table: pd.DataFrame, path: Path, metric: str = "macro_f1") 
             mean + std + 0.015, y, f"{mean:.3f} ± {std:.3f}", va="center", color=INK, fontsize=9
         )
 
-    if not control.empty:
-        floor = float(control["mean"].iloc[0])
-        ax.axvline(floor, color="#8f8e88", linewidth=1.5, linestyle="--")
+    if not reference.empty:
+        height = float(reference["mean"].iloc[0])
+        ax.axvline(height, color="#8f8e88", linewidth=1.5, linestyle="--")
         ax.annotate(
-            "metadata floor",
-            xy=(floor, 1.0),
+            f"{floor} floor",
+            xy=(height, 1.0),
             xycoords=("data", "axes fraction"),
             xytext=(5, -6),
             textcoords="offset points",
@@ -133,9 +147,13 @@ def per_class_recall(table: pd.DataFrame, path: Path, class_names: list[str]) ->
     return _save(figure, path)
 
 
-def ambiguity_comparison(table: pd.DataFrame, path: Path) -> Path:
-    """Each model scored on clips whose sample rate does and does not give the
-    species away. The right hand group is the one worth reading."""
+def ambiguity_comparison(table: pd.DataFrame, path: Path, field: str) -> Path:
+    """Each model scored on clips one field does and does not give the species away on.
+
+    ``field`` is passed in because one call draws this per giveaway. The title used to
+    name the sample rate whatever it had been handed, so the collection code figure
+    carried a caption about equipment.
+    """
     subsets = list(dict.fromkeys(table["subset"]))
     models = list(dict.fromkeys(table["model"]))
     figure, ax = plt.subplots(figsize=(7.5, 4.2))
@@ -168,9 +186,7 @@ def ambiguity_comparison(table: pd.DataFrame, path: Path) -> Path:
 
     ax.set_xticks(positions, models, color=INK)
     ax.set_ylim(0, 1.05)
-    _style(
-        ax, "Macro-F1 split by whether the sample rate identifies the species", ylabel="macro-F1"
-    )
+    _style(ax, f"Macro-F1 split by what the {field} does to the species", ylabel="macro-F1")
     ax.grid(axis="x", visible=False)
     ax.legend(frameon=False, fontsize=9, labelcolor=INK)
     return _save(figure, path)

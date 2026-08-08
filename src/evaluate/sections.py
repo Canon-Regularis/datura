@@ -28,29 +28,67 @@ MARGIN_COLUMNS = (
     "nothing."
 )
 
+# Columns whose value is meaningless once rounded to a fixed number of places.
+SIGNIFICANT_COLUMNS = ("p_value", "q_value")
 
-def overview(margins: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    """Every comparison in the configuration, most resolved first."""
-    table = pd.concat(
-        [frame.assign(family=key) for key, frame in margins.items()], ignore_index=True
-    )
-    columns = ["family", "model", "margin", "low", "high", "p_value", "agreeing", "folds"]
+
+def markdown(frame: pd.DataFrame, decimals: int = 4) -> str:
+    """One table, rendered so that a small p value survives being printed.
+
+    Rounding a whole frame to four places turns anything below 0.00005 into a literal
+    zero. That is a claim no test can make, and it is how the strongest comparison in
+    this project came to be published as `0` while the CSV beside it carried
+    9.47e-09. Significant figures keep it readable, and three of them are stable
+    across platforms, which is the same reason the committed tables round rather than
+    write a full float.
+    """
+    shown = frame.copy()
+    for column in SIGNIFICANT_COLUMNS:
+        if column in shown.columns:
+            shown[column] = [
+                "n/a" if pd.isna(value) else f"{float(value):.3g}" for value in shown[column]
+            ]
+    return shown.round(decimals).to_markdown(index=False)
+
+
+def overview(frames: list[pd.DataFrame]) -> pd.DataFrame:
+    """Every comparison in the configuration, most resolved first.
+
+    Both floors belong here. A family measured against its declared control and again
+    against the strongest model that hears nothing produces two rows for each model,
+    and dropping the second is how the headline of this project stayed off the table
+    that says it lists everything.
+    """
+    table = pd.concat(frames, ignore_index=True)
+    columns = [
+        "family",
+        "model",
+        "floor",
+        "margin",
+        "low",
+        "high",
+        "p_value",
+        "agreeing",
+        "folds",
+    ]
     return table[columns].sort_values("p_value").reset_index(drop=True)
 
 
-def _strongest_floor(cfg: Config, family: families.Family) -> list[str]:
+def _strongest_floor(against: pd.DataFrame | None) -> list[str]:
     """Every model against the best a model with no audio manages.
 
     The metadata control was built before anyone knew what else the paperwork
     carried, so it is a floor rather than the floor. Reporting the higher one beside
     it says how much of the gap was equipment and how much was everything else
     written down about the recording.
+
+    The frame arrives already computed, so this section and the overview above cannot
+    print different numbers for the same pair.
     """
-    strongest = families.strongest_floor(cfg, family)
-    if strongest is None:
+    if against is None or against.empty:
         return []
 
-    against = tables.family_margins(cfg, family, control=strongest)
+    strongest = str(against["floor"].iloc[0])
     return [
         f"### Margin over {strongest}, the strongest model that hears no audio",
         "",
@@ -58,7 +96,7 @@ def _strongest_floor(cfg: Config, family: families.Family) -> list[str]:
         "collection code the field note opens with. None of that is the animal, so this is the",
         "number an audio result has to clear before it is evidence about whales.",
         "",
-        against.round(4).to_markdown(index=False),
+        markdown(against.drop(columns="floor")),
         "",
     ]
 
@@ -72,6 +110,7 @@ def species_section(
     ambiguity: pd.DataFrame,
     figures: list[Path],
     shared_tapes: pd.DataFrame | None = None,
+    against_floor: pd.DataFrame | None = None,
 ) -> list[str]:
     class_names = list(cfg.dataset.species)
     return [
@@ -80,35 +119,42 @@ def species_section(
         "### Margin over the metadata control",
         "",
         "The control sees native sample rate, year, clip duration and file size; it sees no",
-        "audio. Its score is the floor an audio model has to clear.",
+        "audio. It is a floor rather than the floor, and the table after this one measures",
+        "against the highest any model that hears nothing reaches.",
         "",
-        margins.round(4).to_markdown(index=False),
+        markdown(margins.drop(columns="floor", errors="ignore")),
         "",
-        *_strongest_floor(cfg, family),
+        *_strongest_floor(against_floor),
         "### Every model, with the range the recordings support",
         "",
         "The interval comes from resampling whole tapes with replacement. Cuts from one tape",
         "are near duplicates, so resampling clips would count the same recording many times",
         "and produce an interval several times too narrow.",
         "",
-        intervals.round(4).to_markdown(index=False),
+        markdown(intervals),
         "",
         "### Spread across folds",
         "",
-        tables.headline(comparison).round(4).to_markdown(index=False),
+        markdown(tables.headline(comparison)),
         "",
         "### Per species recall",
         "",
-        tables.per_species_recall(comparison, class_names).round(4).to_markdown(index=False),
+        markdown(tables.per_species_recall(comparison, class_names)),
         "",
         *_shared_tape_caveat(shared_tapes),
         "### With and without the giveaway",
         "",
-        f"Test clips split by whether {_giveaway_phrase(ambiguity)} is used by one species or",
-        "by several. On the shared subset the recording cannot identify the species by itself,",
-        "so those rows are where audio has to earn its result.",
+        f"Test clips split by what {_giveaway_phrase(ambiguity)} does to the species. A value",
+        "used by one species names it before any audio is heard. A value used by several does",
+        "not, and those rows are where audio has to earn its result. A clip carrying no value",
+        "at all is a third case, and it is neither of the other two.",
         "",
-        ambiguity.round(4).to_markdown(index=False),
+        "Read `classes_scored` against `classes_total` before the score. A slice can hold",
+        "fewer species than the task does, and it is scored over the ones it holds. Averaging",
+        "in a class that cannot appear scores it zero and divides by it anyway, which caps the",
+        "column and reads as a collapse the predictions do not contain.",
+        "",
+        markdown(ambiguity),
         "",
         "### Figures",
         "",
@@ -173,12 +219,14 @@ def call_type_section(
     return [
         f"## {family.title}",
         "",
-        f"Against `{family.control}`, which sees the site, the coordinates, the collection",
-        "the cut came from and the noise conditions, and no audio.",
+        f"Against `{family.control}`, which sees everything written down about the recording",
+        "and none of the recording. That includes clip duration, which matters here more than",
+        "anywhere else: a note is written against a whole cut, so a longer cut is more likely",
+        "to carry any given call whatever the animal was doing.",
         "",
-        margins.round(4).to_markdown(index=False),
+        markdown(margins.drop(columns="floor", errors="ignore")),
         "",
-        intervals.round(4).to_markdown(index=False),
+        markdown(intervals),
         "",
     ]
 
@@ -195,5 +243,10 @@ def header(cfg: Config, family_count: int) -> list[str]:
         f"at most {cfg.audio.max_windows_per_clip} per clip  ",
         f"Families: {family_count}, each a set of models and the control they were measured "
         "against",
+        "",
+        "Every p value in this document is uncorrected for the number of comparisons reported.",
+        "`MULTIPLICITY.md` beside this file adjusts across every comparison in every",
+        "configuration at once, which is the number to read before calling one of them a",
+        "finding.",
         "",
     ]
