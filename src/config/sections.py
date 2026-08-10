@@ -29,6 +29,16 @@ class DatasetConfig:
     archive_sha256: str
     archive_root: str
     species: tuple[str, ...]
+    corpus: str = ""
+    """Which corpus this configuration reads, when it is not its own.
+
+    A configuration names an experiment. The corpus is the data that experiment runs
+    on, and two experiments can share one. ``context_10k`` differs from ``base_10k``
+    only in what a fold boundary means, so it reads the same manifest, the same audit
+    tables and the same feature caches rather than building duplicates of all three.
+
+    Empty means the configuration owns its corpus, which is the usual case.
+    """
 
     def __post_init__(self) -> None:
         if len(self.archive_sha256) != 64 or not all(
@@ -273,6 +283,14 @@ class Config:
                 )
         blob = json.dumps(payload, sort_keys=True, default=str)
         return hashlib.sha256(blob.encode()).hexdigest()[:12]
+
+    @property
+    def corpus(self) -> str:
+        """The name the manifest, audits and feature caches are stored under.
+
+        Distinct from ``name``, which is the experiment and decides where results go.
+        """
+        return self.dataset.corpus or self.name
 
     @property
     def audio_digest(self) -> str:

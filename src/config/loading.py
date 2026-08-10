@@ -27,13 +27,23 @@ from src.config.sections import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
-def _require(mapping: dict[str, Any], section: str, allowed: set[str]) -> dict[str, Any]:
+def _require(
+    mapping: dict[str, Any],
+    section: str,
+    allowed: set[str],
+    optional: set[str] | None = None,
+) -> dict[str, Any]:
+    """A section that must be present, with every key in ``allowed`` supplied.
+
+    ``optional`` names keys the section may carry and need not. They are accepted
+    rather than refused as unknown, and their absence is not an error.
+    """
     if section not in mapping:
         raise ConfigError(f"missing required config section: {section}")
     block = mapping[section]
     if not isinstance(block, dict):
         raise ConfigError(f"config section {section} must be a mapping")
-    unknown = set(block) - allowed
+    unknown = set(block) - allowed - (optional or set())
     if unknown:
         raise ConfigError(f"unknown keys in {section}: {sorted(unknown)}")
     missing = allowed - set(block)
@@ -114,6 +124,7 @@ def load_config(path: str | Path) -> Config:
         raw,
         "dataset",
         {"archive_url", "zip_name", "archive_sha256", "archive_root", "species"},
+        optional={"corpus"},
     )
     audio_block = _require(
         raw,
@@ -156,6 +167,7 @@ def load_config(path: str | Path) -> Config:
             archive_sha256=str(dataset_block["archive_sha256"]).lower(),
             archive_root=str(dataset_block["archive_root"]),
             species=tuple(str(s) for s in dataset_block["species"]),
+            corpus=str(dataset_block.get("corpus", "")),
         ),
         audio=AudioConfig(
             target_sample_rate=int(audio_block["target_sample_rate"]),

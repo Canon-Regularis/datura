@@ -106,7 +106,7 @@ def extract(
     store = writer.close(pd.DataFrame(index_rows, columns=_INDEX_COLUMNS))
 
     if failures:
-        record = cfg.paths.metadata / f"extract_failures_{cfg.name}_{extractor.name}.csv"
+        record = cfg.paths.metadata / f"extract_failures_{cfg.corpus}_{extractor.name}.csv"
         pd.DataFrame(failures, columns=["clip_id", "reason"]).to_csv(record, index=False)
         logger.warning("\n%d clip(s) could not be processed, listed in %s:", len(failures), record)
         for clip_id, reason in failures[:10]:

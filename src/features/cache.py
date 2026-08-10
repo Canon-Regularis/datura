@@ -42,7 +42,7 @@ def cache_paths(cfg: Config, extractor: FeatureExtractor) -> tuple[Path, Path]:
     the name here instead would mean a new spectrogram derived representation
     silently reused a cache built under different mel settings.
     """
-    stem = f"{cfg.name}_{extractor.name}_{cfg.digest(*extractor.cache_sections)}"
+    stem = f"{cfg.corpus}_{extractor.name}_{cfg.digest(*extractor.cache_sections)}"
     return (
         cfg.paths.processed / f"{stem}.npy",
         cfg.paths.processed / f"{stem}_index.parquet",

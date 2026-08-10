@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 def _shared_tapes(cfg: Config) -> pd.DataFrame | None:
     """Tapes carrying more than one species, when the audit has been written."""
-    path = cfg.paths.metadata / f"audit_cross_species_tapes_{cfg.name}.csv"
+    path = cfg.paths.metadata / f"audit_cross_species_tapes_{cfg.corpus}.csv"
     return pd.read_csv(path) if path.exists() else None
 
 
