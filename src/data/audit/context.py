@@ -31,6 +31,20 @@ SHARED = "shared"
 ABSENT = "absent"
 
 
+def with_columns(frame: pd.DataFrame, parsed: pd.DataFrame, *columns: str) -> pd.DataFrame:
+    """The frame carrying the named note columns, joining only what is missing.
+
+    The manifest gained ``site`` and ``collection_code`` when folds had to be able to
+    group on them. Merging them in again here would give pandas two columns of the
+    same name and leave every caller reading ``site_x``, so the join is conditional
+    rather than unconditional.
+    """
+    absent = [column for column in columns if column not in frame.columns]
+    if not absent:
+        return frame
+    return frame.merge(parsed[["clip_id", *absent]], on="clip_id", how="left")
+
+
 def recorded(frame: pd.DataFrame, column: str) -> pd.Series:
     """Rows where the field was actually written down.
 
@@ -80,24 +94,22 @@ def giveaway_labels(
     help? A field the notes do not carry is left out rather than guessed at, so a
     collection whose annotations were never fetched still gets the sample rate split.
     """
-    joined = manifest
+    frame = manifest
     if annotations is not None:
-        joined = manifest.merge(
-            annotations[["clip_id", "collection_code"]], on="clip_id", how="left"
-        )
+        frame = with_columns(manifest, annotations, "collection_code")
 
     labels = {}
     for column, label in GIVEAWAY_FIELDS.items():
-        if column not in joined.columns:
+        if column not in frame.columns:
             continue
-        shared = shared_values(joined, column)
+        shared = shared_values(frame, column)
         outcome = np.where(
-            ~recorded(joined, column),
+            ~recorded(frame, column),
             ABSENT,
-            np.where(joined[column].isin(shared), SHARED, UNIQUE),
+            np.where(frame[column].isin(shared), SHARED, UNIQUE),
         )
         labels[label] = pd.Series(
-            outcome, index=pd.Index(joined["clip_id"], name="clip_id"), name=label
+            outcome, index=pd.Index(frame["clip_id"], name="clip_id"), name=label
         )
     return labels
 
@@ -114,21 +126,21 @@ def site_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     not a site that happens to be visited for several species, and reporting it as one
     put an empty pseudo site in the count: base_10k has 47 sites and used to say 48.
     """
-    joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")
-    species_per_site = species_per_value(joined, "site")
-    joined["site_species_count"] = joined["site"].map(species_per_site)
+    frame = with_columns(manifest, annotations, "site")
+    species_per_site = species_per_value(frame, "site")
+    frame = frame.assign(site_species_count=frame["site"].map(species_per_site))
 
     unique_sites = int((species_per_site == 1).sum())
-    unique_clips = int((joined["site_species_count"] == 1).sum())
+    unique_clips = int((frame["site_species_count"] == 1).sum())
     return pd.DataFrame(
         [
             {
                 "sites": len(species_per_site),
                 "sites_used_by_one_species": unique_sites,
-                "clips": len(joined),
-                "clips_carrying_a_site": int(recorded(joined, "site").sum()),
+                "clips": len(frame),
+                "clips_carrying_a_site": int(recorded(frame, "site").sum()),
                 "clips_at_a_single_species_site": unique_clips,
-                "share_of_clips_given_away": round(unique_clips / max(len(joined), 1), 4),
+                "share_of_clips_given_away": round(unique_clips / max(len(frame), 1), 4),
             }
         ]
     )
@@ -141,8 +153,8 @@ def code_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
     Every note opens with the code of the collection the cut came from, and it turns
     out to separate the species better than either the site or the audio does.
     """
-    joined = manifest.merge(annotations[["clip_id", "collection_code"]], on="clip_id", how="left")
-    coded = joined[joined["collection_code"].fillna("") != ""]
+    frame = with_columns(manifest, annotations, "collection_code")
+    coded = frame[recorded(frame, "collection_code")]
 
     species_per_code = species_per_value(coded, "collection_code")
     unique_codes = species_per_code[species_per_code == 1].index
@@ -153,10 +165,10 @@ def code_giveaway(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.DataF
             {
                 "codes": len(species_per_code),
                 "codes_used_by_one_species": int((species_per_code == 1).sum()),
-                "clips": len(joined),
+                "clips": len(frame),
                 "clips_carrying_a_code": len(coded),
                 "clips_with_a_single_species_code": unique_clips,
-                "share_of_clips_given_away": round(unique_clips / max(len(joined), 1), 4),
+                "share_of_clips_given_away": round(unique_clips / max(len(frame), 1), 4),
             }
         ]
     )
@@ -170,8 +182,8 @@ def codes_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.Da
     These span dozens of tapes each, which is why they cross the fold boundary and
     why the control has to see them.
     """
-    joined = manifest.merge(annotations[["clip_id", "collection_code"]], on="clip_id", how="left")
-    coded = joined[joined["collection_code"].fillna("") != ""]
+    frame = with_columns(manifest, annotations, "collection_code")
+    coded = frame[recorded(frame, "collection_code")]
 
     table = (
         coded.groupby("collection_code")
@@ -191,10 +203,10 @@ def sites_by_species(manifest: pd.DataFrame, annotations: pd.DataFrame) -> pd.Da
 
     Clips with no site are left out, so every row here names a place.
     """
-    joined = manifest.merge(annotations[["clip_id", "site"]], on="clip_id", how="left")
-    joined = joined[recorded(joined, "site")]
+    frame = with_columns(manifest, annotations, "site")
+    frame = frame[recorded(frame, "site")]
     return (
-        joined.groupby(["species", "site"])
+        frame.groupby(["species", "site"])
         .agg(clips=("clip_id", "size"), tapes=("tape_id", "nunique"))
         .reset_index()
         .sort_values(["species", "clips"], ascending=[True, False])

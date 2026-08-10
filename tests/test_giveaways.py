@@ -77,7 +77,7 @@ def test_a_numeric_field_is_never_read_as_blank():
 
 def test_no_code_in_the_narrow_set_is_shared_by_two_species():
     kept, notes = corpus("base.yaml")
-    joined = kept.merge(notes[["clip_id", "collection_code"]], on="clip_id", how="left")
+    joined = audit.with_columns(kept, notes, "collection_code")
     assert audit.shared_values(joined, "collection_code") == set()
 
 
@@ -95,7 +95,7 @@ def test_the_clips_with_no_code_are_a_handful_of_recordings():
 def test_the_wide_set_does_carry_shared_codes():
     """The three species set cannot ask the question. Eleven species can."""
     kept, notes = corpus("wide.yaml")
-    joined = kept.merge(notes[["clip_id", "collection_code"]], on="clip_id", how="left")
+    joined = audit.with_columns(kept, notes, "collection_code")
     assert audit.shared_values(joined, "collection_code") == {"BA2A", "BE3B", "BE3C"}
 
 

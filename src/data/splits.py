@@ -16,6 +16,7 @@ continuous recordings by site and year.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 import numpy as np
@@ -24,6 +25,8 @@ from sklearn.model_selection import StratifiedGroupKFold
 
 from src.config import Config
 from src.errors import DaturaError
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_GROUP_COLUMN = "tape_id"
 
@@ -70,6 +73,35 @@ def _grouped_holdout(
     return major, minor
 
 
+def with_a_group(manifest: pd.DataFrame, group_column: str) -> pd.DataFrame:
+    """The clips that carry the value folds are grouped on.
+
+    A blank is not a group. Every clip whose site the notes never recorded would
+    otherwise be collected into one pseudo group and held out together, which is
+    neither a recording context nor a random sample of one. It is the same mistake
+    that put the clips carrying no collection code into a bucket labelled as though
+    their code had been measured and found ambiguous.
+
+    Only bites on a column that comes from the field notes. The tape is parsed from
+    the filename and is never blank, so ``base_10k`` passes through untouched.
+    """
+    values = manifest[group_column]
+    if pd.api.types.is_numeric_dtype(values):
+        return manifest
+
+    present = values.fillna("").astype(str).str.strip() != ""
+    if present.all():
+        return manifest
+
+    logger.info(
+        "%d of %d clips carry no %s and cannot join a group",
+        int((~present).sum()),
+        len(manifest),
+        group_column,
+    )
+    return manifest[present]
+
+
 def make_folds(manifest: pd.DataFrame, cfg: Config, *, validation_splits: int = 5) -> list[Fold]:
     """Build ``cfg.split.n_folds`` folds grouped by recording and stratified by class.
 
@@ -83,7 +115,7 @@ def make_folds(manifest: pd.DataFrame, cfg: Config, *, validation_splits: int = 
     """
     group_column = cfg.split.group_column
     _check_manifest(manifest, group_column)
-    frame = manifest.reset_index(drop=True)
+    frame = with_a_group(manifest, group_column).reset_index(drop=True)
     labels = frame["label"].to_numpy()
     groups = frame[group_column].to_numpy()
 

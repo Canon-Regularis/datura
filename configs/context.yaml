@@ -1,0 +1,82 @@
+# Identical to base.yaml except for what a fold boundary means.
+#
+# base_10k groups folds by tape, which proves no recording sits on both sides of a
+# boundary. That is the right control for "has the model seen this recording", and it
+# is not an answer to "has the model seen this recording context". Cuts from different
+# tapes made at the same site, on the same trip, through the same hydrophone, share
+# far more than the animal.
+#
+# This configuration groups by site. A held out fold is a place the model has never
+# heard, so the gap between the two reports is the cost of changing recording context.
+# Nothing else differs: same species, band, window, seed and fold count, so the
+# comparison is like for like.
+#
+# Grouping by collection code was considered and is impossible here. There are seven
+# codes across these three species and HumpbackWhale has exactly one, so holding out a
+# code deletes the class. Site works because each species spans at least eleven of the
+# forty seven sites.
+name: context_10k
+
+dataset:
+  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_sha256: 6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e
+  archive_root: Watkins_Marine_Mammal_Sound_Database
+  # The same data as base_10k, so its manifest, audit tables and feature caches are
+  # read rather than rebuilt. Only the fold rule differs, and that is not a property
+  # of the corpus.
+  corpus: base_10k
+  species:
+    - HumpbackWhale
+    - SpermWhale
+    - KillerWhale
+
+audio:
+  target_sample_rate: 10000
+  min_native_sample_rate: 10000
+  window_seconds: 2.0
+  hop_seconds: 1.0
+  min_clip_seconds: 0.5
+  pad_mode: reflect
+  max_windows_per_clip: 16
+
+spectrogram:
+  n_fft: 512
+  hop_length: 64
+  n_mels: 64
+  fmin: 50
+  fmax: 4900
+
+encoder:
+  architecture: wav2vec2_base
+  checkpoint: wav2vec2_fairseq_base_ls960.pth
+  url: https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960.pth
+  sha256: 1275f890a623b31b9915295dc01d5049c93dc6de8813406c16dfab9b6bd36056
+  sample_rate: 16000
+  layer: 6
+  pooling: mean
+  embedding_dim: 768
+  batch_size: 32
+
+split:
+  n_folds: 5
+  seed: 1234
+  tape_id_length: 5
+  # The one line that separates this configuration from base.yaml. A site comes from
+  # the field notes rather than the filename, so the manifest carries it only because
+  # `src.data.manifest.with_context` puts it there. Clips with no site recorded cannot
+  # join a group and are excluded by `build_folds`, which says how many.
+  group_column: site
+
+paths:
+  raw: data/raw
+  metadata: data/metadata
+  processed: data/processed
+  reports: data/metadata/report
+
+# Trees, controls and the probe. The two from scratch networks are left out: this
+# configuration exists to measure a gap against base_10k, and the models that carry
+# fifty splits in both are the ones that can measure it.
+pipeline:
+  models: [xgboost, metadata, logbook, probe]
+  call_types: []

@@ -22,7 +22,7 @@ import pandas as pd
 from src import cli
 from src.audio.io import probe
 from src.config import Config
-from src.data import audit
+from src.data import annotations, audit
 from src.data.clips import parse_relative_path
 from src.errors import DaturaError
 
@@ -31,6 +31,33 @@ logger = logging.getLogger(__name__)
 
 class ManifestError(DaturaError):
     """Raised when the extracted tree does not look like the Watkins layout."""
+
+
+def with_context(cfg: Config, manifest: pd.DataFrame) -> pd.DataFrame:
+    """Add the site and the collection the field notes record for each clip.
+
+    Folds group on a column of the manifest, and until now the only grouping this
+    project could express was the tape, because the filename is the only identity a
+    clip carries on disk. Holding out a site is a different and harder question:
+    a tape boundary proves no recording sits on both sides of a fold, and a site
+    boundary asks whether the model survives a recording context it has never heard.
+
+    Empty rather than absent where the notes carry nothing, so a caller can tell a
+    blank apart from a recorded value. Nothing is dropped here. The manifest says what
+    exists and a configuration decides what is usable.
+    """
+    try:
+        parsed = annotations.load(cfg)
+    except annotations.AnnotationError:
+        logger.info("no parsed field notes yet; the manifest carries no site or collection")
+        return manifest
+
+    joined = manifest.merge(
+        parsed[["clip_id", "site", "collection_code"]], on="clip_id", how="left"
+    )
+    for column in ("site", "collection_code"):
+        joined[column] = joined[column].fillna("").astype(str)
+    return joined
 
 
 def _drop_reason(header_rate: int, duration: float, cfg: Config) -> str:
@@ -91,10 +118,13 @@ def main(argv: list[str] | None = None) -> int:
     tables["audit_cross_species_tapes"] = audit.cross_species_tapes(cfg, manifest)
     tables.update(audit.annotation_tables(cfg, manifest))
 
-    destination = cfg.paths.metadata / f"manifest_{cfg.name}.parquet"
+    # After the audits, which do their own join and would see a duplicated column.
+    manifest = with_context(cfg, manifest)
+
+    destination = cfg.paths.metadata / f"manifest_{cfg.corpus}.parquet"
     manifest.to_parquet(destination, index=False)
     for stem, table in tables.items():
-        table.to_csv(cfg.paths.metadata / f"{stem}_{cfg.name}.csv", index=False)
+        table.to_csv(cfg.paths.metadata / f"{stem}_{cfg.corpus}.csv", index=False)
 
     audit.log_summary(manifest, tables)
     logger.info("\nmanifest written to %s", destination)
@@ -102,7 +132,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def manifest_path(cfg: Config) -> Path:
-    return cfg.paths.metadata / f"manifest_{cfg.name}.parquet"
+    return cfg.paths.metadata / f"manifest_{cfg.corpus}.parquet"
 
 
 def load_manifest(cfg: Config, *, kept_only: bool = True) -> pd.DataFrame:
