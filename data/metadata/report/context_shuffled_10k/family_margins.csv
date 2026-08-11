@@ -1,0 +1,4 @@
+family,model,floor,margin,low,high,p_value,agreeing,folds
+species,xgboost,logbook,-0.3611000639,-0.5607277587,-0.161472369,0.0006657371,50,50
+species,xgboost,metadata,-0.2569427331,-0.4878121435,-0.0260733227,0.0299017634,40,50
+species,logbook,metadata,0.1041573308,-0.0326965337,0.2410111953,0.1325820221,40,50

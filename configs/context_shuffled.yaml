@@ -1,0 +1,76 @@
+# The coarseness control for context_10k, and the only reason it exists.
+#
+# Holding out a recording context costs XGBoost 0.141 macro-F1 against tape folds. Two
+# explanations fit that. The model was leaning on something the place carries, or five
+# folds over 24 groups is simply a coarser and far more lopsided split than five folds
+# over 134 tapes. One of those is a finding and the other is arithmetic.
+#
+# This groups on pseudo contexts built to match the real ones exactly: same number of
+# groups, same species mix, same tape count per group, tapes dealt at random within a
+# species. Every structural property of the split is preserved and the place is
+# destroyed. If the score falls here too, the drop is coarseness. If it holds up, the
+# place is doing real work.
+
+name: context_shuffled_10k
+
+dataset:
+  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
+  archive_sha256: 6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e
+  archive_root: Watkins_Marine_Mammal_Sound_Database
+  # The same data as base_10k, so its manifest, audit tables and feature caches are
+  # read rather than rebuilt. Only the fold rule differs, and that is not a property
+  # of the corpus.
+  corpus: base_10k
+  species:
+    - HumpbackWhale
+    - SpermWhale
+    - KillerWhale
+
+audio:
+  target_sample_rate: 10000
+  min_native_sample_rate: 10000
+  window_seconds: 2.0
+  hop_seconds: 1.0
+  min_clip_seconds: 0.5
+  pad_mode: reflect
+  max_windows_per_clip: 16
+
+spectrogram:
+  n_fft: 512
+  hop_length: 64
+  n_mels: 64
+  fmin: 50
+  fmax: 4900
+
+encoder:
+  architecture: wav2vec2_base
+  checkpoint: wav2vec2_fairseq_base_ls960.pth
+  url: https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960.pth
+  sha256: 1275f890a623b31b9915295dc01d5049c93dc6de8813406c16dfab9b6bd36056
+  sample_rate: 16000
+  layer: 6
+  pooling: mean
+  embedding_dim: 768
+  batch_size: 32
+
+split:
+  n_folds: 5
+  seed: 1234
+  tape_id_length: 5
+  # Pseudo contexts, dealt at random inside each species to match the real ones group
+  # for group and tape for tape. Nothing about a place survives into this column.
+  group_column: place_shuffled
+
+paths:
+  raw: data/raw
+  metadata: data/metadata
+  processed: data/processed
+  reports: data/metadata/report
+
+# Trees, controls and the probe. The two from scratch networks are left out: this
+# configuration exists to measure a gap against base_10k, and the models that carry
+# fifty splits in both are the ones that can measure it.
+pipeline:
+  models: [xgboost, metadata, logbook, probe]
+  call_types: []
