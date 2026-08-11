@@ -1,25 +1,32 @@
 # datura
 
-datura classifies whale species and call types from Watkins acoustic recordings. It extracts three
-representations of the audio, fits gradient boosted trees, two residual CNNs and a probe over a
-frozen pretrained encoder on identical folds, and scores every result against a control that is given
-no audio at all. It reports each margin with the interval and the p value the design actually
-supports, and corrects across every comparison it makes.
+datura names the whale species in a Watkins recording, and it is allowed to refuse. Four
+independent representations of the audio each carry real species information: hand engineered
+spectral descriptors, log mel spectrograms through two networks, and a frozen speech encoder all
+land between 0.710 and 0.752 macro-F1 on held out recordings, where guessing from the class shares
+reaches 0.333. Averaging the two strongest reaches 0.765 macro-F1 at 84.1% accuracy, and letting
+that pair decline the third of clips it is least sure of takes accuracy to 94.7%.
 
-The headline finding is negative. A model given only what was written down about a recording, and no
-sound, beats every audio model on species. Four audio representations were tried, from hand
-engineered spectral descriptors to a 94 million parameter encoder pretrained on speech, and all four
-lose by between 0.245 and 0.288 macro-F1 with every fold agreeing. Read the results as a measurement
-of the corpus rather than of whales.
+That holds while the fold boundary is a recording. Move it to a recording location and the same
+model falls to 0.321, which is what guessing reaches, and a control with the same fold geometry and
+no geography scores 0.569, so the fall is the place rather than the arithmetic. What the audio
+models learned is a recording context, and it does not travel.
+
+Every audio model is also scored against a control that hears nothing and reads only what was
+written down about the recording. That control wins by 0.245 macro-F1 and more, with every fold
+agreeing, and it barely moves when the place changes. Both results are reported in full below,
+because together they describe how the Watkins corpus was assembled rather than how whales sound.
 
 ## What it does
 
-- Builds a tape grouped cross validation over the Watkins full cuts release, so no recording appears
-  on both sides of a fold boundary.
-- Extracts hand engineered acoustic descriptors, log mel spectrograms and frozen wav2vec2 embeddings
-  into a memory mapped cache.
-- Fits XGBoost, two `MelResNet` variants and a linear probe over the pretrained embeddings, plus two
-  controls that see recording metadata and field note text and never the audio.
+- Identifies a species in one file from the command line, with a confidence band read from held
+  out data and an abstention threshold derived per model.
+- Builds cross validation grouped by tape, so no recording appears on both sides of a fold
+  boundary, and again grouped by recording context, so no place does either.
+- Extracts hand engineered acoustic descriptors, log mel spectrograms and frozen wav2vec2
+  embeddings into a memory mapped cache.
+- Fits XGBoost, two `MelResNet` variants and a linear probe over the pretrained embeddings, plus
+  two controls that see recording metadata and field note text and never the audio.
 - Reports margins with a corrected resampled paired test, intervals bootstrapped over whole tapes,
   and a false discovery rate across every comparison in every configuration at once.
 - Poses within species call type tasks against a control that sees everything written down, and
@@ -28,19 +35,170 @@ of the corpus rather than of whales.
 
 ## Result
 
-Macro-F1 on held out tapes, 10 kHz band. Everything except the larger network ran ten repeats of the
-five fold split, so fifty estimates each; `log mel CNN, 2.8 M` ran one split, so five.
+Macro-F1 on held out tapes, 10 kHz band. Everything except the larger network ran ten repeats of
+the five fold split, so fifty estimates each; `log mel CNN, 2.8 M` ran one split, so five.
 
 | model | macro-F1 | audio |
 | --- | --- | --- |
 | logbook | 0.997 ± 0.005 | no |
 | metadata | 0.868 ± 0.134 | no |
+| XGBoost and probe averaged | 0.765 ± 0.089 | yes |
 | acoustic descriptors, XGBoost | 0.752 ± 0.070 | yes |
 | wav2vec2 probe | 0.739 ± 0.090 | yes |
 | log mel CNN, 2.8 M | 0.713 ± 0.123 | yes |
 | log mel CNN, 0.15 M | 0.710 ± 0.142 | yes |
 
-Against the logbook, which is the highest scoring model that hears nothing:
+Chance is 0.333 for a guess drawn from the class shares, 0.301 for a uniform guess, and 0.256 for
+always answering killer whale. The four audio models share nothing but their input: spectral
+descriptors computed by hand, a network trained from scratch on log mel windows, the same network
+at twenty times the capacity, and a transformer pretrained on 960 hours of English speech and never
+fine tuned here. They land within 0.043 of one another, which is the result that says the signal
+is in the waveform rather than in any one way of reading it.
+
+## Using it
+
+```bash
+uv run python -m src.predict recording.wav
+uv run python -m src.predict recording.wav --model xgboost,probe   # the best measured pair
+```
+
+```text
+Species prediction
+--------------------------------------------
+  KillerWhale             77.7%
+  SpermWhale              13.7%
+  HumpbackWhale            8.6%
+
+  Prediction : KillerWhale
+  Confidence : HIGH, and on held out recordings this model was 92.4% accurate
+               on the most confident 40% of its predictions
+
+  model: xgboost, fold 0, trained on base_10k
+```
+
+One fold of XGBoost is committed, so a fresh clone predicts with no training and no downloads. The
+command walks the same path a training clip walks, through the same functions in the same order,
+and a test round trips a held out clip and asserts the probabilities match what cross validation
+recorded for it. Without that check the command would be answering a question no number in this
+repository describes.
+
+It refuses two kinds of file. A recording below 10 kHz is turned away rather than upsampled, since
+upsampling leaves an empty band above the old Nyquist that a classifier reads as a species. A clip
+under half a second is turned away rather than padded, since reflecting a fraction of a second out
+to a two second window produces an answer about the padding.
+
+## What it is worth when it can decline
+
+Every other score here forces an answer for every clip. That is the right way to compare two
+representations and a poor way to describe a tool, because a classifier that says nothing on the
+hard third of its input is more useful than one that guesses. Ranking held out predictions by the
+probability of the class chosen and keeping the most confident share gives an operating curve.
+Nothing is refitted: this reads the committed per clip probabilities and asks a different question
+of them.
+
+| model | every clip | most confident 70% | most confident 30% |
+| --- | --- | --- | --- |
+| acoustic descriptors, XGBoost | 0.830 | 0.903 | 0.930 |
+| wav2vec2 probe | 0.818 | 0.923 | 0.975 |
+| log mel CNN, 0.15 M | 0.803 | 0.914 | 0.989 |
+| XGBoost and probe averaged | 0.842 | 0.947 | 0.970 |
+
+Accuracy pooled over all fifty splits. Averaging the trees and the probe beats both of them at
+every level, and adding either network makes it worse, so the pair is named rather than the set.
+The average is written out as an ordinary result directory rather than reported as a note, so it
+carries a summary, a confusion matrix and a margin against the controls like every other model, and
+it cannot dodge the multiplicity correction.
+
+Equal weights hold up only while the members are close. Under the place folds below the probe
+reaches 0.444 and the trees 0.321, and averaging them gives 0.440, which is the weaker member
+dragging the stronger one down. The pair is the best combination measured on held out recordings
+rather than a rule that survives a change of question.
+
+A threshold filters uncertainty rather than error. It removes the clips the model was unsure about
+and leaves the confident mistakes untouched, so a model that is wrong while sure stays wrong while
+sure however the cut off moves. On the same 41,600 predictions, `cnn_small` is wrong while more
+than 90% confident on 8.62% of them and XGBoost on 0.101%, which is eighty five times fewer.
+XGBoost is what the command ships for that reason rather than for its score.
+
+The cut off is read from each model's own curve rather than fixed, because the same probability
+means different things to different models. To reach 90% accuracy XGBoost needs 0.591 and
+`cnn_small` needs 0.954. A single 0.6 threshold declines a third of XGBoost's answers and a
+twentieth of the network's.
+
+## Does it survive a new recording context
+
+No. This is the result that matters most and it is negative.
+
+A tape grouped fold proves no recording sits on both sides of the boundary. It does not prove the
+model survives a place, a hydrophone or a recording chain it has never heard. `configs/context.yaml`
+differs from `configs/base.yaml` in one line, the column folds are grouped on, and XGBoost falls
+from 0.752 to 0.321 macro-F1 across that one line. A guess drawn from the class shares reaches
+0.333, so a model trained on other places is worth nothing at a place it has never heard.
+
+Most of that is the place rather than the arithmetic, and it takes a control to say so. Grouping by
+place leaves 24 groups where the tape rule leaves 134, so folds are far coarser and lose far more
+training data. `configs/context_shuffled.yaml` separates the two: pseudo places dealt at random,
+matched to the real ones group for group, species for species and tape for tape, so the split loses
+the same data and keeps none of the geography.
+
+| what is being scored | macro-F1 | cost |
+| --- | --- | --- |
+| tape held out, all 4,160 clips | 0.752 | |
+| the same predictions on the 4,088 clips a place split can score | 0.744 | 0.008 |
+| pseudo places, same structure and no real place | 0.569 | 0.175 |
+| real places | 0.321 | 0.248 |
+
+The fold geometry costs 0.175 and the identity of the place costs 0.248. The 72 clips carrying no
+site, which base scores and a place split cannot, account for the remaining 0.008. So the model is
+not failing to learn. It is learning the recording.
+
+This corrects a weaker version of the same experiment that grouped on 39 tape linked contexts and
+put the place cost at 0.029. Site names that no tape connects stayed separate there, so six groups
+were all Dominica, five were all Bermuda, and the two Oregon aquariums were two places. 52% of held
+out clips sat in a fold whose place was also in the training set, and a half leaked test reported a
+fifth of the effect. `recording_places` merges them by name: 47 sites become 39 contexts become 24
+places, and no place, site or tape now crosses a fold boundary.
+
+Three things bound how hard this can be pushed.
+
+The corpus is close to its limit here. 24 places over three species means humpback has exactly five,
+which is the fewest a five fold split can use, and `oregon` alone is 49 of the 65 killer whale tapes.
+Every fold gives up between 18% and 55% of some class's clips. That cost is what the pseudo place
+control measures and subtracts, and it also means a single fold moves the mean a long way.
+
+Repeats buy nothing at this grouping. Ten repeats of the place split produce 1 distinct partition
+against 10 for the tape split, because `StratifiedGroupKFold` over two dozen groups is very nearly
+deterministic. The fifty rows behind 0.321 are five folds scored under ten
+model seeds, so the fold count printed beside it overstates the evidence tenfold and the spread is a
+between fold range rather than a sampling uncertainty.
+
+The pseudo places match the real ones on tapes per group and not on clips per group, 44 against a
+median of 57, so the control is not a perfect twin. Dealing it under many seeds and reading 0.321 as
+a percentile of that null is the experiment that would close this, and it has not been run.
+
+| model | tape held out | place held out | change |
+| --- | --- | --- | --- |
+| logbook | 0.997 | 0.991 | -0.006 |
+| metadata | 0.868 | 0.621 | -0.247 |
+| XGBoost and probe averaged | 0.765 | 0.440 | -0.324 |
+| wav2vec2 probe | 0.739 | 0.444 | -0.295 |
+| acoustic descriptors, XGBoost | 0.752 | 0.321 | -0.431 |
+
+The logbook barely moves, because the collection code identifies the species wherever the recording
+was made. That is the cleanest statement of the confound this project measures: the paperwork
+transfers across places and the audio does not.
+
+The audio models change order here, and that is the one encouraging line in this section. The
+frozen speech encoder is the weakest of the pair on held out recordings and the strongest on held
+out places, 0.444 against 0.321, so representations pretrained elsewhere give up less when the
+recording chain changes than descriptors computed from this corpus do. The pseudo place control was
+run for the trees only, so the split between geometry and place is measured for that row and
+assumed for the others.
+
+## The control that beats it
+
+A model given no audio at all, only the recording metadata and the parsed field note, reaches 0.997
+on this task. Every audio model loses to it.
 
 | comparison | margin | 95% interval | p | agreeing |
 | --- | --- | --- | --- | --- |
@@ -50,11 +208,10 @@ Against the logbook, which is the highest scoring model that hears nothing:
 | CNN 2.8 M | -0.285 | -0.514 to -0.056 | 0.026 | 5 of 5 |
 | logbook against metadata | +0.130 | -0.012 to +0.271 | 0.072 | 45 of 50 |
 
-Every audio comparison resolves, and every one of them is negative. Three carry the full fifty
-splits. The four representations share nothing but their input: spectral descriptors computed by
-hand, a network trained from scratch on log mel windows, the same network at twenty times the
-capacity, and a transformer pretrained on 960 hours of English speech and never fine tuned here. They
-land within 0.043 of one another and all of them lose to the paperwork.
+Every audio comparison resolves and every one of them is negative. Three carry the full fifty
+splits. That result is a measurement of the corpus: the paperwork attached to a Watkins recording
+identifies the species almost perfectly, so any model reading it starts from a place no acoustic
+model can reach. The next section shows which fields do it.
 
 Measured against the metadata control instead, the same XGBoost comparison is -0.115 at p = 0.24,
 which settles nothing. The floor was in the wrong place until the logbook was built.
@@ -96,11 +253,15 @@ span two species over eight tapes, so they are scored over the two they hold. `c
 `ambiguity_breakdown.csv` carries that denominator, and averaging a class that cannot appear into it
 caps the column at two thirds and reads as a collapse the predictions do not contain.
 
-The logbook falls from 0.998 to 0.638 there. Everything else falls too, and the metadata control
-finishes highest at 0.698 while never seeing a code at all, so the fall is a property of those 359
-clips rather than of the field they are missing. Removing the sample rate giveaway costs the metadata
-control 19 points and the CNN one, so the audio models are worse on average and degrade less where
-the recording stops answering the question.
+The two columns on the left are the ones that describe the audio models. XGBoost scores 0.705 where
+the sample rate is unique to a species and 0.661 where several species share it, a gap of 0.044.
+If the acoustic models were leaning on equipment signature rather than on the animal, that gap
+would be far wider. The metadata control loses 19 points across the same split and the CNN loses
+one.
+
+The logbook falls from 0.998 to 0.638 on the clips with no code. Everything else falls too, and the
+metadata control finishes highest at 0.698 while never seeing a code at all, so the fall is a
+property of those 359 clips rather than of the field they are missing.
 
 Eleven species is where a genuinely shared code exists. On the 2,581 clips whose code is used by more
 than one of them the logbook still reaches 0.666 against XGBoost's 0.304, so what the paperwork
@@ -236,11 +397,11 @@ Fin whale is excluded: 569 of its 580 clips run between 320 and 640 Hz, putting 
 than upsampled, since upsampling leaves an empty band above the old Nyquist that a classifier will
 use as a label. What survives shares an identical 0 to 5 kHz band.
 
-**Folds.** `StratifiedGroupKFold` over tapes, applied across species so a tape carrying two labels is
-never split. The tape is the first five characters of the clip id: `5401800A` and `54018001` are both
-cuts of tape `54018`. Humpback has 604 clips over 14 tapes, so clip counts overstate the sample size
-by roughly an order of magnitude. `tests/test_splits.py` fails if a tape lands on both sides of a
-fold.
+**Folds.** `StratifiedGroupKFold` over a group named by the config, applied across species so a
+group carrying two labels is never split. `base_10k` groups by tape, which is the first five
+characters of the clip id: `5401800A` and `54018001` are both cuts of tape `54018`. Humpback has 604
+clips over 14 tapes, so clip counts overstate the sample size by roughly an order of magnitude.
+`tests/test_splits.py` fails if a group lands on both sides of a fold.
 
 **Repeats.** The whole split reruns under shifted seeds, giving fifty estimates instead of five. A
 model and its control run the identical plan, so repeat three fold two of one pairs with repeat three
@@ -257,9 +418,9 @@ not fall as repeats are added, so ten repeats are worth far less than fifty inde
 `tests/test_uncertainty.py` pins both halves of that: the species differences stay unresolved across
 ten repeats, and a second set that does cross the threshold on repeats alone is recorded beside them.
 
-**How many comparisons.** Thirty are reported across the three configurations, so reading each at
+**How many comparisons.** Forty six are reported across the five configurations, so reading each at
 0.05 on its own expects more than one to clear the bar carrying nothing.
-`data/metadata/report/MULTIPLICITY.md` adjusts across all of them at once. Eleven survive, and every
+`data/metadata/report/MULTIPLICITY.md` adjusts across all of them at once. Twenty two survive, and every
 one is either an audio model losing to a model that hears nothing or one no-audio model beating
 another. Not a single positive audio comparison survives, in any configuration.
 
@@ -312,17 +473,25 @@ uv run python -m src.evaluate.report  --config configs/base.yaml
 A full run from an empty `data/` takes a little over three hours, most of it the download and the two
 network trainings, at roughly 17 minutes per fold on a 4 GB laptop GPU.
 
+`configs/context.yaml` reuses everything `base.yaml` built and refits on the other fold rule, so it
+costs the training alone:
+
+```bash
+uv run python -m src.pipeline --config configs/context.yaml --only trees
+```
+
 ## Layout
 
 ```text
 .github/          CI, and the dependency update schedule
-configs/          base.yaml drives the pipeline; base_5k.yaml narrows the band and
-                  wide.yaml widens the species set
+configs/          base.yaml drives the pipeline; base_5k.yaml narrows the band,
+                  wide.yaml widens the species set, context.yaml changes the fold rule
 data/raw/         the archive and the extracted species (gitignored)
 data/metadata/    manifest, audit tables and every report
 data/processed/   cached feature arrays (gitignored)
 
 src/pipeline.py   every stage in order, skipping whatever is already done
+src/predict.py    name the species in one recording, or decline to
 src/config/       sections declare the shape and validate it; loading reads the YAML
 src/results.py    where results live on disk; every report path is built here
 src/scoring.py    how a prediction becomes a number, shared by training and reporting
@@ -331,8 +500,8 @@ src/provenance.py what produced a result: commit, versions, accelerator, config 
 
 src/audio/        decode, resample, window
 src/data/         clips parses identity, notes reads a field note, annotations fetches
-                  and parses them, manifest lists the audio, audit describes it,
-                  splits holds the fold grouping rule
+                  and parses them, manifest lists the audio and builds the recording
+                  contexts, audit describes it, splits holds the fold grouping rule
 src/features/     views hands out rows without copying them, source reads the cache,
                   controls are the models given no audio, plus the extractor interface,
                   its implementations, the cache and the registry
@@ -341,8 +510,8 @@ src/train/        folds and the repeat plan, one cross validation runner, one se
                   tasks decides which call type questions are worth asking and
                   calltypes answers one
 src/evaluate/     families groups results, tables builds them, sections composes the
-                  document, figures draws it, artifacts writes it, report runs the lot,
-                  plus occlusion and Grad-CAM
+                  document, figures draws it, coverage measures abstention, artifacts
+                  writes it, report runs the lot, plus occlusion and Grad-CAM
 experiments/      six notebooks reading committed artifacts, one argument each:
                   the corpus and its confounds, the species results, how much
                   they settle, call types and breadth, what the network used,
@@ -354,16 +523,16 @@ its extractor and its cache; `src/models/registry.py` declares each model's feat
 file and trainer. Adding a representation is a new extractor plus one line; adding a model is one
 entry. Neither touches the runner, the metrics or the split.
 
-Models report on themselves through `artifacts`: the trees return which features carried the fit, the
-network returns its learning curve and writes its weights. That is why the runner has no branch for
-either.
+Models report on themselves through `artifacts`: the trees return which features carried the fit and
+write their booster, the network returns its learning curve and writes its weights. That is why the
+runner has no branch for either.
 
 ## Reproducing
 
-Full numbers live in `data/metadata/report/{base_10k,base_5k,wide_10k}/REPORT.md`. Every comparison
-in a configuration is listed at the top of its report, sorted by how well it resolves, against its
-declared control and against the strongest model that hears nothing.
-`data/metadata/report/MULTIPLICITY.md` corrects across all three at once.
+Full numbers live in `data/metadata/report/{base_10k,base_5k,wide_10k,context_10k,context_shuffled_10k}/REPORT.md`. Every
+comparison in a configuration is listed at the top of its report, sorted by how well it resolves,
+against its declared control and against the strongest model that hears nothing.
+`data/metadata/report/MULTIPLICITY.md` corrects across all of them at once.
 
 The manifests, predictions and parsed notes are committed, so every report rebuilds without the 6.7 GB
 archive:
@@ -378,7 +547,7 @@ CSV that produced it. CI diffs the regenerated reports against the committed one
 was not covered by that until the test existed.
 
 CI runs three jobs: lint, the suite on 3.12, 3.13 and 3.14 on Linux plus 3.14 on Windows, and a
-rebuild of all three reports. Every job installs with `uv sync --locked` against a pinned uv, because
+rebuild of all five reports. Every job installs with `uv sync --locked` against a pinned uv, because
 a uv older than the one that wrote `uv.lock` discards the lock and resolves from scratch rather than
 reporting that it cannot read it.
 

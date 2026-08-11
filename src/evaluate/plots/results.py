@@ -147,6 +147,43 @@ def per_class_recall(table: pd.DataFrame, path: Path, class_names: list[str]) ->
     return _save(figure, path)
 
 
+def coverage_curve(table: pd.DataFrame, path: Path) -> Path:
+    """What each model is worth when it is allowed to decline.
+
+    Every other figure here forces an answer for every clip, which is the right way to
+    compare two representations and the wrong way to describe a tool. This reads left
+    to right as the model becoming choosier, and a curve that climbs is a model whose
+    confidence carries information.
+
+    A flat curve would be the interesting failure: a model equally wrong when sure and
+    unsure, for which no threshold buys anything.
+    """
+    figure, ax = plt.subplots(figsize=(7.5, 4.2))
+    names = list(dict.fromkeys(table["model"]))
+
+    for index, name in enumerate(names):
+        rows = table[table["model"] == name].sort_values("coverage")
+        ax.plot(
+            rows["coverage"] * 100,
+            rows["accuracy"] * 100,
+            marker="o",
+            markersize=4,
+            linewidth=1.6,
+            color=SERIES[index % len(SERIES)],
+            label=name,
+        )
+
+    ax.invert_xaxis()
+    _style(
+        ax,
+        "Accuracy against the share of clips answered",
+        xlabel="coverage, percent of clips the model answered",
+        ylabel="accuracy on those clips, percent",
+    )
+    ax.legend(frameon=False, fontsize=9, labelcolor=INK)
+    return _save(figure, path)
+
+
 def ambiguity_comparison(table: pd.DataFrame, path: Path, field: str) -> Path:
     """Each model scored on clips one field does and does not give the species away on.
 

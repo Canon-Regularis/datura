@@ -1,6 +1,7 @@
 family,model,floor,margin,low,high,p_value,agreeing,folds
 species,xgboost,logbook,-0.2450302575,-0.3180604227,-0.1720000922,1.66242e-08,50,50
 species,probe,logbook,-0.2583496229,-0.3525039322,-0.1641953136,1.2996e-06,50,50
+species,xgboost+probe,logbook,-0.2326660607,-0.3251478028,-0.1401843186,6.38895e-06,50,50
 species,cnn_small,logbook,-0.2877795784,-0.4357534089,-0.1398057478,0.0002854306,50,50
 calltype_spermwhale_coda,calltype_spermwhale_coda,calltype_spermwhale_coda_context,-0.1622062278,-0.3015121145,-0.0229003412,0.0234053418,46,50
 species,cnn,logbook,-0.2848420368,-0.513647785,-0.0560362885,0.0259022597,5,5
@@ -12,6 +13,7 @@ calltype_killerwhale_whistle,calltype_killerwhale_whistle,calltype_killerwhale_w
 species,cnn_small,metadata,-0.1581639361,-0.4015989557,0.0852710835,0.1977667494,40,50
 species,xgboost,metadata,-0.1154146152,-0.3101117619,0.0792825315,0.2392911269,38,50
 calltype_killerwhale_chirp,calltype_killerwhale_chirp,calltype_killerwhale_chirp_context,-0.0515405148,-0.146612769,0.0435317394,0.281293377,32,50
+species,xgboost+probe,metadata,-0.1030504185,-0.2952254512,0.0891246142,0.2864895161,38,50
 species,cnn,metadata,-0.170193954,-0.657293503,0.3169055949,0.3869314368,4,5
 calltype_spermwhale_click,calltype_spermwhale_click,calltype_spermwhale_click_context,-0.0300622722,-0.1463305472,0.0862060028,0.6056853555,25,50
 calltype_spermwhale_whistle,calltype_spermwhale_whistle,calltype_spermwhale_whistle_context,0.0387491746,-0.267618855,0.3451172042,0.800428274,26,50

@@ -26,10 +26,11 @@ import pytest
 
 from src.config import PROJECT_ROOT, load_config
 from src.evaluate import families, figures
+from tests.conftest import REPORT_CONFIGS
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
 NOTEBOOKS = PROJECT_ROOT / "experiments"
-CONFIG_FILE = {"base_10k": "base.yaml", "base_5k": "base_5k.yaml", "wide_10k": "wide.yaml"}
+CONFIG_FILE = REPORT_CONFIGS
 
 TOKEN = re.compile(r"[\w{}.\-]+\.png")
 PLACEHOLDER = re.compile(r"\{[^}]*\}")
@@ -113,9 +114,8 @@ def test_every_figure_at_a_config_root_is_one_a_rebuild_writes(name, monkeypatch
     drawn: list = []
     for helper in ("model_comparison", "per_class_recall", "confusion_heatmap"):
         monkeypatch.setattr(figures.plots, helper, lambda *a, **k: drawn.append(a[1]) or a[1])
-    monkeypatch.setattr(
-        figures.plots, "ambiguity_comparison", lambda *a, **k: drawn.append(a[1]) or a[1]
-    )
+    for helper in ("ambiguity_comparison", "coverage_curve"):
+        monkeypatch.setattr(figures.plots, helper, lambda *a, **k: drawn.append(a[1]) or a[1])
     monkeypatch.setattr(
         figures,
         "_per_model_drawing",
@@ -130,11 +130,13 @@ def test_every_figure_at_a_config_root_is_one_a_rebuild_writes(name, monkeypatch
 
     cfg = load_config(f"configs/{CONFIG_FILE[name]}")
     family = next(f for f in families.discover(cfg) if f.key == families.SPECIES_FAMILY)
+    operating = directory / "coverage.csv"
     figures.draw_all(
         cfg,
         family,
         pd.read_csv(directory / "comparison.csv"),
         pd.read_csv(directory / "ambiguity_breakdown.csv"),
+        pd.read_csv(operating) if operating.exists() else None,
     )
 
     produced = {path.name for path in drawn if path is not None}

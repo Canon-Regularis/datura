@@ -30,9 +30,9 @@ NO_AUDIO_SOURCES = (METADATA_SOURCE, LOGBOOK_SOURCE)
 
 Builder = Callable[[Config, dict[str, Any]], WindowClassifier]
 
-# Reading a fitted model back off disk. Only the models that write a checkpoint
-# declare one, which is why it is optional: the trees are refitted in seconds and
-# never saved, so nothing can load them and nothing needs to.
+# Reading a fitted model back off disk. Every model that writes a checkpoint declares
+# one. The trees did not for a long time, on the reasoning that they refit in seconds,
+# which held until a prediction command needed something to load.
 Loader = Callable[[Path, dict[str, Any], int], WindowClassifier]
 
 # Which command trains a model. The tree models share one, because the control has
@@ -88,6 +88,12 @@ def _build_trees(cfg: Config, settings: dict[str, Any]) -> WindowClassifier:
     return GradientBoostedTrees(params)
 
 
+def _load_trees(checkpoint: Path, settings: dict[str, Any], n_classes: int) -> WindowClassifier:
+    from src.models.gbdt import GradientBoostedTrees
+
+    return GradientBoostedTrees.load(checkpoint, settings["model"], n_classes)
+
+
 def _build_cnn(cfg: Config, settings: dict[str, Any]) -> WindowClassifier:
     from src.models.cnn import SpectrogramCNN
 
@@ -123,6 +129,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=features.ACOUSTIC,
         config_file="configs/xgb.yaml",
         build=_build_trees,
+        load=_load_trees,
         repeats=10,
         summary="gradient boosted trees over hand engineered descriptors",
     ),
@@ -151,6 +158,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=METADATA_SOURCE,
         config_file="configs/metadata.yaml",
         build=_build_trees,
+        load=_load_trees,
         repeats=10,
         summary="recording metadata only, the floor every audio model must clear",
     ),
@@ -160,6 +168,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         source=LOGBOOK_SOURCE,
         config_file="configs/logbook.yaml",
         build=_build_trees,
+        load=_load_trees,
         repeats=10,
         summary="everything written down about a recording, and none of the recording",
     ),

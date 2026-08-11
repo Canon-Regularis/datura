@@ -16,13 +16,13 @@ import pandas as pd
 
 from src.config import Config
 from src.data import annotations as ann
-from src.data.splits import Fold
+from src.data.splits import Fold, clips_from_index
 from src.features import registry as features
 from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
 from src.features.source import FeatureSource
 from src.models.registry import LOGBOOK_SOURCE, METADATA_SOURCE, ModelSpec
 from src.train.crossval import run_cross_validation, save_result
-from src.train.folds import FoldPlan, folds_for, format_test_tapes, save_summary
+from src.train.folds import FoldPlan, folds_for, format_test_groups, save_summary
 
 logger = logging.getLogger(__name__)
 
@@ -84,16 +84,23 @@ def assemble(cfg: Config, source_kind: str, repeats: int = 1) -> Assembly:
     folds = folds_for(cfg, source)
     save_summary(cfg, source, folds)
 
+    # Counted from the clips the folds were built over rather than from the window
+    # index. The index carries what extraction wrote, so a group taken from the field
+    # notes is not on it, and reading the count straight off it was the last place
+    # this experiment fell over.
+    grouped = clips_from_index(source.index, cfg.split.group_column, cfg)
     logger.info(
-        "%s features: %d windows over %d clips and %d tapes",
+        "%s features: %d windows over %d clips and %d %s groups",
         source.name,
         len(source.index),
         source.index["clip_id"].nunique(),
-        source.index[cfg.split.group_column].nunique(),
+        grouped[cfg.split.group_column].nunique(),
+        cfg.split.group_column,
     )
     logger.info(
-        "\nIndependent recordings per class in each test fold\n%s",
-        format_test_tapes(cfg, source, folds),
+        "\nIndependent %s groups per class in each test fold\n%s",
+        cfg.split.group_column,
+        format_test_groups(cfg, source, folds),
     )
     if repeats > 1:
         logger.info("scoring on %d repeats of the split, %d folds each", repeats, len(folds))

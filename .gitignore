@@ -3,6 +3,11 @@
 data/raw/
 data/processed/
 data/metadata/report/**/checkpoints/
+# One exception: the fold `python -m src.predict` ships with. Without it a fresh clone
+# can score the committed predictions but cannot identify a recording. The trees
+# rather than the network, because the network is wrong while above 90% confident on
+# one prediction in twelve and the trees on one in a thousand.
+!data/metadata/report/base_10k/xgboost/checkpoints/fold0.json
 
 .venv/
 __pycache__/

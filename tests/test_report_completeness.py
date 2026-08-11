@@ -19,9 +19,10 @@ import pytest
 
 from src.config import PROJECT_ROOT, load_config
 from src.evaluate import families, figures, plots
+from tests.conftest import REPORT_CONFIGS
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
-CONFIG_FILE = {"base_10k": "base.yaml", "base_5k": "base_5k.yaml", "wide_10k": "wide.yaml"}
+CONFIG_FILE = REPORT_CONFIGS
 CONFIGS = list(CONFIG_FILE)
 
 # A markdown row, split on the pipes, with the outer empties dropped.

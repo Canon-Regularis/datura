@@ -40,10 +40,23 @@ def test_a_call_type_result_naming_no_model_was_fitted_by_the_default():
     assert spec_for_result("calltype_spermwhale_coda").name == DEFAULT_CALL_TYPE_MODEL
 
 
-def test_the_default_writes_no_checkpoint_so_it_cannot_be_explained():
-    """Not a gap: the trees are refitted in seconds and never saved."""
-    assert spec_for_result("calltype_spermwhale_coda").load is None
+def test_the_default_cannot_be_explained_by_band_even_though_it_now_saves():
+    """The trees used to save nothing, so nothing could load them and that was the guard.
+
+    They save now, because the prediction command needs a fitted fold it can read
+    without retraining. The guard against explaining them moved rather than went away:
+    a flat descriptor vector has no frequency axis, so masking a band means nothing
+    there and the error names the representation that was asked.
+    """
+    from src.config import load_config
+    from src.evaluate.explain import ExplainError, _frequencies
+
+    trees = spec_for_result("calltype_spermwhale_coda")
+    assert trees.load is not None, "the shipped fold would be unreadable"
     assert spec_for_result("cnn_small").load is not None
+
+    with pytest.raises(ExplainError, match="no frequency axis"):
+        _frequencies(load_config("configs/base.yaml"), trees)
 
 
 @pytest.mark.parametrize(

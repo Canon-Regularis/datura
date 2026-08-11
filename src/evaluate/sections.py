@@ -111,6 +111,7 @@ def species_section(
     figures: list[Path],
     shared_tapes: pd.DataFrame | None = None,
     against_floor: pd.DataFrame | None = None,
+    operating: pd.DataFrame | None = None,
 ) -> list[str]:
     class_names = list(cfg.dataset.species)
     return [
@@ -156,11 +157,35 @@ def species_section(
         "",
         markdown(ambiguity),
         "",
+        *_operating_curve(operating),
         "### Figures",
         "",
         *[f"- `{path.name}`" for path in figures],
         "",
         "Every figure has a CSV of the same name beside it, or in the model directory.",
+        "",
+    ]
+
+
+def _operating_curve(operating: pd.DataFrame | None) -> list[str]:
+    """What the audio models are worth when they are allowed to decline.
+
+    Every other number here forces a prediction for every clip, which is the right
+    way to compare two representations and the wrong way to describe a tool. A model
+    that says nothing on the hard third of its input is more useful than one that
+    guesses, and the curve is what says how much more.
+    """
+    if operating is None or operating.empty:
+        return []
+    return [
+        "### Accuracy against coverage",
+        "",
+        "Predictions ranked by the probability of the class the model chose, then cut at a",
+        "threshold. `coverage` is the share kept, and the row at 1.0 is the score reported",
+        "everywhere else. Nothing is refitted: this reads the held out probabilities the",
+        "cross validation already wrote.",
+        "",
+        markdown(operating),
         "",
     ]
 

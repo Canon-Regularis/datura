@@ -57,6 +57,7 @@ def draw_all(
     family: families.Family,
     comparison: pd.DataFrame,
     ambiguity: pd.DataFrame,
+    operating: pd.DataFrame | None = None,
 ) -> list[Path]:
     """Every figure the species section links to, in the order it links to them.
 
@@ -79,6 +80,11 @@ def draw_all(
         ),
         plots.per_class_recall(comparison, directory / "per_class_recall.png", class_names),
     ]
+
+    # Only the models that hear the recording have one, so a family of controls draws
+    # nothing rather than an empty pair of axes.
+    if operating is not None and not operating.empty:
+        figures.append(plots.coverage_curve(operating, directory / "coverage.png"))
 
     # One breakdown per giveaway. Native sample rate was the first field found to
     # hand over the species; the collection code is the second and the stronger.

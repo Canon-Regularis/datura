@@ -100,6 +100,7 @@ CONFIG_FILES = {
     "base_10k": "base.yaml",
     "base_5k": "base_5k.yaml",
     "wide_10k": "wide.yaml",
+    "context_10k": "context.yaml",
 }
 
 
@@ -112,6 +113,7 @@ def report_exists() -> None:
 SPECIES_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
+    "XGBoost and probe averaged": "xgboost+probe",
     "acoustic descriptors, XGBoost": "xgboost",
     "wav2vec2 probe": "probe",
     "log mel CNN, 0.15 M": "cnn_small",
@@ -131,6 +133,21 @@ WIDE_ROWS = {
     "metadata": "metadata",
     "acoustic, XGBoost": "xgboost",
     "wav2vec2 probe": "probe",
+}
+
+CONTEXT_ROWS = {
+    "logbook": "logbook",
+    "metadata": "metadata",
+    "acoustic descriptors, XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
+    "XGBoost and probe averaged": "xgboost+probe",
+}
+
+COVERAGE_ROWS = {
+    "acoustic descriptors, XGBoost": "xgboost",
+    "wav2vec2 probe": "probe",
+    "log mel CNN, 0.15 M": "cnn_small",
+    "XGBoost and probe averaged": "xgboost+probe",
 }
 
 AMBIGUITY_ROWS = {
@@ -338,3 +355,272 @@ def test_the_corpus_caption_names_both_filters(report_exists):
     text = README.read_text(encoding="utf-8")
     assert f"{low_rate} humpback clips" in text
     assert f"{short} more" in text
+
+
+def test_the_coverage_table_matches_the_artifact(report_exists):
+    """The operating curve is what the prediction command prints a band from.
+
+    A figure overstated here would put a confidence claim beside an answer that the
+    held out data does not support, which is worse than a wrong score in a comparison
+    table because somebody would act on it.
+    """
+    path = REPORTS / "base_10k" / "coverage.csv"
+    if not path.exists():
+        pytest.skip("coverage.csv absent; run python -m src.evaluate.report first")
+    curve = pd.read_csv(path)
+
+    for cells in rows_of("| model | every clip | most confident 70% |"):
+        label, full, seventy, thirty = cells[:4]
+        rows = curve[curve["model"] == COVERAGE_ROWS[label]].set_index("coverage")
+        for printed, level in ((full, 1.0), (seventy, 0.7), (thirty, 0.3)):
+            assert matches(printed, rows.loc[level, "accuracy"]), f"{label} at {level:.0%}"
+
+    # The opening paragraph quotes the best of these as a percentage, and it is the
+    # first number anybody reads.
+    best = curve[(curve["model"] == "xgboost+probe") & (curve["coverage"] == 0.7)]
+    assert f"takes accuracy to {best.iloc[0]['accuracy']:.1%}" in " ".join(
+        README.read_text(encoding="utf-8").split()
+    )
+
+
+def test_the_coverage_table_lists_every_model_with_a_curve(report_exists):
+    path = REPORTS / "base_10k" / "coverage.csv"
+    if not path.exists():
+        pytest.skip("coverage.csv absent")
+    printed = {COVERAGE_ROWS[cells[0]] for cells in rows_of("| model | every clip |")}
+    on_disk = set(pd.read_csv(path)["model"])
+    assert on_disk - printed <= {"cnn"}, f"a curve exists for {sorted(on_disk - printed)}"
+
+
+def test_the_confident_mistake_claim_matches_the_predictions(report_exists):
+    """The number that decides which model the prediction command ships.
+
+    A threshold cannot fix a model that is wrong while sure, so this is the property
+    the default was chosen on, and it is quoted in the prose rather than in a table.
+    """
+    from src import scoring
+    from src.config import load_config
+    from src.results import predictions_path
+
+    cfg = load_config("configs/base.yaml")
+    columns = scoring.probability_columns(len(cfg.dataset.species))
+
+    def confidently_wrong(name: str) -> float:
+        frame = pd.read_parquet(predictions_path(cfg, name))
+        probabilities = frame[columns].to_numpy()
+        wrong = probabilities.argmax(axis=1) != frame["label"].to_numpy()
+        return float((wrong & (probabilities.max(axis=1) > 0.9)).mean()) * 100
+
+    text = README.read_text(encoding="utf-8")
+    network, trees = confidently_wrong("cnn_small"), confidently_wrong("xgboost")
+    assert f"{network:.2f}% of them and XGBoost on {trees:.3f}%" in text
+    assert trees < network, "the shipped model has to be the one that is confidently wrong least"
+
+
+def test_the_thresholds_quoted_are_the_ones_predict_would_use(report_exists):
+    """Two models needing very different cut offs is why neither is hardcoded."""
+    from src import predict
+    from src.config import load_config
+
+    cfg = load_config("configs/base.yaml")
+    if predict.curve_for(cfg, "xgboost") is None:
+        pytest.skip("coverage.csv absent")
+
+    # Whitespace collapsed, because these two numbers sit either side of a line break
+    # and a reflow of the paragraph is not a change to the claim.
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    trees = predict.threshold_for(predict.curve_for(cfg, "xgboost"))
+    network = predict.threshold_for(predict.curve_for(cfg, "cnn_small"))
+    assert f"XGBoost needs {trees:.3f} and `cnn_small` needs {network:.3f}" in text
+
+
+def test_the_chance_baselines_are_measured_rather_than_assumed(report_exists):
+    """0.333 is quoted as the floor the audio models are read against.
+
+    Three classes do not make macro-F1 of a guess exactly one third, because these
+    classes are far from balanced, so the figure is computed on the real labels.
+    """
+    import numpy as np
+
+    from src import scoring
+    from src.config import load_config
+    from src.results import predictions_path
+
+    cfg = load_config("configs/base.yaml")
+    labels = pd.read_parquet(predictions_path(cfg, "xgboost"))["label"].to_numpy()
+    n_classes = len(cfg.dataset.species)
+    shares = np.bincount(labels, minlength=n_classes) / len(labels)
+    rng = np.random.default_rng(0)
+
+    def guessing(probabilities: np.ndarray | None) -> float:
+        draws = [
+            scoring.from_counts(
+                labels, rng.choice(n_classes, len(labels), p=probabilities), n_classes
+            )["macro_f1"]
+            for _ in range(50)
+        ]
+        return float(np.mean(draws))
+
+    text = README.read_text(encoding="utf-8")
+    stratified = guessing(shares)
+    uniform = guessing(np.full(n_classes, 1 / n_classes))
+    majority = scoring.from_counts(labels, np.full(len(labels), int(shares.argmax())), n_classes)[
+        "macro_f1"
+    ]
+
+    assert f"Chance is {stratified:.3f} for a guess drawn from the class shares" in text
+    assert f"{uniform:.3f} for a uniform guess" in text
+    assert f"{majority:.3f} for" in text
+
+
+def test_the_context_table_matches_both_reports(report_exists):
+    """One column per fold rule, so a stale figure in either shows up here.
+
+    The change column is the number the section exists to report, and it is the
+    difference of two artifacts rather than a figure of its own, so it is recomputed
+    rather than read.
+    """
+    if not (REPORTS / "context_10k" / "xgboost" / "summary.csv").exists():
+        pytest.skip("context_10k absent; run the pipeline on configs/context.yaml")
+
+    for cells in rows_of("| model | tape held out | place held out | change |"):
+        label, held_out_tape, held_out_context, change = cells[:4]
+        name = CONTEXT_ROWS[label]
+
+        scores = {}
+        for config in ("base_10k", "context_10k"):
+            summary = pd.read_csv(REPORTS / config / name / "summary.csv")
+            scores[config] = summary[summary["metric"] == "macro_f1"].iloc[0]["mean"]
+
+        assert matches(held_out_tape, scores["base_10k"]), f"{label}: tape held out"
+        assert matches(held_out_context, scores["context_10k"]), f"{label}: context held out"
+        assert matches(change, scores["context_10k"] - scores["base_10k"]), f"{label}: change"
+
+
+def test_the_context_table_lists_only_models_that_were_refitted(report_exists):
+    directory = REPORTS / "context_10k"
+    if not directory.exists():
+        pytest.skip("context_10k absent")
+    printed = {CONTEXT_ROWS[cells[0]] for cells in rows_of("| model | tape held out |")}
+    on_disk = {path.parent.name for path in directory.glob("*/summary.csv")}
+    assert printed <= on_disk, f"the README quotes {sorted(printed - on_disk)} with no result"
+
+
+def test_the_context_decomposition_matches_the_artifacts(report_exists):
+    """The table that says how much of the drop is the place and how much is geometry.
+
+    This is the correction the coarseness control forced. The section claimed the place
+    cost 0.141 macro-F1 when the control shows most of that is five folds over two dozen
+    lopsided groups, so every row here is recomputed rather than quoted.
+    """
+    import numpy as np
+
+    from src import scoring
+    from src.config import load_config
+    from src.data.manifest import load_manifest
+    from src.results import predictions_path
+
+    base, context = load_config("configs/base.yaml"), load_config("configs/context.yaml")
+    control = REPORTS / "context_shuffled_10k" / "xgboost" / "summary.csv"
+    if not control.exists():
+        pytest.skip("the coarseness control has not been fitted")
+
+    columns = scoring.probability_columns(len(base.dataset.species))
+    grouped = load_manifest(context, kept_only=True)
+    shared = set(grouped.loc[grouped[context.split.group_column] != "", "clip_id"])
+
+    def per_fold(frame: pd.DataFrame) -> float:
+        scores = frame.groupby(["repeat", "fold"]).apply(
+            lambda group: scoring.from_counts(
+                group["label"].to_numpy(),
+                group[columns].to_numpy().argmax(axis=1),
+                len(base.dataset.species),
+            )["macro_f1"],
+            include_groups=False,
+        )
+        return float(np.mean(scores))
+
+    predictions = pd.read_parquet(predictions_path(base, "xgboost"))
+    expected = [
+        per_fold(predictions),
+        per_fold(predictions[predictions["clip_id"].isin(shared)]),
+        float(pd.read_csv(control).set_index("metric").loc["macro_f1", "mean"]),
+        float(
+            pd.read_csv(REPORTS / "context_10k" / "xgboost" / "summary.csv")
+            .set_index("metric")
+            .loc["macro_f1", "mean"]
+        ),
+    ]
+
+    rows = rows_of("| what is being scored | macro-F1 | cost |")
+    assert len(rows) == len(expected), (
+        f"the table has {len(rows)} rows against {len(expected)} steps"
+    )
+    for row, actual in zip(rows, expected, strict=True):
+        assert matches(row[1], actual), f"{row[0]}: {row[1]} against {actual:.4f}"
+
+    # And each cost is the step above it minus this one, so the column cannot drift
+    # from the scores beside it.
+    for i, row in enumerate(rows[1:], start=1):
+        assert matches(row[2], expected[i - 1] - expected[i]), f"{row[0]}: cost"
+
+
+def test_the_repeats_claim_matches_what_the_splitter_actually_does(report_exists):
+    """Ten repeats buy ten partitions on tapes and far fewer on places.
+
+    The README uses this to say the spread on the context result is not a sampling
+    uncertainty. If the splitter ever became less deterministic the claim would silently
+    stop being true, and the number beside it is the whole reason the section hedges.
+    """
+    from sklearn.model_selection import StratifiedGroupKFold
+
+    from src.config import load_config
+    from src.data.manifest import load_manifest, manifest_path
+    from src.data.splits import with_a_group
+
+    counts = {}
+    for label, path in (("tape", "configs/base.yaml"), ("context", "configs/context.yaml")):
+        cfg = load_config(path)
+        if not manifest_path(cfg).exists():
+            pytest.skip("manifest absent")
+        frame = with_a_group(load_manifest(cfg), cfg.split.group_column).reset_index(drop=True)
+        labels = frame["label"].to_numpy()
+        groups = frame[cfg.split.group_column].to_numpy()
+        seen = set()
+        for repeat in range(10):
+            splitter = StratifiedGroupKFold(
+                n_splits=cfg.split.n_folds, shuffle=True, random_state=cfg.split.seed + repeat
+            )
+            seen.add(
+                tuple(
+                    tuple(sorted(set(groups[test])))
+                    for _, test in splitter.split(frame, labels, groups)
+                )
+            )
+        counts[label] = len(seen)
+
+    assert counts["tape"] == 10, "the tape split still varies with every repeat"
+    assert counts["context"] < counts["tape"], "the hedge in the README assumes it does not"
+
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    assert f"produce {counts['context']} distinct partition against {counts['tape']}" in text, (
+        f"the README should say {counts['context']} against {counts['tape']}"
+    )
+
+
+def test_the_place_merge_is_described_as_the_manifest_has_it(report_exists):
+    """How many groups the notes really describe, and how much leak the merge removed."""
+    from src.config import load_config
+    from src.data.manifest import load_manifest, manifest_path
+
+    cfg = load_config("configs/context.yaml")
+    if not manifest_path(cfg).exists():
+        pytest.skip("manifest absent")
+    kept = load_manifest(cfg, kept_only=True)
+    grouped = kept[kept["place"] != ""]
+
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    assert f"{grouped['site'].nunique()} sites" in text
+    assert f"{grouped['context'].nunique()} contexts" in text
+    assert f"{grouped['place'].nunique()} places" in text
+    assert grouped["place"].nunique() < grouped["context"].nunique(), "the merge did nothing"

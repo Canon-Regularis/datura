@@ -15,6 +15,7 @@ from src.evaluate.plots.explain import gradcam_panel, occlusion_profile
 from src.evaluate.plots.results import (
     ambiguity_comparison,
     confusion_heatmap,
+    coverage_curve,
     feature_importance,
     model_comparison,
     per_class_recall,
@@ -27,6 +28,7 @@ __all__ = [
     "SERIES",
     "ambiguity_comparison",
     "confusion_heatmap",
+    "coverage_curve",
     "feature_importance",
     "gradcam_panel",
     "model_comparison",

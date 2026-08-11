@@ -185,8 +185,16 @@ def fold_summary(
     manifest: pd.DataFrame, folds: list[Fold], group_column: str = DEFAULT_GROUP_COLUMN
 ) -> pd.DataFrame:
     """Clip and group counts per class per fold, the table that shows how thin
-    the scarcest class really is."""
+    the scarcest class really is.
+
+    Groups and tapes are separate columns because they stop being the same thing as
+    soon as the fold rule changes. Under context folds one held out group can carry
+    dozens of recordings: fold 0 of ``context_10k`` holds out a single killer whale
+    group spanning 41 tapes, and a table that called that "1 tape" understated the
+    evidence forty fold. Under tape folds the two columns agree, which is the point.
+    """
     by_clip = manifest.set_index("clip_id")
+    has_tapes = DEFAULT_GROUP_COLUMN in manifest.columns
     rows = []
     for fold in folds:
         for part, clips in (
@@ -202,21 +210,56 @@ def fold_summary(
                         "part": part,
                         "species": species,
                         "clips": len(group),
-                        "tapes": group[group_column].nunique(),
+                        "groups": group[group_column].nunique(),
+                        "tapes": (
+                            group[DEFAULT_GROUP_COLUMN].nunique()
+                            if has_tapes
+                            else group[group_column].nunique()
+                        ),
                     }
                 )
     return pd.DataFrame(rows)
 
 
-def clips_from_index(index: pd.DataFrame, group_column: str = DEFAULT_GROUP_COLUMN) -> pd.DataFrame:
+def clips_from_index(
+    index: pd.DataFrame,
+    group_column: str = DEFAULT_GROUP_COLUMN,
+    cfg: Config | None = None,
+) -> pd.DataFrame:
     """Collapse a window index to one row per clip, ready for fold construction.
 
     Folds are built from the clips that actually produced features rather than from
     the manifest, so a clip that failed to decode cannot end up in a fold with no
-    rows behind it.
+    rows behind it. The index decides which clips exist.
+
+    It does not always carry the value they are grouped by. Extraction writes the clip
+    identity and the audio header, so a group taken from the field notes, such as the
+    site, is joined on from the manifest here. Every caller goes through this function,
+    which is why the join belongs here rather than at one entry point: putting it in
+    ``folds_for_index`` alone left ``save_summary`` still raising.
+
+    Baking the column into the cache instead would invalidate every stored array for
+    something no extractor reads.
     """
+    clips = index.drop_duplicates("clip_id")
+
+    if group_column not in clips.columns:
+        if cfg is None:
+            raise SplitError(
+                f"the window index carries no {group_column}, and no configuration was "
+                "given to look one up from the manifest"
+            )
+        from src.data.manifest import load_manifest
+
+        groups = load_manifest(cfg, kept_only=True)[["clip_id", group_column]]
+        clips = clips.merge(groups, on="clip_id", how="left")
+
+    # The tape rides along wherever the index already knows it, so the fold summary
+    # can report recordings and groups separately when they differ.
     columns = ["clip_id", group_column, "species", "label"]
-    return index.drop_duplicates("clip_id")[columns].reset_index(drop=True)
+    if DEFAULT_GROUP_COLUMN in clips.columns and DEFAULT_GROUP_COLUMN not in columns:
+        columns.append(DEFAULT_GROUP_COLUMN)
+    return clips[columns].reset_index(drop=True)
 
 
 def folds_for_index(index: pd.DataFrame, cfg: Config) -> list[Fold]:
@@ -224,8 +267,15 @@ def folds_for_index(index: pd.DataFrame, cfg: Config) -> list[Fold]:
 
     Training and explainability both need this. Sharing it is what keeps the fold
     a model was scored on identical to the fold its explanation is computed on.
+
+    The index says which clips exist, because a clip that failed to decode must not
+    reach a fold with no rows behind it. It does not always say which group they
+    belong to: extraction writes the clip identity and the audio header, so a group
+    taken from the field notes, such as the site, has to be joined on from the
+    manifest. Baking it into the cache instead would invalidate every stored array
+    for a column no extractor ever reads.
     """
-    return make_folds(clips_from_index(index, cfg.split.group_column), cfg)
+    return make_folds(clips_from_index(index, cfg.split.group_column, cfg), cfg)
 
 
 def rows_for_clips(index: pd.DataFrame, clips: tuple[str, ...] | list[str]) -> np.ndarray:

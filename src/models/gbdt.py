@@ -66,6 +66,16 @@ class GradientBoostedTrees(WindowClassifier):
         return dict(zip(names, (float(s) for s in scores), strict=True))
 
     def artifacts(self, context: FoldContext) -> dict[str, pd.DataFrame]:
+        """The gain ranking, and the fitted trees beside the fold that produced them.
+
+        The trees were not saved for a long time, on the reasoning that they refit in
+        seconds so nothing needs to load them. That was true while the only consumer
+        was the report. It stopped being true the moment a prediction command existed,
+        and it mattered: the only model that could be shipped was the network, which is
+        the worst calibrated of the four. One prediction in twelve from it is both
+        wrong and above 90% confident, against one in a thousand from these.
+        """
+        self.save(context.checkpoint)
         scores = self.feature_importance(context.feature_names)
         ranked = sorted(scores.items(), key=lambda item: -item[1])
         table = pd.DataFrame(ranked, columns=["feature", "gain"])
@@ -76,3 +86,18 @@ class GradientBoostedTrees(WindowClassifier):
             raise RuntimeError("fit must be called before save")
         path.parent.mkdir(parents=True, exist_ok=True)
         self._model.save_model(str(path.with_suffix(".json")))
+
+    @classmethod
+    def load(cls, path: Path, params: dict[str, Any], n_classes: int) -> GradientBoostedTrees:
+        """Rebuild fitted trees from the JSON booster beside their fold.
+
+        ``n_classes`` is carried in the saved model, so it is accepted and ignored to
+        keep the signature every loader in the registry shares.
+        """
+        saved = path.with_suffix(".json")
+        if not saved.exists():
+            raise FileNotFoundError(f"no fitted trees at {saved}")
+        model = cls(params)
+        model._model = XGBClassifier()
+        model._model.load_model(str(saved))
+        return model
