@@ -26,7 +26,7 @@ import pandas as pd
 
 from src import cli
 from src.config import Config
-from src.evaluate import families, sections, tables
+from src.evaluate import coverage, ensemble, families, sections, tables
 from src.evaluate import figures as figure_set
 from src.evaluate.artifacts import write_table
 from src.provenance import write as write_provenance
@@ -44,6 +44,12 @@ def _shared_tapes(cfg: Config) -> pd.DataFrame | None:
 def build(cfg: Config) -> Path:
     """Write every family's tables, the species figures, and the summary."""
     directory = ensure(cfg)
+
+    # Before discovery, because the averaged model has to be on disk to be found. It
+    # refits nothing: the members were scored on identical folds, so their per clip
+    # probabilities join and average.
+    ensemble.materialise(cfg)
+
     discovered = families.discover(cfg)
     if not discovered:
         raise tables.MissingResults(
@@ -98,7 +104,15 @@ def build(cfg: Config) -> Path:
         ambiguity = tables.ambiguity(cfg, list(family.names))
         write_table(ambiguity, directory / "ambiguity_breakdown.csv")
 
-        figures = figure_set.draw_all(cfg, family, comparison, ambiguity)
+        # What each audio model is worth when it is allowed to decline. The controls
+        # are left out: an operating curve for the logbook would describe how
+        # confidently it reads paperwork, which is not a question anyone asks of a
+        # tool that takes a wav file.
+        heard = [name for name in family.names if name not in family.floors]
+        operating = coverage.table(cfg, heard)
+        write_table(operating, directory / "coverage.csv")
+
+        figures = figure_set.draw_all(cfg, family, comparison, ambiguity, operating)
         document += sections.species_section(
             cfg,
             family,
@@ -109,6 +123,7 @@ def build(cfg: Config) -> Path:
             figures,
             _shared_tapes(cfg),
             against_floor.get(family.key),
+            operating,
         )
 
     resolved = overview[overview["p_value"] < 0.05]

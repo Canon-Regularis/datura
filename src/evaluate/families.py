@@ -19,6 +19,7 @@ import pandas as pd
 
 from src.config import Config
 from src.errors import DaturaError
+from src.evaluate import ensemble
 from src.models import registry as models
 from src.results import SUMMARY_FILE, config_directory
 
@@ -120,9 +121,17 @@ def _title(cfg: Config, key: str) -> str:
 
 
 def _species_family(cfg: Config, names: list[str]) -> Family | None:
-    """The four species models, measured against the metadata control."""
+    """The species models, measured against the metadata control.
+
+    Derived results join the family too. An average of two fitted models is a model a
+    person can run, so it earns a margin and a place in the multiplicity correction
+    rather than a footnote. It is recognised by its name rather than by a registry
+    entry, because nothing trained it and a spec with no trainer would be a lie.
+    """
     control = models.control().name
+    known = set(models.names())
     members = tuple(name for name in models.names() if name != control and name in names)
+    members += tuple(name for name in names if ensemble.is_derived(name, known))
     if not members:
         return None
     if control not in names:
