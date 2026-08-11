@@ -1,0 +1,47 @@
+{
+  "recorded_at": "2026-08-11T12:16:48+00:00",
+  "config": {
+    "name": "context_10k",
+    "source": "context.yaml",
+    "audio_digest": "6f023f4a5136",
+    "spectrogram_digest": "581448c30aa6",
+    "species": [
+      "HumpbackWhale",
+      "SpermWhale",
+      "KillerWhale"
+    ],
+    "target_sample_rate": 10000,
+    "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
+  },
+  "git": {
+    "commit": "2ee377a15437b5872d71a4223d0178f483d83f31",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": {
+    "version": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "packages": {
+    "numpy": "2.4.6",
+    "scipy": "1.18.0",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "xgboost": "3.3.0",
+    "torch": "2.13.0+cu126",
+    "librosa": "0.11.0",
+    "soundfile": "0.14.0",
+    "soxr": "1.1.0"
+  },
+  "accelerator": {
+    "available": true,
+    "torch_build": "2.13.0+cu126",
+    "device": "NVIDIA GeForce MX570 A",
+    "total_memory_gb": 4.29,
+    "cuda": "12.6"
+  },
+  "model": "xgboost",
+  "feature_source": "acoustic",
+  "splits": 50
+}

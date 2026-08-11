@@ -1,0 +1,21 @@
+giveaway,model,subset,clips,classes_scored,classes_total,folds,macro_f1_mean,macro_f1_std
+native sample rate,xgboost,native sample rate shared by species,834,3,3,50,0.3597358131,0.1515350837
+native sample rate,xgboost,native sample rate unique to a species,3254,3,3,50,0.2609116152,0.1615141151
+collection code,xgboost,collection code not recorded,359,2,3,30,0.4837606838,0.3526044239
+collection code,xgboost,collection code unique to a species,3729,3,3,50,0.3517110704,0.0889634521
+native sample rate,logbook,native sample rate shared by species,834,3,3,50,0.6444310267,0.1818391185
+native sample rate,logbook,native sample rate unique to a species,3254,3,3,50,0.8666666667,0.1649572198
+collection code,logbook,collection code not recorded,359,2,3,30,0.4761904762,0.0342473787
+collection code,logbook,collection code unique to a species,3729,3,3,50,0.9903346445,0.0153605383
+native sample rate,probe,native sample rate shared by species,834,3,3,50,0.4759595142,0.1148133292
+native sample rate,probe,native sample rate unique to a species,3254,3,3,50,0.3561369647,0.1018113823
+collection code,probe,collection code not recorded,359,2,3,30,0.2766191548,0.1086003655
+collection code,probe,collection code unique to a species,3729,3,3,50,0.4589973578,0.1036379669
+native sample rate,xgboost+probe,native sample rate shared by species,834,3,3,50,0.4796932556,0.1163610543
+native sample rate,xgboost+probe,native sample rate unique to a species,3254,3,3,50,0.3545356978,0.1158025824
+collection code,xgboost+probe,collection code not recorded,359,2,3,30,0.2743783602,0.1115346047
+collection code,xgboost+probe,collection code unique to a species,3729,3,3,50,0.4581339646,0.1053282712
+native sample rate,metadata,native sample rate shared by species,834,3,3,50,0.3243687563,0.2061450799
+native sample rate,metadata,native sample rate unique to a species,3254,3,3,50,0.6357794209,0.3602019165
+collection code,metadata,collection code not recorded,359,2,3,30,0.6664160401,0.2399121032
+collection code,metadata,collection code unique to a species,3729,3,3,50,0.6098235102,0.2170316275
