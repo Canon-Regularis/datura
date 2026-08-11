@@ -111,15 +111,17 @@ jobs:
       # The manifests and per-clip predictions are committed, so every report rebuilds
       # without the 6.7 GB archive. If a table stops regenerating, or regenerates
       # differently, this job is where it surfaces.
-      # The multiplicity table reads the three family_margins.csv files, so it runs
-      # last and is diffed like everything else. Correcting across all three at once
-      # is the point of it, and a stale copy would report a different verdict from the
-      # reports beside it.
+      # The multiplicity table reads every family_margins.csv, so it runs last and is
+      # diffed like everything else. Correcting across all of them at once is the point
+      # of it, and a stale copy would report a different verdict from the reports
+      # beside it.
       - name: Rebuild every report
         run: |
           uv run python -m src.evaluate.report --config configs/base.yaml
           uv run python -m src.evaluate.report --config configs/base_5k.yaml
           uv run python -m src.evaluate.report --config configs/wide.yaml
+          uv run python -m src.evaluate.report --config configs/context.yaml
+          uv run python -m src.evaluate.report --config configs/context_shuffled.yaml
           uv run python -m src.evaluate.multiplicity
 
       # Figures and provenance are excluded. Matplotlib output is not byte-stable

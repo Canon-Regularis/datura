@@ -5,7 +5,7 @@ right number for one comparison read on its own. This project does not report on
 It reports two dozen, ranks them, and calls the smallest a finding, and at 0.05
 apiece a set that size expects more than one to clear the bar carrying nothing.
 
-The family is the union of all three configurations rather than each one separately.
+The family is the union of every configuration rather than each one separately.
 Correcting inside a configuration would give the same comparison a different adjusted
 value depending on which file it was read from, and would invite quoting the smaller.
 
@@ -30,7 +30,13 @@ from src.results import config_directory
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_CONFIGS = ("configs/base.yaml", "configs/base_5k.yaml", "configs/wide.yaml")
+DEFAULT_CONFIGS = (
+    "configs/base.yaml",
+    "configs/base_5k.yaml",
+    "configs/wide.yaml",
+    "configs/context.yaml",
+    "configs/context_shuffled.yaml",
+)
 THRESHOLD = 0.05
 
 COLUMNS = (
