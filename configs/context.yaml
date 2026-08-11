@@ -6,15 +6,25 @@
 # tapes made at the same site, on the same trip, through the same hydrophone, share
 # far more than the animal.
 #
-# This configuration groups by site. A held out fold is a place the model has never
-# heard, so the gap between the two reports is the cost of changing recording context.
-# Nothing else differs: same species, band, window, seed and fold count, so the
-# comparison is like for like.
+# This configuration groups by recording context. A held out fold is a place the model
+# has never heard, so the gap between the two reports is the cost of changing recording
+# context. Nothing else differs: same species, band, window, seed and fold count, so
+# the comparison is like for like.
+#
+# The group is neither the raw site nor the tape merged context, and both were tried.
+# Six tapes carry clips the notes place at more than one site, so grouping on the site
+# alone put one to three whole tapes on both sides of every fold, which is the leak tape
+# grouping exists to prevent hiding inside the experiment built to measure leakage.
+# `recording_contexts` fixes that by merging any sites a tape links, and leaves a second
+# leak behind: it cannot merge names no tape connects, so its 39 groups covered only 24
+# places and 52% of held out clips sat in a fold whose place was also in training.
+# `recording_places` merges those by name, giving 24 groups that are place clean, site
+# clean and tape clean. It is a coarser split and a real one.
 #
 # Grouping by collection code was considered and is impossible here. There are seven
 # codes across these three species and HumpbackWhale has exactly one, so holding out a
-# code deletes the class. Site works because each species spans at least eleven of the
-# forty seven sites.
+# code deletes the class. Place is the finest grouping that still works: humpback spans
+# exactly five of the twenty four, which is the minimum a five fold split can use.
 name: context_10k
 
 dataset:
@@ -62,11 +72,11 @@ split:
   n_folds: 5
   seed: 1234
   tape_id_length: 5
-  # The one line that separates this configuration from base.yaml. A site comes from
+  # The one line that separates this configuration from base.yaml. A place comes from
   # the field notes rather than the filename, so the manifest carries it only because
   # `src.data.manifest.with_context` puts it there. Clips with no site recorded cannot
   # join a group and are excluded by `build_folds`, which says how many.
-  group_column: site
+  group_column: place
 
 paths:
   raw: data/raw
