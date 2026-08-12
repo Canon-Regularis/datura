@@ -32,7 +32,7 @@ from src.features.source import DerivedSource, FeatureSource
 from src.models import registry as models
 from src.models.base import WindowClassifier
 from src.models.registry import ModelSpec, load_settings
-from src.results import checkpoint_path, model_directory
+from src.results import ResultName, checkpoint_path, model_directory, occlusion_path
 from src.train import tasks
 
 logger = logging.getLogger(__name__)
@@ -58,18 +58,20 @@ def load_fold_model(
     the result, and the spec only says how to read it.
     """
     if spec.load is None:
-        raise ExplainError(
-            f"{spec.name} writes no checkpoint, so there is nothing to explain; "
-            "the trees are refitted in seconds and never saved"
-        )
+        raise ExplainError(f"{spec.name} writes no checkpoint, so there is nothing to explain")
 
+    # No suffix is tested here. Each loader knows its own format, torch writing .pt and
+    # xgboost .json, so the one that looked for the file is the one that reports it
+    # missing. Testing here put that knowledge in two places and the two disagreed: the
+    # check asked for .pt, the trees started writing .json, and explaining a tree result
+    # failed with a message telling the reader to run the network trainer.
     checkpoint = checkpoint_path(cfg, name, fold_index)
-    if not checkpoint.with_suffix(".pt").exists():
+    try:
+        return spec.load(checkpoint, settings, n_classes)
+    except FileNotFoundError as error:
         raise ExplainError(
-            f"no checkpoint at {checkpoint.with_suffix('.pt')}; "
-            f"run python -m src.train.cnn --name {name} first"
-        )
-    return spec.load(checkpoint, settings, n_classes)
+            f"{name} has no fitted fold {fold_index} to explain ({error}); train it first"
+        ) from error
 
 
 def sample_correct_windows(
@@ -162,7 +164,7 @@ def run(
 
     table = band_occlusion(model, source.matrix(rows), source.index, rows, class_names, frequencies)
     table.insert(0, "fold", fold.index)
-    table.to_csv(directory / "occlusion.csv", index=False)
+    table.to_csv(occlusion_path(cfg, name), index=False)
     plots.occlusion_profile(table, directory / "occlusion.png", class_names)
     logger.info(
         "\nMacro-F1 lost per masked band\n%s",
@@ -228,16 +230,13 @@ def source_for_result(cfg: Config, spec: ModelSpec, name: str) -> FeatureSource:
 
 def _task_of(cfg: Config, name: str) -> tuple[str, str]:
     """The species and call type a result directory is named after."""
-    body = name.removeprefix(families.CALL_TYPE_PREFIX)
-    for species in cfg.dataset.species:
-        prefix = f"{species.lower()}_"
-        if not body.startswith(prefix):
-            continue
-        call_type = body.removeprefix(prefix)
-        for candidate in models.names():
-            call_type = call_type.removesuffix(f"_{candidate}")
-        return species, call_type
-    raise ExplainError(f"{name} names no species in this configuration")
+    try:
+        parsed = ResultName.parse(name, species=cfg.dataset.species, models=models.names())
+    except ValueError as error:
+        raise ExplainError(str(error)) from error
+    if not parsed.is_call_type:
+        raise ExplainError(f"{name} is not a call type result")
+    return parsed.species, parsed.call_type
 
 
 def main(argv: list[str] | None = None) -> int:
