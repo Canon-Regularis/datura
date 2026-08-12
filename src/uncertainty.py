@@ -25,6 +25,7 @@ them as independent and reports a standard error roughly three times too small.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 import numpy as np
@@ -32,11 +33,18 @@ import pandas as pd
 from scipy import stats
 
 from src import scoring
+from src.data.splits import DEFAULT_GROUP_COLUMN
 from src.errors import DaturaError
 
 DEFAULT_RESAMPLES = 2000
 DEFAULT_CONFIDENCE = 0.95
-GROUP_COLUMN = "tape_id"
+
+# The unit of independence, taken from the module that owns the fold rule rather than
+# spelled again here. It was spelled twice, and the two could have drifted into a
+# bootstrap resampling one thing while the folds held out another.
+GROUP_COLUMN = DEFAULT_GROUP_COLUMN
+
+logger = logging.getLogger(__name__)
 
 
 class ComparisonError(DaturaError):
@@ -107,6 +115,54 @@ class PairedComparison:
         )
 
 
+def _distinct_repeats(differences: pd.Series) -> pd.Series:
+    """Drop repeats that reproduced a split an earlier repeat already measured.
+
+    A repeat is supposed to redraw the folds under a fresh seed. It does not always
+    manage it: ``StratifiedGroupKFold`` places groups greedily by class count, so with
+    few enough groups every seed returns the same partition. ``context_10k`` has 24
+    groups and ten repeats of it produce one partition, so its fifty rows are five
+    folds written out ten times.
+
+    Counting those as fifty estimates is the mistake this project exists to warn
+    about, and it had made it. The correction divides by ``n``, so ten copies shrank
+    the standard error by roughly the square root of ten and moved XGBoost against the
+    metadata control from p = 0.082 to p = 0.0018, which is the difference between a
+    comparison that survives the false discovery correction and one that does not.
+
+    Two repeats that fitted the same models on the same folds produce bit identical
+    differences, so identity is the test. Two genuinely different partitions agreeing
+    to the last bit across every fold does not happen with floating point.
+    """
+    names = differences.index.names or []
+    if not isinstance(differences.index, pd.MultiIndex) or "repeat" not in names:
+        return differences
+
+    seen: set[bytes] = set()
+    keep: list[object] = []
+    for repeat, values in differences.groupby(level="repeat", sort=True):
+        signature = values.to_numpy(dtype=float).tobytes()
+        if signature in seen:
+            continue
+        seen.add(signature)
+        keep.append(repeat)
+
+    repeats = differences.index.get_level_values("repeat")
+    if len(keep) == repeats.nunique():
+        return differences
+
+    logger.warning(
+        "%d of %d repeats reproduced a split already measured, so they are not "
+        "independent estimates and are dropped; this comparison rests on %d folds "
+        "rather than %d",
+        repeats.nunique() - len(keep),
+        repeats.nunique(),
+        len(keep) * _folds_per_repeat(differences.index),
+        len(differences),
+    )
+    return differences[repeats.isin(keep)]
+
+
 def _folds_per_repeat(index: pd.Index) -> int:
     """How many folds one split was cut into.
 
@@ -159,9 +215,20 @@ def bootstrap_metric(
 
     ``predictions`` is a clip level frame as written by the runner: one row per
     clip, carrying its group, its label and a probability per class.
+
+    ``group_column`` should be whatever the folds held out. It defaults to the tape
+    because that is the unit for every configuration that groups by one, and passing
+    it matters where they differ: ``context_10k`` holds out places, and resampling its
+    tapes reported an interval 59% narrower than resampling the places did.
     """
     if group_column not in predictions.columns:
         raise ComparisonError(f"predictions have no {group_column} column to resample over")
+
+    # Positions, not labels. Everything below indexes numpy arrays, and the row groups
+    # were built from the frame's own index, so a caller handing in a sorted or sliced
+    # frame silently resampled the wrong rows. The point estimate survived that and
+    # only the interval moved, which is the hardest kind of wrong to notice.
+    predictions = predictions.reset_index(drop=True)
 
     columns = scoring.probability_columns(len(class_names))
     missing = set(columns) - set(predictions.columns)
@@ -237,7 +304,10 @@ def paired_difference(
     if len(left) < 2:
         raise ComparisonError(f"cannot compare across {len(left)} fold")
 
-    differences = (left - right).to_numpy(dtype=float)
+    # Before anything is measured, because a repeat that redrew nothing is a copy of
+    # an estimate rather than a second one, and every term below divides by the count.
+    paired = _distinct_repeats(left - right)
+    differences = paired.to_numpy(dtype=float)
     mean = float(differences.mean())
 
     if np.all(differences == differences[0]):
@@ -255,7 +325,7 @@ def paired_difference(
             n_folds=len(differences),
         )
 
-    per_repeat = folds_per_repeat or _folds_per_repeat(left.index)
+    per_repeat = folds_per_repeat or _folds_per_repeat(paired.index)
     error = np.sqrt(_variance_of_the_mean(differences, per_repeat))
 
     degrees = len(differences) - 1

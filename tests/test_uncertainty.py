@@ -144,6 +144,23 @@ def repeated(differences: list[float], folds: int = 5) -> tuple[pd.Series, pd.Se
     return control + pd.Series(differences, index=index), control
 
 
+def varied(differences: list[float], repeats: int, jitter: float = 0.004) -> list[float]:
+    """Genuinely distinct repeats of the same quantity.
+
+    Every repeat is a different draw, which is what a repeat is supposed to be. The
+    tests below used ten identical copies as a stand in, and that is now the one thing
+    a repeat may not be: ``_distinct_repeats`` collapses copies, so a test built from
+    them would measure the collapse rather than the correction it means to check.
+    """
+    out = []
+    for repeat in range(repeats):
+        shift = jitter * (repeat - (repeats - 1) / 2)
+        out.extend(
+            value + shift * (1 if fold % 2 == 0 else -1) for fold, value in enumerate(differences)
+        )
+    return out
+
+
 def test_repeating_a_split_cannot_manufacture_significance():
     """The failure this project would otherwise have shipped.
 
@@ -154,15 +171,40 @@ def test_repeating_a_split_cannot_manufacture_significance():
     more splits does pin the mean down better, but nothing like a factor of ten.
     """
     once = [0.10, -0.02, 0.14, 0.05, -0.06]
-    values = np.array(once * 10)
-    fifty = paired_difference(*repeated(once * 10))
+    values = np.array(varied(once, 10))
+    fifty = paired_difference(*repeated(varied(once, 10)))
 
     naive = 2.0 * stats.t.sf(abs(values.mean() / np.sqrt(values.var(ddof=1) / 50)), 49)
 
     assert fifty.n_folds == 50
     assert naive < 0.01, "the naive test on these differences would call this decisive"
-    assert not fifty.resolved, "ten copies of one split are not ten times the evidence"
+    assert not fifty.resolved, "fifty correlated folds are not fifty independent ones"
     assert fifty.p_value > 20 * naive
+
+
+def test_a_repeat_that_redrew_nothing_is_not_a_second_estimate():
+    """The bug this caught, which had reached the published report.
+
+    A repeat is meant to redraw the folds under a fresh seed, and with few enough
+    groups ``StratifiedGroupKFold`` returns the same partition every time. The
+    ``context_10k`` configuration has 24 groups and ten repeats of it produce one
+    partition, so its fifty rows were five folds written out ten times and every term
+    that divides by the count was ten times too generous.
+
+    It changed a verdict rather than a decimal: XGBoost against the metadata control
+    was published as surviving the false discovery correction, and on its five real
+    folds it does not.
+    """
+    once = [0.14, 0.02, 0.16, 0.05, 0.08]
+
+    copied = paired_difference(*repeated(once * 10))
+    genuine = paired_difference(*repeated(varied(once, 10)))
+    alone = paired_difference(*repeated(once))
+
+    assert copied.n_folds == 5, "ten copies of one split are one split"
+    assert copied.p_value == pytest.approx(alone.p_value), "and score exactly as it does"
+    assert copied.folds_agreeing == alone.folds_agreeing
+    assert genuine.n_folds == 50, "ten different splits are still ten splits"
 
 
 def test_the_correction_uses_the_fold_overlap_and_not_the_row_count():
@@ -232,10 +274,10 @@ def test_repeats_can_convert_an_unresolved_comparison_into_a_resolved_one():
     once = [0.14, 0.02, 0.16, 0.05, 0.08]
 
     five = paired_difference(*repeated(once))
-    fifty = paired_difference(*repeated(once * 10))
+    fifty = paired_difference(*repeated(varied(once, 10)))
 
     assert not five.resolved and five.p_value == pytest.approx(0.08594, abs=1e-5)
-    assert fifty.resolved and fifty.p_value == pytest.approx(0.00215, abs=1e-5)
+    assert fifty.resolved and fifty.p_value == pytest.approx(0.00265, abs=1e-5)
     assert fifty.p_value < five.p_value
 
 
