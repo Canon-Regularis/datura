@@ -17,6 +17,23 @@ def _digests(tmp_path, name, **overrides):
     return cfg.audio_digest, cfg.spectrogram_digest
 
 
+def _cache_keys(tmp_path, name, **overrides):
+    """The key each representation actually stores under, per extractor.
+
+    The two digests above are convenience properties of the config. The real key is
+    ``cfg.digest(*extractor.cache_sections)``, and the difference between the two is
+    where a bug lived: a test named for the acoustic cache was asserting on
+    ``audio_digest``, so it passed while the cache it was named after went stale.
+    """
+    from src.features import registry
+
+    cfg = load_config(write_config(tmp_path / name, **overrides))
+    return {
+        kind: cfg.digest(*registry.build_extractor(kind, cfg).cache_sections)
+        for kind in registry.kinds()
+    }
+
+
 def test_acquisition_details_do_not_invalidate_the_cache(tmp_path):
     """Pinning a checksum or switching mirror must not discard extracted features."""
     base = _digests(tmp_path, "base")
@@ -57,13 +74,46 @@ def test_window_cap_invalidates_both_caches(tmp_path):
     assert base[1] != capped[1]
 
 
-def test_spectrogram_settings_leave_the_acoustic_cache_alone(tmp_path):
-    """The mel grid changes the spectrograms. The descriptors are keyed separately
-    so they survive a change to it."""
-    base = _digests(tmp_path, "base")
-    finer = _digests(tmp_path, "finer", spectrogram={"n_mels": 96})
-    assert base[0] == finer[0]
-    assert base[1] != finer[1]
+def test_spectrogram_settings_move_the_caches_built_from_them(tmp_path):
+    """This test asserted the opposite, and the opposite was a bug.
+
+    It read "the descriptors are keyed separately so they survive a change to it",
+    which is false: the acoustic descriptors are computed through a mel basis built
+    from the spectrogram settings, so changing the mel grid changes 160 of the 214
+    values. The shape is the length of the feature names and does not move, so a
+    stale array would have loaded at exactly the right size and said nothing.
+    """
+    from src.features import registry
+
+    base = _cache_keys(tmp_path, "base")
+    finer = _cache_keys(tmp_path, "finer", spectrogram={"n_mels": 96})
+
+    assert base[registry.ACOUSTIC] != finer[registry.ACOUSTIC], "built through the mel basis"
+    assert base[registry.LOGMEL] != finer[registry.LOGMEL]
+    assert base[registry.ENCODER] == finer[registry.ENCODER], "the encoder reads the waveform"
+
+
+def test_every_extractor_declares_the_sections_it_is_built_from(tmp_path):
+    """Closes the class of bug rather than the one instance of it.
+
+    ``registry._spectral`` is the shared wiring for the two hand written
+    representations and it injects ``cfg.spectrogram`` into both. Anything built that
+    way depends on the section whether or not it says so, and for a long time one of
+    them did not. This asserts the declaration against what actually reaches the
+    constructor, so a third representation cannot repeat it.
+    """
+    from src.config import load_config
+    from src.features import registry
+
+    cfg = load_config(write_config(tmp_path))
+    sources = {
+        registry.ACOUSTIC: ("dataset", "audio", "spectrogram"),
+        registry.LOGMEL: ("dataset", "audio", "spectrogram"),
+        registry.ENCODER: ("dataset", "audio", "encoder"),
+    }
+    for kind, expected in sources.items():
+        declared = registry.build_extractor(kind, cfg).cache_sections
+        assert set(declared) == set(expected), f"{kind} keys its cache on {declared}"
 
 
 def test_split_settings_do_not_touch_either_cache(tmp_path):

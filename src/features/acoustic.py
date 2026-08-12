@@ -89,6 +89,25 @@ class AcousticFeatures(FeatureExtractor):
     def name(self) -> str:
         return "acoustic"
 
+    @property
+    def cache_sections(self) -> tuple[str, ...]:
+        """The spectrogram belongs here, and its absence was a live bug.
+
+        These descriptors are not spectrograms, so the section looks irrelevant, and
+        it is not: the mel basis above is built from ``n_fft``, ``n_mels``, ``fmin``
+        and ``fmax``, and every MFCC and contrast measure is computed through it.
+        Moving ``n_mels`` from 64 to 96 changes 160 of the 214 values.
+
+        What made it dangerous is that the count does not change. The output shape is
+        the length of the feature names, which depends only on ``n_mfcc`` and the
+        contrast band count, so a stale array loads at exactly the right shape and
+        nothing raises. Editing a mel setting and rerunning the pipeline would have
+        rebuilt the spectrograms and the embeddings, skipped these, and left the trees
+        and both controls fitted on the old descriptors while the report claimed the
+        new settings.
+        """
+        return ("dataset", "audio", "spectrogram")
+
     def output_shape(self, window_samples: int) -> tuple[int, ...]:
         return (len(self.feature_names()),)
 
