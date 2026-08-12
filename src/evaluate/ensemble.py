@@ -31,7 +31,13 @@ import pandas as pd
 
 from src import scoring
 from src.config import Config
-from src.results import model_directory, predictions_path
+from src.results import (
+    clip_metrics_path,
+    confusion_path,
+    model_directory,
+    predictions_path,
+    summary_path,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -120,14 +126,13 @@ def materialise(cfg: Config, names: tuple[str, ...] = ENSEMBLE) -> str | None:
         )
     fold_metrics = pd.DataFrame(rows)
 
-    directory = model_directory(cfg, name)
-    directory.mkdir(parents=True, exist_ok=True)
-    fold_metrics.to_csv(directory / "fold_metrics_clip.csv", index=False)
-    scoring.summarise_folds(fold_metrics).to_csv(directory / "summary.csv", index=False)
+    model_directory(cfg, name).mkdir(parents=True, exist_ok=True)
+    fold_metrics.to_csv(clip_metrics_path(cfg, name), index=False)
+    scoring.summarise_folds(fold_metrics).to_csv(summary_path(cfg, name), index=False)
     scoring.confusion(
         pooled["label"].to_numpy(), pooled["prediction"].to_numpy(), class_names
-    ).to_csv(directory / "confusion.csv")
-    pooled.to_parquet(directory / "clip_predictions.parquet", index=False)
+    ).to_csv(confusion_path(cfg, name))
+    pooled.to_parquet(predictions_path(cfg, name), index=False)
 
     logger.info(
         "%s: macro-F1 %.3f over %d splits, averaged from %s",

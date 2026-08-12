@@ -26,7 +26,7 @@ from src.config import Config, load_config
 from src.errors import DaturaError
 from src.evaluate.artifacts import write_table
 from src.evaluate.sections import markdown
-from src.results import config_directory
+from src.results import family_margins_path
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ def gather(configs: list[Config]) -> pd.DataFrame:
     """
     frames = []
     for cfg in configs:
-        path = config_directory(cfg) / "family_margins.csv"
+        path = family_margins_path(cfg)
         if not path.exists():
             raise MissingMargins(
                 f"{path} is missing; run python -m src.evaluate.report --config {cfg.source.name}"

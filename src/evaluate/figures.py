@@ -19,7 +19,7 @@ import pandas as pd
 
 from src.config import Config
 from src.evaluate import families, plots, tables
-from src.results import config_directory, model_directory
+from src.results import clip_metrics_path, config_directory, confusion_path, model_directory
 
 # Files a model may or may not write, and the figure each one becomes. The trees
 # report which features carried the fit and the network reports its learning curve,
@@ -34,7 +34,7 @@ def splits_behind(cfg: Config, name: str) -> int:
     times. The shares it is drawn from are unaffected and the raw counts printed
     beside them are not, so the title says how many splits are behind the number.
     """
-    return len(pd.read_csv(model_directory(cfg, name) / "fold_metrics_clip.csv"))
+    return len(pd.read_csv(clip_metrics_path(cfg, name)))
 
 
 def _per_model_drawing(cfg: Config, directory: Path) -> dict[str, Callable[[Path, str], Path]]:
@@ -99,7 +99,7 @@ def draw_all(
         source = model_directory(cfg, name)
         figures.append(
             plots.confusion_heatmap(
-                pd.read_csv(source / "confusion.csv", index_col=0),
+                pd.read_csv(confusion_path(cfg, name), index_col=0),
                 directory / f"confusion_{name}.png",
                 f"{name}, {splits_behind(cfg, name)} splits pooled",
             )

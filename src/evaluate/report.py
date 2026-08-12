@@ -30,14 +30,23 @@ from src.evaluate import coverage, ensemble, families, sections, tables
 from src.evaluate import figures as figure_set
 from src.evaluate.artifacts import write_table
 from src.provenance import write as write_provenance
-from src.results import ensure, report_path
+from src.results import (
+    ambiguity_path,
+    audit_table_path,
+    comparison_path,
+    coverage_path,
+    ensure,
+    family_margins_path,
+    margin_over_control_path,
+    report_path,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def _shared_tapes(cfg: Config) -> pd.DataFrame | None:
     """Tapes carrying more than one species, when the audit has been written."""
-    path = cfg.paths.metadata / f"audit_cross_species_tapes_{cfg.corpus}.csv"
+    path = audit_table_path(cfg, "audit_cross_species_tapes")
     return pd.read_csv(path) if path.exists() else None
 
 
@@ -74,7 +83,7 @@ def build(cfg: Config) -> Path:
     intervals = {family.key: tables.family_intervals(cfg, family) for family in discovered}
 
     overview = sections.overview([*margins.values(), *against_floor.values()])
-    write_table(overview, directory / "family_margins.csv")
+    write_table(overview, family_margins_path(cfg))
 
     document = [
         *sections.header(cfg, len(discovered)),
@@ -95,14 +104,14 @@ def build(cfg: Config) -> Path:
             continue
 
         comparison = tables.comparison(cfg, list(family.names))
-        write_table(comparison, directory / "comparison.csv")
+        write_table(comparison, comparison_path(cfg))
         write_table(
             margins[family.key].drop(columns=["family", "floor"]),
-            directory / "margin_over_control.csv",
+            margin_over_control_path(cfg),
         )
 
         ambiguity = tables.ambiguity(cfg, list(family.names))
-        write_table(ambiguity, directory / "ambiguity_breakdown.csv")
+        write_table(ambiguity, ambiguity_path(cfg))
 
         # What each audio model is worth when it is allowed to decline. The controls
         # are left out: an operating curve for the logbook would describe how
@@ -110,7 +119,7 @@ def build(cfg: Config) -> Path:
         # tool that takes a wav file.
         heard = [name for name in family.names if name not in family.floors]
         operating = coverage.table(cfg, heard)
-        write_table(operating, directory / "coverage.csv")
+        write_table(operating, coverage_path(cfg))
 
         figures = figure_set.draw_all(cfg, family, comparison, ambiguity, operating)
         document += sections.species_section(

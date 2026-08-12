@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from src.config import PROJECT_ROOT, Config
+from src.results import PROVENANCE_FILE
 
 TRACKED_PACKAGES = (
     "numpy",
@@ -116,6 +117,6 @@ def record(cfg: Config, extra: dict[str, Any] | None = None) -> dict[str, Any]:
 
 def write(cfg: Config, directory: Path, extra: dict[str, Any] | None = None) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
-    path = directory / "provenance.json"
+    path = directory / PROVENANCE_FILE
     path.write_text(json.dumps(record(cfg, extra), indent=2) + "\n", encoding="utf-8")
     return path

@@ -28,7 +28,16 @@ from src.data.splits import Fold, rows_for_clips
 from src.features.source import FeatureSource
 from src.models.base import Batch, FoldContext, WindowClassifier
 from src.provenance import write as write_provenance
-from src.results import checkpoint_path, model_directory
+from src.results import (
+    checkpoint_path,
+    clip_metrics_path,
+    confusion_path,
+    model_directory,
+    predictions_path,
+    summary_path,
+    window_metrics_path,
+    window_predictions_path,
+)
 from src.train.folds import FoldPlan
 
 logger = logging.getLogger(__name__)
@@ -237,15 +246,16 @@ def save_result(
     directory looks like a run over every clip of that type and nothing contradicts
     it.
     """
-    directory = model_directory(cfg, result.model_name)
+    name = result.model_name
+    directory = model_directory(cfg, name)
     directory.mkdir(parents=True, exist_ok=True)
 
-    result.clip_metrics.to_csv(directory / "fold_metrics_clip.csv", index=False)
-    result.window_metrics.to_csv(directory / "fold_metrics_window.csv", index=False)
-    result.summary.to_csv(directory / "summary.csv", index=False)
-    result.confusion.to_csv(directory / "confusion.csv")
-    result.clip_predictions.to_parquet(directory / "clip_predictions.parquet", index=False)
-    result.window_predictions.to_parquet(directory / "window_predictions.parquet", index=False)
+    result.clip_metrics.to_csv(clip_metrics_path(cfg, name), index=False)
+    result.window_metrics.to_csv(window_metrics_path(cfg, name), index=False)
+    result.summary.to_csv(summary_path(cfg, name), index=False)
+    result.confusion.to_csv(confusion_path(cfg, name))
+    result.clip_predictions.to_parquet(predictions_path(cfg, name), index=False)
+    result.window_predictions.to_parquet(window_predictions_path(cfg, name), index=False)
     for key, table in result.extras.items():
         table.to_csv(directory / f"{key}.csv", index=False)
 

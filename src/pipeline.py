@@ -32,10 +32,10 @@ from src.evaluate import report as report_cli
 from src.features import extract as extract_cli
 from src.features import registry as features
 from src.models import registry as models
-from src.results import config_directory, has_results, model_directory
+from src.results import config_directory, has_results, occlusion_path
 from src.train import calltypes as calltypes_cli
-from src.train import cnn as cnn_cli
-from src.train import xgb as xgb_cli
+from src.train.cnn import train_network
+from src.train.xgb import train_trees
 
 logger = logging.getLogger(__name__)
 
@@ -114,13 +114,13 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
     counts = {spec.repeats for spec in wanted}
     if len(counts) != 1:
         raise ValueError(f"the tree models declare different repeat counts: {sorted(counts)}")
-    repeats = str(next(iter(counts)))
+    repeats = next(iter(counts))
 
     trees = [spec.name for spec in wanted]
     stages = [
         Stage(
             models.TREES,
-            lambda n=repeats: xgb_cli.main(["--config", config_path, "--repeats", n]),
+            lambda n=repeats: train_trees(cfg, repeats=n),
             lambda: all(has_results(cfg, name) for name in trees),
         )
     ]
@@ -130,9 +130,7 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
         stages.append(
             Stage(
                 spec.name,
-                lambda n=spec.name, r=str(spec.repeats): cnn_cli.main(
-                    ["--config", config_path, "--name", n, "--repeats", r]
-                ),
+                lambda n=spec.name, r=spec.repeats: train_network(cfg, n, repeats=r),
                 lambda n=spec.name: has_results(cfg, n),
             )
         )
@@ -185,7 +183,7 @@ def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
                         EXPLAINED_FOLD,
                     ]
                 ),
-                lambda: (model_directory(cfg, EXPLAINED_VARIANT) / "occlusion.csv").exists(),
+                lambda: occlusion_path(cfg, EXPLAINED_VARIANT).exists(),
             )
         )
 
