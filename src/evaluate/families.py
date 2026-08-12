@@ -21,7 +21,7 @@ from src.config import Config
 from src.errors import DaturaError
 from src.evaluate import ensemble
 from src.models import registry as models
-from src.results import SUMMARY_FILE, config_directory
+from src.results import SUMMARY_FILE, ResultName, config_directory, confusion_path
 
 # A call type result is named after its task, and its control carries this marker.
 # The species control is named by the registry instead, because it predates the
@@ -99,25 +99,26 @@ def class_names_of(cfg: Config, name: str) -> tuple[str, ...]:
     result declares ``absent`` and ``present`` and a species result declares the
     species. Reading it here keeps the report from having to know which is which.
     """
-    path = config_directory(cfg) / name / "confusion.csv"
+    path = confusion_path(cfg, name)
     if not path.exists():
         raise FamilyError(f"{name} has no confusion.csv, so its classes are unknown")
     return tuple(str(value) for value in pd.read_csv(path, index_col=0).index)
 
 
-def _title(cfg: Config, key: str) -> str:
-    """A readable heading for a call type family.
+def _parsed(cfg: Config, name: str) -> ResultName | None:
+    """One result name taken apart, or nothing when it names no species under study."""
+    try:
+        return ResultName.parse(name, species=cfg.dataset.species, models=models.names())
+    except ValueError:
+        return None
 
-    Task names are lowercased when they become directories, so the species is
-    recovered by matching against the species under study rather than by guessing
-    where the word ends.
-    """
-    body = key.removeprefix(CALL_TYPE_PREFIX)
-    for species in cfg.dataset.species:
-        prefix = f"{species.lower()}_"
-        if body.startswith(prefix):
-            return f"{species}, {body.removeprefix(prefix).replace('_', ' ')}"
-    return body.replace("_", " ")
+
+def _title(cfg: Config, key: str) -> str:
+    """A readable heading for a call type family."""
+    parsed = _parsed(cfg, key)
+    if parsed is None or not parsed.is_call_type:
+        return key.removeprefix(CALL_TYPE_PREFIX).replace("_", " ")
+    return f"{parsed.species}, {parsed.call_type.replace('_', ' ')}"
 
 
 def _species_family(cfg: Config, names: list[str]) -> Family | None:
@@ -148,13 +149,14 @@ def _species_family(cfg: Config, names: list[str]) -> Family | None:
     )
 
 
-def _controls_by_key(names: list[str]) -> dict[str, str]:
+def _controls_by_key(cfg: Config, names: list[str]) -> dict[str, str]:
     """The context control belonging to each call type task."""
     controls: dict[str, str] = {}
     for name in names:
-        if CONTEXT_MARKER not in name:
+        parsed = _parsed(cfg, name)
+        if parsed is None or not parsed.is_control:
             continue
-        key = name.split(CONTEXT_MARKER)[0]
+        key = parsed.task_key
         if key in controls:
             raise FamilyError(
                 f"{key} has two controls, {controls[key]} and {name}; one of them is a leftover run"
@@ -184,7 +186,7 @@ def _assign(trials: list[str], keys: list[str]) -> dict[str, list[str]]:
 
 def _call_type_families(cfg: Config, names: list[str]) -> list[Family]:
     """One family per call type task, measured against its context control."""
-    controls = _controls_by_key(names)
+    controls = _controls_by_key(cfg, names)
     trials = [name for name in names if CONTEXT_MARKER not in name]
     members = _assign(trials, list(controls))
 

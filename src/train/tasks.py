@@ -23,6 +23,7 @@ from src.data.manifest import load_manifest
 from src.data.notes import CALL_PREFIX, Vocabulary
 from src.errors import DaturaError
 from src.features.source import FeatureSource
+from src.results import ResultName
 
 logger = logging.getLogger(__name__)
 
@@ -61,11 +62,17 @@ class Task:
 
     @property
     def name(self) -> str:
-        return f"calltype_{self.species.lower()}_{self.call_type}"
+        """The result directory this task writes to.
+
+        Rendered by ``ResultName`` rather than formatted here, because four places used
+        to take this string apart again and any disagreement would attach a result to
+        the wrong control.
+        """
+        return ResultName(call_type=self.call_type, species=self.species).render()
 
     @property
     def control_name(self) -> str:
-        return f"{self.name}_context"
+        return ResultName(call_type=self.call_type, species=self.species, is_control=True).render()
 
     def __repr__(self) -> str:
         guard = "" if self.max_clip_seconds is None else f", clips under {self.max_clip_seconds:g}s"
