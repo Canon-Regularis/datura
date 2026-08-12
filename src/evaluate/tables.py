@@ -17,7 +17,7 @@ from src.data.audit import context as audit
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
 from src.evaluate import families
-from src.results import model_directory, predictions_path
+from src.results import clip_metrics_path, predictions_path, summary_path
 
 
 class MissingResults(DaturaError):
@@ -28,7 +28,7 @@ def comparison(cfg: Config, model_names: list[str]) -> pd.DataFrame:
     """One row per model, one column per metric mean and spread."""
     rows = []
     for name in model_names:
-        summary = pd.read_csv(model_directory(cfg, name) / "summary.csv")
+        summary = pd.read_csv(summary_path(cfg, name))
         record: dict[str, object] = {"model": name}
         for _, entry in summary.iterrows():
             record[f"{entry['metric']}_mean"] = entry["mean"]
@@ -45,9 +45,7 @@ def headline(table: pd.DataFrame, metric: str = "macro_f1") -> pd.DataFrame:
 
 
 def _fold_scores(cfg: Config, name: str, metric: str) -> pd.Series:
-    return uncertainty.fold_scores(
-        pd.read_csv(model_directory(cfg, name) / "fold_metrics_clip.csv"), metric
-    )
+    return uncertainty.fold_scores(pd.read_csv(clip_metrics_path(cfg, name)), metric)
 
 
 def family_margins(
@@ -98,19 +96,25 @@ def family_intervals(
 ) -> pd.DataFrame:
     """Each model's own score with the range the recordings support.
 
-    The interval comes from resampling tapes rather than clips, so it answers what
-    a different draw of recordings would have produced. That is a wider and more
-    honest question than the spread across folds.
+    The interval comes from resampling recordings rather than clips, so it answers
+    what a different draw of them would have produced. That is a wider and more honest
+    question than the spread across folds.
+
+    It resamples whatever the folds held out rather than always the tape. Under
+    ``context_10k`` a fold holds out a place, so tapes within one are not independent
+    draws, and resampling them reported an interval 59% narrower than the design
+    supports. The ``groups`` column names the unit so the two cannot be read alike.
     """
+    group_column = cfg.split.group_column
     rows = []
     for name in family.names:
-        predictions = pd.read_parquet(predictions_path(cfg, name))
-        if "repeat" in predictions.columns:
-            # One prediction per clip. A repeated run holds a full pass per repeat,
-            # and pooling them would score some clips ten times over.
-            predictions = predictions[predictions["repeat"] == 0].reset_index(drop=True)
+        predictions = _clips_with_group(cfg, name, group_column)
         interval = uncertainty.bootstrap_metric(
-            predictions, list(family.class_names), metric=metric, resamples=resamples
+            predictions,
+            list(family.class_names),
+            metric=metric,
+            resamples=resamples,
+            group_column=group_column,
         )
         rows.append(
             {
@@ -118,10 +122,34 @@ def family_intervals(
                 "estimate": interval.estimate,
                 "low": interval.low,
                 "high": interval.high,
-                "tapes": predictions[uncertainty.GROUP_COLUMN].nunique(),
+                "groups": predictions[group_column].nunique(),
+                "unit": group_column,
             }
         )
     return pd.DataFrame(rows)
+
+
+def _clips_with_group(cfg: Config, name: str, group_column: str) -> pd.DataFrame:
+    """One prediction per clip, carrying the column the folds were grouped on.
+
+    A repeated run holds a full pass per repeat, and pooling them would score some
+    clips ten times over, so one repeat is taken. The runner writes the tape onto every
+    prediction and nothing else, so a group taken from the field notes is joined from
+    the manifest here, the same way ``clips_from_index`` does it for folds.
+    """
+    predictions = pd.read_parquet(predictions_path(cfg, name))
+    if "repeat" in predictions.columns:
+        predictions = predictions[predictions["repeat"] == 0]
+    predictions = predictions.reset_index(drop=True)
+
+    if group_column in predictions.columns:
+        return predictions
+
+    from src.data.manifest import load_manifest
+
+    groups = load_manifest(cfg, kept_only=True)[["clip_id", group_column]]
+    joined = predictions.merge(groups, on="clip_id", how="left")
+    return joined[joined[group_column].astype(str).str.strip() != ""].reset_index(drop=True)
 
 
 def giveaways(cfg: Config) -> dict[str, pd.Series]:
