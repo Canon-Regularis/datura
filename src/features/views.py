@@ -21,6 +21,17 @@ class RowView:
         self._array = array
         self._rows = np.asarray(rows, dtype=np.int64)
 
+    @classmethod
+    def over(cls, array: np.ndarray) -> RowView:
+        """Every row of an array already in memory.
+
+        One file has no cache behind it, so the prediction command has an array and
+        needs a view. It was building ``RowView(matrix, np.arange(len(matrix)))`` by
+        hand, which is the kind of line that gets copied wrong once and then reaches
+        numpy as something that is not a view at all.
+        """
+        return cls(array, np.arange(len(array)))
+
     def __len__(self) -> int:
         return len(self._rows)
 

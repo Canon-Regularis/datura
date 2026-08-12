@@ -15,6 +15,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src.features.views import RowView
+
 
 @dataclass(frozen=True)
 class FoldContext:
@@ -31,9 +33,15 @@ class FoldContext:
 
 @dataclass(frozen=True)
 class Batch:
-    """Feature rows and their labels."""
+    """Feature rows and their labels.
 
-    features: np.ndarray
+    A ``RowView`` rather than an array, because that is what every caller has always
+    passed. Declaring an array here was a lie the implementations then worked around
+    individually, and one of them worked around it with ``isinstance``, which is how a
+    lookalike object reached numpy as a nought dimensional object array.
+    """
+
+    features: RowView
     labels: np.ndarray
 
     def __post_init__(self) -> None:
@@ -70,8 +78,13 @@ class WindowClassifier(ABC):
         """Fit on ``train``, using ``validation`` for early stopping only."""
 
     @abstractmethod
-    def predict_proba(self, features: np.ndarray) -> np.ndarray:
-        """Return a ``(n_windows, n_classes)`` array of probabilities."""
+    def predict_proba(self, features: RowView) -> np.ndarray:
+        """Return a ``(n_windows, n_classes)`` array of probabilities.
+
+        A view names its rows and materialises them in blocks, so a model that only
+        needs one batch at a time never holds a whole fold in memory. Ask it for
+        ``to_numpy`` or ``take`` rather than testing what it is.
+        """
 
     @abstractmethod
     def save(self, path: Path) -> None: ...

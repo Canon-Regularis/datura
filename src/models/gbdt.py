@@ -32,8 +32,16 @@ class GradientBoostedTrees(WindowClassifier):
         return self._name
 
     @staticmethod
-    def _flatten(features: RowView | np.ndarray) -> np.ndarray:
-        array = features.to_numpy() if isinstance(features, RowView) else np.asarray(features)
+    def _flatten(features: RowView) -> np.ndarray:
+        """Rows as one flat float32 block, which is all XGBoost takes.
+
+        This used to branch on ``isinstance`` to decide whether it had a view or a bare
+        array, because the interface declared an array and every caller passed a view.
+        Something shaped like a view but not one then slipped through the branch and
+        reached numpy as a nought dimensional object array. The interface says view now,
+        so there is nothing to ask.
+        """
+        array = features.to_numpy()
         return array.reshape(len(array), -1).astype(np.float32, copy=False)
 
     def fit(self, train: Batch, validation: Batch, n_classes: int) -> None:
@@ -52,7 +60,7 @@ class GradientBoostedTrees(WindowClassifier):
             verbose=False,
         )
 
-    def predict_proba(self, features: RowView | np.ndarray) -> np.ndarray:
+    def predict_proba(self, features: RowView) -> np.ndarray:
         if self._model is None:
             raise RuntimeError("fit must be called before predict_proba")
         return self._model.predict_proba(self._flatten(features)).astype(np.float64)
