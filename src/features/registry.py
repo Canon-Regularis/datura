@@ -9,18 +9,30 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+import pandas as pd
+
 from src.config import Config
+from src.data.annotations import condition_columns
 from src.errors import DaturaError
 from src.features import cache
 from src.features.acoustic import AcousticFeatures
 from src.features.base import FeatureExtractor
+from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
 from src.features.encoder import EncoderEmbedding
-from src.features.source import CachedFeatureSource
+from src.features.source import CachedFeatureSource, FeatureSource
 from src.features.spectrogram import LogMelSpectrogram
 
 ACOUSTIC = "acoustic"
 LOGMEL = "logmel"
 ENCODER = "encoder"
+
+# The two that hear nothing. They are feature sources like any other and were keyed
+# from a different module, with an if chain in a third resolving which was which, so
+# ``ModelSpec.source`` was a union of two namespaces and adding a control meant editing
+# three files. They are named here, beside the representations, because that is what
+# makes the field one namespace.
+METADATA = "metadata"
+LOGBOOK = "logbook"
 
 
 def _spectral(extractor: type[FeatureExtractor]) -> Callable[[Config], FeatureExtractor]:
@@ -47,6 +59,35 @@ _EXTRACTORS: dict[str, Callable[[Config], FeatureExtractor]] = {
     LOGMEL: _spectral(LogMelSpectrogram),
     ENCODER: EncoderEmbedding,
 }
+
+
+# A control is derived from a window index rather than read from a cache, so it takes
+# the frame instead of a config. Same registry, different shape of factory, which is
+# why the two tables are separate rather than one with a discriminator.
+_CONTROLS: dict[str, Callable[[pd.DataFrame], FeatureSource]] = {
+    METADATA: MetadataFeatureSource,
+    LOGBOOK: lambda index: LogbookFeatureSource(index, condition_columns(index)),
+}
+
+
+def controls() -> tuple[str, ...]:
+    """Every source that describes a recording without hearing it."""
+    return tuple(_CONTROLS)
+
+
+def is_control(name: str) -> bool:
+    return name in _CONTROLS
+
+
+def build_control(name: str, index: pd.DataFrame) -> FeatureSource:
+    """One control over the clips a window index names.
+
+    Derived from the audio source's index so a control sees the same clips in the same
+    folds and only the description differs.
+    """
+    if name not in _CONTROLS:
+        raise UnknownRepresentation(name)
+    return _CONTROLS[name](index)
 
 
 class UnknownRepresentation(DaturaError):

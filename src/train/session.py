@@ -18,9 +18,8 @@ from src.config import Config
 from src.data import annotations as ann
 from src.data.splits import Fold, clips_from_index
 from src.features import registry as features
-from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
 from src.features.source import FeatureSource
-from src.models.registry import LOGBOOK_SOURCE, METADATA_SOURCE, ModelSpec
+from src.models.registry import ModelSpec
 from src.train.crossval import run_cross_validation, save_result
 from src.train.folds import FoldPlan, folds_for, format_test_groups, save_summary
 
@@ -43,19 +42,22 @@ class Assembly:
     def source_for(self, spec: ModelSpec) -> FeatureSource:
         """The features a given model consumes.
 
-        Both no-audio models are derived from the audio source's index, so they see
-        the same clips in the same folds and only the description differs.
+        A lookup rather than a chain of string comparisons. It was three branches over
+        two namespaces, so ``ModelSpec.source`` could name either a representation or a
+        control and only this function knew which, which meant adding a third control
+        was an edit here as well as in two registries.
+
+        Every control is derived from the audio source's index, so it sees the same
+        clips in the same folds and only the description differs.
         """
-        if spec.source == METADATA_SOURCE:
-            return MetadataFeatureSource(self.audio.index)
-        if spec.source == LOGBOOK_SOURCE:
-            index = self.logbook_index
+        if features.is_control(spec.source):
+            index = self.logbook_index if spec.source == features.LOGBOOK else self.audio.index
             if index is None:
                 raise ValueError(
                     f"{spec.name} needs the parsed field notes; "
                     "run python -m src.data.annotations first"
                 )
-            return LogbookFeatureSource(index, ann.condition_columns(index))
+            return features.build_control(spec.source, index)
         if spec.source != self.audio.name:
             raise ValueError(
                 f"{spec.name} needs {spec.source} features; this assembly holds {self.audio.name}"
