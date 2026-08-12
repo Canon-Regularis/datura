@@ -11,22 +11,23 @@ for the report to do it without pulling torch into the process.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from src.config import Config, load_yaml
+from src.config import Config, ConfigError, load_yaml
 from src.errors import DaturaError
 from src.features import registry as features
 from src.models.base import WindowClassifier
 
-METADATA_SOURCE = "metadata"
-LOGBOOK_SOURCE = "logbook"
-
-# Neither of these hears the recording. The metadata control is the floor every
-# published margin is measured from; the logbook sees the rest of the paperwork
-# besides, and exists to say how much of the floor that paperwork was carrying.
-NO_AUDIO_SOURCES = (METADATA_SOURCE, LOGBOOK_SOURCE)
+# Taken from the feature registry rather than spelled again, because a control is a
+# feature source and ``ModelSpec.source`` names one namespace. These two used to be
+# declared here, which made the field a union of two namespaces resolved by an if chain
+# in a third module. The metadata control is the floor every published margin is
+# measured from; the logbook sees the rest of the paperwork besides, and exists to say
+# how much of that floor the paperwork was carrying.
+METADATA_SOURCE = features.METADATA
+LOGBOOK_SOURCE = features.LOGBOOK
 
 Builder = Callable[[Config, dict[str, Any]], WindowClassifier]
 
@@ -48,6 +49,46 @@ class UnknownModel(DaturaError):
         super().__init__(f"unknown model {name!r}; expected one of {names()}")
 
 
+# What each kind of hyperparameter file may contain. ``None`` means the block's keys
+# are handed straight to the estimator, so enumerating them here would only duplicate
+# its signature; the block is still required to exist. A named set means every key is
+# read by this project's own code with an explicit default, which is where a typo used
+# to disappear: misspell `epochs` in configs/cnn.yaml and the file said 30 while the
+# run trained 40, with nothing printed either way.
+TREE_SETTINGS: dict[str, frozenset[str] | None] = {"model": None}
+
+TORCH_TRAIN_KEYS = frozenset(
+    {
+        "epochs",
+        "batch_size",
+        "lr",
+        "weight_decay",
+        "warmup_epochs",
+        "early_stopping_patience",
+        "seed",
+        "device",
+        "deterministic",
+    }
+)
+
+NETWORK_SETTINGS: dict[str, frozenset[str] | None] = {
+    "model": None,
+    "train": TORCH_TRAIN_KEYS,
+    "augment": frozenset(
+        {
+            "enabled",
+            "probability",
+            "max_time_shift",
+            "noise_std",
+            "freq_mask_bins",
+            "time_mask_frames",
+        }
+    ),
+}
+
+PROBE_SETTINGS: dict[str, frozenset[str] | None] = {"model": None, "train": TORCH_TRAIN_KEYS}
+
+
 @dataclass(frozen=True)
 class ModelSpec:
     """Everything the runner needs to train one model."""
@@ -58,6 +99,7 @@ class ModelSpec:
     trainer: str
     build: Builder
     summary: str
+    settings_schema: dict[str, frozenset[str] | None] = field(default_factory=dict)
     load: Loader | None = None
     repeats: int = 1
     """How many times the whole split is redrawn for this model.
@@ -72,7 +114,7 @@ class ModelSpec:
     @property
     def hears_audio(self) -> bool:
         """Whether this model is given the recording at all."""
-        return self.source not in NO_AUDIO_SOURCES
+        return not features.is_control(self.source)
 
     @property
     def is_control(self) -> bool:
@@ -128,6 +170,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=TREES,
         source=features.ACOUSTIC,
         config_file="configs/xgb.yaml",
+        settings_schema=TREE_SETTINGS,
         build=_build_trees,
         load=_load_trees,
         repeats=10,
@@ -138,6 +181,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=NETWORK,
         source=features.LOGMEL,
         config_file="configs/cnn.yaml",
+        settings_schema=NETWORK_SETTINGS,
         build=_build_cnn,
         load=_load_cnn,
         summary="residual CNN over log mel windows",
@@ -147,6 +191,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=NETWORK,
         source=features.LOGMEL,
         config_file="configs/cnn_small.yaml",
+        settings_schema=NETWORK_SETTINGS,
         build=_build_cnn,
         load=_load_cnn,
         repeats=10,
@@ -157,6 +202,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=TREES,
         source=METADATA_SOURCE,
         config_file="configs/metadata.yaml",
+        settings_schema=TREE_SETTINGS,
         build=_build_trees,
         load=_load_trees,
         repeats=10,
@@ -167,6 +213,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=TREES,
         source=LOGBOOK_SOURCE,
         config_file="configs/logbook.yaml",
+        settings_schema=TREE_SETTINGS,
         build=_build_trees,
         load=_load_trees,
         repeats=10,
@@ -180,6 +227,7 @@ _SPECS: tuple[ModelSpec, ...] = (
         trainer=NETWORK,
         source=features.ENCODER,
         config_file="configs/probe.yaml",
+        settings_schema=PROBE_SETTINGS,
         build=_build_probe,
         load=_load_probe,
         repeats=10,
@@ -195,11 +243,49 @@ def load_settings(spec: ModelSpec, overrides: dict[str, Any] | None = None) -> d
 
     Hyperparameters live in YAML beside the model that uses them, so a variant is a
     new config file and one registry entry.
+
+    Validated against the spec's schema, because nothing checked these files and the
+    consequence was silent. Every setting is read with an explicit default, so a
+    misspelled key fell back to a value the file did not contain and the run carried on
+    without a word. The four defaults in ``configs/cnn.yaml`` all disagree with the code
+    they back onto: the file says 30 epochs and the fallback is 40, 64 against 32, 0.004
+    against 0.003, 7 against 8.
     """
     settings = load_yaml(spec.config_file)
     for section, values in (overrides or {}).items():
         settings.setdefault(section, {}).update(values)
+    _check_settings(spec, settings)
     return settings
+
+
+def _check_settings(spec: ModelSpec, settings: dict[str, Any]) -> None:
+    """Refuse a hyperparameter file this model does not understand."""
+    if not spec.settings_schema:
+        return
+
+    unknown = set(settings) - set(spec.settings_schema)
+    if unknown:
+        raise ConfigError(
+            f"unknown blocks in {spec.config_file}: {sorted(unknown)}; "
+            f"expected some of {sorted(spec.settings_schema)}"
+        )
+
+    for block, allowed in spec.settings_schema.items():
+        values = settings.get(block)
+        if values is None:
+            if allowed is None or block == "augment":
+                continue  # augment is optional; the probe has none at all
+            raise ConfigError(f"{spec.config_file} is missing the {block} block")
+        if not isinstance(values, dict):
+            raise ConfigError(f"{block} in {spec.config_file} must be a mapping")
+        if allowed is None:
+            continue  # passed straight to the estimator, which validates its own names
+        stray = set(values) - allowed
+        if stray:
+            raise ConfigError(
+                f"unknown keys in {block} of {spec.config_file}: {sorted(stray)}; "
+                f"expected some of {sorted(allowed)}"
+            )
 
 
 def names() -> tuple[str, ...]:

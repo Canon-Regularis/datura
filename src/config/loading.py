@@ -52,6 +52,33 @@ def _require(
     return block
 
 
+# Every section a config file may carry. A required one that goes missing is caught
+# where it is read; an optional one that is misspelled was not caught anywhere.
+SECTIONS = frozenset(
+    {"name", "dataset", "audio", "spectrogram", "split", "paths", "pipeline", "encoder"}
+)
+
+
+def _check_sections(raw: dict[str, Any], source: Path) -> None:
+    """Refuse a top level key this loader does not know.
+
+    Keys inside a section were already checked and the section names were not, so a
+    misspelled optional section fell through to its defaults in silence. That is not
+    cosmetic here. Writing ``pipelines:`` instead of ``pipeline:`` leaves
+    ``PipelineConfig.models`` as ``None``, which allows every model, so ``wide.yaml``
+    would train the two networks it exists to exclude and rewrite a committed report.
+    Writing ``encodder:`` leaves the checkpoint empty, and the encoder then runs with
+    randomly initialised weights behind a log warning, producing embeddings that mean
+    nothing while every stage downstream carries on.
+    """
+    unknown = set(raw) - SECTIONS
+    if unknown:
+        raise ConfigError(
+            f"unknown top level sections in {source.name}: {sorted(unknown)}; "
+            f"expected some of {sorted(SECTIONS)}"
+        )
+
+
 def _optional(mapping: dict[str, Any], section: str, allowed: set[str]) -> dict[str, Any]:
     """A section a config may leave out entirely.
 
@@ -119,6 +146,7 @@ def load_config(path: str | Path) -> Config:
         raise ConfigError(f"config file {source} must contain a top level mapping")
     if "name" not in raw:
         raise ConfigError("config must define a top level 'name'")
+    _check_sections(raw, source)
 
     dataset_block = _require(
         raw,

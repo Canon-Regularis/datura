@@ -1,9 +1,21 @@
 from __future__ import annotations
 
-import pytest
+import tempfile
+from dataclasses import replace
+from pathlib import Path
 
-from src.config import ConfigError, load_config
+import pytest
+import yaml
+
+from src.config import PROJECT_ROOT, ConfigError, load_config
 from tests.conftest import write_config
+
+
+def tmp_model_file(payload: dict) -> Path:
+    """A model hyperparameter file on disk, for the validation tests below."""
+    path = Path(tempfile.mkdtemp()) / "model.yaml"
+    path.write_text(yaml.safe_dump(payload), encoding="utf-8")
+    return path
 
 
 def test_valid_config_exposes_derived_sizes(config):
@@ -75,3 +87,104 @@ def test_no_committed_model_config_lets_the_machine_choose_its_thread_count():
             offenders.append(path.name)
 
     assert not offenders, f"{offenders} would let the machine pick its own thread count"
+
+
+def test_a_misspelled_section_is_refused_rather_than_defaulted(tmp_path):
+    """The hole this closed, which was a correctness problem rather than a nicety.
+
+    Keys inside a section were checked and the section names were not. Writing
+    ``pipelines:`` left ``PipelineConfig.models`` as ``None``, which allows every
+    model, so ``wide.yaml`` would have trained the two networks it exists to exclude
+    and rewritten a committed report. Writing ``encodder:`` left the checkpoint empty
+    and the encoder ran with randomly initialised weights behind a log warning.
+    """
+    from src.config.loading import SECTIONS
+
+    source = PROJECT_ROOT / "configs" / "wide.yaml"
+    raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+
+    for real, typo in (("pipeline", "pipelines"), ("encoder", "encodder"), ("split", "splitt")):
+        body = dict(raw)
+        assert real in body, f"{source.name} no longer carries {real}"
+        assert real in SECTIONS
+        body[typo] = body.pop(real)
+
+        path = tmp_path / f"{typo}.yaml"
+        path.write_text(yaml.safe_dump(body), encoding="utf-8")
+        with pytest.raises(ConfigError, match=typo):
+            load_config(path)
+
+
+def test_every_committed_config_uses_only_known_sections():
+    """And the guard above does not refuse anything the project actually ships."""
+    for path in sorted((PROJECT_ROOT / "configs").glob("*.yaml")):
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if "dataset" not in raw:
+            continue  # a model hyperparameter file, not an experiment
+        load_config(path)
+
+
+def test_a_typo_in_a_model_hyperparameter_file_is_refused():
+    """Nothing checked these files, and every setting is read with a default.
+
+    A misspelled key fell back to a value the file did not contain and the run carried
+    on without a word. The four defaults behind ``configs/cnn.yaml`` all disagree with
+    it: the file says 30 epochs and the fallback is 40, 64 against 32, 0.004 against
+    0.003, 7 against 8. Misspelling ``epochs`` trained a third longer than the file said.
+    """
+    import yaml as yaml_module
+
+    from src.models import registry as models
+
+    spec = models.get("cnn")
+    raw = yaml_module.safe_load((PROJECT_ROOT / spec.config_file).read_text(encoding="utf-8"))
+
+    for block, real, typo in (
+        ("train", "epochs", "epocs"),
+        ("augment", "noise_std", "noise_stdev"),
+    ):
+        broken = {name: dict(values) for name, values in raw.items()}
+        broken[block][typo] = broken[block].pop(real)
+        raise_on = tmp_model_file(broken)
+        with pytest.raises(ConfigError, match=typo):
+            models.load_settings(replace(spec, config_file=str(raise_on)))
+
+
+def test_a_stray_block_in_a_model_file_is_refused():
+    import yaml as yaml_module
+
+    from src.models import registry as models
+
+    spec = models.get("cnn")
+    raw = yaml_module.safe_load((PROJECT_ROOT / spec.config_file).read_text(encoding="utf-8"))
+    raw["trian"] = raw.pop("train")
+
+    with pytest.raises(ConfigError, match="trian"):
+        models.load_settings(replace(spec, config_file=str(tmp_model_file(raw))))
+
+
+def test_every_committed_model_file_supplies_every_setting_its_code_reads():
+    """So the defaults behind them are never the value that gets used.
+
+    Validation stops a typo. This stops the quieter version, where a key is simply
+    absent and the fallback silently becomes the setting. The mapping below refuses to
+    hand over a default, so reading one raises rather than passing.
+    """
+    from src.models import registry as models
+
+    class NoDefaults(dict):
+        def get(self, key, default=None):
+            if key not in self:
+                raise AssertionError(f"{key} was read from a default rather than from the file")
+            return self[key]
+
+    for spec in models.specs():
+        settings = models.load_settings(spec)
+        strict = {block: NoDefaults(values) for block, values in settings.items()}
+        for block, allowed in spec.settings_schema.items():
+            if allowed is None or block not in strict:
+                continue
+            missing = allowed - set(strict[block])
+            assert not missing, (
+                f"{spec.config_file} leaves {sorted(missing)} in {block} to a default"
+            )
