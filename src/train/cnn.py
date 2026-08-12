@@ -8,10 +8,12 @@ from __future__ import annotations
 
 import logging
 import sys
+from pathlib import Path
 
 import torch
 
 from src import cli
+from src.config import Config
 from src.models import registry as models
 from src.models.cnn import resolve_device
 from src.models.registry import load_settings
@@ -31,6 +33,29 @@ def log_device(settings: dict) -> torch.device:
     return device
 
 
+def train_network(
+    cfg: Config,
+    name: str,
+    *,
+    epochs: int | None = None,
+    repeats: int | None = None,
+) -> Path:
+    """Fit one network trainer model on one configuration.
+
+    ``repeats`` defaults to what the registry declares, because the cost that decides
+    it belongs beside the model rather than in whoever calls this.
+    """
+    spec = models.get(name)
+    overrides = {"train": {"epochs": epochs}} if epochs is not None else None
+    settings = load_settings(spec, overrides)
+    log_device(settings["train"])
+
+    assembly: Assembly = assemble(
+        cfg, spec.source, repeats=repeats if repeats is not None else spec.repeats
+    )
+    return train(cfg, spec, assembly, settings, name=name)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     cli.add_variant_name(parser)
@@ -43,16 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    cfg = cli.prepare(args)
-    spec = models.get(args.name)
-
-    overrides = {"train": {"epochs": args.epochs}} if args.epochs is not None else None
-    settings = load_settings(spec, overrides)
-    log_device(settings["train"])
-
-    repeats = args.repeats if args.repeats is not None else spec.repeats
-    assembly: Assembly = assemble(cfg, spec.source, repeats=repeats)
-    train(cfg, spec, assembly, settings, name=args.name)
+    train_network(cli.prepare(args), args.name, epochs=args.epochs, repeats=args.repeats)
     return 0
 
 

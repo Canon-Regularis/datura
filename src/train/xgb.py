@@ -15,12 +15,51 @@ Usage:
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from src import cli
+from src.config import Config
 from src.features import registry as features
 from src.models import registry as models
-from src.models.registry import load_settings
+from src.models.registry import ModelSpec, load_settings
 from src.train.session import assemble, train
+
+
+def train_trees(
+    cfg: Config,
+    *,
+    only: str | None = None,
+    skip_control: bool = False,
+    repeats: int = 1,
+) -> list[Path]:
+    """Fit every tree model on one configuration, and say where each landed.
+
+    A typed function rather than only a command, because the pipeline used to reach
+    this logic by building an argv list and handing it to ``main``. That put argparse
+    between two pieces of the same program: a renamed flag failed at runtime instead of
+    at import, integers were stringified so they could be parsed back, and the logic
+    below could not be called or tested except through a command line.
+    """
+    wanted = list(models.trained_by(models.TREES))
+    if only:
+        wanted = [models.get(only)]
+    elif skip_control:
+        wanted = [spec for spec in wanted if not spec.is_control]
+
+    # Grouped by the cached representation each model reads, rather than assuming every
+    # tree reads the acoustic descriptors. A model whose source is not cached audio
+    # takes its columns off the window index, which every assembly carries, so it can
+    # ride along with any of them.
+    by_source: dict[str, list[ModelSpec]] = {}
+    for spec in wanted:
+        source = spec.source if spec.hears_audio else features.ACOUSTIC
+        by_source.setdefault(source, []).append(spec)
+
+    written = []
+    for source, specs in sorted(by_source.items()):
+        assembly = assemble(cfg, source, repeats=repeats)
+        written += [train(cfg, spec, assembly, load_settings(spec)) for spec in specs]
+    return written
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -39,27 +78,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    cfg = cli.prepare(args)
-
-    wanted = list(models.trained_by(models.TREES))
-    if args.only:
-        wanted = [models.get(args.only)]
-    elif args.skip_control:
-        wanted = [spec for spec in wanted if not spec.is_control]
-
-    # Group by the cached representation each model reads, rather than assuming every
-    # tree reads the acoustic descriptors. A model whose source is not cached audio
-    # takes its columns off the window index, which every assembly carries, so it can
-    # ride along with any of them.
-    by_source: dict[str, list] = {}
-    for spec in wanted:
-        source = spec.source if spec.hears_audio else features.ACOUSTIC
-        by_source.setdefault(source, []).append(spec)
-
-    for source, specs in sorted(by_source.items()):
-        assembly = assemble(cfg, source, repeats=args.repeats)
-        for spec in specs:
-            train(cfg, spec, assembly, load_settings(spec))
+    train_trees(
+        cli.prepare(args),
+        only=args.only,
+        skip_control=args.skip_control,
+        repeats=args.repeats,
+    )
     return 0
 
 
