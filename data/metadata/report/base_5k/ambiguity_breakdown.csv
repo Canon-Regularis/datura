@@ -7,10 +7,10 @@ native sample rate,cnn_small,native sample rate shared by species,847,3,3,5,0.66
 native sample rate,cnn_small,native sample rate unique to a species,3370,3,3,5,0.7434093878,0.2191731787
 collection code,cnn_small,collection code not recorded,359,2,3,5,0.4897679603,0.0142930721
 collection code,cnn_small,collection code unique to a species,3858,3,3,5,0.7640608326,0.1839269066
-native sample rate,logbook,native sample rate shared by species,847,3,3,50,0.8533182969,0.163209273
-native sample rate,logbook,native sample rate unique to a species,3370,3,3,50,0.9988691431,0.0058645047
-collection code,logbook,collection code not recorded,359,2,3,47,0.5847118193,0.2398759013
-collection code,logbook,collection code unique to a species,3858,3,3,50,0.996071132,0.0089355976
+native sample rate,logbook,native sample rate shared by species,847,3,3,50,0.8925724568,0.1566349753
+native sample rate,logbook,native sample rate unique to a species,3370,3,3,50,0.9976845143,0.0079537086
+collection code,logbook,collection code not recorded,359,2,3,47,0.6422172452,0.2365660465
+collection code,logbook,collection code unique to a species,3858,3,3,50,0.9985823674,0.0058183632
 native sample rate,probe,native sample rate shared by species,847,3,3,50,0.6718482202,0.1191401426
 native sample rate,probe,native sample rate unique to a species,3370,3,3,50,0.6846204875,0.1456607718
 collection code,probe,collection code not recorded,359,2,3,47,0.3952595676,0.1890238026

@@ -624,3 +624,101 @@ def test_the_place_merge_is_described_as_the_manifest_has_it(report_exists):
     assert f"{grouped['context'].nunique()} contexts" in text
     assert f"{grouped['place'].nunique()} places" in text
     assert grouped["place"].nunique() < grouped["context"].nunique(), "the merge did nothing"
+
+
+UNITS = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+    "seventeen",
+    "eighteen",
+    "nineteen",
+]
+TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+
+
+def _spelled(number: int) -> str:
+    """The README writes counts as words, so the check has to as well.
+
+    A lookup table of the counts that happened to be current is the wrong shape for
+    this: it needs a new entry every time a number moves, and the failure it produces
+    is a KeyError in the test rather than a sentence about the README.
+    """
+    if number < 20:
+        return UNITS[number].capitalize()
+    tens, unit = divmod(number, 10)
+    word = TENS[tens] + (f" {UNITS[unit]}" if unit else "")
+    return word.capitalize()
+
+
+def test_the_spelling_helper_covers_the_range_the_readme_uses():
+    assert [_spelled(n) for n in (5, 14, 19, 20, 35, 46)] == [
+        "Five",
+        "Fourteen",
+        "Nineteen",
+        "Twenty",
+        "Thirty five",
+        "Forty six",
+    ]
+
+
+def test_the_multiplicity_claims_match_the_correction(report_exists):
+    """How many comparisons there are, how many survive, and the claim about all of them.
+
+    The last of those is the strongest methodological statement the project makes, and
+    nothing checked it against the artifact. The count is checked too, because it moved
+    when the correction stopped counting a repeated split as ten independent ones and
+    the prose kept the old number for exactly as long as nobody looked.
+    """
+    path = REPORTS / "multiplicity.csv"
+    if not path.exists():
+        pytest.skip("multiplicity.csv absent; run python -m src.evaluate.multiplicity first")
+    table = pd.read_csv(path)
+    survivors = table[table["rejected"]]
+
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    assert f"{_spelled(len(table))} are reported across the" in text, f"{len(table)} comparisons"
+    assert f"{_spelled(len(survivors))} survive" in text, f"{len(survivors)} survive"
+
+    # "Not a single positive audio comparison survives, in any configuration."
+    controls = {"logbook", "metadata"}
+    positive = survivors[(survivors["margin"] > 0) & (~survivors["model"].isin(controls))]
+    named = list(positive["model"])
+    assert positive.empty, (
+        f"the README says no positive audio comparison survives; these do: {named}"
+    )
+
+
+def test_a_repeated_split_is_not_counted_as_independent_evidence(report_exists):
+    """The fold counts published for each configuration are the distinct ones.
+
+    ``context_10k`` groups by place and has 24 of them, which is few enough that every
+    seed returns the same partition, so its ten repeats are one split. A fold count of
+    50 beside that comparison would be the claim this project was built to refuse.
+    """
+    path = REPORTS / "multiplicity.csv"
+    if not path.exists():
+        pytest.skip("multiplicity.csv absent")
+    table = pd.read_csv(path).set_index("config")
+
+    assert table.loc["base_10k", "folds"].max() == 50, "the tape split does redraw"
+    for config in ("context_10k", "context_shuffled_10k"):
+        if config not in table.index:
+            continue
+        assert table.loc[config, "folds"].max() < 50, (
+            f"{config} publishes 50 folds from a split its grouping cannot redraw"
+        )

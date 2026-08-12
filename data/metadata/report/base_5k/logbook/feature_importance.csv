@@ -1,751 +1,3001 @@
 feature,gain,repeat,fold
-native_sample_rate,0.6079714894294739,0,0
-collection_code,0.18108181655406952,0,0
-latitude,0.17152264714241028,0,0
-site_code,0.03358347341418266,0,0
-year,0.004139777738600969,0,0
-bytes_on_disk,0.0010320815490558743,0,0
-longitude,0.0004967189743183553,0,0
-duration_seconds,0.0001719857391435653,0,0
-cond_ship_noise,0.0,0,0
-cond_engine_noise,0.0,0,0
-cond_reverberation,0.0,0,0
-cond_water_noise,0.0,0,0
-cond_night_recording,0.0,0,0
-cond_no_visual,0.0,0,0
-cond_tape_speed_note,0.0,0,0
-latitude,0.5286397933959961,0,1
-native_sample_rate,0.3578822910785675,0,1
-collection_code,0.05610024929046631,0,1
-site_code,0.044755928218364716,0,1
-cond_ship_noise,0.005445852410048246,0,1
-year,0.004656665958464146,0,1
-bytes_on_disk,0.0013041720958426595,0,1
-longitude,0.000835778599139303,0,1
-duration_seconds,0.0003792164206970483,0,1
-cond_engine_noise,0.0,0,1
-cond_reverberation,0.0,0,1
-cond_water_noise,0.0,0,1
-cond_night_recording,0.0,0,1
-cond_no_visual,0.0,0,1
-cond_tape_speed_note,0.0,0,1
-latitude,0.5075312852859497,0,2
-native_sample_rate,0.4408351182937622,0,2
-collection_code,0.031196800991892815,0,2
-site_code,0.009204095229506493,0,2
-duration_seconds,0.00902414321899414,0,2
-bytes_on_disk,0.0012444810708984733,0,2
-year,0.0004999016528017819,0,2
-longitude,0.0004641803971026093,0,2
-cond_ship_noise,0.0,0,2
-cond_engine_noise,0.0,0,2
-cond_reverberation,0.0,0,2
-cond_water_noise,0.0,0,2
-cond_night_recording,0.0,0,2
-cond_no_visual,0.0,0,2
-cond_tape_speed_note,0.0,0,2
-latitude,0.5211770534515381,0,3
-native_sample_rate,0.40007284283638,0,3
-collection_code,0.06742812693119049,0,3
-year,0.004613408353179693,0,3
-site_code,0.004573898855596781,0,3
-duration_seconds,0.0010216733207926154,0,3
-bytes_on_disk,0.0007285225437954068,0,3
-longitude,0.0003844855527859181,0,3
-cond_ship_noise,0.0,0,3
-cond_engine_noise,0.0,0,3
-cond_reverberation,0.0,0,3
-cond_water_noise,0.0,0,3
-cond_night_recording,0.0,0,3
-cond_no_visual,0.0,0,3
-cond_tape_speed_note,0.0,0,3
-native_sample_rate,0.5964112281799316,0,4
-collection_code,0.2188049554824829,0,4
-latitude,0.14024770259857178,0,4
-year,0.041753996163606644,0,4
-site_code,0.0017220007721334696,0,4
-bytes_on_disk,0.0006892375531606376,0,4
-longitude,0.00025721004931256175,0,4
-duration_seconds,0.00010162738908547908,0,4
-cond_water_noise,1.2100509593437891e-05,0,4
-cond_ship_noise,0.0,0,4
-cond_engine_noise,0.0,0,4
-cond_reverberation,0.0,0,4
-cond_night_recording,0.0,0,4
-cond_no_visual,0.0,0,4
-cond_tape_speed_note,0.0,0,4
-native_sample_rate,0.5630655884742737,1,0
-collection_code,0.23547208309173584,1,0
-latitude,0.1504226177930832,1,0
-site_code,0.03885525092482567,1,0
-cond_ship_noise,0.006729830987751484,1,0
-year,0.004105464089661837,1,0
-longitude,0.0006879279389977455,1,0
-bytes_on_disk,0.00045916627277620137,1,0
-duration_seconds,0.00020206707995384932,1,0
-cond_engine_noise,0.0,1,0
-cond_reverberation,0.0,1,0
-cond_water_noise,0.0,1,0
-cond_night_recording,0.0,1,0
-cond_no_visual,0.0,1,0
-cond_tape_speed_note,0.0,1,0
-latitude,0.5088607668876648,1,1
-native_sample_rate,0.4066057801246643,1,1
-collection_code,0.07243210077285767,1,1
-year,0.0051639266312122345,1,1
-site_code,0.00494700251147151,1,1
-bytes_on_disk,0.0010411200346425176,1,1
-longitude,0.000506523996591568,1,1
-duration_seconds,0.0004427780513651669,1,1
-cond_ship_noise,0.0,1,1
-cond_engine_noise,0.0,1,1
-cond_reverberation,0.0,1,1
-cond_water_noise,0.0,1,1
-cond_night_recording,0.0,1,1
-cond_no_visual,0.0,1,1
-cond_tape_speed_note,0.0,1,1
-latitude,0.5040695667266846,1,2
-native_sample_rate,0.4556381106376648,1,2
-collection_code,0.027642739936709404,1,2
-site_code,0.007412116974592209,1,2
-year,0.003956641536206007,1,2
-bytes_on_disk,0.0006069400697015226,1,2
-duration_seconds,0.00045696235611103475,1,2
-longitude,0.0002168671926483512,1,2
-cond_ship_noise,0.0,1,2
-cond_engine_noise,0.0,1,2
-cond_reverberation,0.0,1,2
-cond_water_noise,0.0,1,2
-cond_night_recording,0.0,1,2
-cond_no_visual,0.0,1,2
-cond_tape_speed_note,0.0,1,2
-latitude,0.4490300714969635,1,3
-native_sample_rate,0.3961939513683319,1,3
-collection_code,0.10001195222139359,1,3
-site_code,0.03505246341228485,1,3
-duration_seconds,0.01795690879225731,1,3
-bytes_on_disk,0.0011572354706004262,1,3
-longitude,0.0005163027090020478,1,3
-year,8.113042713375762e-05,1,3
-cond_ship_noise,0.0,1,3
-cond_engine_noise,0.0,1,3
-cond_reverberation,0.0,1,3
-cond_water_noise,0.0,1,3
-cond_night_recording,0.0,1,3
-cond_no_visual,0.0,1,3
-cond_tape_speed_note,0.0,1,3
-native_sample_rate,0.5867886543273926,1,4
-collection_code,0.1864415854215622,1,4
-latitude,0.15534302592277527,1,4
-year,0.05102010816335678,1,4
-site_code,0.00972848292440176,1,4
-cond_ship_noise,0.0049320184625685215,1,4
-duration_seconds,0.004697918426245451,1,4
-bytes_on_disk,0.0006215471657924354,1,4
-longitude,0.00042663048952817917,1,4
-cond_engine_noise,0.0,1,4
-cond_reverberation,0.0,1,4
-cond_water_noise,0.0,1,4
-cond_night_recording,0.0,1,4
-cond_no_visual,0.0,1,4
-cond_tape_speed_note,0.0,1,4
-native_sample_rate,0.5349427461624146,2,0
-latitude,0.3165396749973297,2,0
-collection_code,0.11831916123628616,2,0
-site_code,0.025647614151239395,2,0
-year,0.0035717312712222338,2,0
-bytes_on_disk,0.0005272297421470284,2,0
-longitude,0.00030169804813340306,2,0
-duration_seconds,0.00015014938253443688,2,0
-cond_ship_noise,0.0,2,0
-cond_engine_noise,0.0,2,0
-cond_reverberation,0.0,2,0
-cond_water_noise,0.0,2,0
-cond_night_recording,0.0,2,0
-cond_no_visual,0.0,2,0
-cond_tape_speed_note,0.0,2,0
-latitude,0.5220704674720764,2,1
-native_sample_rate,0.36577582359313965,2,1
-collection_code,0.05807236209511757,2,1
-site_code,0.04682189226150513,2,1
-year,0.004636099096387625,2,1
-bytes_on_disk,0.0014472883194684982,2,1
-longitude,0.0008001956739462912,2,1
-duration_seconds,0.0003758076927624643,2,1
-cond_ship_noise,0.0,2,1
-cond_engine_noise,0.0,2,1
-cond_reverberation,0.0,2,1
-cond_water_noise,0.0,2,1
-cond_night_recording,0.0,2,1
-cond_no_visual,0.0,2,1
-cond_tape_speed_note,0.0,2,1
-latitude,0.5122070908546448,2,2
-native_sample_rate,0.4468674063682556,2,2
-collection_code,0.028515134006738663,2,2
-site_code,0.006823059171438217,2,2
-year,0.004354396834969521,2,2
-bytes_on_disk,0.0005460751708596945,2,2
-duration_seconds,0.0004017489845864475,2,2
-longitude,0.0002851009776350111,2,2
-cond_ship_noise,0.0,2,2
-cond_engine_noise,0.0,2,2
-cond_reverberation,0.0,2,2
-cond_water_noise,0.0,2,2
-cond_night_recording,0.0,2,2
-cond_no_visual,0.0,2,2
-cond_tape_speed_note,0.0,2,2
-native_sample_rate,0.4824587106704712,2,3
-latitude,0.41270601749420166,2,3
-collection_code,0.1029183492064476,2,3
-bytes_on_disk,0.0008404570980928838,2,3
-year,0.0005601643351837993,2,3
-site_code,0.00021723996906075627,2,3
-longitude,0.0001683382724877447,2,3
-duration_seconds,0.00013063785445410758,2,3
-cond_ship_noise,0.0,2,3
-cond_engine_noise,0.0,2,3
-cond_reverberation,0.0,2,3
-cond_water_noise,0.0,2,3
-cond_night_recording,0.0,2,3
-cond_no_visual,0.0,2,3
-cond_tape_speed_note,0.0,2,3
-native_sample_rate,0.6640493869781494,2,4
-collection_code,0.2430996149778366,2,4
-duration_seconds,0.043128084391355515,2,4
-site_code,0.02981214039027691,2,4
-latitude,0.01288715098053217,2,4
-year,0.004771761130541563,2,4
-bytes_on_disk,0.0015883586602285504,2,4
-longitude,0.0006635028403252363,2,4
-cond_ship_noise,0.0,2,4
-cond_engine_noise,0.0,2,4
-cond_reverberation,0.0,2,4
-cond_water_noise,0.0,2,4
-cond_night_recording,0.0,2,4
-cond_no_visual,0.0,2,4
-cond_tape_speed_note,0.0,2,4
-native_sample_rate,0.55641108751297,3,0
-collection_code,0.2117219865322113,3,0
-latitude,0.18252484500408173,3,0
-site_code,0.03644373640418053,3,0
-cond_ship_noise,0.006585041526705027,3,0
-year,0.004663970321416855,3,0
-bytes_on_disk,0.0008110274793580174,3,0
-longitude,0.0006211661384440958,3,0
-duration_seconds,0.00021716121409554034,3,0
-cond_engine_noise,0.0,3,0
-cond_reverberation,0.0,3,0
-cond_water_noise,0.0,3,0
-cond_night_recording,0.0,3,0
-cond_no_visual,0.0,3,0
-cond_tape_speed_note,0.0,3,0
-latitude,0.5168069005012512,3,1
-native_sample_rate,0.3786311745643616,3,1
-site_code,0.0742112249135971,3,1
-collection_code,0.024337012320756912,3,1
-year,0.00448793126270175,3,1
-longitude,0.0006745795253664255,3,1
-bytes_on_disk,0.0005522497813217342,3,1
-duration_seconds,0.0002989107742905617,3,1
-cond_ship_noise,0.0,3,1
-cond_engine_noise,0.0,3,1
-cond_reverberation,0.0,3,1
-cond_water_noise,0.0,3,1
-cond_night_recording,0.0,3,1
-cond_no_visual,0.0,3,1
-cond_tape_speed_note,0.0,3,1
-native_sample_rate,0.5227680206298828,3,2
-latitude,0.43564268946647644,3,2
-collection_code,0.02545037306845188,3,2
-duration_seconds,0.012219666503369808,3,2
-year,0.003053876105695963,3,2
-bytes_on_disk,0.0004471602151170373,3,2
-site_code,0.000253658858127892,3,2
-longitude,0.00016453428543172777,3,2
-cond_ship_noise,0.0,3,2
-cond_engine_noise,0.0,3,2
-cond_reverberation,0.0,3,2
-cond_water_noise,0.0,3,2
-cond_night_recording,0.0,3,2
-cond_no_visual,0.0,3,2
-cond_tape_speed_note,0.0,3,2
-latitude,0.4652179181575775,3,3
-native_sample_rate,0.43246638774871826,3,3
-collection_code,0.0878610759973526,3,3
-site_code,0.012364422902464867,3,3
-bytes_on_disk,0.0012393584474921227,3,3
-duration_seconds,0.0004404166538733989,3,3
-longitude,0.0003220012877136469,3,3
-year,8.83715765667148e-05,3,3
-cond_ship_noise,0.0,3,3
-cond_engine_noise,0.0,3,3
-cond_reverberation,0.0,3,3
-cond_water_noise,0.0,3,3
-cond_night_recording,0.0,3,3
-cond_no_visual,0.0,3,3
-cond_tape_speed_note,0.0,3,3
-native_sample_rate,0.6086339950561523,3,4
-collection_code,0.2063300907611847,3,4
-latitude,0.15825693309307098,3,4
-site_code,0.01114620454609394,3,4
-duration_seconds,0.009250961244106293,3,4
-year,0.0038878091145306826,3,4
-bytes_on_disk,0.002107369713485241,3,4
-longitude,0.00038665669853799045,3,4
-cond_ship_noise,0.0,3,4
-cond_engine_noise,0.0,3,4
-cond_reverberation,0.0,3,4
-cond_water_noise,0.0,3,4
-cond_night_recording,0.0,3,4
-cond_no_visual,0.0,3,4
-cond_tape_speed_note,0.0,3,4
-native_sample_rate,0.6279103755950928,4,0
-collection_code,0.18460175395011902,4,0
-latitude,0.14738160371780396,4,0
-site_code,0.03432629257440567,4,0
-year,0.00416593300178647,4,0
-bytes_on_disk,0.0008493122877553105,4,0
-longitude,0.0005930815823376179,4,0
-duration_seconds,0.00017171251238323748,4,0
-cond_ship_noise,0.0,4,0
-cond_engine_noise,0.0,4,0
-cond_reverberation,0.0,4,0
-cond_water_noise,0.0,4,0
-cond_night_recording,0.0,4,0
-cond_no_visual,0.0,4,0
-cond_tape_speed_note,0.0,4,0
-latitude,0.5129567384719849,4,1
-native_sample_rate,0.38696372509002686,4,1
-collection_code,0.07299409806728363,4,1
-site_code,0.012843961827456951,4,1
-cond_ship_noise,0.008430713787674904,4,1
-year,0.004255961161106825,4,1
-longitude,0.0007124939002096653,4,1
-bytes_on_disk,0.0005097992834635079,4,1
-duration_seconds,0.00033244185033254325,4,1
-cond_engine_noise,0.0,4,1
-cond_reverberation,0.0,4,1
-cond_water_noise,0.0,4,1
-cond_night_recording,0.0,4,1
-cond_no_visual,0.0,4,1
-cond_tape_speed_note,0.0,4,1
-native_sample_rate,0.5015475749969482,4,2
-latitude,0.4294124245643616,4,2
-collection_code,0.04769887775182724,4,2
-site_code,0.011196093633770943,4,2
-duration_seconds,0.007837655022740364,4,2
-bytes_on_disk,0.0012706414563581347,4,2
-longitude,0.000607056193985045,4,2
-year,0.00042968138586729765,4,2
-cond_ship_noise,0.0,4,2
-cond_engine_noise,0.0,4,2
-cond_reverberation,0.0,4,2
-cond_water_noise,0.0,4,2
-cond_night_recording,0.0,4,2
-cond_no_visual,0.0,4,2
-cond_tape_speed_note,0.0,4,2
-latitude,0.45855528116226196,4,3
-native_sample_rate,0.4494920074939728,4,3
-collection_code,0.07967305183410645,4,3
-site_code,0.004696627147495747,4,3
-year,0.004468679428100586,4,3
-duration_seconds,0.0014961845008656383,4,3
-bytes_on_disk,0.0010130375158041716,4,3
-longitude,0.0006051670643500984,4,3
-cond_ship_noise,0.0,4,3
-cond_engine_noise,0.0,4,3
-cond_reverberation,0.0,4,3
-cond_water_noise,0.0,4,3
-cond_night_recording,0.0,4,3
-cond_no_visual,0.0,4,3
-cond_tape_speed_note,0.0,4,3
-native_sample_rate,0.5441492795944214,4,4
-collection_code,0.2030317485332489,4,4
-latitude,0.14881208539009094,4,4
-year,0.07924284040927887,4,4
-cond_ship_noise,0.011965322308242321,4,4
-site_code,0.01091934647411108,4,4
-bytes_on_disk,0.0011745640076696873,4,4
-longitude,0.0004919772618450224,4,4
-duration_seconds,0.00020304747158661485,4,4
-cond_water_noise,9.794393008633051e-06,4,4
-cond_engine_noise,0.0,4,4
-cond_reverberation,0.0,4,4
-cond_night_recording,0.0,4,4
-cond_no_visual,0.0,4,4
-cond_tape_speed_note,0.0,4,4
-native_sample_rate,0.49345141649246216,5,0
-latitude,0.3875505030155182,5,0
-collection_code,0.08800772577524185,5,0
-site_code,0.02677324041724205,5,0
-year,0.00334970117546618,5,0
-bytes_on_disk,0.0004146544961258769,5,0
-longitude,0.00032278016442433,5,0
-duration_seconds,0.00012991460971534252,5,0
-cond_ship_noise,0.0,5,0
-cond_engine_noise,0.0,5,0
-cond_reverberation,0.0,5,0
-cond_water_noise,0.0,5,0
-cond_night_recording,0.0,5,0
-cond_no_visual,0.0,5,0
-cond_tape_speed_note,0.0,5,0
-latitude,0.5057979822158813,5,1
-native_sample_rate,0.38969549536705017,5,1
-collection_code,0.07765861600637436,5,1
-site_code,0.01263171061873436,5,1
-cond_ship_noise,0.008245616219937801,5,1
-year,0.004290878772735596,5,1
-longitude,0.0006784051074646413,5,1
-bytes_on_disk,0.0005194367258809507,5,1
-duration_seconds,0.00048187602078542113,5,1
-cond_engine_noise,0.0,5,1
-cond_reverberation,0.0,5,1
-cond_water_noise,0.0,5,1
-cond_night_recording,0.0,5,1
-cond_no_visual,0.0,5,1
-cond_tape_speed_note,0.0,5,1
-latitude,0.48369595408439636,5,2
-native_sample_rate,0.45486578345298767,5,2
-collection_code,0.035196561366319656,5,2
-duration_seconds,0.02314949408173561,5,2
-bytes_on_disk,0.0017649217043071985,5,2
-site_code,0.0006148550310172141,5,2
-year,0.0004092214221600443,5,2
-longitude,0.00030323248938657343,5,2
-cond_ship_noise,0.0,5,2
-cond_engine_noise,0.0,5,2
-cond_reverberation,0.0,5,2
-cond_water_noise,0.0,5,2
-cond_night_recording,0.0,5,2
-cond_no_visual,0.0,5,2
-cond_tape_speed_note,0.0,5,2
-latitude,0.4777667820453644,5,3
-native_sample_rate,0.41362255811691284,5,3
-collection_code,0.08577673137187958,5,3
-site_code,0.01917796954512596,5,3
-duration_seconds,0.0013180678943172097,5,3
-bytes_on_disk,0.001039381604641676,5,3
-year,0.0009247930138371885,5,3
-longitude,0.0003737054066732526,5,3
-cond_ship_noise,0.0,5,3
-cond_engine_noise,0.0,5,3
-cond_reverberation,0.0,5,3
-cond_water_noise,0.0,5,3
-cond_night_recording,0.0,5,3
-cond_no_visual,0.0,5,3
-cond_tape_speed_note,0.0,5,3
-native_sample_rate,0.6137368679046631,5,4
-collection_code,0.2144896686077118,5,4
-latitude,0.16440460085868835,5,4
-year,0.005059374496340752,5,4
-bytes_on_disk,0.0009183405782096088,5,4
-duration_seconds,0.0005500870174728334,5,4
-site_code,0.00043335670488886535,5,4
-longitude,0.0004076705372426659,5,4
-cond_ship_noise,0.0,5,4
-cond_engine_noise,0.0,5,4
-cond_reverberation,0.0,5,4
-cond_water_noise,0.0,5,4
-cond_night_recording,0.0,5,4
-cond_no_visual,0.0,5,4
-cond_tape_speed_note,0.0,5,4
-native_sample_rate,0.6305379867553711,6,0
-collection_code,0.21138422191143036,6,0
-latitude,0.12029358744621277,6,0
-site_code,0.03260920196771622,6,0
-year,0.003913592081516981,6,0
-longitude,0.000683276797644794,6,0
-bytes_on_disk,0.00043674444896169007,6,0
-duration_seconds,0.00014147633919492364,6,0
-cond_ship_noise,0.0,6,0
-cond_engine_noise,0.0,6,0
-cond_reverberation,0.0,6,0
-cond_water_noise,0.0,6,0
-cond_night_recording,0.0,6,0
-cond_no_visual,0.0,6,0
-cond_tape_speed_note,0.0,6,0
-latitude,0.47886839509010315,6,1
-native_sample_rate,0.42349183559417725,6,1
-collection_code,0.08537078648805618,6,1
-site_code,0.005486390087753534,6,1
-year,0.004871920682489872,6,1
-duration_seconds,0.000686073035467416,6,1
-longitude,0.0006146366358734667,6,1
-bytes_on_disk,0.0006099255988374352,6,1
-cond_ship_noise,0.0,6,1
-cond_engine_noise,0.0,6,1
-cond_reverberation,0.0,6,1
-cond_water_noise,0.0,6,1
-cond_night_recording,0.0,6,1
-cond_no_visual,0.0,6,1
-cond_tape_speed_note,0.0,6,1
-native_sample_rate,0.48309269547462463,6,2
-latitude,0.45025718212127686,6,2
-collection_code,0.039172012358903885,6,2
-site_code,0.016695253551006317,6,2
-duration_seconds,0.008388561196625233,6,2
-bytes_on_disk,0.0011475494829937816,6,2
-longitude,0.0006757894298061728,6,2
-year,0.0005709101678803563,6,2
-cond_ship_noise,0.0,6,2
-cond_engine_noise,0.0,6,2
-cond_reverberation,0.0,6,2
-cond_water_noise,0.0,6,2
-cond_night_recording,0.0,6,2
-cond_no_visual,0.0,6,2
-cond_tape_speed_note,0.0,6,2
-latitude,0.5149895548820496,6,3
-native_sample_rate,0.4065368175506592,6,3
-collection_code,0.06657566875219345,6,3
-site_code,0.004934478551149368,6,3
-year,0.0044421241618692875,6,3
-duration_seconds,0.0010473922593519092,6,3
-bytes_on_disk,0.0007537449710071087,6,3
-longitude,0.0007201682310551405,6,3
-cond_ship_noise,0.0,6,3
-cond_engine_noise,0.0,6,3
-cond_reverberation,0.0,6,3
-cond_water_noise,0.0,6,3
-cond_night_recording,0.0,6,3
-cond_no_visual,0.0,6,3
-cond_tape_speed_note,0.0,6,3
-native_sample_rate,0.5496882796287537,6,4
-collection_code,0.318514883518219,6,4
-latitude,0.12720151245594025,6,4
-bytes_on_disk,0.0024400088004767895,6,4
-longitude,0.0009066094644367695,6,4
-site_code,0.0007016683230176568,6,4
-duration_seconds,0.0003208202833775431,6,4
-year,0.00022623517725151032,6,4
-cond_ship_noise,0.0,6,4
-cond_engine_noise,0.0,6,4
-cond_reverberation,0.0,6,4
-cond_water_noise,0.0,6,4
-cond_night_recording,0.0,6,4
-cond_no_visual,0.0,6,4
-cond_tape_speed_note,0.0,6,4
-native_sample_rate,0.6043845415115356,7,0
-collection_code,0.1808842122554779,7,0
-latitude,0.1779121607542038,7,0
-site_code,0.031644366681575775,7,0
-year,0.003990294877439737,7,0
-bytes_on_disk,0.0006764270947314799,7,0
-longitude,0.00032660880242474377,7,0
-duration_seconds,0.00018140225438401103,7,0
-cond_ship_noise,0.0,7,0
-cond_engine_noise,0.0,7,0
-cond_reverberation,0.0,7,0
-cond_water_noise,0.0,7,0
-cond_night_recording,0.0,7,0
-cond_no_visual,0.0,7,0
-cond_tape_speed_note,0.0,7,0
-latitude,0.515617311000824,7,1
-native_sample_rate,0.3830760419368744,7,1
-collection_code,0.07483113557100296,7,1
-site_code,0.013307810761034489,7,1
-cond_ship_noise,0.006940032355487347,7,1
-year,0.00454380689188838,7,1
-longitude,0.0007167501607909799,7,1
-bytes_on_disk,0.000540969951543957,7,1
-duration_seconds,0.0004261392750777304,7,1
-cond_engine_noise,0.0,7,1
-cond_reverberation,0.0,7,1
-cond_water_noise,0.0,7,1
-cond_night_recording,0.0,7,1
-cond_no_visual,0.0,7,1
-cond_tape_speed_note,0.0,7,1
-latitude,0.5024558901786804,7,2
-native_sample_rate,0.45610499382019043,7,2
-collection_code,0.030973060056567192,7,2
-site_code,0.005182462744414806,7,2
-year,0.003632861189544201,7,2
-duration_seconds,0.0007397501613013446,7,2
-longitude,0.000525922398082912,7,2
-bytes_on_disk,0.00038497839705087245,7,2
-cond_ship_noise,0.0,7,2
-cond_engine_noise,0.0,7,2
-cond_reverberation,0.0,7,2
-cond_water_noise,0.0,7,2
-cond_night_recording,0.0,7,2
-cond_no_visual,0.0,7,2
-cond_tape_speed_note,0.0,7,2
-latitude,0.48288410902023315,7,3
-native_sample_rate,0.3957807719707489,7,3
-collection_code,0.09073849767446518,7,3
-site_code,0.018522316589951515,7,3
-duration_seconds,0.010231070220470428,7,3
-bytes_on_disk,0.0013918550685048103,7,3
-longitude,0.0003976485750172287,7,3
-year,5.376384797273204e-05,7,3
-cond_ship_noise,0.0,7,3
-cond_engine_noise,0.0,7,3
-cond_reverberation,0.0,7,3
-cond_water_noise,0.0,7,3
-cond_night_recording,0.0,7,3
-cond_no_visual,0.0,7,3
-cond_tape_speed_note,0.0,7,3
-native_sample_rate,0.5818330645561218,7,4
-collection_code,0.19437812268733978,7,4
-latitude,0.15213076770305634,7,4
-year,0.06637111306190491,7,4
-site_code,0.0025355296675115824,7,4
-bytes_on_disk,0.0017962472047656775,7,4
-longitude,0.0005876496434211731,7,4
-duration_seconds,0.0003674645267892629,7,4
-cond_ship_noise,0.0,7,4
-cond_engine_noise,0.0,7,4
-cond_reverberation,0.0,7,4
-cond_water_noise,0.0,7,4
-cond_night_recording,0.0,7,4
-cond_no_visual,0.0,7,4
-cond_tape_speed_note,0.0,7,4
-native_sample_rate,0.6246249675750732,8,0
-collection_code,0.18459004163742065,8,0
-latitude,0.1482953280210495,8,0
-site_code,0.03680095076560974,8,0
-year,0.004042621236294508,8,0
-bytes_on_disk,0.0008692181436344981,8,0
-longitude,0.0006021974259056151,8,0
-duration_seconds,0.00016624407726339996,8,0
-cond_water_noise,8.412856914219446e-06,8,0
-cond_ship_noise,0.0,8,0
-cond_engine_noise,0.0,8,0
-cond_reverberation,0.0,8,0
-cond_night_recording,0.0,8,0
-cond_no_visual,0.0,8,0
-cond_tape_speed_note,0.0,8,0
-latitude,0.5232670903205872,8,1
-native_sample_rate,0.3952849507331848,8,1
-collection_code,0.07116691768169403,8,1
-year,0.0046257134526968,8,1
-site_code,0.004307927563786507,8,1
-longitude,0.0005215352866798639,8,1
-bytes_on_disk,0.00047782761976122856,8,1
-duration_seconds,0.00034804537426680326,8,1
-cond_ship_noise,0.0,8,1
-cond_engine_noise,0.0,8,1
-cond_reverberation,0.0,8,1
-cond_water_noise,0.0,8,1
-cond_night_recording,0.0,8,1
-cond_no_visual,0.0,8,1
-cond_tape_speed_note,0.0,8,1
-native_sample_rate,0.4681980311870575,8,2
-latitude,0.4653870165348053,8,2
-collection_code,0.02590714581310749,8,2
-site_code,0.02164807729423046,8,2
-duration_seconds,0.017435774207115173,8,2
-bytes_on_disk,0.0007131414604373276,8,2
-longitude,0.0004898152546957135,8,2
-year,0.00022109004203230143,8,2
-cond_ship_noise,0.0,8,2
-cond_engine_noise,0.0,8,2
-cond_reverberation,0.0,8,2
-cond_water_noise,0.0,8,2
-cond_night_recording,0.0,8,2
-cond_no_visual,0.0,8,2
-cond_tape_speed_note,0.0,8,2
-latitude,0.5156923532485962,8,3
-native_sample_rate,0.4051845669746399,8,3
-collection_code,0.06492272764444351,8,3
-site_code,0.00590112479403615,8,3
-year,0.004164533689618111,8,3
-cond_reverberation,0.0017744600772857666,8,3
-bytes_on_disk,0.0010243331780657172,8,3
-longitude,0.0008641126332804561,8,3
-duration_seconds,0.00047181552508845925,8,3
-cond_ship_noise,0.0,8,3
-cond_engine_noise,0.0,8,3
-cond_water_noise,0.0,8,3
-cond_night_recording,0.0,8,3
-cond_no_visual,0.0,8,3
-cond_tape_speed_note,0.0,8,3
-native_sample_rate,0.5432473421096802,8,4
-collection_code,0.17597711086273193,8,4
-latitude,0.14089179039001465,8,4
-site_code,0.13313452899456024,8,4
-year,0.005127421580255032,8,4
-bytes_on_disk,0.0008042305707931519,8,4
-longitude,0.0005059817340224981,8,4
-duration_seconds,0.000311587646137923,8,4
-cond_ship_noise,0.0,8,4
-cond_engine_noise,0.0,8,4
-cond_reverberation,0.0,8,4
-cond_water_noise,0.0,8,4
-cond_night_recording,0.0,8,4
-cond_no_visual,0.0,8,4
-cond_tape_speed_note,0.0,8,4
-native_sample_rate,0.624894917011261,9,0
-collection_code,0.20827385783195496,9,0
-latitude,0.1266935169696808,9,0
-site_code,0.03513985499739647,9,0
-year,0.0037125875242054462,9,0
-longitude,0.0006941752508282661,9,0
-bytes_on_disk,0.0004272469086572528,9,0
-duration_seconds,0.0001638757239561528,9,0
-cond_ship_noise,0.0,9,0
-cond_engine_noise,0.0,9,0
-cond_reverberation,0.0,9,0
-cond_water_noise,0.0,9,0
-cond_night_recording,0.0,9,0
-cond_no_visual,0.0,9,0
-cond_tape_speed_note,0.0,9,0
-latitude,0.5134163498878479,9,1
-native_sample_rate,0.38399234414100647,9,1
-collection_code,0.05438558757305145,9,1
-site_code,0.041121240705251694,9,1
-year,0.004651353228837252,9,1
-bytes_on_disk,0.0012453957460820675,9,1
-longitude,0.0008522368152625859,9,1
-duration_seconds,0.0003355434164404869,9,1
-cond_ship_noise,0.0,9,1
-cond_engine_noise,0.0,9,1
-cond_reverberation,0.0,9,1
-cond_water_noise,0.0,9,1
-cond_night_recording,0.0,9,1
-cond_no_visual,0.0,9,1
-cond_tape_speed_note,0.0,9,1
-native_sample_rate,0.4807652235031128,9,2
-latitude,0.45090848207473755,9,2
-collection_code,0.04553947597742081,9,2
-site_code,0.012721143662929535,9,2
-duration_seconds,0.007706228643655777,9,2
-bytes_on_disk,0.0013151997700333595,9,2
-longitude,0.0006609602714888752,9,2
-year,0.0003832584770862013,9,2
-cond_ship_noise,0.0,9,2
-cond_engine_noise,0.0,9,2
-cond_reverberation,0.0,9,2
-cond_water_noise,0.0,9,2
-cond_night_recording,0.0,9,2
-cond_no_visual,0.0,9,2
-cond_tape_speed_note,0.0,9,2
-latitude,0.4580790102481842,9,3
-native_sample_rate,0.45092910528182983,9,3
-collection_code,0.07872286438941956,9,3
-site_code,0.0050095305778086185,9,3
-year,0.004428680054843426,9,3
-duration_seconds,0.0012836039531975985,9,3
-bytes_on_disk,0.000998667092062533,9,3
-longitude,0.0005484736757352948,9,3
-cond_ship_noise,0.0,9,3
-cond_engine_noise,0.0,9,3
-cond_reverberation,0.0,9,3
-cond_water_noise,0.0,9,3
-cond_night_recording,0.0,9,3
-cond_no_visual,0.0,9,3
-cond_tape_speed_note,0.0,9,3
-native_sample_rate,0.5872632265090942,9,4
-collection_code,0.24027785658836365,9,4
-latitude,0.16076327860355377,9,4
-year,0.005416986998170614,9,4
-cond_ship_noise,0.00410061702132225,9,4
-site_code,0.0009493461111560464,9,4
-bytes_on_disk,0.0007363298209384084,9,4
-longitude,0.0003737535735126585,9,4
-duration_seconds,0.0001020464624161832,9,4
-cond_water_noise,1.6546695405850187e-05,9,4
-cond_engine_noise,0.0,9,4
-cond_reverberation,0.0,9,4
-cond_night_recording,0.0,9,4
-cond_no_visual,0.0,9,4
-cond_tape_speed_note,0.0,9,4
+collection_code_AC2A,0.3800772726535797,0,0
+collection_code_BA2A,0.35051992535591125,0,0
+latitude,0.21141381561756134,0,0
+site_1 mile S of Olowalu reef - Hawaii,0.023953404277563095,0,0
+native_sample_rate,0.018573585897684097,0,0
+"site_Vancouver, British Columbia",0.0071479687467217445,0,0
+site_Dominica Is,0.004763874225318432,0,0
+site_N end of Dominica,0.0012733747716993093,0,0
+"site_Kikvika, Norway",0.0010994361946359277,0,0
+collection_code_BE7A,0.00039061755524016917,0,0
+longitude,0.00022885901853442192,0,0
+year,0.00022495821758639067,0,0
+duration_seconds,0.00014634171384386718,0,0
+bytes_on_disk,9.744379349285737e-05,0,0
+cond_water_noise,8.90856099431403e-05,0,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,0
+"site_3-4 mi. off Roseau, Dominica",0.0,0,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,0
+site_50 mi. NE Malta,0.0,0,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,0
+"site_Andenes, Norway",0.0,0,0
+"site_Argus Island, Bermuda",0.0,0,0
+site_Bequia,0.0,0,0
+site_Bermuda,0.0,0,0
+site_BermudaBD,0.0,0,0
+"site_Castle Harbour, Bermuda",0.0,0,0
+site_DOMINICA,0.0,0,0
+"site_Dabob Bay, Seattle, Washington",0.0,0,0
+site_Delaware,0.0,0,0
+site_Dominica,0.0,0,0
+site_Dominica  E,0.0,0,0
+site_Dominica IsBD,0.0,0,0
+"site_Gully, SE Sable I., Canada  BD",0.0,0,0
+"site_Ligurian Sea, NW Italy",0.0,0,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,0
+site_Madeira,0.0,0,0
+site_N of Selina,0.0,0,0
+"site_N of Selina, Sicily",0.0,0,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,0,0
+"site_Near Filicudi, Italy",0.0,0,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,0,0
+"site_Off Maui, HI",0.0,0,0
+"site_Off Maui, HIBD",0.0,0,0
+site_Oregon Coast Aquarium,0.0,0,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,0,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,0
+"site_Plantagenet Bank, Bermuda",0.0,0,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,0
+"site_Sable Island, Nova Scotia",0.0,0,0
+"site_South of Sable Island, North Atlantic",0.0,0,0
+"site_St. David's Island, Bermuda",0.0,0,0
+"site_T3 Ice Island, Canada",0.0,0,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,0,0
+"site_Tortola, British Virgin IslandsO",0.0,0,0
+site_W of Browns Bank,0.0,0,0
+"site_off Gibbs Hill Light, Bermuda",0.0,0,0
+"site_over Plantagenet Banks, Bermuda",0.0,0,0
+collection_code_BD10A,0.0,0,0
+collection_code_BA2A,0.4043772518634796,0,1
+collection_code_AC2A,0.28964677453041077,0,1
+latitude,0.2160300463438034,0,1
+site_Delaware,0.057753756642341614,0,1
+collection_code_BE3C,0.02339925430715084,0,1
+"site_Vancouver, British Columbia",0.007244923152029514,0,1
+native_sample_rate,0.0004138820804655552,0,1
+collection_code_BE7A,0.00031779188429936767,0,1
+year,0.00025573582388460636,0,1
+bytes_on_disk,0.00022094271844252944,0,1
+longitude,0.00017570791533216834,0,1
+duration_seconds,0.00016389784286729991,0,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,0,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,1
+"site_3-4 mi. off Roseau, Dominica",0.0,0,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,1
+site_50 mi. NE Malta,0.0,0,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,1
+"site_Andenes, Norway",0.0,0,1
+"site_Argus Island, Bermuda",0.0,0,1
+site_Bequia,0.0,0,1
+site_Bermuda,0.0,0,1
+site_BermudaBD,0.0,0,1
+"site_Castle Harbour, Bermuda",0.0,0,1
+site_DOMINICA,0.0,0,1
+"site_Dabob Bay, Seattle, Washington",0.0,0,1
+site_Dominica,0.0,0,1
+site_Dominica  E,0.0,0,1
+site_Dominica Is,0.0,0,1
+site_Dominica IsBD,0.0,0,1
+"site_Gully, SE Sable I., Canada  BD",0.0,0,1
+"site_Kikvika, Norway",0.0,0,1
+"site_Ligurian Sea, NW Italy",0.0,0,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,1
+site_Madeira,0.0,0,1
+site_N end of Dominica,0.0,0,1
+site_N of Selina,0.0,0,1
+"site_N of Selina, Sicily",0.0,0,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,0,1
+"site_Near Filicudi, Italy",0.0,0,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,0,1
+"site_Off Maui, HI",0.0,0,1
+"site_Off Maui, HIBD",0.0,0,1
+site_Oregon Coast Aquarium,0.0,0,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,0,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,1
+"site_Plantagenet Bank, Bermuda",0.0,0,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,1
+"site_Sable Island, Nova Scotia",0.0,0,1
+"site_South of Sable Island, North Atlantic",0.0,0,1
+"site_St. David's Island, Bermuda",0.0,0,1
+"site_T3 Ice Island, Canada",0.0,0,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,0,1
+"site_Tortola, British Virgin IslandsO",0.0,0,1
+site_W of Browns Bank,0.0,0,1
+"site_off Gibbs Hill Light, Bermuda",0.0,0,1
+"site_over Plantagenet Banks, Bermuda",0.0,0,1
+collection_code_BD10A,0.0,0,1
+native_sample_rate,0.3311900496482849,0,2
+collection_code_AC2A,0.2997484505176544,0,2
+latitude,0.2653287649154663,0,2
+"site_Sable Island, Nova Scotia",0.05119561031460762,0,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.017458897083997726,0,2
+collection_code_BE7A,0.015206155367195606,0,2
+"site_Vancouver, British Columbia",0.011974561959505081,0,2
+collection_code_BA2A,0.00698739942163229,0,2
+year,0.00032488934812135994,0,2
+longitude,0.0002814853214658797,0,2
+bytes_on_disk,0.0002060578262899071,0,2
+duration_seconds,9.774130012374371e-05,0,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,0,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,2
+"site_3-4 mi. off Roseau, Dominica",0.0,0,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,2
+site_50 mi. NE Malta,0.0,0,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,2
+"site_Andenes, Norway",0.0,0,2
+"site_Argus Island, Bermuda",0.0,0,2
+site_Bequia,0.0,0,2
+site_Bermuda,0.0,0,2
+site_BermudaBD,0.0,0,2
+"site_Castle Harbour, Bermuda",0.0,0,2
+site_DOMINICA,0.0,0,2
+"site_Dabob Bay, Seattle, Washington",0.0,0,2
+site_Delaware,0.0,0,2
+site_Dominica,0.0,0,2
+site_Dominica  E,0.0,0,2
+site_Dominica Is,0.0,0,2
+site_Dominica IsBD,0.0,0,2
+"site_Gully, SE Sable I., Canada  BD",0.0,0,2
+"site_Kikvika, Norway",0.0,0,2
+"site_Ligurian Sea, NW Italy",0.0,0,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,2
+site_Madeira,0.0,0,2
+site_N end of Dominica,0.0,0,2
+site_N of Selina,0.0,0,2
+"site_N of Selina, Sicily",0.0,0,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,0,2
+"site_Near Filicudi, Italy",0.0,0,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,0,2
+"site_Off Maui, HI",0.0,0,2
+"site_Off Maui, HIBD",0.0,0,2
+site_Oregon Coast Aquarium,0.0,0,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,0,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,2
+"site_Plantagenet Bank, Bermuda",0.0,0,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,2
+"site_South of Sable Island, North Atlantic",0.0,0,2
+"site_St. David's Island, Bermuda",0.0,0,2
+"site_T3 Ice Island, Canada",0.0,0,2
+"site_Tortola, British Virgin IslandsO",0.0,0,2
+site_W of Browns Bank,0.0,0,2
+"site_off Gibbs Hill Light, Bermuda",0.0,0,2
+"site_over Plantagenet Banks, Bermuda",0.0,0,2
+collection_code_BD10A,0.0,0,2
+collection_code_BD15A,0.0,0,2
+latitude,0.32752156257629395,0,3
+collection_code_AC2A,0.32095688581466675,0,3
+collection_code_BA2A,0.3170395791530609,0,3
+native_sample_rate,0.016138380393385887,0,3
+site_Dominica  E,0.008839407935738564,0,3
+"site_Vancouver, British Columbia",0.006245992612093687,0,3
+"site_Kikvika, Norway",0.0009696802007965744,0,3
+"site_Off Maui, HI",0.0008421626407653093,0,3
+collection_code_BE7A,0.0006641969666816294,0,3
+bytes_on_disk,0.00024904057499952614,0,3
+longitude,0.00018841197015717626,0,3
+"site_Argus Island, Bermuda",0.00017507074517197907,0,3
+duration_seconds,0.00016968161799013615,0,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,0,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,3
+"site_3-4 mi. off Roseau, Dominica",0.0,0,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,3
+site_50 mi. NE Malta,0.0,0,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,3
+"site_Andenes, Norway",0.0,0,3
+site_Bequia,0.0,0,3
+site_Bermuda,0.0,0,3
+site_BermudaBD,0.0,0,3
+"site_Castle Harbour, Bermuda",0.0,0,3
+site_DOMINICA,0.0,0,3
+"site_Dabob Bay, Seattle, Washington",0.0,0,3
+site_Delaware,0.0,0,3
+site_Dominica,0.0,0,3
+site_Dominica Is,0.0,0,3
+site_Dominica IsBD,0.0,0,3
+"site_Gully, SE Sable I., Canada  BD",0.0,0,3
+"site_Ligurian Sea, NW Italy",0.0,0,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,3
+site_Madeira,0.0,0,3
+site_N end of Dominica,0.0,0,3
+site_N of Selina,0.0,0,3
+"site_N of Selina, Sicily",0.0,0,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,0,3
+"site_Near Filicudi, Italy",0.0,0,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,0,3
+"site_Off Maui, HIBD",0.0,0,3
+site_Oregon Coast Aquarium,0.0,0,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,0,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,3
+"site_Plantagenet Bank, Bermuda",0.0,0,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,3
+"site_Sable Island, Nova Scotia",0.0,0,3
+"site_South of Sable Island, North Atlantic",0.0,0,3
+"site_St. David's Island, Bermuda",0.0,0,3
+"site_T3 Ice Island, Canada",0.0,0,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,0,3
+"site_Tortola, British Virgin IslandsO",0.0,0,3
+site_W of Browns Bank,0.0,0,3
+"site_off Gibbs Hill Light, Bermuda",0.0,0,3
+"site_over Plantagenet Banks, Bermuda",0.0,0,3
+collection_code_BD10A,0.0,0,3
+collection_code_BD15A,0.0,0,3
+collection_code_BE3B,0.0,0,3
+collection_code_BA2A,0.30004575848579407,0,4
+latitude,0.29265445470809937,0,4
+collection_code_AC2A,0.2863483130931854,0,4
+native_sample_rate,0.08057644218206406,0,4
+"site_Vancouver, British Columbia",0.022228701040148735,0,4
+year,0.016067078337073326,0,4
+site_Bermuda,0.0005111234495416284,0,4
+"site_Kikvika, Norway",0.0004741114389616996,0,4
+duration_seconds,0.00044017023174092174,0,4
+collection_code_BE7A,0.0003281130630057305,0,4
+bytes_on_disk,0.00023625284666195512,0,4
+longitude,8.944918954512104e-05,0,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,0,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,4
+"site_3-4 mi. off Roseau, Dominica",0.0,0,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,4
+site_50 mi. NE Malta,0.0,0,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,4
+"site_Andenes, Norway",0.0,0,4
+"site_Argus Island, Bermuda",0.0,0,4
+site_Bequia,0.0,0,4
+site_BermudaBD,0.0,0,4
+"site_Castle Harbour, Bermuda",0.0,0,4
+site_DOMINICA,0.0,0,4
+"site_Dabob Bay, Seattle, Washington",0.0,0,4
+site_Delaware,0.0,0,4
+site_Dominica,0.0,0,4
+site_Dominica  E,0.0,0,4
+site_Dominica Is,0.0,0,4
+site_Dominica IsBD,0.0,0,4
+"site_Gully, SE Sable I., Canada  BD",0.0,0,4
+"site_Ligurian Sea, NW Italy",0.0,0,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,4
+site_Madeira,0.0,0,4
+site_N end of Dominica,0.0,0,4
+site_N of Selina,0.0,0,4
+"site_N of Selina, Sicily",0.0,0,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,0,4
+"site_Near Filicudi, Italy",0.0,0,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,0,4
+"site_Off Maui, HI",0.0,0,4
+"site_Off Maui, HIBD",0.0,0,4
+site_Oregon Coast Aquarium,0.0,0,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,0,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,4
+"site_Plantagenet Bank, Bermuda",0.0,0,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,4
+"site_Sable Island, Nova Scotia",0.0,0,4
+"site_South of Sable Island, North Atlantic",0.0,0,4
+"site_St. David's Island, Bermuda",0.0,0,4
+"site_T3 Ice Island, Canada",0.0,0,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,0,4
+"site_Tortola, British Virgin IslandsO",0.0,0,4
+site_W of Browns Bank,0.0,0,4
+"site_off Gibbs Hill Light, Bermuda",0.0,0,4
+"site_over Plantagenet Banks, Bermuda",0.0,0,4
+collection_code_BD10A,0.0,0,4
+collection_code_BD15A,0.0,0,4
+collection_code_AC2A,0.3368944525718689,1,0
+collection_code_BA2A,0.3176947236061096,1,0
+latitude,0.25039544701576233,1,0
+site_N end of Dominica,0.04554152116179466,1,0
+site_1 mile S of Olowalu reef - Hawaii,0.020996691659092903,1,0
+native_sample_rate,0.015878377482295036,1,0
+"site_Vancouver, British Columbia",0.006681228522211313,1,0
+site_Dominica Is,0.004208482801914215,1,0
+"site_Kikvika, Norway",0.0008580642752349377,1,0
+collection_code_BE7A,0.0003249027649872005,1,0
+cond_water_noise,0.00018286042904946953,1,0
+longitude,0.00016486275126226246,1,0
+bytes_on_disk,9.98852847260423e-05,1,0
+duration_seconds,7.854370051063597e-05,1,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,1,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,1,0
+"site_3-4 mi. off Roseau, Dominica",0.0,1,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,0
+site_50 mi. NE Malta,0.0,1,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,0
+"site_Andenes, Norway",0.0,1,0
+"site_Argus Island, Bermuda",0.0,1,0
+site_Bequia,0.0,1,0
+site_Bermuda,0.0,1,0
+site_BermudaBD,0.0,1,0
+"site_Castle Harbour, Bermuda",0.0,1,0
+site_DOMINICA,0.0,1,0
+"site_Dabob Bay, Seattle, Washington",0.0,1,0
+site_Delaware,0.0,1,0
+site_Dominica,0.0,1,0
+site_Dominica  E,0.0,1,0
+site_Dominica IsBD,0.0,1,0
+"site_Gully, SE Sable I., Canada  BD",0.0,1,0
+"site_Ligurian Sea, NW Italy",0.0,1,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,0
+site_Madeira,0.0,1,0
+site_N of Selina,0.0,1,0
+"site_N of Selina, Sicily",0.0,1,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,1,0
+"site_Near Filicudi, Italy",0.0,1,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,1,0
+"site_Off Maui, HI",0.0,1,0
+"site_Off Maui, HIBD",0.0,1,0
+site_Oregon Coast Aquarium,0.0,1,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,1,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,0
+"site_Plantagenet Bank, Bermuda",0.0,1,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,0
+"site_Sable Island, Nova Scotia",0.0,1,0
+"site_South of Sable Island, North Atlantic",0.0,1,0
+"site_St. David's Island, Bermuda",0.0,1,0
+"site_T3 Ice Island, Canada",0.0,1,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,1,0
+"site_Tortola, British Virgin IslandsO",0.0,1,0
+site_W of Browns Bank,0.0,1,0
+"site_off Gibbs Hill Light, Bermuda",0.0,1,0
+"site_over Plantagenet Banks, Bermuda",0.0,1,0
+collection_code_BD10A,0.0,1,0
+collection_code_BD15A,0.0,1,0
+collection_code_BA2A,0.396267831325531,1,1
+collection_code_AC2A,0.29134222865104675,1,1
+latitude,0.21485261619091034,1,1
+site_Delaware,0.0598113052546978,1,1
+collection_code_BE3C,0.028861505910754204,1,1
+"site_Vancouver, British Columbia",0.006851657759398222,1,1
+native_sample_rate,0.00045474342186935246,1,1
+collection_code_BE7A,0.0004086434200871736,1,1
+"site_Kikvika, Norway",0.0003723744594026357,1,1
+bytes_on_disk,0.00021547118376474828,1,1
+year,0.0002038196980720386,1,1
+longitude,0.00018232456932310015,1,1
+duration_seconds,0.00017549184849485755,1,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,1,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,1,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,1,1
+"site_3-4 mi. off Roseau, Dominica",0.0,1,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,1
+site_50 mi. NE Malta,0.0,1,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,1
+"site_Andenes, Norway",0.0,1,1
+"site_Argus Island, Bermuda",0.0,1,1
+site_Bequia,0.0,1,1
+site_Bermuda,0.0,1,1
+site_BermudaBD,0.0,1,1
+"site_Castle Harbour, Bermuda",0.0,1,1
+site_DOMINICA,0.0,1,1
+"site_Dabob Bay, Seattle, Washington",0.0,1,1
+site_Dominica,0.0,1,1
+site_Dominica  E,0.0,1,1
+site_Dominica Is,0.0,1,1
+site_Dominica IsBD,0.0,1,1
+"site_Gully, SE Sable I., Canada  BD",0.0,1,1
+"site_Ligurian Sea, NW Italy",0.0,1,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,1
+site_Madeira,0.0,1,1
+site_N end of Dominica,0.0,1,1
+site_N of Selina,0.0,1,1
+"site_N of Selina, Sicily",0.0,1,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,1,1
+"site_Near Filicudi, Italy",0.0,1,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,1,1
+"site_Off Maui, HI",0.0,1,1
+"site_Off Maui, HIBD",0.0,1,1
+site_Oregon Coast Aquarium,0.0,1,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,1,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,1
+"site_Plantagenet Bank, Bermuda",0.0,1,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,1
+"site_Sable Island, Nova Scotia",0.0,1,1
+"site_South of Sable Island, North Atlantic",0.0,1,1
+"site_St. David's Island, Bermuda",0.0,1,1
+"site_T3 Ice Island, Canada",0.0,1,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,1,1
+"site_Tortola, British Virgin IslandsO",0.0,1,1
+site_W of Browns Bank,0.0,1,1
+"site_off Gibbs Hill Light, Bermuda",0.0,1,1
+"site_over Plantagenet Banks, Bermuda",0.0,1,1
+collection_code_BD10A,0.0,1,1
+native_sample_rate,0.3420734703540802,1,2
+latitude,0.2825169563293457,1,2
+collection_code_AC2A,0.23600850999355316,1,2
+"site_Sable Island, Nova Scotia",0.055872634053230286,1,2
+collection_code_BE7A,0.0356738343834877,1,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.023783650249242783,1,2
+"site_Vancouver, British Columbia",0.012653576210141182,1,2
+collection_code_BA2A,0.007535782642662525,1,2
+site_Delaware,0.0027018822729587555,1,2
+site_Bermuda,0.00046106232912279665,1,2
+year,0.00024901930009946227,1,2
+longitude,0.0001738871360430494,1,2
+bytes_on_disk,0.00016546816914342344,1,2
+duration_seconds,0.0001303041644860059,1,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,1,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,1,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,1,2
+"site_3-4 mi. off Roseau, Dominica",0.0,1,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,2
+site_50 mi. NE Malta,0.0,1,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,2
+"site_Andenes, Norway",0.0,1,2
+"site_Argus Island, Bermuda",0.0,1,2
+site_Bequia,0.0,1,2
+site_BermudaBD,0.0,1,2
+"site_Castle Harbour, Bermuda",0.0,1,2
+site_DOMINICA,0.0,1,2
+"site_Dabob Bay, Seattle, Washington",0.0,1,2
+site_Dominica,0.0,1,2
+site_Dominica  E,0.0,1,2
+site_Dominica Is,0.0,1,2
+site_Dominica IsBD,0.0,1,2
+"site_Gully, SE Sable I., Canada  BD",0.0,1,2
+"site_Kikvika, Norway",0.0,1,2
+"site_Ligurian Sea, NW Italy",0.0,1,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,2
+site_Madeira,0.0,1,2
+site_N end of Dominica,0.0,1,2
+site_N of Selina,0.0,1,2
+"site_N of Selina, Sicily",0.0,1,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,1,2
+"site_Near Filicudi, Italy",0.0,1,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,1,2
+"site_Off Maui, HI",0.0,1,2
+"site_Off Maui, HIBD",0.0,1,2
+site_Oregon Coast Aquarium,0.0,1,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,1,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,2
+"site_Plantagenet Bank, Bermuda",0.0,1,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,2
+"site_South of Sable Island, North Atlantic",0.0,1,2
+"site_St. David's Island, Bermuda",0.0,1,2
+"site_T3 Ice Island, Canada",0.0,1,2
+"site_Tortola, British Virgin IslandsO",0.0,1,2
+site_W of Browns Bank,0.0,1,2
+"site_off Gibbs Hill Light, Bermuda",0.0,1,2
+"site_over Plantagenet Banks, Bermuda",0.0,1,2
+collection_code_BD10A,0.0,1,2
+collection_code_BD15A,0.0,1,2
+collection_code_BA2A,0.3812521994113922,1,3
+latitude,0.27520814538002014,1,3
+collection_code_AC2A,0.260220468044281,1,3
+site_Delaware,0.05209850147366524,1,3
+native_sample_rate,0.017074398696422577,1,3
+site_Dominica  E,0.007370338309556246,1,3
+"site_Vancouver, British Columbia",0.004737387876957655,1,3
+"site_Kikvika, Norway",0.0007712587830610573,1,3
+collection_code_BE7A,0.0006568196113221347,1,3
+bytes_on_disk,0.0002357169723836705,1,3
+longitude,0.00017245564959011972,1,3
+duration_seconds,0.00011924262071261182,1,3
+year,8.313752914546058e-05,1,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,1,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,1,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,1,3
+"site_3-4 mi. off Roseau, Dominica",0.0,1,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,3
+site_50 mi. NE Malta,0.0,1,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,3
+"site_Andenes, Norway",0.0,1,3
+"site_Argus Island, Bermuda",0.0,1,3
+site_Bequia,0.0,1,3
+site_Bermuda,0.0,1,3
+site_BermudaBD,0.0,1,3
+"site_Castle Harbour, Bermuda",0.0,1,3
+site_DOMINICA,0.0,1,3
+"site_Dabob Bay, Seattle, Washington",0.0,1,3
+site_Dominica,0.0,1,3
+site_Dominica Is,0.0,1,3
+site_Dominica IsBD,0.0,1,3
+"site_Gully, SE Sable I., Canada  BD",0.0,1,3
+"site_Ligurian Sea, NW Italy",0.0,1,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,3
+site_Madeira,0.0,1,3
+site_N end of Dominica,0.0,1,3
+site_N of Selina,0.0,1,3
+"site_N of Selina, Sicily",0.0,1,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,1,3
+"site_Near Filicudi, Italy",0.0,1,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,1,3
+"site_Off Maui, HI",0.0,1,3
+"site_Off Maui, HIBD",0.0,1,3
+site_Oregon Coast Aquarium,0.0,1,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,1,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,3
+"site_Plantagenet Bank, Bermuda",0.0,1,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,3
+"site_Sable Island, Nova Scotia",0.0,1,3
+"site_South of Sable Island, North Atlantic",0.0,1,3
+"site_St. David's Island, Bermuda",0.0,1,3
+"site_T3 Ice Island, Canada",0.0,1,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,1,3
+"site_Tortola, British Virgin IslandsO",0.0,1,3
+site_W of Browns Bank,0.0,1,3
+"site_off Gibbs Hill Light, Bermuda",0.0,1,3
+"site_over Plantagenet Banks, Bermuda",0.0,1,3
+collection_code_BD10A,0.0,1,3
+collection_code_BD15A,0.0,1,3
+collection_code_BA2A,0.34489691257476807,1,4
+collection_code_AC2A,0.3248399496078491,1,4
+latitude,0.2911998927593231,1,4
+collection_code_BE3C,0.03065425343811512,1,4
+native_sample_rate,0.0033562490716576576,1,4
+"site_Vancouver, British Columbia",0.0026799056213349104,1,4
+year,0.000723951670806855,1,4
+"site_Kikvika, Norway",0.0007066833786666393,1,4
+collection_code_BE7A,0.00026191843790002167,1,4
+duration_seconds,0.0002520359994377941,1,4
+bytes_on_disk,0.00018947833450511098,1,4
+cond_water_noise,0.00014256674330681562,1,4
+longitude,9.624510130379349e-05,1,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,1,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,1,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,1,4
+"site_3-4 mi. off Roseau, Dominica",0.0,1,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,4
+site_50 mi. NE Malta,0.0,1,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,4
+"site_Andenes, Norway",0.0,1,4
+"site_Argus Island, Bermuda",0.0,1,4
+site_Bequia,0.0,1,4
+site_Bermuda,0.0,1,4
+site_BermudaBD,0.0,1,4
+"site_Castle Harbour, Bermuda",0.0,1,4
+site_DOMINICA,0.0,1,4
+"site_Dabob Bay, Seattle, Washington",0.0,1,4
+site_Delaware,0.0,1,4
+site_Dominica,0.0,1,4
+site_Dominica  E,0.0,1,4
+site_Dominica Is,0.0,1,4
+site_Dominica IsBD,0.0,1,4
+"site_Gully, SE Sable I., Canada  BD",0.0,1,4
+"site_Ligurian Sea, NW Italy",0.0,1,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,4
+site_Madeira,0.0,1,4
+site_N end of Dominica,0.0,1,4
+site_N of Selina,0.0,1,4
+"site_N of Selina, Sicily",0.0,1,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,1,4
+"site_Near Filicudi, Italy",0.0,1,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,1,4
+"site_Off Maui, HI",0.0,1,4
+"site_Off Maui, HIBD",0.0,1,4
+site_Oregon Coast Aquarium,0.0,1,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,1,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,4
+"site_Plantagenet Bank, Bermuda",0.0,1,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,4
+"site_Sable Island, Nova Scotia",0.0,1,4
+"site_South of Sable Island, North Atlantic",0.0,1,4
+"site_St. David's Island, Bermuda",0.0,1,4
+"site_T3 Ice Island, Canada",0.0,1,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,1,4
+"site_Tortola, British Virgin IslandsO",0.0,1,4
+site_W of Browns Bank,0.0,1,4
+"site_off Gibbs Hill Light, Bermuda",0.0,1,4
+"site_over Plantagenet Banks, Bermuda",0.0,1,4
+collection_code_AC2A,0.34665873646736145,2,0
+collection_code_BA2A,0.3321881890296936,2,0
+latitude,0.27356773614883423,2,0
+site_1 mile S of Olowalu reef - Hawaii,0.021159080788493156,2,0
+native_sample_rate,0.0206194669008255,2,0
+site_Dominica Is,0.0041505200788378716,2,0
+"site_Kikvika, Norway",0.0009199437336064875,2,0
+"site_Vancouver, British Columbia",0.0002370868023717776,2,0
+collection_code_BE7A,0.000180136994458735,2,0
+longitude,8.184082253137603e-05,2,0
+cond_water_noise,7.733466190984473e-05,2,0
+year,6.996566662564874e-05,2,0
+bytes_on_disk,6.827889592386782e-05,2,0
+duration_seconds,2.1677715267287567e-05,2,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,2,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,2,0
+"site_3-4 mi. off Roseau, Dominica",0.0,2,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,0
+site_50 mi. NE Malta,0.0,2,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,0
+"site_Andenes, Norway",0.0,2,0
+"site_Argus Island, Bermuda",0.0,2,0
+site_Bequia,0.0,2,0
+site_Bermuda,0.0,2,0
+site_BermudaBD,0.0,2,0
+"site_Castle Harbour, Bermuda",0.0,2,0
+site_DOMINICA,0.0,2,0
+"site_Dabob Bay, Seattle, Washington",0.0,2,0
+site_Delaware,0.0,2,0
+site_Dominica,0.0,2,0
+site_Dominica  E,0.0,2,0
+site_Dominica IsBD,0.0,2,0
+"site_Gully, SE Sable I., Canada  BD",0.0,2,0
+"site_Ligurian Sea, NW Italy",0.0,2,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,0
+site_Madeira,0.0,2,0
+site_N end of Dominica,0.0,2,0
+site_N of Selina,0.0,2,0
+"site_N of Selina, Sicily",0.0,2,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,2,0
+"site_Near Filicudi, Italy",0.0,2,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,2,0
+"site_Off Maui, HI",0.0,2,0
+"site_Off Maui, HIBD",0.0,2,0
+site_Oregon Coast Aquarium,0.0,2,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,2,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,0
+"site_Plantagenet Bank, Bermuda",0.0,2,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,0
+"site_Sable Island, Nova Scotia",0.0,2,0
+"site_South of Sable Island, North Atlantic",0.0,2,0
+"site_St. David's Island, Bermuda",0.0,2,0
+"site_T3 Ice Island, Canada",0.0,2,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,2,0
+"site_Tortola, British Virgin IslandsO",0.0,2,0
+site_W of Browns Bank,0.0,2,0
+"site_off Gibbs Hill Light, Bermuda",0.0,2,0
+"site_over Plantagenet Banks, Bermuda",0.0,2,0
+collection_code_BD10A,0.0,2,0
+collection_code_BA2A,0.40601447224617004,2,1
+collection_code_AC2A,0.28905948996543884,2,1
+latitude,0.2156195044517517,2,1
+site_Delaware,0.05744462460279465,2,1
+collection_code_BE3C,0.023045510053634644,2,1
+"site_Vancouver, British Columbia",0.007258158642798662,2,1
+native_sample_rate,0.00039731417200528085,2,1
+collection_code_BE7A,0.0003173874574713409,2,1
+year,0.0002918823156505823,2,1
+bytes_on_disk,0.00021689855202566832,2,1
+longitude,0.00017622903396841139,2,1
+duration_seconds,0.00015852453361731023,2,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,2,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,2,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,2,1
+"site_3-4 mi. off Roseau, Dominica",0.0,2,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,1
+site_50 mi. NE Malta,0.0,2,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,1
+"site_Andenes, Norway",0.0,2,1
+"site_Argus Island, Bermuda",0.0,2,1
+site_Bequia,0.0,2,1
+site_Bermuda,0.0,2,1
+site_BermudaBD,0.0,2,1
+"site_Castle Harbour, Bermuda",0.0,2,1
+site_DOMINICA,0.0,2,1
+"site_Dabob Bay, Seattle, Washington",0.0,2,1
+site_Dominica,0.0,2,1
+site_Dominica  E,0.0,2,1
+site_Dominica Is,0.0,2,1
+site_Dominica IsBD,0.0,2,1
+"site_Gully, SE Sable I., Canada  BD",0.0,2,1
+"site_Kikvika, Norway",0.0,2,1
+"site_Ligurian Sea, NW Italy",0.0,2,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,1
+site_Madeira,0.0,2,1
+site_N end of Dominica,0.0,2,1
+site_N of Selina,0.0,2,1
+"site_N of Selina, Sicily",0.0,2,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,2,1
+"site_Near Filicudi, Italy",0.0,2,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,2,1
+"site_Off Maui, HI",0.0,2,1
+"site_Off Maui, HIBD",0.0,2,1
+site_Oregon Coast Aquarium,0.0,2,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,2,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,1
+"site_Plantagenet Bank, Bermuda",0.0,2,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,1
+"site_Sable Island, Nova Scotia",0.0,2,1
+"site_South of Sable Island, North Atlantic",0.0,2,1
+"site_St. David's Island, Bermuda",0.0,2,1
+"site_T3 Ice Island, Canada",0.0,2,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,2,1
+"site_Tortola, British Virgin IslandsO",0.0,2,1
+site_W of Browns Bank,0.0,2,1
+"site_off Gibbs Hill Light, Bermuda",0.0,2,1
+"site_over Plantagenet Banks, Bermuda",0.0,2,1
+collection_code_BD10A,0.0,2,1
+native_sample_rate,0.3051760196685791,2,2
+latitude,0.24206377565860748,2,2
+collection_code_AC2A,0.23874279856681824,2,2
+collection_code_BA2A,0.08084164559841156,2,2
+"site_Sable Island, Nova Scotia",0.056030914187431335,2,2
+collection_code_BE7A,0.03477073833346367,2,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.025324638932943344,2,2
+"site_Vancouver, British Columbia",0.012781813740730286,2,2
+site_Delaware,0.003044484881684184,2,2
+site_Bermuda,0.0004932216252200305,2,2
+year,0.0002373968600295484,2,2
+bytes_on_disk,0.00017967179883271456,2,2
+longitude,0.00014566408935934305,2,2
+duration_seconds,0.00012602124479599297,2,2
+site_N end of Dominica,4.128191721974872e-05,2,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,2,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,2,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,2,2
+"site_3-4 mi. off Roseau, Dominica",0.0,2,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,2
+site_50 mi. NE Malta,0.0,2,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,2
+"site_Andenes, Norway",0.0,2,2
+"site_Argus Island, Bermuda",0.0,2,2
+site_Bequia,0.0,2,2
+site_BermudaBD,0.0,2,2
+"site_Castle Harbour, Bermuda",0.0,2,2
+site_DOMINICA,0.0,2,2
+"site_Dabob Bay, Seattle, Washington",0.0,2,2
+site_Dominica,0.0,2,2
+site_Dominica  E,0.0,2,2
+site_Dominica Is,0.0,2,2
+site_Dominica IsBD,0.0,2,2
+"site_Gully, SE Sable I., Canada  BD",0.0,2,2
+"site_Kikvika, Norway",0.0,2,2
+"site_Ligurian Sea, NW Italy",0.0,2,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,2
+site_Madeira,0.0,2,2
+site_N of Selina,0.0,2,2
+"site_N of Selina, Sicily",0.0,2,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,2,2
+"site_Near Filicudi, Italy",0.0,2,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,2,2
+"site_Off Maui, HI",0.0,2,2
+"site_Off Maui, HIBD",0.0,2,2
+site_Oregon Coast Aquarium,0.0,2,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,2,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,2
+"site_Plantagenet Bank, Bermuda",0.0,2,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,2
+"site_South of Sable Island, North Atlantic",0.0,2,2
+"site_St. David's Island, Bermuda",0.0,2,2
+"site_T3 Ice Island, Canada",0.0,2,2
+"site_Tortola, British Virgin IslandsO",0.0,2,2
+site_W of Browns Bank,0.0,2,2
+"site_off Gibbs Hill Light, Bermuda",0.0,2,2
+"site_over Plantagenet Banks, Bermuda",0.0,2,2
+collection_code_BD10A,0.0,2,2
+collection_code_BD15A,0.0,2,2
+collection_code_BA2A,0.3785558044910431,2,3
+collection_code_AC2A,0.20650029182434082,2,3
+latitude,0.19359025359153748,2,3
+native_sample_rate,0.18359912931919098,2,3
+"site_Vancouver, British Columbia",0.027970481663942337,2,3
+site_Dominica IsBD,0.008858226239681244,2,3
+collection_code_BE7A,0.00023614130623172969,2,3
+duration_seconds,0.00022408069344237447,2,3
+year,0.00021186546655371785,2,3
+bytes_on_disk,0.00016800922458060086,2,3
+longitude,8.576181426178664e-05,2,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,2,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,2,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,2,3
+"site_3-4 mi. off Roseau, Dominica",0.0,2,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,3
+site_50 mi. NE Malta,0.0,2,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,3
+"site_Andenes, Norway",0.0,2,3
+"site_Argus Island, Bermuda",0.0,2,3
+site_Bequia,0.0,2,3
+site_Bermuda,0.0,2,3
+site_BermudaBD,0.0,2,3
+"site_Castle Harbour, Bermuda",0.0,2,3
+site_DOMINICA,0.0,2,3
+"site_Dabob Bay, Seattle, Washington",0.0,2,3
+site_Delaware,0.0,2,3
+site_Dominica,0.0,2,3
+site_Dominica  E,0.0,2,3
+site_Dominica Is,0.0,2,3
+"site_Gully, SE Sable I., Canada  BD",0.0,2,3
+"site_Kikvika, Norway",0.0,2,3
+"site_Ligurian Sea, NW Italy",0.0,2,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,3
+site_Madeira,0.0,2,3
+site_N end of Dominica,0.0,2,3
+site_N of Selina,0.0,2,3
+"site_N of Selina, Sicily",0.0,2,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,2,3
+"site_Near Filicudi, Italy",0.0,2,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,2,3
+"site_Off Maui, HI",0.0,2,3
+"site_Off Maui, HIBD",0.0,2,3
+site_Oregon Coast Aquarium,0.0,2,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,2,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,3
+"site_Plantagenet Bank, Bermuda",0.0,2,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,3
+"site_Sable Island, Nova Scotia",0.0,2,3
+"site_South of Sable Island, North Atlantic",0.0,2,3
+"site_St. David's Island, Bermuda",0.0,2,3
+"site_T3 Ice Island, Canada",0.0,2,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,2,3
+"site_Tortola, British Virgin IslandsO",0.0,2,3
+site_W of Browns Bank,0.0,2,3
+"site_off Gibbs Hill Light, Bermuda",0.0,2,3
+"site_over Plantagenet Banks, Bermuda",0.0,2,3
+collection_code_BD10A,0.0,2,3
+collection_code_BD15A,0.0,2,3
+collection_code_AC2A,0.35171669721603394,2,4
+collection_code_BA2A,0.3385438621044159,2,4
+latitude,0.28629475831985474,2,4
+collection_code_BE3C,0.020619602873921394,2,4
+"site_Kikvika, Norway",0.000619481666944921,2,4
+collection_code_BE7A,0.0004790899984072894,2,4
+duration_seconds,0.00046191783621907234,2,4
+bytes_on_disk,0.00037218289799056947,2,4
+native_sample_rate,0.0003594318113755435,2,4
+"site_Vancouver, British Columbia",0.00029510160675272346,2,4
+longitude,0.0001316933921771124,2,4
+year,5.836679702042602e-05,2,4
+cond_water_noise,4.791311948793009e-05,2,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,2,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,2,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,2,4
+"site_3-4 mi. off Roseau, Dominica",0.0,2,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,4
+site_50 mi. NE Malta,0.0,2,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,4
+"site_Andenes, Norway",0.0,2,4
+"site_Argus Island, Bermuda",0.0,2,4
+site_Bequia,0.0,2,4
+site_Bermuda,0.0,2,4
+site_BermudaBD,0.0,2,4
+"site_Castle Harbour, Bermuda",0.0,2,4
+site_DOMINICA,0.0,2,4
+"site_Dabob Bay, Seattle, Washington",0.0,2,4
+site_Delaware,0.0,2,4
+site_Dominica,0.0,2,4
+site_Dominica  E,0.0,2,4
+site_Dominica Is,0.0,2,4
+site_Dominica IsBD,0.0,2,4
+"site_Gully, SE Sable I., Canada  BD",0.0,2,4
+"site_Ligurian Sea, NW Italy",0.0,2,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,4
+site_Madeira,0.0,2,4
+site_N end of Dominica,0.0,2,4
+site_N of Selina,0.0,2,4
+"site_N of Selina, Sicily",0.0,2,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,2,4
+"site_Near Filicudi, Italy",0.0,2,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,2,4
+"site_Off Maui, HI",0.0,2,4
+"site_Off Maui, HIBD",0.0,2,4
+site_Oregon Coast Aquarium,0.0,2,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,2,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,4
+"site_Plantagenet Bank, Bermuda",0.0,2,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,4
+"site_Sable Island, Nova Scotia",0.0,2,4
+"site_South of Sable Island, North Atlantic",0.0,2,4
+"site_St. David's Island, Bermuda",0.0,2,4
+"site_T3 Ice Island, Canada",0.0,2,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,2,4
+"site_Tortola, British Virgin IslandsO",0.0,2,4
+site_W of Browns Bank,0.0,2,4
+"site_off Gibbs Hill Light, Bermuda",0.0,2,4
+"site_over Plantagenet Banks, Bermuda",0.0,2,4
+collection_code_AC2A,0.3806045353412628,3,0
+collection_code_BA2A,0.3574284017086029,3,0
+latitude,0.2141607701778412,3,0
+site_1 mile S of Olowalu reef - Hawaii,0.02312641032040119,3,0
+native_sample_rate,0.011407026089727879,3,0
+"site_Vancouver, British Columbia",0.006404124666005373,3,0
+site_Dominica Is,0.004388911183923483,3,0
+"site_Kikvika, Norway",0.0009180317283608019,3,0
+"site_3 miles N of San Juan, Puerto Rico",0.0004649412294384092,3,0
+collection_code_BE7A,0.0003377488465048373,3,0
+year,0.00021255676983855665,3,0
+cond_water_noise,0.00018942667520605028,3,0
+longitude,0.00017790880519896746,3,0
+bytes_on_disk,0.000103730199043639,3,0
+duration_seconds,7.539461512351409e-05,3,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,3,0
+"site_3-4 mi. off Roseau, Dominica",0.0,3,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,0
+site_50 mi. NE Malta,0.0,3,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,0
+"site_Andenes, Norway",0.0,3,0
+"site_Argus Island, Bermuda",0.0,3,0
+site_Bequia,0.0,3,0
+site_Bermuda,0.0,3,0
+site_BermudaBD,0.0,3,0
+"site_Castle Harbour, Bermuda",0.0,3,0
+site_DOMINICA,0.0,3,0
+"site_Dabob Bay, Seattle, Washington",0.0,3,0
+site_Delaware,0.0,3,0
+site_Dominica,0.0,3,0
+site_Dominica  E,0.0,3,0
+site_Dominica IsBD,0.0,3,0
+"site_Gully, SE Sable I., Canada  BD",0.0,3,0
+"site_Ligurian Sea, NW Italy",0.0,3,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,0
+site_Madeira,0.0,3,0
+site_N end of Dominica,0.0,3,0
+site_N of Selina,0.0,3,0
+"site_N of Selina, Sicily",0.0,3,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,3,0
+"site_Near Filicudi, Italy",0.0,3,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,3,0
+"site_Off Maui, HI",0.0,3,0
+"site_Off Maui, HIBD",0.0,3,0
+site_Oregon Coast Aquarium,0.0,3,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,3,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,0
+"site_Plantagenet Bank, Bermuda",0.0,3,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,0
+"site_Sable Island, Nova Scotia",0.0,3,0
+"site_South of Sable Island, North Atlantic",0.0,3,0
+"site_St. David's Island, Bermuda",0.0,3,0
+"site_T3 Ice Island, Canada",0.0,3,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,3,0
+"site_Tortola, British Virgin IslandsO",0.0,3,0
+site_W of Browns Bank,0.0,3,0
+"site_off Gibbs Hill Light, Bermuda",0.0,3,0
+"site_over Plantagenet Banks, Bermuda",0.0,3,0
+collection_code_BD10A,0.0,3,0
+collection_code_BA2A,0.40311819314956665,3,1
+collection_code_AC2A,0.2906745374202728,3,1
+latitude,0.21487075090408325,3,1
+site_Delaware,0.05918048694729805,3,1
+collection_code_BE3C,0.023733852431178093,3,1
+"site_Vancouver, British Columbia",0.00635351100936532,3,1
+"site_Off Maui, HI",0.0008682355983182788,3,1
+native_sample_rate,0.00039804019615985453,3,1
+bytes_on_disk,0.0002216034336015582,3,1
+longitude,0.00019308525952510536,3,1
+collection_code_BE7A,0.00013944394595455378,3,1
+duration_seconds,0.00013651112385559827,3,1
+year,0.00011175656254636124,3,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,3,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,3,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,3,1
+"site_3-4 mi. off Roseau, Dominica",0.0,3,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,1
+site_50 mi. NE Malta,0.0,3,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,1
+"site_Andenes, Norway",0.0,3,1
+"site_Argus Island, Bermuda",0.0,3,1
+site_Bequia,0.0,3,1
+site_Bermuda,0.0,3,1
+site_BermudaBD,0.0,3,1
+"site_Castle Harbour, Bermuda",0.0,3,1
+site_DOMINICA,0.0,3,1
+"site_Dabob Bay, Seattle, Washington",0.0,3,1
+site_Dominica,0.0,3,1
+site_Dominica  E,0.0,3,1
+site_Dominica Is,0.0,3,1
+site_Dominica IsBD,0.0,3,1
+"site_Gully, SE Sable I., Canada  BD",0.0,3,1
+"site_Kikvika, Norway",0.0,3,1
+"site_Ligurian Sea, NW Italy",0.0,3,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,1
+site_Madeira,0.0,3,1
+site_N end of Dominica,0.0,3,1
+site_N of Selina,0.0,3,1
+"site_N of Selina, Sicily",0.0,3,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,3,1
+"site_Near Filicudi, Italy",0.0,3,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,3,1
+"site_Off Maui, HIBD",0.0,3,1
+site_Oregon Coast Aquarium,0.0,3,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,3,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,1
+"site_Plantagenet Bank, Bermuda",0.0,3,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,1
+"site_Sable Island, Nova Scotia",0.0,3,1
+"site_South of Sable Island, North Atlantic",0.0,3,1
+"site_St. David's Island, Bermuda",0.0,3,1
+"site_T3 Ice Island, Canada",0.0,3,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,3,1
+"site_Tortola, British Virgin IslandsO",0.0,3,1
+site_W of Browns Bank,0.0,3,1
+"site_off Gibbs Hill Light, Bermuda",0.0,3,1
+"site_over Plantagenet Banks, Bermuda",0.0,3,1
+collection_code_BD10A,0.0,3,1
+collection_code_BA2A,0.37149596214294434,3,2
+collection_code_AC2A,0.34468668699264526,3,2
+latitude,0.2433888018131256,3,2
+collection_code_BE7A,0.022027859464287758,3,2
+native_sample_rate,0.018192270770668983,3,2
+bytes_on_disk,8.911406621336937e-05,3,2
+duration_seconds,8.34441016195342e-05,3,2
+longitude,3.112713966402225e-05,3,2
+cond_reverberation,4.6358654799405485e-06,3,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,3,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,3,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,3,2
+"site_3-4 mi. off Roseau, Dominica",0.0,3,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,2
+site_50 mi. NE Malta,0.0,3,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,2
+"site_Andenes, Norway",0.0,3,2
+"site_Argus Island, Bermuda",0.0,3,2
+site_Bequia,0.0,3,2
+site_Bermuda,0.0,3,2
+site_BermudaBD,0.0,3,2
+"site_Castle Harbour, Bermuda",0.0,3,2
+site_DOMINICA,0.0,3,2
+"site_Dabob Bay, Seattle, Washington",0.0,3,2
+site_Delaware,0.0,3,2
+site_Dominica,0.0,3,2
+site_Dominica  E,0.0,3,2
+site_Dominica Is,0.0,3,2
+site_Dominica IsBD,0.0,3,2
+"site_Gully, SE Sable I., Canada  BD",0.0,3,2
+"site_Kikvika, Norway",0.0,3,2
+"site_Ligurian Sea, NW Italy",0.0,3,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,2
+site_Madeira,0.0,3,2
+site_N end of Dominica,0.0,3,2
+site_N of Selina,0.0,3,2
+"site_N of Selina, Sicily",0.0,3,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,3,2
+"site_Near Filicudi, Italy",0.0,3,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,3,2
+"site_Off Maui, HI",0.0,3,2
+"site_Off Maui, HIBD",0.0,3,2
+site_Oregon Coast Aquarium,0.0,3,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,3,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,2
+"site_Plantagenet Bank, Bermuda",0.0,3,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,2
+"site_Sable Island, Nova Scotia",0.0,3,2
+"site_South of Sable Island, North Atlantic",0.0,3,2
+"site_St. David's Island, Bermuda",0.0,3,2
+"site_T3 Ice Island, Canada",0.0,3,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,3,2
+"site_Tortola, British Virgin IslandsO",0.0,3,2
+"site_Vancouver, British Columbia",0.0,3,2
+site_W of Browns Bank,0.0,3,2
+"site_off Gibbs Hill Light, Bermuda",0.0,3,2
+"site_over Plantagenet Banks, Bermuda",0.0,3,2
+collection_code_BD10A,0.0,3,2
+collection_code_BD15A,0.0,3,2
+collection_code_BA2A,0.3312913179397583,3,3
+collection_code_AC2A,0.31823304295539856,3,3
+latitude,0.3062189519405365,3,3
+native_sample_rate,0.026575332507491112,3,3
+site_Dominica  E,0.009445917792618275,3,3
+"site_Vancouver, British Columbia",0.00699748145416379,3,3
+collection_code_BE7A,0.00040314419311471283,3,3
+year,0.000277858431218192,3,3
+bytes_on_disk,0.00027310888981446624,3,3
+duration_seconds,0.00019549348508007824,3,3
+longitude,8.827815327094868e-05,3,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,3,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,3,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,3,3
+"site_3-4 mi. off Roseau, Dominica",0.0,3,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,3
+site_50 mi. NE Malta,0.0,3,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,3
+"site_Andenes, Norway",0.0,3,3
+"site_Argus Island, Bermuda",0.0,3,3
+site_Bequia,0.0,3,3
+site_Bermuda,0.0,3,3
+site_BermudaBD,0.0,3,3
+"site_Castle Harbour, Bermuda",0.0,3,3
+site_DOMINICA,0.0,3,3
+"site_Dabob Bay, Seattle, Washington",0.0,3,3
+site_Delaware,0.0,3,3
+site_Dominica,0.0,3,3
+site_Dominica Is,0.0,3,3
+site_Dominica IsBD,0.0,3,3
+"site_Gully, SE Sable I., Canada  BD",0.0,3,3
+"site_Kikvika, Norway",0.0,3,3
+"site_Ligurian Sea, NW Italy",0.0,3,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,3
+site_Madeira,0.0,3,3
+site_N end of Dominica,0.0,3,3
+site_N of Selina,0.0,3,3
+"site_N of Selina, Sicily",0.0,3,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,3,3
+"site_Near Filicudi, Italy",0.0,3,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,3,3
+"site_Off Maui, HI",0.0,3,3
+"site_Off Maui, HIBD",0.0,3,3
+site_Oregon Coast Aquarium,0.0,3,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,3,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,3
+"site_Plantagenet Bank, Bermuda",0.0,3,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,3
+"site_Sable Island, Nova Scotia",0.0,3,3
+"site_South of Sable Island, North Atlantic",0.0,3,3
+"site_St. David's Island, Bermuda",0.0,3,3
+"site_T3 Ice Island, Canada",0.0,3,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,3,3
+"site_Tortola, British Virgin IslandsO",0.0,3,3
+site_W of Browns Bank,0.0,3,3
+"site_off Gibbs Hill Light, Bermuda",0.0,3,3
+"site_over Plantagenet Banks, Bermuda",0.0,3,3
+collection_code_BD10A,0.0,3,3
+collection_code_BD15A,0.0,3,3
+collection_code_AC2A,0.34635841846466064,3,4
+collection_code_BA2A,0.33289533853530884,3,4
+latitude,0.2910252809524536,3,4
+collection_code_BE3C,0.02724066562950611,3,4
+"site_Vancouver, British Columbia",0.00055632897419855,3,4
+collection_code_BE7A,0.0005218872101977468,3,4
+native_sample_rate,0.0004731716762762517,3,4
+duration_seconds,0.00042707176180556417,3,4
+bytes_on_disk,0.00027671243879012764,3,4
+longitude,0.00013251803466118872,3,4
+year,9.263525862479582e-05,3,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,3,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,3,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,3,4
+"site_3-4 mi. off Roseau, Dominica",0.0,3,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,4
+site_50 mi. NE Malta,0.0,3,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,4
+"site_Andenes, Norway",0.0,3,4
+"site_Argus Island, Bermuda",0.0,3,4
+site_Bequia,0.0,3,4
+site_Bermuda,0.0,3,4
+site_BermudaBD,0.0,3,4
+"site_Castle Harbour, Bermuda",0.0,3,4
+site_DOMINICA,0.0,3,4
+"site_Dabob Bay, Seattle, Washington",0.0,3,4
+site_Delaware,0.0,3,4
+site_Dominica,0.0,3,4
+site_Dominica  E,0.0,3,4
+site_Dominica Is,0.0,3,4
+site_Dominica IsBD,0.0,3,4
+"site_Gully, SE Sable I., Canada  BD",0.0,3,4
+"site_Kikvika, Norway",0.0,3,4
+"site_Ligurian Sea, NW Italy",0.0,3,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,4
+site_Madeira,0.0,3,4
+site_N end of Dominica,0.0,3,4
+site_N of Selina,0.0,3,4
+"site_N of Selina, Sicily",0.0,3,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,3,4
+"site_Near Filicudi, Italy",0.0,3,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,3,4
+"site_Off Maui, HI",0.0,3,4
+"site_Off Maui, HIBD",0.0,3,4
+site_Oregon Coast Aquarium,0.0,3,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,3,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,4
+"site_Plantagenet Bank, Bermuda",0.0,3,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,4
+"site_Sable Island, Nova Scotia",0.0,3,4
+"site_South of Sable Island, North Atlantic",0.0,3,4
+"site_St. David's Island, Bermuda",0.0,3,4
+"site_T3 Ice Island, Canada",0.0,3,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,3,4
+"site_Tortola, British Virgin IslandsO",0.0,3,4
+site_W of Browns Bank,0.0,3,4
+"site_off Gibbs Hill Light, Bermuda",0.0,3,4
+"site_over Plantagenet Banks, Bermuda",0.0,3,4
+collection_code_BD10A,0.0,3,4
+collection_code_AC2A,0.37225663661956787,4,0
+collection_code_BA2A,0.3530981242656708,4,0
+latitude,0.2174607664346695,4,0
+site_1 mile S of Olowalu reef - Hawaii,0.023584043607115746,4,0
+native_sample_rate,0.018218927085399628,4,0
+"site_Vancouver, British Columbia",0.007259394973516464,4,0
+site_Dominica Is,0.004663810133934021,4,0
+site_N end of Dominica,0.001396042644046247,4,0
+"site_Kikvika, Norway",0.0009167096577584743,4,0
+collection_code_BE7A,0.0003611620923038572,4,0
+longitude,0.00022408046061173081,4,0
+cond_water_noise,0.00019581591186579317,4,0
+year,0.00014112371718510985,4,0
+duration_seconds,0.00013350571680348366,4,0
+bytes_on_disk,8.988436457002535e-05,4,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,4,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,4,0
+"site_3-4 mi. off Roseau, Dominica",0.0,4,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,0
+site_50 mi. NE Malta,0.0,4,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,0
+"site_Andenes, Norway",0.0,4,0
+"site_Argus Island, Bermuda",0.0,4,0
+site_Bequia,0.0,4,0
+site_Bermuda,0.0,4,0
+site_BermudaBD,0.0,4,0
+"site_Castle Harbour, Bermuda",0.0,4,0
+site_DOMINICA,0.0,4,0
+"site_Dabob Bay, Seattle, Washington",0.0,4,0
+site_Delaware,0.0,4,0
+site_Dominica,0.0,4,0
+site_Dominica  E,0.0,4,0
+site_Dominica IsBD,0.0,4,0
+"site_Gully, SE Sable I., Canada  BD",0.0,4,0
+"site_Ligurian Sea, NW Italy",0.0,4,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,0
+site_Madeira,0.0,4,0
+site_N of Selina,0.0,4,0
+"site_N of Selina, Sicily",0.0,4,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,4,0
+"site_Near Filicudi, Italy",0.0,4,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,4,0
+"site_Off Maui, HI",0.0,4,0
+"site_Off Maui, HIBD",0.0,4,0
+site_Oregon Coast Aquarium,0.0,4,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,4,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,0
+"site_Plantagenet Bank, Bermuda",0.0,4,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,0
+"site_Sable Island, Nova Scotia",0.0,4,0
+"site_South of Sable Island, North Atlantic",0.0,4,0
+"site_St. David's Island, Bermuda",0.0,4,0
+"site_T3 Ice Island, Canada",0.0,4,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,4,0
+"site_Tortola, British Virgin IslandsO",0.0,4,0
+site_W of Browns Bank,0.0,4,0
+"site_off Gibbs Hill Light, Bermuda",0.0,4,0
+"site_over Plantagenet Banks, Bermuda",0.0,4,0
+collection_code_BD10A,0.0,4,0
+collection_code_AC2A,0.3077099919319153,4,1
+latitude,0.3017171621322632,4,1
+collection_code_BA2A,0.286331444978714,4,1
+site_N end of Dominica,0.06477969139814377,4,1
+collection_code_BE3C,0.030899403616786003,4,1
+"site_Vancouver, British Columbia",0.006951866205781698,4,1
+native_sample_rate,0.000567382201552391,4,1
+collection_code_BE7A,0.000418622832512483,4,1
+longitude,0.00022167747374624014,4,1
+bytes_on_disk,0.00021188249229453504,4,1
+duration_seconds,0.00011725322838174179,4,1
+year,7.364179327851161e-05,4,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,4,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,4,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,4,1
+"site_3-4 mi. off Roseau, Dominica",0.0,4,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,1
+site_50 mi. NE Malta,0.0,4,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,1
+"site_Andenes, Norway",0.0,4,1
+"site_Argus Island, Bermuda",0.0,4,1
+site_Bequia,0.0,4,1
+site_Bermuda,0.0,4,1
+site_BermudaBD,0.0,4,1
+"site_Castle Harbour, Bermuda",0.0,4,1
+site_DOMINICA,0.0,4,1
+"site_Dabob Bay, Seattle, Washington",0.0,4,1
+site_Delaware,0.0,4,1
+site_Dominica,0.0,4,1
+site_Dominica  E,0.0,4,1
+site_Dominica Is,0.0,4,1
+site_Dominica IsBD,0.0,4,1
+"site_Gully, SE Sable I., Canada  BD",0.0,4,1
+"site_Kikvika, Norway",0.0,4,1
+"site_Ligurian Sea, NW Italy",0.0,4,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,1
+site_Madeira,0.0,4,1
+site_N of Selina,0.0,4,1
+"site_N of Selina, Sicily",0.0,4,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,4,1
+"site_Near Filicudi, Italy",0.0,4,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,4,1
+"site_Off Maui, HI",0.0,4,1
+"site_Off Maui, HIBD",0.0,4,1
+site_Oregon Coast Aquarium,0.0,4,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,4,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,1
+"site_Plantagenet Bank, Bermuda",0.0,4,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,1
+"site_Sable Island, Nova Scotia",0.0,4,1
+"site_South of Sable Island, North Atlantic",0.0,4,1
+"site_St. David's Island, Bermuda",0.0,4,1
+"site_T3 Ice Island, Canada",0.0,4,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,4,1
+"site_Tortola, British Virgin IslandsO",0.0,4,1
+site_W of Browns Bank,0.0,4,1
+"site_off Gibbs Hill Light, Bermuda",0.0,4,1
+"site_over Plantagenet Banks, Bermuda",0.0,4,1
+collection_code_BD10A,0.0,4,1
+collection_code_AC2A,0.28508609533309937,4,2
+latitude,0.208596333861351,4,2
+collection_code_BA2A,0.19786320626735687,4,2
+native_sample_rate,0.19528812170028687,4,2
+collection_code_BE7A,0.030032487586140633,4,2
+collection_code_BE3C,0.0297788567841053,4,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.02715214714407921,4,2
+"site_Sable Island, Nova Scotia",0.02462882176041603,4,2
+"site_Vancouver, British Columbia",0.0009689462604001164,4,2
+bytes_on_disk,0.0001753440301399678,4,2
+longitude,0.0001678520638961345,4,2
+year,0.00014165413449518383,4,2
+duration_seconds,0.00012013925152132288,4,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,4,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,4,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,4,2
+"site_3-4 mi. off Roseau, Dominica",0.0,4,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,2
+site_50 mi. NE Malta,0.0,4,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,2
+"site_Andenes, Norway",0.0,4,2
+"site_Argus Island, Bermuda",0.0,4,2
+site_Bequia,0.0,4,2
+site_Bermuda,0.0,4,2
+site_BermudaBD,0.0,4,2
+"site_Castle Harbour, Bermuda",0.0,4,2
+site_DOMINICA,0.0,4,2
+"site_Dabob Bay, Seattle, Washington",0.0,4,2
+site_Delaware,0.0,4,2
+site_Dominica,0.0,4,2
+site_Dominica  E,0.0,4,2
+site_Dominica Is,0.0,4,2
+site_Dominica IsBD,0.0,4,2
+"site_Gully, SE Sable I., Canada  BD",0.0,4,2
+"site_Kikvika, Norway",0.0,4,2
+"site_Ligurian Sea, NW Italy",0.0,4,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,2
+site_Madeira,0.0,4,2
+site_N end of Dominica,0.0,4,2
+site_N of Selina,0.0,4,2
+"site_N of Selina, Sicily",0.0,4,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,4,2
+"site_Near Filicudi, Italy",0.0,4,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,4,2
+"site_Off Maui, HI",0.0,4,2
+"site_Off Maui, HIBD",0.0,4,2
+site_Oregon Coast Aquarium,0.0,4,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,4,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,2
+"site_Plantagenet Bank, Bermuda",0.0,4,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,2
+"site_South of Sable Island, North Atlantic",0.0,4,2
+"site_St. David's Island, Bermuda",0.0,4,2
+"site_T3 Ice Island, Canada",0.0,4,2
+"site_Tortola, British Virgin IslandsO",0.0,4,2
+site_W of Browns Bank,0.0,4,2
+"site_off Gibbs Hill Light, Bermuda",0.0,4,2
+"site_over Plantagenet Banks, Bermuda",0.0,4,2
+collection_code_BD10A,0.0,4,2
+latitude,0.4369490146636963,4,3
+collection_code_AC2A,0.27650508284568787,4,3
+collection_code_BA2A,0.26997682452201843,4,3
+collection_code_BE3C,0.015998950228095055,4,3
+collection_code_BE7A,0.0002363103412790224,4,3
+native_sample_rate,0.00020565422892104834,4,3
+bytes_on_disk,8.614821126684546e-05,4,3
+duration_seconds,4.2039944673888385e-05,4,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,4,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,4,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,4,3
+"site_3-4 mi. off Roseau, Dominica",0.0,4,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,3
+site_50 mi. NE Malta,0.0,4,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,3
+"site_Andenes, Norway",0.0,4,3
+"site_Argus Island, Bermuda",0.0,4,3
+site_Bequia,0.0,4,3
+site_Bermuda,0.0,4,3
+site_BermudaBD,0.0,4,3
+"site_Castle Harbour, Bermuda",0.0,4,3
+site_DOMINICA,0.0,4,3
+"site_Dabob Bay, Seattle, Washington",0.0,4,3
+site_Delaware,0.0,4,3
+site_Dominica,0.0,4,3
+site_Dominica  E,0.0,4,3
+site_Dominica Is,0.0,4,3
+site_Dominica IsBD,0.0,4,3
+"site_Gully, SE Sable I., Canada  BD",0.0,4,3
+"site_Kikvika, Norway",0.0,4,3
+"site_Ligurian Sea, NW Italy",0.0,4,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,3
+site_Madeira,0.0,4,3
+site_N end of Dominica,0.0,4,3
+site_N of Selina,0.0,4,3
+"site_N of Selina, Sicily",0.0,4,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,4,3
+"site_Near Filicudi, Italy",0.0,4,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,4,3
+"site_Off Maui, HI",0.0,4,3
+"site_Off Maui, HIBD",0.0,4,3
+site_Oregon Coast Aquarium,0.0,4,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,4,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,3
+"site_Plantagenet Bank, Bermuda",0.0,4,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,3
+"site_Sable Island, Nova Scotia",0.0,4,3
+"site_South of Sable Island, North Atlantic",0.0,4,3
+"site_St. David's Island, Bermuda",0.0,4,3
+"site_T3 Ice Island, Canada",0.0,4,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,4,3
+"site_Tortola, British Virgin IslandsO",0.0,4,3
+"site_Vancouver, British Columbia",0.0,4,3
+site_W of Browns Bank,0.0,4,3
+"site_off Gibbs Hill Light, Bermuda",0.0,4,3
+"site_over Plantagenet Banks, Bermuda",0.0,4,3
+collection_code_BD10A,0.0,4,3
+collection_code_BD15A,0.0,4,3
+collection_code_BE3B,0.0,4,3
+collection_code_AC2A,0.3476613759994507,4,4
+collection_code_BA2A,0.3361518681049347,4,4
+latitude,0.2894059717655182,4,4
+native_sample_rate,0.023260515183210373,4,4
+year,0.0012670437572523952,4,4
+"site_Kikvika, Norway",0.0005462357657961547,4,4
+collection_code_BE7A,0.0005310721462592483,4,4
+duration_seconds,0.0003857042465824634,4,4
+"site_Vancouver, British Columbia",0.0003304032434243709,4,4
+bytes_on_disk,0.0003199697530362755,4,4
+longitude,0.000139757597935386,4,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,4,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,4,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,4,4
+"site_3-4 mi. off Roseau, Dominica",0.0,4,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,4
+site_50 mi. NE Malta,0.0,4,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,4
+"site_Andenes, Norway",0.0,4,4
+"site_Argus Island, Bermuda",0.0,4,4
+site_Bequia,0.0,4,4
+site_Bermuda,0.0,4,4
+site_BermudaBD,0.0,4,4
+"site_Castle Harbour, Bermuda",0.0,4,4
+site_DOMINICA,0.0,4,4
+"site_Dabob Bay, Seattle, Washington",0.0,4,4
+site_Delaware,0.0,4,4
+site_Dominica,0.0,4,4
+site_Dominica  E,0.0,4,4
+site_Dominica Is,0.0,4,4
+site_Dominica IsBD,0.0,4,4
+"site_Gully, SE Sable I., Canada  BD",0.0,4,4
+"site_Ligurian Sea, NW Italy",0.0,4,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,4
+site_Madeira,0.0,4,4
+site_N end of Dominica,0.0,4,4
+site_N of Selina,0.0,4,4
+"site_N of Selina, Sicily",0.0,4,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,4,4
+"site_Near Filicudi, Italy",0.0,4,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,4,4
+"site_Off Maui, HI",0.0,4,4
+"site_Off Maui, HIBD",0.0,4,4
+site_Oregon Coast Aquarium,0.0,4,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,4,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,4
+"site_Plantagenet Bank, Bermuda",0.0,4,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,4
+"site_Sable Island, Nova Scotia",0.0,4,4
+"site_South of Sable Island, North Atlantic",0.0,4,4
+"site_St. David's Island, Bermuda",0.0,4,4
+"site_T3 Ice Island, Canada",0.0,4,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,4,4
+"site_Tortola, British Virgin IslandsO",0.0,4,4
+site_W of Browns Bank,0.0,4,4
+"site_off Gibbs Hill Light, Bermuda",0.0,4,4
+"site_over Plantagenet Banks, Bermuda",0.0,4,4
+collection_code_BD10A,0.0,4,4
+collection_code_BD15A,0.0,4,4
+collection_code_AC2A,0.3726963698863983,5,0
+collection_code_BA2A,0.36151859164237976,5,0
+latitude,0.22813281416893005,5,0
+site_1 mile S of Olowalu reef - Hawaii,0.01946019008755684,5,0
+native_sample_rate,0.016024984419345856,5,0
+longitude,0.0012943461770191789,5,0
+collection_code_BE7A,0.00038428150583058596,5,0
+"site_Vancouver, British Columbia",0.00023826005053706467,5,0
+site_Oregon Coast Aquarium,0.00014533150533679873,5,0
+bytes_on_disk,0.00010484719678061083,5,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,5,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,5,0
+"site_3-4 mi. off Roseau, Dominica",0.0,5,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,0
+site_50 mi. NE Malta,0.0,5,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,0
+"site_Andenes, Norway",0.0,5,0
+"site_Argus Island, Bermuda",0.0,5,0
+site_Bequia,0.0,5,0
+site_Bermuda,0.0,5,0
+site_BermudaBD,0.0,5,0
+"site_Castle Harbour, Bermuda",0.0,5,0
+site_DOMINICA,0.0,5,0
+"site_Dabob Bay, Seattle, Washington",0.0,5,0
+site_Delaware,0.0,5,0
+site_Dominica,0.0,5,0
+site_Dominica  E,0.0,5,0
+site_Dominica Is,0.0,5,0
+site_Dominica IsBD,0.0,5,0
+"site_Gully, SE Sable I., Canada  BD",0.0,5,0
+"site_Kikvika, Norway",0.0,5,0
+"site_Ligurian Sea, NW Italy",0.0,5,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,0
+site_Madeira,0.0,5,0
+site_N end of Dominica,0.0,5,0
+site_N of Selina,0.0,5,0
+"site_N of Selina, Sicily",0.0,5,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,5,0
+"site_Near Filicudi, Italy",0.0,5,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,5,0
+"site_Off Maui, HI",0.0,5,0
+"site_Off Maui, HIBD",0.0,5,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,5,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,0
+"site_Plantagenet Bank, Bermuda",0.0,5,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,0
+"site_Sable Island, Nova Scotia",0.0,5,0
+"site_South of Sable Island, North Atlantic",0.0,5,0
+"site_St. David's Island, Bermuda",0.0,5,0
+"site_T3 Ice Island, Canada",0.0,5,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,5,0
+"site_Tortola, British Virgin IslandsO",0.0,5,0
+site_W of Browns Bank,0.0,5,0
+"site_off Gibbs Hill Light, Bermuda",0.0,5,0
+"site_over Plantagenet Banks, Bermuda",0.0,5,0
+collection_code_BD10A,0.0,5,0
+collection_code_BD15A,0.0,5,0
+collection_code_BE3B,0.0,5,0
+collection_code_BE3C,0.0,5,0
+collection_code_BA2A,0.392729252576828,5,1
+collection_code_AC2A,0.29119834303855896,5,1
+latitude,0.2186741828918457,5,1
+site_Delaware,0.05995738133788109,5,1
+collection_code_BE3C,0.028960509225726128,5,1
+"site_Vancouver, British Columbia",0.0069411927834153175,5,1
+native_sample_rate,0.0004864968650508672,5,1
+collection_code_BE7A,0.00045998822315596044,5,1
+longitude,0.00020690629025921226,5,1
+bytes_on_disk,0.00019940787751693279,5,1
+duration_seconds,0.00012478785356506705,5,1
+year,6.160452903714031e-05,5,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,5,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,5,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,5,1
+"site_3-4 mi. off Roseau, Dominica",0.0,5,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,1
+site_50 mi. NE Malta,0.0,5,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,1
+"site_Andenes, Norway",0.0,5,1
+"site_Argus Island, Bermuda",0.0,5,1
+site_Bequia,0.0,5,1
+site_Bermuda,0.0,5,1
+site_BermudaBD,0.0,5,1
+"site_Castle Harbour, Bermuda",0.0,5,1
+site_DOMINICA,0.0,5,1
+"site_Dabob Bay, Seattle, Washington",0.0,5,1
+site_Dominica,0.0,5,1
+site_Dominica  E,0.0,5,1
+site_Dominica Is,0.0,5,1
+site_Dominica IsBD,0.0,5,1
+"site_Gully, SE Sable I., Canada  BD",0.0,5,1
+"site_Kikvika, Norway",0.0,5,1
+"site_Ligurian Sea, NW Italy",0.0,5,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,1
+site_Madeira,0.0,5,1
+site_N end of Dominica,0.0,5,1
+site_N of Selina,0.0,5,1
+"site_N of Selina, Sicily",0.0,5,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,5,1
+"site_Near Filicudi, Italy",0.0,5,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,5,1
+"site_Off Maui, HI",0.0,5,1
+"site_Off Maui, HIBD",0.0,5,1
+site_Oregon Coast Aquarium,0.0,5,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,5,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,1
+"site_Plantagenet Bank, Bermuda",0.0,5,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,1
+"site_Sable Island, Nova Scotia",0.0,5,1
+"site_South of Sable Island, North Atlantic",0.0,5,1
+"site_St. David's Island, Bermuda",0.0,5,1
+"site_T3 Ice Island, Canada",0.0,5,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,5,1
+"site_Tortola, British Virgin IslandsO",0.0,5,1
+site_W of Browns Bank,0.0,5,1
+"site_off Gibbs Hill Light, Bermuda",0.0,5,1
+"site_over Plantagenet Banks, Bermuda",0.0,5,1
+collection_code_BD10A,0.0,5,1
+collection_code_BA2A,0.36812716722488403,5,2
+collection_code_AC2A,0.3372729420661926,5,2
+latitude,0.23625187575817108,5,2
+"site_Vancouver, British Columbia",0.020262014120817184,5,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.019572634249925613,5,2
+native_sample_rate,0.017628872767090797,5,2
+collection_code_BE7A,0.0002752305881585926,5,2
+year,0.00022424443159252405,5,2
+longitude,0.00018705302500166,5,2
+bytes_on_disk,0.00012508149666246027,5,2
+duration_seconds,6.32924129604362e-05,5,2
+cond_reverberation,9.639535164751578e-06,5,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,5,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,5,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,5,2
+"site_3-4 mi. off Roseau, Dominica",0.0,5,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,2
+site_50 mi. NE Malta,0.0,5,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,2
+"site_Andenes, Norway",0.0,5,2
+"site_Argus Island, Bermuda",0.0,5,2
+site_Bequia,0.0,5,2
+site_Bermuda,0.0,5,2
+site_BermudaBD,0.0,5,2
+"site_Castle Harbour, Bermuda",0.0,5,2
+site_DOMINICA,0.0,5,2
+"site_Dabob Bay, Seattle, Washington",0.0,5,2
+site_Delaware,0.0,5,2
+site_Dominica,0.0,5,2
+site_Dominica  E,0.0,5,2
+site_Dominica Is,0.0,5,2
+site_Dominica IsBD,0.0,5,2
+"site_Gully, SE Sable I., Canada  BD",0.0,5,2
+"site_Kikvika, Norway",0.0,5,2
+"site_Ligurian Sea, NW Italy",0.0,5,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,2
+site_Madeira,0.0,5,2
+site_N end of Dominica,0.0,5,2
+site_N of Selina,0.0,5,2
+"site_N of Selina, Sicily",0.0,5,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,5,2
+"site_Near Filicudi, Italy",0.0,5,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,5,2
+"site_Off Maui, HI",0.0,5,2
+"site_Off Maui, HIBD",0.0,5,2
+site_Oregon Coast Aquarium,0.0,5,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,5,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,2
+"site_Plantagenet Bank, Bermuda",0.0,5,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,2
+"site_Sable Island, Nova Scotia",0.0,5,2
+"site_South of Sable Island, North Atlantic",0.0,5,2
+"site_St. David's Island, Bermuda",0.0,5,2
+"site_T3 Ice Island, Canada",0.0,5,2
+"site_Tortola, British Virgin IslandsO",0.0,5,2
+site_W of Browns Bank,0.0,5,2
+"site_off Gibbs Hill Light, Bermuda",0.0,5,2
+"site_over Plantagenet Banks, Bermuda",0.0,5,2
+collection_code_BD10A,0.0,5,2
+collection_code_AC2A,0.3283154368400574,5,3
+latitude,0.31657087802886963,5,3
+collection_code_BA2A,0.3163842260837555,5,3
+native_sample_rate,0.027648326009511948,5,3
+"site_Vancouver, British Columbia",0.007589258253574371,5,3
+"site_Kikvika, Norway",0.0010006472002714872,5,3
+"site_Off Maui, HI",0.0009012597729451954,5,3
+collection_code_BE7A,0.0008631660020910203,5,3
+bytes_on_disk,0.0002556339604780078,5,3
+duration_seconds,0.00019948610861320049,5,3
+year,0.00015852172509767115,5,3
+longitude,0.000113141410110984,5,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,5,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,5,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,5,3
+"site_3-4 mi. off Roseau, Dominica",0.0,5,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,3
+site_50 mi. NE Malta,0.0,5,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,3
+"site_Andenes, Norway",0.0,5,3
+"site_Argus Island, Bermuda",0.0,5,3
+site_Bequia,0.0,5,3
+site_Bermuda,0.0,5,3
+site_BermudaBD,0.0,5,3
+"site_Castle Harbour, Bermuda",0.0,5,3
+site_DOMINICA,0.0,5,3
+"site_Dabob Bay, Seattle, Washington",0.0,5,3
+site_Delaware,0.0,5,3
+site_Dominica,0.0,5,3
+site_Dominica  E,0.0,5,3
+site_Dominica Is,0.0,5,3
+site_Dominica IsBD,0.0,5,3
+"site_Gully, SE Sable I., Canada  BD",0.0,5,3
+"site_Ligurian Sea, NW Italy",0.0,5,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,3
+site_Madeira,0.0,5,3
+site_N end of Dominica,0.0,5,3
+site_N of Selina,0.0,5,3
+"site_N of Selina, Sicily",0.0,5,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,5,3
+"site_Near Filicudi, Italy",0.0,5,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,5,3
+"site_Off Maui, HIBD",0.0,5,3
+site_Oregon Coast Aquarium,0.0,5,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,5,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,3
+"site_Plantagenet Bank, Bermuda",0.0,5,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,3
+"site_Sable Island, Nova Scotia",0.0,5,3
+"site_South of Sable Island, North Atlantic",0.0,5,3
+"site_St. David's Island, Bermuda",0.0,5,3
+"site_T3 Ice Island, Canada",0.0,5,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,5,3
+"site_Tortola, British Virgin IslandsO",0.0,5,3
+site_W of Browns Bank,0.0,5,3
+"site_off Gibbs Hill Light, Bermuda",0.0,5,3
+"site_over Plantagenet Banks, Bermuda",0.0,5,3
+collection_code_BD10A,0.0,5,3
+collection_code_BD15A,0.0,5,3
+collection_code_BA2A,0.4139138162136078,5,4
+collection_code_AC2A,0.28314509987831116,5,4
+latitude,0.2522186040878296,5,4
+collection_code_BE3C,0.028841685503721237,5,4
+native_sample_rate,0.008711690083146095,5,4
+"site_Vancouver, British Columbia",0.00477233249694109,5,4
+site_Dominica Is,0.004701782017946243,5,4
+"site_Sable Island, Nova Scotia",0.002135890070348978,5,4
+"site_Kikvika, Norway",0.0008908832678571343,5,4
+collection_code_BE7A,0.0001559941447339952,5,4
+year,0.00012600002810359,5,4
+longitude,0.00012587488163262606,5,4
+bytes_on_disk,0.00012484884064178914,5,4
+cond_water_noise,8.711356349522248e-05,5,4
+duration_seconds,4.840133260586299e-05,5,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,5,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,5,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,5,4
+"site_3-4 mi. off Roseau, Dominica",0.0,5,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,4
+site_50 mi. NE Malta,0.0,5,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,4
+"site_Andenes, Norway",0.0,5,4
+"site_Argus Island, Bermuda",0.0,5,4
+site_Bequia,0.0,5,4
+site_Bermuda,0.0,5,4
+site_BermudaBD,0.0,5,4
+"site_Castle Harbour, Bermuda",0.0,5,4
+site_DOMINICA,0.0,5,4
+"site_Dabob Bay, Seattle, Washington",0.0,5,4
+site_Delaware,0.0,5,4
+site_Dominica,0.0,5,4
+site_Dominica  E,0.0,5,4
+site_Dominica IsBD,0.0,5,4
+"site_Gully, SE Sable I., Canada  BD",0.0,5,4
+"site_Ligurian Sea, NW Italy",0.0,5,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,4
+site_Madeira,0.0,5,4
+site_N end of Dominica,0.0,5,4
+site_N of Selina,0.0,5,4
+"site_N of Selina, Sicily",0.0,5,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,5,4
+"site_Near Filicudi, Italy",0.0,5,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,5,4
+"site_Off Maui, HI",0.0,5,4
+"site_Off Maui, HIBD",0.0,5,4
+site_Oregon Coast Aquarium,0.0,5,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,5,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,4
+"site_Plantagenet Bank, Bermuda",0.0,5,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,4
+"site_South of Sable Island, North Atlantic",0.0,5,4
+"site_St. David's Island, Bermuda",0.0,5,4
+"site_T3 Ice Island, Canada",0.0,5,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,5,4
+"site_Tortola, British Virgin IslandsO",0.0,5,4
+site_W of Browns Bank,0.0,5,4
+"site_off Gibbs Hill Light, Bermuda",0.0,5,4
+"site_over Plantagenet Banks, Bermuda",0.0,5,4
+collection_code_AC2A,0.3738129436969757,6,0
+collection_code_BA2A,0.3529459834098816,6,0
+latitude,0.21947668492794037,6,0
+site_1 mile S of Olowalu reef - Hawaii,0.02331884764134884,6,0
+native_sample_rate,0.01626618579030037,6,0
+"site_Vancouver, British Columbia",0.00735592283308506,6,0
+site_Dominica Is,0.00456442404538393,6,0
+"site_Kikvika, Norway",0.0009512517135590315,6,0
+collection_code_BE7A,0.0003911216335836798,6,0
+cond_water_noise,0.00023841984511818737,6,0
+year,0.000206456272280775,6,0
+longitude,0.00018925861513707787,6,0
+duration_seconds,0.00016441357729490846,6,0
+bytes_on_disk,0.00011813806486316025,6,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,6,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,6,0
+"site_3-4 mi. off Roseau, Dominica",0.0,6,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,0
+site_50 mi. NE Malta,0.0,6,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,0
+"site_Andenes, Norway",0.0,6,0
+"site_Argus Island, Bermuda",0.0,6,0
+site_Bequia,0.0,6,0
+site_Bermuda,0.0,6,0
+site_BermudaBD,0.0,6,0
+"site_Castle Harbour, Bermuda",0.0,6,0
+site_DOMINICA,0.0,6,0
+"site_Dabob Bay, Seattle, Washington",0.0,6,0
+site_Delaware,0.0,6,0
+site_Dominica,0.0,6,0
+site_Dominica  E,0.0,6,0
+site_Dominica IsBD,0.0,6,0
+"site_Gully, SE Sable I., Canada  BD",0.0,6,0
+"site_Ligurian Sea, NW Italy",0.0,6,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,0
+site_Madeira,0.0,6,0
+site_N end of Dominica,0.0,6,0
+site_N of Selina,0.0,6,0
+"site_N of Selina, Sicily",0.0,6,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,6,0
+"site_Near Filicudi, Italy",0.0,6,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,6,0
+"site_Off Maui, HI",0.0,6,0
+"site_Off Maui, HIBD",0.0,6,0
+site_Oregon Coast Aquarium,0.0,6,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,6,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,0
+"site_Plantagenet Bank, Bermuda",0.0,6,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,0
+"site_Sable Island, Nova Scotia",0.0,6,0
+"site_South of Sable Island, North Atlantic",0.0,6,0
+"site_St. David's Island, Bermuda",0.0,6,0
+"site_T3 Ice Island, Canada",0.0,6,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,6,0
+"site_Tortola, British Virgin IslandsO",0.0,6,0
+site_W of Browns Bank,0.0,6,0
+"site_off Gibbs Hill Light, Bermuda",0.0,6,0
+"site_over Plantagenet Banks, Bermuda",0.0,6,0
+collection_code_BD10A,0.0,6,0
+collection_code_AC2A,0.3563941419124603,6,1
+collection_code_BA2A,0.329477995634079,6,1
+latitude,0.2682178318500519,6,1
+collection_code_BE3C,0.03500491753220558,6,1
+"site_Vancouver, British Columbia",0.008054872043430805,6,1
+"site_Off Maui, HI",0.0010694870725274086,6,1
+native_sample_rate,0.0006559600587934256,6,1
+collection_code_BE7A,0.0004054243036080152,6,1
+bytes_on_disk,0.0002383084938628599,6,1
+longitude,0.00022396576241590083,6,1
+duration_seconds,0.00013080010830890387,6,1
+year,0.00012634762970265,6,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,6,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,6,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,6,1
+"site_3-4 mi. off Roseau, Dominica",0.0,6,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,1
+site_50 mi. NE Malta,0.0,6,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,1
+"site_Andenes, Norway",0.0,6,1
+"site_Argus Island, Bermuda",0.0,6,1
+site_Bequia,0.0,6,1
+site_Bermuda,0.0,6,1
+site_BermudaBD,0.0,6,1
+"site_Castle Harbour, Bermuda",0.0,6,1
+site_DOMINICA,0.0,6,1
+"site_Dabob Bay, Seattle, Washington",0.0,6,1
+site_Delaware,0.0,6,1
+site_Dominica,0.0,6,1
+site_Dominica  E,0.0,6,1
+site_Dominica Is,0.0,6,1
+site_Dominica IsBD,0.0,6,1
+"site_Gully, SE Sable I., Canada  BD",0.0,6,1
+"site_Kikvika, Norway",0.0,6,1
+"site_Ligurian Sea, NW Italy",0.0,6,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,1
+site_Madeira,0.0,6,1
+site_N end of Dominica,0.0,6,1
+site_N of Selina,0.0,6,1
+"site_N of Selina, Sicily",0.0,6,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,6,1
+"site_Near Filicudi, Italy",0.0,6,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,6,1
+"site_Off Maui, HIBD",0.0,6,1
+site_Oregon Coast Aquarium,0.0,6,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,6,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,1
+"site_Plantagenet Bank, Bermuda",0.0,6,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,1
+"site_Sable Island, Nova Scotia",0.0,6,1
+"site_South of Sable Island, North Atlantic",0.0,6,1
+"site_St. David's Island, Bermuda",0.0,6,1
+"site_T3 Ice Island, Canada",0.0,6,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,6,1
+"site_Tortola, British Virgin IslandsO",0.0,6,1
+site_W of Browns Bank,0.0,6,1
+"site_off Gibbs Hill Light, Bermuda",0.0,6,1
+"site_over Plantagenet Banks, Bermuda",0.0,6,1
+collection_code_BD10A,0.0,6,1
+collection_code_AC2A,0.24713046848773956,6,2
+native_sample_rate,0.2196960747241974,6,2
+latitude,0.2007693201303482,6,2
+collection_code_BA2A,0.18498878180980682,6,2
+collection_code_BE3C,0.06074768677353859,6,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.027184193953871727,6,2
+collection_code_BE7A,0.02688136138021946,6,2
+"site_Sable Island, Nova Scotia",0.026786891743540764,6,2
+site_Delaware,0.0036918180994689465,6,2
+"site_Vancouver, British Columbia",0.0010716414544731379,6,2
+"site_Off Maui, HI",0.0005392077728174627,6,2
+bytes_on_disk,0.0001868975959951058,6,2
+longitude,0.00015088416694197804,6,2
+duration_seconds,0.00010898325854213908,6,2
+year,6.575647421414033e-05,6,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,6,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,6,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,6,2
+"site_3-4 mi. off Roseau, Dominica",0.0,6,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,2
+site_50 mi. NE Malta,0.0,6,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,2
+"site_Andenes, Norway",0.0,6,2
+"site_Argus Island, Bermuda",0.0,6,2
+site_Bequia,0.0,6,2
+site_Bermuda,0.0,6,2
+site_BermudaBD,0.0,6,2
+"site_Castle Harbour, Bermuda",0.0,6,2
+site_DOMINICA,0.0,6,2
+"site_Dabob Bay, Seattle, Washington",0.0,6,2
+site_Dominica,0.0,6,2
+site_Dominica  E,0.0,6,2
+site_Dominica Is,0.0,6,2
+site_Dominica IsBD,0.0,6,2
+"site_Gully, SE Sable I., Canada  BD",0.0,6,2
+"site_Kikvika, Norway",0.0,6,2
+"site_Ligurian Sea, NW Italy",0.0,6,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,2
+site_Madeira,0.0,6,2
+site_N end of Dominica,0.0,6,2
+site_N of Selina,0.0,6,2
+"site_N of Selina, Sicily",0.0,6,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,6,2
+"site_Near Filicudi, Italy",0.0,6,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,6,2
+"site_Off Maui, HIBD",0.0,6,2
+site_Oregon Coast Aquarium,0.0,6,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,6,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,2
+"site_Plantagenet Bank, Bermuda",0.0,6,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,2
+"site_South of Sable Island, North Atlantic",0.0,6,2
+"site_St. David's Island, Bermuda",0.0,6,2
+"site_T3 Ice Island, Canada",0.0,6,2
+"site_Tortola, British Virgin IslandsO",0.0,6,2
+site_W of Browns Bank,0.0,6,2
+"site_off Gibbs Hill Light, Bermuda",0.0,6,2
+"site_over Plantagenet Banks, Bermuda",0.0,6,2
+collection_code_BD10A,0.0,6,2
+latitude,0.351738840341568,6,3
+collection_code_AC2A,0.3129867613315582,6,3
+collection_code_BA2A,0.30735188722610474,6,3
+native_sample_rate,0.0172407329082489,6,3
+site_Dominica  E,0.008763853460550308,6,3
+"site_Vancouver, British Columbia",0.0005764172528870404,6,3
+collection_code_BE7A,0.0003216535842511803,6,3
+longitude,0.00025761034339666367,6,3
+bytes_on_disk,0.00023360557679552585,6,3
+duration_seconds,0.00017980992561206222,6,3
+"site_Argus Island, Bermuda",0.00017969761393032968,6,3
+year,0.0001690899662207812,6,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,6,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,6,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,6,3
+"site_3-4 mi. off Roseau, Dominica",0.0,6,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,3
+site_50 mi. NE Malta,0.0,6,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,3
+"site_Andenes, Norway",0.0,6,3
+site_Bequia,0.0,6,3
+site_Bermuda,0.0,6,3
+site_BermudaBD,0.0,6,3
+"site_Castle Harbour, Bermuda",0.0,6,3
+site_DOMINICA,0.0,6,3
+"site_Dabob Bay, Seattle, Washington",0.0,6,3
+site_Delaware,0.0,6,3
+site_Dominica,0.0,6,3
+site_Dominica Is,0.0,6,3
+site_Dominica IsBD,0.0,6,3
+"site_Gully, SE Sable I., Canada  BD",0.0,6,3
+"site_Kikvika, Norway",0.0,6,3
+"site_Ligurian Sea, NW Italy",0.0,6,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,3
+site_Madeira,0.0,6,3
+site_N end of Dominica,0.0,6,3
+site_N of Selina,0.0,6,3
+"site_N of Selina, Sicily",0.0,6,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,6,3
+"site_Near Filicudi, Italy",0.0,6,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,6,3
+"site_Off Maui, HI",0.0,6,3
+"site_Off Maui, HIBD",0.0,6,3
+site_Oregon Coast Aquarium,0.0,6,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,6,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,3
+"site_Plantagenet Bank, Bermuda",0.0,6,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,3
+"site_Sable Island, Nova Scotia",0.0,6,3
+"site_South of Sable Island, North Atlantic",0.0,6,3
+"site_St. David's Island, Bermuda",0.0,6,3
+"site_T3 Ice Island, Canada",0.0,6,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,6,3
+"site_Tortola, British Virgin IslandsO",0.0,6,3
+site_W of Browns Bank,0.0,6,3
+"site_off Gibbs Hill Light, Bermuda",0.0,6,3
+"site_over Plantagenet Banks, Bermuda",0.0,6,3
+collection_code_BD10A,0.0,6,3
+collection_code_BD15A,0.0,6,3
+collection_code_AC2A,0.3431878685951233,6,4
+collection_code_BA2A,0.3377099931240082,6,4
+latitude,0.29449495673179626,6,4
+native_sample_rate,0.02145261876285076,6,4
+collection_code_BE7A,0.0008927425951696932,6,4
+"site_Kikvika, Norway",0.0006612369907088578,6,4
+bytes_on_disk,0.00034485585638321936,6,4
+duration_seconds,0.0003282394609414041,6,4
+"site_Vancouver, British Columbia",0.00032682844903320074,6,4
+site_Oregon Coast Aquarium,0.000308169808704406,6,4
+longitude,0.00021310454758349806,6,4
+year,7.933604501886293e-05,6,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,6,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,6,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,6,4
+"site_3-4 mi. off Roseau, Dominica",0.0,6,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,4
+site_50 mi. NE Malta,0.0,6,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,4
+"site_Andenes, Norway",0.0,6,4
+"site_Argus Island, Bermuda",0.0,6,4
+site_Bequia,0.0,6,4
+site_Bermuda,0.0,6,4
+site_BermudaBD,0.0,6,4
+"site_Castle Harbour, Bermuda",0.0,6,4
+site_DOMINICA,0.0,6,4
+"site_Dabob Bay, Seattle, Washington",0.0,6,4
+site_Delaware,0.0,6,4
+site_Dominica,0.0,6,4
+site_Dominica  E,0.0,6,4
+site_Dominica Is,0.0,6,4
+site_Dominica IsBD,0.0,6,4
+"site_Gully, SE Sable I., Canada  BD",0.0,6,4
+"site_Ligurian Sea, NW Italy",0.0,6,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,4
+site_Madeira,0.0,6,4
+site_N end of Dominica,0.0,6,4
+site_N of Selina,0.0,6,4
+"site_N of Selina, Sicily",0.0,6,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,6,4
+"site_Near Filicudi, Italy",0.0,6,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,6,4
+"site_Off Maui, HI",0.0,6,4
+"site_Off Maui, HIBD",0.0,6,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,6,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,4
+"site_Plantagenet Bank, Bermuda",0.0,6,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,4
+"site_Sable Island, Nova Scotia",0.0,6,4
+"site_South of Sable Island, North Atlantic",0.0,6,4
+"site_St. David's Island, Bermuda",0.0,6,4
+"site_T3 Ice Island, Canada",0.0,6,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,6,4
+"site_Tortola, British Virgin IslandsO",0.0,6,4
+site_W of Browns Bank,0.0,6,4
+"site_off Gibbs Hill Light, Bermuda",0.0,6,4
+"site_over Plantagenet Banks, Bermuda",0.0,6,4
+collection_code_BD10A,0.0,6,4
+collection_code_BD15A,0.0,6,4
+collection_code_AC2A,0.34118446707725525,7,0
+collection_code_BA2A,0.318497896194458,7,0
+latitude,0.25240421295166016,7,0
+site_N end of Dominica,0.04531705379486084,7,0
+site_1 mile S of Olowalu reef - Hawaii,0.020925037562847137,7,0
+native_sample_rate,0.010312619619071484,7,0
+"site_Vancouver, British Columbia",0.005483236163854599,7,0
+site_Dominica Is,0.003971548285335302,7,0
+"site_Kikvika, Norway",0.0008764087106101215,7,0
+collection_code_BE7A,0.0003192824951838702,7,0
+year,0.0002747803519014269,7,0
+longitude,0.00022297797841019928,7,0
+bytes_on_disk,7.834326970623806e-05,7,0
+cond_water_noise,7.10358508513309e-05,7,0
+duration_seconds,6.103069972596131e-05,7,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,7,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,7,0
+"site_3-4 mi. off Roseau, Dominica",0.0,7,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,0
+site_50 mi. NE Malta,0.0,7,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,0
+"site_Andenes, Norway",0.0,7,0
+"site_Argus Island, Bermuda",0.0,7,0
+site_Bequia,0.0,7,0
+site_Bermuda,0.0,7,0
+site_BermudaBD,0.0,7,0
+"site_Castle Harbour, Bermuda",0.0,7,0
+site_DOMINICA,0.0,7,0
+"site_Dabob Bay, Seattle, Washington",0.0,7,0
+site_Delaware,0.0,7,0
+site_Dominica,0.0,7,0
+site_Dominica  E,0.0,7,0
+site_Dominica IsBD,0.0,7,0
+"site_Gully, SE Sable I., Canada  BD",0.0,7,0
+"site_Ligurian Sea, NW Italy",0.0,7,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,0
+site_Madeira,0.0,7,0
+site_N of Selina,0.0,7,0
+"site_N of Selina, Sicily",0.0,7,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,7,0
+"site_Near Filicudi, Italy",0.0,7,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,7,0
+"site_Off Maui, HI",0.0,7,0
+"site_Off Maui, HIBD",0.0,7,0
+site_Oregon Coast Aquarium,0.0,7,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,7,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,0
+"site_Plantagenet Bank, Bermuda",0.0,7,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,0
+"site_Sable Island, Nova Scotia",0.0,7,0
+"site_South of Sable Island, North Atlantic",0.0,7,0
+"site_St. David's Island, Bermuda",0.0,7,0
+"site_T3 Ice Island, Canada",0.0,7,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,7,0
+"site_Tortola, British Virgin IslandsO",0.0,7,0
+site_W of Browns Bank,0.0,7,0
+"site_off Gibbs Hill Light, Bermuda",0.0,7,0
+"site_over Plantagenet Banks, Bermuda",0.0,7,0
+collection_code_BD10A,0.0,7,0
+collection_code_AC2A,0.3605445921421051,7,1
+collection_code_BA2A,0.3326776325702667,7,1
+latitude,0.26122114062309265,7,1
+collection_code_BE3C,0.03540118411183357,7,1
+"site_Vancouver, British Columbia",0.008277353830635548,7,1
+native_sample_rate,0.000609000853728503,7,1
+collection_code_BE7A,0.0004890094278380275,7,1
+bytes_on_disk,0.000263939902652055,7,1
+longitude,0.0002580160216894001,7,1
+duration_seconds,0.00013280486746225506,7,1
+year,0.00012532352411653847,7,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,7,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,7,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,7,1
+"site_3-4 mi. off Roseau, Dominica",0.0,7,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,1
+site_50 mi. NE Malta,0.0,7,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,1
+"site_Andenes, Norway",0.0,7,1
+"site_Argus Island, Bermuda",0.0,7,1
+site_Bequia,0.0,7,1
+site_Bermuda,0.0,7,1
+site_BermudaBD,0.0,7,1
+"site_Castle Harbour, Bermuda",0.0,7,1
+site_DOMINICA,0.0,7,1
+"site_Dabob Bay, Seattle, Washington",0.0,7,1
+site_Delaware,0.0,7,1
+site_Dominica,0.0,7,1
+site_Dominica  E,0.0,7,1
+site_Dominica Is,0.0,7,1
+site_Dominica IsBD,0.0,7,1
+"site_Gully, SE Sable I., Canada  BD",0.0,7,1
+"site_Kikvika, Norway",0.0,7,1
+"site_Ligurian Sea, NW Italy",0.0,7,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,1
+site_Madeira,0.0,7,1
+site_N end of Dominica,0.0,7,1
+site_N of Selina,0.0,7,1
+"site_N of Selina, Sicily",0.0,7,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,7,1
+"site_Near Filicudi, Italy",0.0,7,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,7,1
+"site_Off Maui, HI",0.0,7,1
+"site_Off Maui, HIBD",0.0,7,1
+site_Oregon Coast Aquarium,0.0,7,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,7,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,1
+"site_Plantagenet Bank, Bermuda",0.0,7,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,1
+"site_Sable Island, Nova Scotia",0.0,7,1
+"site_South of Sable Island, North Atlantic",0.0,7,1
+"site_St. David's Island, Bermuda",0.0,7,1
+"site_T3 Ice Island, Canada",0.0,7,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,7,1
+"site_Tortola, British Virgin IslandsO",0.0,7,1
+site_W of Browns Bank,0.0,7,1
+"site_off Gibbs Hill Light, Bermuda",0.0,7,1
+"site_over Plantagenet Banks, Bermuda",0.0,7,1
+collection_code_BD10A,0.0,7,1
+collection_code_BA2A,0.33758825063705444,7,2
+collection_code_AC2A,0.332730770111084,7,2
+latitude,0.2745094299316406,7,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.019420640543103218,7,2
+"site_Vancouver, British Columbia",0.015893204137682915,7,2
+native_sample_rate,0.011615153402090073,7,2
+site_Dominica  E,0.006999549455940723,7,2
+collection_code_BE7A,0.0004601860127877444,7,2
+longitude,0.0002655496937222779,7,2
+year,0.00025619356893002987,7,2
+bytes_on_disk,0.00016043096547946334,7,2
+duration_seconds,0.00010063485387945548,7,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,7,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,7,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,7,2
+"site_3-4 mi. off Roseau, Dominica",0.0,7,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,2
+site_50 mi. NE Malta,0.0,7,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,2
+"site_Andenes, Norway",0.0,7,2
+"site_Argus Island, Bermuda",0.0,7,2
+site_Bequia,0.0,7,2
+site_Bermuda,0.0,7,2
+site_BermudaBD,0.0,7,2
+"site_Castle Harbour, Bermuda",0.0,7,2
+site_DOMINICA,0.0,7,2
+"site_Dabob Bay, Seattle, Washington",0.0,7,2
+site_Delaware,0.0,7,2
+site_Dominica,0.0,7,2
+site_Dominica Is,0.0,7,2
+site_Dominica IsBD,0.0,7,2
+"site_Gully, SE Sable I., Canada  BD",0.0,7,2
+"site_Kikvika, Norway",0.0,7,2
+"site_Ligurian Sea, NW Italy",0.0,7,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,2
+site_Madeira,0.0,7,2
+site_N end of Dominica,0.0,7,2
+site_N of Selina,0.0,7,2
+"site_N of Selina, Sicily",0.0,7,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,7,2
+"site_Near Filicudi, Italy",0.0,7,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,7,2
+"site_Off Maui, HI",0.0,7,2
+"site_Off Maui, HIBD",0.0,7,2
+site_Oregon Coast Aquarium,0.0,7,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,7,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,2
+"site_Plantagenet Bank, Bermuda",0.0,7,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,2
+"site_Sable Island, Nova Scotia",0.0,7,2
+"site_South of Sable Island, North Atlantic",0.0,7,2
+"site_St. David's Island, Bermuda",0.0,7,2
+"site_T3 Ice Island, Canada",0.0,7,2
+"site_Tortola, British Virgin IslandsO",0.0,7,2
+site_W of Browns Bank,0.0,7,2
+"site_off Gibbs Hill Light, Bermuda",0.0,7,2
+"site_over Plantagenet Banks, Bermuda",0.0,7,2
+collection_code_BD10A,0.0,7,2
+collection_code_BD15A,0.0,7,2
+collection_code_BA2A,0.41243651509284973,7,3
+collection_code_AC2A,0.27700215578079224,7,3
+latitude,0.2574830949306488,7,3
+native_sample_rate,0.023907916620373726,7,3
+site_Dominica IsBD,0.012181458994746208,7,3
+site_Dominica  E,0.008548148907721043,7,3
+"site_Vancouver, British Columbia",0.007183935958892107,7,3
+collection_code_BE7A,0.0003365892043802887,7,3
+duration_seconds,0.0003139797772746533,7,3
+bytes_on_disk,0.0002711298002395779,7,3
+year,0.0002527546021156013,7,3
+longitude,8.228525257436559e-05,7,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,7,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,7,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,7,3
+"site_3-4 mi. off Roseau, Dominica",0.0,7,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,3
+site_50 mi. NE Malta,0.0,7,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,3
+"site_Andenes, Norway",0.0,7,3
+"site_Argus Island, Bermuda",0.0,7,3
+site_Bequia,0.0,7,3
+site_Bermuda,0.0,7,3
+site_BermudaBD,0.0,7,3
+"site_Castle Harbour, Bermuda",0.0,7,3
+site_DOMINICA,0.0,7,3
+"site_Dabob Bay, Seattle, Washington",0.0,7,3
+site_Delaware,0.0,7,3
+site_Dominica,0.0,7,3
+site_Dominica Is,0.0,7,3
+"site_Gully, SE Sable I., Canada  BD",0.0,7,3
+"site_Kikvika, Norway",0.0,7,3
+"site_Ligurian Sea, NW Italy",0.0,7,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,3
+site_Madeira,0.0,7,3
+site_N end of Dominica,0.0,7,3
+site_N of Selina,0.0,7,3
+"site_N of Selina, Sicily",0.0,7,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,7,3
+"site_Near Filicudi, Italy",0.0,7,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,7,3
+"site_Off Maui, HI",0.0,7,3
+"site_Off Maui, HIBD",0.0,7,3
+site_Oregon Coast Aquarium,0.0,7,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,7,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,3
+"site_Plantagenet Bank, Bermuda",0.0,7,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,3
+"site_Sable Island, Nova Scotia",0.0,7,3
+"site_South of Sable Island, North Atlantic",0.0,7,3
+"site_St. David's Island, Bermuda",0.0,7,3
+"site_T3 Ice Island, Canada",0.0,7,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,7,3
+"site_Tortola, British Virgin IslandsO",0.0,7,3
+site_W of Browns Bank,0.0,7,3
+"site_off Gibbs Hill Light, Bermuda",0.0,7,3
+"site_over Plantagenet Banks, Bermuda",0.0,7,3
+collection_code_BD10A,0.0,7,3
+collection_code_BD15A,0.0,7,3
+collection_code_AC2A,0.3434503972530365,7,4
+collection_code_BA2A,0.3354370594024658,7,4
+latitude,0.2955220341682434,7,4
+collection_code_BE3C,0.021785611286759377,7,4
+native_sample_rate,0.000995275448076427,7,4
+year,0.00067334552295506,7,4
+collection_code_BE7A,0.0006218695780262351,7,4
+"site_Kikvika, Norway",0.0004526933189481497,7,4
+duration_seconds,0.0003702861431520432,7,4
+"site_Vancouver, British Columbia",0.00024926738115027547,7,4
+bytes_on_disk,0.0002460201794747263,7,4
+longitude,0.00019620583043433726,7,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,7,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,7,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,7,4
+"site_3-4 mi. off Roseau, Dominica",0.0,7,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,4
+site_50 mi. NE Malta,0.0,7,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,4
+"site_Andenes, Norway",0.0,7,4
+"site_Argus Island, Bermuda",0.0,7,4
+site_Bequia,0.0,7,4
+site_Bermuda,0.0,7,4
+site_BermudaBD,0.0,7,4
+"site_Castle Harbour, Bermuda",0.0,7,4
+site_DOMINICA,0.0,7,4
+"site_Dabob Bay, Seattle, Washington",0.0,7,4
+site_Delaware,0.0,7,4
+site_Dominica,0.0,7,4
+site_Dominica  E,0.0,7,4
+site_Dominica Is,0.0,7,4
+site_Dominica IsBD,0.0,7,4
+"site_Gully, SE Sable I., Canada  BD",0.0,7,4
+"site_Ligurian Sea, NW Italy",0.0,7,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,4
+site_Madeira,0.0,7,4
+site_N end of Dominica,0.0,7,4
+site_N of Selina,0.0,7,4
+"site_N of Selina, Sicily",0.0,7,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,7,4
+"site_Near Filicudi, Italy",0.0,7,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,7,4
+"site_Off Maui, HI",0.0,7,4
+"site_Off Maui, HIBD",0.0,7,4
+site_Oregon Coast Aquarium,0.0,7,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,7,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,4
+"site_Plantagenet Bank, Bermuda",0.0,7,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,4
+"site_Sable Island, Nova Scotia",0.0,7,4
+"site_South of Sable Island, North Atlantic",0.0,7,4
+"site_St. David's Island, Bermuda",0.0,7,4
+"site_T3 Ice Island, Canada",0.0,7,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,7,4
+"site_Tortola, British Virgin IslandsO",0.0,7,4
+site_W of Browns Bank,0.0,7,4
+"site_off Gibbs Hill Light, Bermuda",0.0,7,4
+"site_over Plantagenet Banks, Bermuda",0.0,7,4
+collection_code_BD10A,0.0,7,4
+collection_code_AC2A,0.3758041560649872,8,0
+collection_code_BA2A,0.34927797317504883,8,0
+latitude,0.2171662449836731,8,0
+site_1 mile S of Olowalu reef - Hawaii,0.023707175627350807,8,0
+native_sample_rate,0.018432464450597763,8,0
+"site_Vancouver, British Columbia",0.007103289943188429,8,0
+site_Dominica Is,0.00503339571878314,8,0
+site_N end of Dominica,0.0013554199831560254,8,0
+"site_Kikvika, Norway",0.0009232832817360759,8,0
+collection_code_BE7A,0.0003498416917864233,8,0
+longitude,0.00025630119489505887,8,0
+year,0.0002080420672427863,8,0
+cond_water_noise,0.0001959724468179047,8,0
+duration_seconds,0.00010414452844997868,8,0
+bytes_on_disk,8.225560304708779e-05,8,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,8,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,8,0
+"site_3-4 mi. off Roseau, Dominica",0.0,8,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,0
+site_50 mi. NE Malta,0.0,8,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,0
+"site_Andenes, Norway",0.0,8,0
+"site_Argus Island, Bermuda",0.0,8,0
+site_Bequia,0.0,8,0
+site_Bermuda,0.0,8,0
+site_BermudaBD,0.0,8,0
+"site_Castle Harbour, Bermuda",0.0,8,0
+site_DOMINICA,0.0,8,0
+"site_Dabob Bay, Seattle, Washington",0.0,8,0
+site_Delaware,0.0,8,0
+site_Dominica,0.0,8,0
+site_Dominica  E,0.0,8,0
+site_Dominica IsBD,0.0,8,0
+"site_Gully, SE Sable I., Canada  BD",0.0,8,0
+"site_Ligurian Sea, NW Italy",0.0,8,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,0
+site_Madeira,0.0,8,0
+site_N of Selina,0.0,8,0
+"site_N of Selina, Sicily",0.0,8,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,8,0
+"site_Near Filicudi, Italy",0.0,8,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,8,0
+"site_Off Maui, HI",0.0,8,0
+"site_Off Maui, HIBD",0.0,8,0
+site_Oregon Coast Aquarium,0.0,8,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,8,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,0
+"site_Plantagenet Bank, Bermuda",0.0,8,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,0
+"site_Sable Island, Nova Scotia",0.0,8,0
+"site_South of Sable Island, North Atlantic",0.0,8,0
+"site_St. David's Island, Bermuda",0.0,8,0
+"site_T3 Ice Island, Canada",0.0,8,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,8,0
+"site_Tortola, British Virgin IslandsO",0.0,8,0
+site_W of Browns Bank,0.0,8,0
+"site_off Gibbs Hill Light, Bermuda",0.0,8,0
+"site_over Plantagenet Banks, Bermuda",0.0,8,0
+collection_code_BD10A,0.0,8,0
+collection_code_AC2A,0.3582344353199005,8,1
+collection_code_BA2A,0.3309202790260315,8,1
+latitude,0.2655050754547119,8,1
+collection_code_BE3C,0.03496454283595085,8,1
+"site_Vancouver, British Columbia",0.008416177704930305,8,1
+native_sample_rate,0.0006029445212334394,8,1
+collection_code_BE7A,0.00041771843098104,8,1
+bytes_on_disk,0.00026558496756479144,8,1
+year,0.0002583625609986484,8,1
+longitude,0.00022907096717972308,8,1
+duration_seconds,0.00018574476416688412,8,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,8,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,8,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,8,1
+"site_3-4 mi. off Roseau, Dominica",0.0,8,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,1
+site_50 mi. NE Malta,0.0,8,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,1
+"site_Andenes, Norway",0.0,8,1
+"site_Argus Island, Bermuda",0.0,8,1
+site_Bequia,0.0,8,1
+site_Bermuda,0.0,8,1
+site_BermudaBD,0.0,8,1
+"site_Castle Harbour, Bermuda",0.0,8,1
+site_DOMINICA,0.0,8,1
+"site_Dabob Bay, Seattle, Washington",0.0,8,1
+site_Delaware,0.0,8,1
+site_Dominica,0.0,8,1
+site_Dominica  E,0.0,8,1
+site_Dominica Is,0.0,8,1
+site_Dominica IsBD,0.0,8,1
+"site_Gully, SE Sable I., Canada  BD",0.0,8,1
+"site_Kikvika, Norway",0.0,8,1
+"site_Ligurian Sea, NW Italy",0.0,8,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,1
+site_Madeira,0.0,8,1
+site_N end of Dominica,0.0,8,1
+site_N of Selina,0.0,8,1
+"site_N of Selina, Sicily",0.0,8,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,8,1
+"site_Near Filicudi, Italy",0.0,8,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,8,1
+"site_Off Maui, HI",0.0,8,1
+"site_Off Maui, HIBD",0.0,8,1
+site_Oregon Coast Aquarium,0.0,8,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,8,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,1
+"site_Plantagenet Bank, Bermuda",0.0,8,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,1
+"site_Sable Island, Nova Scotia",0.0,8,1
+"site_South of Sable Island, North Atlantic",0.0,8,1
+"site_St. David's Island, Bermuda",0.0,8,1
+"site_T3 Ice Island, Canada",0.0,8,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,8,1
+"site_Tortola, British Virgin IslandsO",0.0,8,1
+site_W of Browns Bank,0.0,8,1
+"site_off Gibbs Hill Light, Bermuda",0.0,8,1
+"site_over Plantagenet Banks, Bermuda",0.0,8,1
+collection_code_BD10A,0.0,8,1
+native_sample_rate,0.3518824875354767,8,2
+collection_code_AC2A,0.3088996708393097,8,2
+latitude,0.24901629984378815,8,2
+"site_Sable Island, Nova Scotia",0.03526943176984787,8,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.01968369260430336,8,2
+collection_code_BE7A,0.017021169885993004,8,2
+"site_Vancouver, British Columbia",0.012402987107634544,8,2
+collection_code_BA2A,0.004944999236613512,8,2
+year,0.000313743541482836,8,2
+longitude,0.00025571061996743083,8,2
+bytes_on_disk,0.0001929990976350382,8,2
+duration_seconds,0.00011686898506013677,8,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,8,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,8,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,8,2
+"site_3-4 mi. off Roseau, Dominica",0.0,8,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,2
+site_50 mi. NE Malta,0.0,8,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,2
+"site_Andenes, Norway",0.0,8,2
+"site_Argus Island, Bermuda",0.0,8,2
+site_Bequia,0.0,8,2
+site_Bermuda,0.0,8,2
+site_BermudaBD,0.0,8,2
+"site_Castle Harbour, Bermuda",0.0,8,2
+site_DOMINICA,0.0,8,2
+"site_Dabob Bay, Seattle, Washington",0.0,8,2
+site_Delaware,0.0,8,2
+site_Dominica,0.0,8,2
+site_Dominica  E,0.0,8,2
+site_Dominica Is,0.0,8,2
+site_Dominica IsBD,0.0,8,2
+"site_Gully, SE Sable I., Canada  BD",0.0,8,2
+"site_Kikvika, Norway",0.0,8,2
+"site_Ligurian Sea, NW Italy",0.0,8,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,2
+site_Madeira,0.0,8,2
+site_N end of Dominica,0.0,8,2
+site_N of Selina,0.0,8,2
+"site_N of Selina, Sicily",0.0,8,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,8,2
+"site_Near Filicudi, Italy",0.0,8,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,8,2
+"site_Off Maui, HI",0.0,8,2
+"site_Off Maui, HIBD",0.0,8,2
+site_Oregon Coast Aquarium,0.0,8,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,8,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,2
+"site_Plantagenet Bank, Bermuda",0.0,8,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,2
+"site_South of Sable Island, North Atlantic",0.0,8,2
+"site_St. David's Island, Bermuda",0.0,8,2
+"site_T3 Ice Island, Canada",0.0,8,2
+"site_Tortola, British Virgin IslandsO",0.0,8,2
+site_W of Browns Bank,0.0,8,2
+"site_off Gibbs Hill Light, Bermuda",0.0,8,2
+"site_over Plantagenet Banks, Bermuda",0.0,8,2
+collection_code_BD10A,0.0,8,2
+collection_code_BD15A,0.0,8,2
+latitude,0.343763530254364,8,3
+collection_code_AC2A,0.3206978142261505,8,3
+collection_code_BA2A,0.31017395853996277,8,3
+native_sample_rate,0.014881114475429058,8,3
+site_Dominica  E,0.00874574389308691,8,3
+"site_Vancouver, British Columbia",0.0005366686382330954,8,3
+collection_code_BE7A,0.00030922432779334486,8,3
+duration_seconds,0.00028026342624798417,8,3
+bytes_on_disk,0.00023583976144436747,8,3
+"site_Argus Island, Bermuda",0.00017610139911994338,8,3
+longitude,0.00014562120486516505,8,3
+year,5.40630571777001e-05,8,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,8,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,8,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,8,3
+"site_3-4 mi. off Roseau, Dominica",0.0,8,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,3
+site_50 mi. NE Malta,0.0,8,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,3
+"site_Andenes, Norway",0.0,8,3
+site_Bequia,0.0,8,3
+site_Bermuda,0.0,8,3
+site_BermudaBD,0.0,8,3
+"site_Castle Harbour, Bermuda",0.0,8,3
+site_DOMINICA,0.0,8,3
+"site_Dabob Bay, Seattle, Washington",0.0,8,3
+site_Delaware,0.0,8,3
+site_Dominica,0.0,8,3
+site_Dominica Is,0.0,8,3
+site_Dominica IsBD,0.0,8,3
+"site_Gully, SE Sable I., Canada  BD",0.0,8,3
+"site_Kikvika, Norway",0.0,8,3
+"site_Ligurian Sea, NW Italy",0.0,8,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,3
+site_Madeira,0.0,8,3
+site_N end of Dominica,0.0,8,3
+site_N of Selina,0.0,8,3
+"site_N of Selina, Sicily",0.0,8,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,8,3
+"site_Near Filicudi, Italy",0.0,8,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,8,3
+"site_Off Maui, HI",0.0,8,3
+"site_Off Maui, HIBD",0.0,8,3
+site_Oregon Coast Aquarium,0.0,8,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,8,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,3
+"site_Plantagenet Bank, Bermuda",0.0,8,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,3
+"site_Sable Island, Nova Scotia",0.0,8,3
+"site_South of Sable Island, North Atlantic",0.0,8,3
+"site_St. David's Island, Bermuda",0.0,8,3
+"site_T3 Ice Island, Canada",0.0,8,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,8,3
+"site_Tortola, British Virgin IslandsO",0.0,8,3
+site_W of Browns Bank,0.0,8,3
+"site_off Gibbs Hill Light, Bermuda",0.0,8,3
+"site_over Plantagenet Banks, Bermuda",0.0,8,3
+collection_code_BD10A,0.0,8,3
+collection_code_BD15A,0.0,8,3
+latitude,0.2753847539424896,8,4
+collection_code_BA2A,0.25328049063682556,8,4
+collection_code_AC2A,0.2530829608440399,8,4
+collection_code_BE7A,0.11644062399864197,8,4
+"site_Kikvika, Norway",0.07743871212005615,8,4
+native_sample_rate,0.016507253050804138,8,4
+site_Dominica  E,0.0068794130347669125,8,4
+"site_Vancouver, British Columbia",0.00048771704314276576,8,4
+bytes_on_disk,0.00027798800147138536,8,4
+duration_seconds,8.483206329401582e-05,8,4
+longitude,8.157846605172381e-05,8,4
+year,5.365706965676509e-05,8,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,8,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,8,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,8,4
+"site_3-4 mi. off Roseau, Dominica",0.0,8,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,4
+site_50 mi. NE Malta,0.0,8,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,4
+"site_Andenes, Norway",0.0,8,4
+"site_Argus Island, Bermuda",0.0,8,4
+site_Bequia,0.0,8,4
+site_Bermuda,0.0,8,4
+site_BermudaBD,0.0,8,4
+"site_Castle Harbour, Bermuda",0.0,8,4
+site_DOMINICA,0.0,8,4
+"site_Dabob Bay, Seattle, Washington",0.0,8,4
+site_Delaware,0.0,8,4
+site_Dominica,0.0,8,4
+site_Dominica Is,0.0,8,4
+site_Dominica IsBD,0.0,8,4
+"site_Gully, SE Sable I., Canada  BD",0.0,8,4
+"site_Ligurian Sea, NW Italy",0.0,8,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,4
+site_Madeira,0.0,8,4
+site_N end of Dominica,0.0,8,4
+site_N of Selina,0.0,8,4
+"site_N of Selina, Sicily",0.0,8,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,8,4
+"site_Near Filicudi, Italy",0.0,8,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,8,4
+"site_Off Maui, HI",0.0,8,4
+"site_Off Maui, HIBD",0.0,8,4
+site_Oregon Coast Aquarium,0.0,8,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,8,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,4
+"site_Plantagenet Bank, Bermuda",0.0,8,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,4
+"site_Sable Island, Nova Scotia",0.0,8,4
+"site_South of Sable Island, North Atlantic",0.0,8,4
+"site_St. David's Island, Bermuda",0.0,8,4
+"site_T3 Ice Island, Canada",0.0,8,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,8,4
+"site_Tortola, British Virgin IslandsO",0.0,8,4
+site_W of Browns Bank,0.0,8,4
+"site_off Gibbs Hill Light, Bermuda",0.0,8,4
+"site_over Plantagenet Banks, Bermuda",0.0,8,4
+collection_code_BD10A,0.0,8,4
+collection_code_BD15A,0.0,8,4
+collection_code_AC2A,0.41394782066345215,9,0
+collection_code_BA2A,0.28356632590293884,9,0
+latitude,0.24363817274570465,9,0
+site_1 mile S of Olowalu reef - Hawaii,0.025675425305962563,9,0
+native_sample_rate,0.020345602184534073,9,0
+"site_Vancouver, British Columbia",0.008298126049339771,9,0
+site_N end of Dominica,0.0014565738383680582,9,0
+"site_Kikvika, Norway",0.0009793111821636558,9,0
+"site_3 miles N of San Juan, Puerto Rico",0.0005562050500884652,9,0
+collection_code_BE7A,0.00042530804057605565,9,0
+longitude,0.0002925815642811358,9,0
+duration_seconds,0.00028663635021075606,9,0
+cond_water_noise,0.00024072204541880637,9,0
+year,0.00014575041132047772,9,0
+bytes_on_disk,0.00014549243496730924,9,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,9,0
+"site_3-4 mi. off Roseau, Dominica",0.0,9,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,0
+site_50 mi. NE Malta,0.0,9,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,0
+"site_Andenes, Norway",0.0,9,0
+"site_Argus Island, Bermuda",0.0,9,0
+site_Bequia,0.0,9,0
+site_Bermuda,0.0,9,0
+site_BermudaBD,0.0,9,0
+"site_Castle Harbour, Bermuda",0.0,9,0
+site_DOMINICA,0.0,9,0
+"site_Dabob Bay, Seattle, Washington",0.0,9,0
+site_Delaware,0.0,9,0
+site_Dominica,0.0,9,0
+site_Dominica  E,0.0,9,0
+site_Dominica Is,0.0,9,0
+site_Dominica IsBD,0.0,9,0
+"site_Gully, SE Sable I., Canada  BD",0.0,9,0
+"site_Ligurian Sea, NW Italy",0.0,9,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,0
+site_Madeira,0.0,9,0
+site_N of Selina,0.0,9,0
+"site_N of Selina, Sicily",0.0,9,0
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,9,0
+"site_Near Filicudi, Italy",0.0,9,0
+"site_Off Gibbs Hill Light, Bermuda",0.0,9,0
+"site_Off Maui, HI",0.0,9,0
+"site_Off Maui, HIBD",0.0,9,0
+site_Oregon Coast Aquarium,0.0,9,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,9,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,0
+"site_Plantagenet Bank, Bermuda",0.0,9,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,0
+"site_Sable Island, Nova Scotia",0.0,9,0
+"site_South of Sable Island, North Atlantic",0.0,9,0
+"site_St. David's Island, Bermuda",0.0,9,0
+"site_T3 Ice Island, Canada",0.0,9,0
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,9,0
+"site_Tortola, British Virgin IslandsO",0.0,9,0
+site_W of Browns Bank,0.0,9,0
+"site_off Gibbs Hill Light, Bermuda",0.0,9,0
+"site_over Plantagenet Banks, Bermuda",0.0,9,0
+collection_code_BD10A,0.0,9,0
+collection_code_AC2A,0.35791200399398804,9,1
+collection_code_BA2A,0.33718451857566833,9,1
+latitude,0.2634981870651245,9,1
+collection_code_BE3C,0.029802098870277405,9,1
+"site_Vancouver, British Columbia",0.008920430205762386,9,1
+"site_Off Maui, HI",0.0010643211426213384,9,1
+native_sample_rate,0.0004900312633253634,9,1
+collection_code_BE7A,0.0003896602429449558,9,1
+bytes_on_disk,0.00025921029737219214,9,1
+longitude,0.00021458631090354174,9,1
+duration_seconds,0.00016989119467325509,9,1
+year,9.508794755674899e-05,9,1
+site_1 mile S of Olowalu reef - Hawaii,0.0,9,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,9,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,9,1
+"site_3-4 mi. off Roseau, Dominica",0.0,9,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,1
+site_50 mi. NE Malta,0.0,9,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,1
+"site_Andenes, Norway",0.0,9,1
+"site_Argus Island, Bermuda",0.0,9,1
+site_Bequia,0.0,9,1
+site_Bermuda,0.0,9,1
+site_BermudaBD,0.0,9,1
+"site_Castle Harbour, Bermuda",0.0,9,1
+site_DOMINICA,0.0,9,1
+"site_Dabob Bay, Seattle, Washington",0.0,9,1
+site_Delaware,0.0,9,1
+site_Dominica,0.0,9,1
+site_Dominica  E,0.0,9,1
+site_Dominica Is,0.0,9,1
+site_Dominica IsBD,0.0,9,1
+"site_Gully, SE Sable I., Canada  BD",0.0,9,1
+"site_Kikvika, Norway",0.0,9,1
+"site_Ligurian Sea, NW Italy",0.0,9,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,1
+site_Madeira,0.0,9,1
+site_N end of Dominica,0.0,9,1
+site_N of Selina,0.0,9,1
+"site_N of Selina, Sicily",0.0,9,1
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,9,1
+"site_Near Filicudi, Italy",0.0,9,1
+"site_Off Gibbs Hill Light, Bermuda",0.0,9,1
+"site_Off Maui, HIBD",0.0,9,1
+site_Oregon Coast Aquarium,0.0,9,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,9,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,1
+"site_Plantagenet Bank, Bermuda",0.0,9,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,1
+"site_Sable Island, Nova Scotia",0.0,9,1
+"site_South of Sable Island, North Atlantic",0.0,9,1
+"site_St. David's Island, Bermuda",0.0,9,1
+"site_T3 Ice Island, Canada",0.0,9,1
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,9,1
+"site_Tortola, British Virgin IslandsO",0.0,9,1
+site_W of Browns Bank,0.0,9,1
+"site_off Gibbs Hill Light, Bermuda",0.0,9,1
+"site_over Plantagenet Banks, Bermuda",0.0,9,1
+collection_code_BD10A,0.0,9,1
+collection_code_BA2A,0.3601742386817932,9,2
+collection_code_AC2A,0.29317569732666016,9,2
+latitude,0.24523892998695374,9,2
+collection_code_BE7A,0.04591863602399826,9,2
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.029590755701065063,9,2
+native_sample_rate,0.013049507513642311,9,2
+site_Dominica  E,0.006366490386426449,9,2
+site_Delaware,0.003988944459706545,9,2
+"site_Vancouver, British Columbia",0.0012198990443721414,9,2
+"site_Off Maui, HI",0.0006228282582014799,9,2
+bytes_on_disk,0.00023472440079785883,9,2
+longitude,0.00018580480536911637,9,2
+duration_seconds,0.00013191276229918003,9,2
+year,0.00010166550782741979,9,2
+site_1 mile S of Olowalu reef - Hawaii,0.0,9,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,9,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,9,2
+"site_3-4 mi. off Roseau, Dominica",0.0,9,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,2
+site_50 mi. NE Malta,0.0,9,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,2
+"site_Andenes, Norway",0.0,9,2
+"site_Argus Island, Bermuda",0.0,9,2
+site_Bequia,0.0,9,2
+site_Bermuda,0.0,9,2
+site_BermudaBD,0.0,9,2
+"site_Castle Harbour, Bermuda",0.0,9,2
+site_DOMINICA,0.0,9,2
+"site_Dabob Bay, Seattle, Washington",0.0,9,2
+site_Dominica,0.0,9,2
+site_Dominica Is,0.0,9,2
+site_Dominica IsBD,0.0,9,2
+"site_Gully, SE Sable I., Canada  BD",0.0,9,2
+"site_Kikvika, Norway",0.0,9,2
+"site_Ligurian Sea, NW Italy",0.0,9,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,2
+site_Madeira,0.0,9,2
+site_N end of Dominica,0.0,9,2
+site_N of Selina,0.0,9,2
+"site_N of Selina, Sicily",0.0,9,2
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,9,2
+"site_Near Filicudi, Italy",0.0,9,2
+"site_Off Gibbs Hill Light, Bermuda",0.0,9,2
+"site_Off Maui, HIBD",0.0,9,2
+site_Oregon Coast Aquarium,0.0,9,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,9,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,2
+"site_Plantagenet Bank, Bermuda",0.0,9,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,2
+"site_Sable Island, Nova Scotia",0.0,9,2
+"site_South of Sable Island, North Atlantic",0.0,9,2
+"site_St. David's Island, Bermuda",0.0,9,2
+"site_T3 Ice Island, Canada",0.0,9,2
+"site_Tortola, British Virgin IslandsO",0.0,9,2
+site_W of Browns Bank,0.0,9,2
+"site_off Gibbs Hill Light, Bermuda",0.0,9,2
+"site_over Plantagenet Banks, Bermuda",0.0,9,2
+collection_code_BD10A,0.0,9,2
+collection_code_BD15A,0.0,9,2
+collection_code_AC2A,0.35509467124938965,9,3
+collection_code_BA2A,0.3203134536743164,9,3
+latitude,0.30413490533828735,9,3
+collection_code_BE3C,0.020015211775898933,9,3
+native_sample_rate,0.0002735906164161861,9,3
+bytes_on_disk,0.00011443218681961298,9,3
+duration_seconds,5.3663228754885495e-05,9,3
+site_1 mile S of Olowalu reef - Hawaii,0.0,9,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,9,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,9,3
+"site_3-4 mi. off Roseau, Dominica",0.0,9,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,3
+site_50 mi. NE Malta,0.0,9,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,3
+"site_Andenes, Norway",0.0,9,3
+"site_Argus Island, Bermuda",0.0,9,3
+site_Bequia,0.0,9,3
+site_Bermuda,0.0,9,3
+site_BermudaBD,0.0,9,3
+"site_Castle Harbour, Bermuda",0.0,9,3
+site_DOMINICA,0.0,9,3
+"site_Dabob Bay, Seattle, Washington",0.0,9,3
+site_Delaware,0.0,9,3
+site_Dominica,0.0,9,3
+site_Dominica  E,0.0,9,3
+site_Dominica Is,0.0,9,3
+site_Dominica IsBD,0.0,9,3
+"site_Gully, SE Sable I., Canada  BD",0.0,9,3
+"site_Kikvika, Norway",0.0,9,3
+"site_Ligurian Sea, NW Italy",0.0,9,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,3
+site_Madeira,0.0,9,3
+site_N end of Dominica,0.0,9,3
+site_N of Selina,0.0,9,3
+"site_N of Selina, Sicily",0.0,9,3
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,9,3
+"site_Near Filicudi, Italy",0.0,9,3
+"site_Off Gibbs Hill Light, Bermuda",0.0,9,3
+"site_Off Maui, HI",0.0,9,3
+"site_Off Maui, HIBD",0.0,9,3
+site_Oregon Coast Aquarium,0.0,9,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,9,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,3
+"site_Plantagenet Bank, Bermuda",0.0,9,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,3
+"site_Sable Island, Nova Scotia",0.0,9,3
+"site_South of Sable Island, North Atlantic",0.0,9,3
+"site_St. David's Island, Bermuda",0.0,9,3
+"site_T3 Ice Island, Canada",0.0,9,3
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,9,3
+"site_Tortola, British Virgin IslandsO",0.0,9,3
+"site_Vancouver, British Columbia",0.0,9,3
+site_W of Browns Bank,0.0,9,3
+"site_off Gibbs Hill Light, Bermuda",0.0,9,3
+"site_over Plantagenet Banks, Bermuda",0.0,9,3
+collection_code_BD10A,0.0,9,3
+collection_code_BD15A,0.0,9,3
+collection_code_BE3B,0.0,9,3
+collection_code_BE7A,0.0,9,3
+collection_code_BA2A,0.3191799819469452,9,4
+latitude,0.29696357250213623,9,4
+collection_code_AC2A,0.2918233573436737,9,4
+native_sample_rate,0.0680820643901825,9,4
+"site_Vancouver, British Columbia",0.021826479583978653,9,4
+site_Bermuda,0.0005560680292546749,9,4
+"site_Kikvika, Norway",0.0004730565706267953,9,4
+duration_seconds,0.000355977303115651,9,4
+collection_code_BE7A,0.0003428464406169951,9,4
+bytes_on_disk,0.0002483645803295076,9,4
+year,0.0001036731555359438,9,4
+longitude,4.457668183022179e-05,9,4
+site_1 mile S of Olowalu reef - Hawaii,0.0,9,4
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,9,4
+"site_3 miles N of San Juan, Puerto Rico",0.0,9,4
+"site_3-4 mi. off Roseau, Dominica",0.0,9,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,4
+site_50 mi. NE Malta,0.0,9,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,4
+"site_Andenes, Norway",0.0,9,4
+"site_Argus Island, Bermuda",0.0,9,4
+site_Bequia,0.0,9,4
+site_BermudaBD,0.0,9,4
+"site_Castle Harbour, Bermuda",0.0,9,4
+site_DOMINICA,0.0,9,4
+"site_Dabob Bay, Seattle, Washington",0.0,9,4
+site_Delaware,0.0,9,4
+site_Dominica,0.0,9,4
+site_Dominica  E,0.0,9,4
+site_Dominica Is,0.0,9,4
+site_Dominica IsBD,0.0,9,4
+"site_Gully, SE Sable I., Canada  BD",0.0,9,4
+"site_Ligurian Sea, NW Italy",0.0,9,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,4
+site_Madeira,0.0,9,4
+site_N end of Dominica,0.0,9,4
+site_N of Selina,0.0,9,4
+"site_N of Selina, Sicily",0.0,9,4
+"site_N of Shelter Point, Knight Island Passage, Alaska",0.0,9,4
+"site_Near Filicudi, Italy",0.0,9,4
+"site_Off Gibbs Hill Light, Bermuda",0.0,9,4
+"site_Off Maui, HI",0.0,9,4
+"site_Off Maui, HIBD",0.0,9,4
+site_Oregon Coast Aquarium,0.0,9,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.0,9,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,4
+"site_Plantagenet Bank, Bermuda",0.0,9,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,4
+"site_Sable Island, Nova Scotia",0.0,9,4
+"site_South of Sable Island, North Atlantic",0.0,9,4
+"site_St. David's Island, Bermuda",0.0,9,4
+"site_T3 Ice Island, Canada",0.0,9,4
+"site_Three to four miles N. of Crafton Is., Prince William Sound, Alaska",0.0,9,4
+"site_Tortola, British Virgin IslandsO",0.0,9,4
+site_W of Browns Bank,0.0,9,4
+"site_off Gibbs Hill Light, Bermuda",0.0,9,4
+"site_over Plantagenet Banks, Bermuda",0.0,9,4
+collection_code_BD10A,0.0,9,4
+collection_code_BD15A,0.0,9,4

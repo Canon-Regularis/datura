@@ -17,10 +17,10 @@ Columns beside the margin say what the design resolves. `folds` counts every fol
 
 | family   | model         | floor    |   margin |     low |    high |   p_value |   agreeing |   folds |
 |:---------|:--------------|:---------|---------:|--------:|--------:|----------:|-----------:|--------:|
-| species  | xgboost+probe | logbook  |  -0.462  | -0.5373 | -0.3867 |  1.23e-16 |         50 |      50 |
-| species  | xgboost       | logbook  |  -0.4946 | -0.5775 | -0.4118 |  3.42e-16 |         50 |      50 |
-| species  | probe         | logbook  |  -0.4827 | -0.5691 | -0.3962 |  3.8e-15  |         50 |      50 |
-| species  | logbook       | metadata |   0.3452 |  0.2475 |  0.4429 |  4.64e-09 |         50 |      50 |
+| species  | probe         | logbook  |  -0.5359 | -0.6074 | -0.4645 |  5.02e-20 |         50 |      50 |
+| species  | xgboost+probe | logbook  |  -0.5153 | -0.5906 | -0.44   |  1.91e-18 |         50 |      50 |
+| species  | xgboost       | logbook  |  -0.5479 | -0.647  | -0.4487 |  5.55e-15 |         50 |      50 |
+| species  | logbook       | metadata |   0.3985 |  0.2801 |  0.5169 |  1.54e-08 |         50 |      50 |
 | species  | xgboost       | metadata |  -0.1494 | -0.2377 | -0.0611 |  0.00134  |         48 |      50 |
 | species  | probe         | metadata |  -0.1375 | -0.273  | -0.0019 |  0.047    |         43 |      50 |
 | species  | xgboost+probe | metadata |  -0.1168 | -0.2357 |  0.0022 |  0.0541   |         43 |      50 |
@@ -35,7 +35,7 @@ against the highest any model that hears nothing reaches.
 
 | model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
 |:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| logbook       | 0.9198 |    0.5746 |   0.3452 |  0.2475 |  0.4429 |  4.64e-09 |         50 |      50 | species  |
+| logbook       | 0.9731 |    0.5746 |   0.3985 |  0.2801 |  0.5169 |  1.54e-08 |         50 |      50 | species  |
 | xgboost+probe | 0.4578 |    0.5746 |  -0.1168 | -0.2357 |  0.0022 |  0.0541   |         43 |      50 | species  |
 | probe         | 0.4372 |    0.5746 |  -0.1375 | -0.273  | -0.0019 |  0.047    |         43 |      50 | species  |
 | xgboost       | 0.4252 |    0.5746 |  -0.1494 | -0.2377 | -0.0611 |  0.00134  |         48 |      50 | species  |
@@ -48,30 +48,33 @@ number an audio result has to clear before it is evidence about whales.
 
 | model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
 |:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| xgboost+probe | 0.4578 |    0.9198 |  -0.462  | -0.5373 | -0.3867 |  1.23e-16 |         50 |      50 | species  |
-| probe         | 0.4372 |    0.9198 |  -0.4827 | -0.5691 | -0.3962 |  3.8e-15  |         50 |      50 | species  |
-| xgboost       | 0.4252 |    0.9198 |  -0.4946 | -0.5775 | -0.4118 |  3.42e-16 |         50 |      50 | species  |
+| xgboost+probe | 0.4578 |    0.9731 |  -0.5153 | -0.5906 | -0.44   |  1.91e-18 |         50 |      50 | species  |
+| probe         | 0.4372 |    0.9731 |  -0.5359 | -0.6074 | -0.4645 |  5.02e-20 |         50 |      50 | species  |
+| xgboost       | 0.4252 |    0.9731 |  -0.5479 | -0.647  | -0.4487 |  5.55e-15 |         50 |      50 | species  |
 
 ### Every model, with the range the recordings support
 
-The interval comes from resampling whole tapes with replacement. Cuts from one tape
-are near duplicates, so resampling clips would count the same recording many times
-and produce an interval several times too narrow.
+The interval comes from resampling whole groups with replacement, where the group is
+whatever this configuration's folds held out and the `unit` column names it. Cuts from
+one recording are near duplicates, so resampling clips would count the same recording
+many times and produce an interval several times too narrow. Resampling tapes under a
+fold rule that holds out places is the same mistake one level up, and it reported an
+interval 59% narrower than the design supports.
 
-| model         |   estimate |    low |   high |   tapes |
-|:--------------|-----------:|-------:|-------:|--------:|
-| xgboost       |     0.3951 | 0.3184 | 0.4692 |     228 |
-| logbook       |     0.9442 | 0.8822 | 0.9692 |     228 |
-| probe         |     0.4669 | 0.3771 | 0.5335 |     228 |
-| xgboost+probe |     0.4836 | 0.384  | 0.5551 |     228 |
-| metadata      |     0.5837 | 0.4802 | 0.6708 |     228 |
+| model         |   estimate |    low |   high |   groups | unit    |
+|:--------------|-----------:|-------:|-------:|---------:|:--------|
+| xgboost       |     0.3951 | 0.3184 | 0.4692 |      228 | tape_id |
+| logbook       |     0.975  | 0.9392 | 0.9878 |      228 | tape_id |
+| probe         |     0.4669 | 0.3771 | 0.5335 |      228 | tape_id |
+| xgboost+probe |     0.4836 | 0.384  | 0.5551 |      228 | tape_id |
+| metadata      |     0.5837 | 0.4802 | 0.6708 |      228 | tape_id |
 
 ### Spread across folds
 
 | model         |   mean |    std |
 |:--------------|-------:|-------:|
 | xgboost       | 0.4252 | 0.1009 |
-| logbook       | 0.9198 | 0.0863 |
+| logbook       | 0.9731 | 0.0224 |
 | probe         | 0.4372 | 0.0732 |
 | xgboost+probe | 0.4578 | 0.0792 |
 | metadata      | 0.5746 | 0.1185 |
@@ -81,7 +84,7 @@ and produce an interval several times too narrow.
 | model         |   HumpbackWhale |   SpermWhale |   KillerWhale |   Long_FinnedPilotWhale |   NorthernRightWhale |   SpinnerDolphin |   Short_Finned(Pacific)PilotWhale |   Beluga_WhiteWhale |   WeddellSeal |   Walrus |   StripedDolphin |
 |:--------------|----------------:|-------------:|--------------:|------------------------:|---------------------:|-----------------:|----------------------------------:|--------------------:|--------------:|---------:|-----------------:|
 | xgboost       |          0.2532 |       0.5467 |        0.8391 |                  0.5384 |               0.5965 |           0.7481 |                            0.0457 |              0.47   |        0.6978 |   0.6013 |           0.1723 |
-| logbook       |          1      |       0.9139 |        0.981  |                  0.9626 |               1      |           0.8759 |                            0.8    |              0.8683 |        1      |   0.9929 |           0.7648 |
+| logbook       |          1      |       0.9175 |        0.9997 |                  0.9889 |               1      |           0.9178 |                            0.913  |              1      |        1      |   0.9286 |           1      |
 | probe         |          0.3257 |       0.5044 |        0.7777 |                  0.5186 |               0.69   |           0.7986 |                            0.0725 |              0.4694 |        0.703  |   0.6461 |           0.3033 |
 | xgboost+probe |          0.3292 |       0.5366 |        0.8431 |                  0.5345 |               0.6968 |           0.8161 |                            0.0683 |              0.5273 |        0.7531 |   0.6765 |           0.2704 |
 | metadata      |          0.4859 |       0.5719 |        0.7587 |                  0.7397 |               0.8493 |           0.9362 |                            0.0701 |              0.8522 |        0.8642 |   0.6244 |           0.2739 |
@@ -107,11 +110,11 @@ column and reads as a collapse the predictions do not contain.
 | collection code    | xgboost       | collection code not recorded           |     361 |                3 |              11 |      46 |          0.365  |         0.1818 |
 | collection code    | xgboost       | collection code shared by species      |    2581 |                4 |              11 |      50 |          0.3083 |         0.0742 |
 | collection code    | xgboost       | collection code unique to a species    |    4781 |               10 |              11 |      50 |          0.4187 |         0.1015 |
-| native sample rate | logbook       | native sample rate shared by species   |    5241 |               11 |              11 |      50 |          0.8992 |         0.0937 |
-| native sample rate | logbook       | native sample rate unique to a species |    2482 |                8 |              11 |      50 |          0.4864 |         0.1154 |
-| collection code    | logbook       | collection code not recorded           |     361 |                3 |              11 |      46 |          0.4336 |         0.2082 |
-| collection code    | logbook       | collection code shared by species      |    2581 |                4 |              11 |      50 |          0.6656 |         0.1211 |
-| collection code    | logbook       | collection code unique to a species    |    4781 |               10 |              11 |      50 |          0.7929 |         0.0758 |
+| native sample rate | logbook       | native sample rate shared by species   |    5241 |               11 |              11 |      50 |          0.9521 |         0.0487 |
+| native sample rate | logbook       | native sample rate unique to a species |    2482 |                8 |              11 |      50 |          0.491  |         0.11   |
+| collection code    | logbook       | collection code not recorded           |     361 |                3 |              11 |      46 |          0.4198 |         0.224  |
+| collection code    | logbook       | collection code shared by species      |    2581 |                4 |              11 |      50 |          0.7228 |         0.0206 |
+| collection code    | logbook       | collection code unique to a species    |    4781 |               10 |              11 |      50 |          0.8394 |         0.0521 |
 | native sample rate | probe         | native sample rate shared by species   |    5241 |               11 |              11 |      50 |          0.437  |         0.0885 |
 | native sample rate | probe         | native sample rate unique to a species |    2482 |                8 |              11 |      50 |          0.2783 |         0.1007 |
 | collection code    | probe         | collection code not recorded           |     361 |                3 |              11 |      46 |          0.3105 |         0.1586 |

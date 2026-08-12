@@ -15,11 +15,11 @@ finding.
 
 Columns beside the margin say what the design resolves. `folds` counts every fold of every repeat, so a run of ten repeats over five folds shows 50. `low` and `high` bound the paired difference at 95%, and `p_value` is the corrected resampled test, which accounts for the training data those folds share. `agreeing` counts the folds that pointed the same way as the mean, and is worth reading where the p value settles nothing.
 
-| family   | model   | floor    |   margin |     low |    high |   p_value |   agreeing |   folds |
-|:---------|:--------|:---------|---------:|--------:|--------:|----------:|-----------:|--------:|
-| species  | xgboost | logbook  |  -0.3611 | -0.5607 | -0.1615 |  0.000666 |         50 |      50 |
-| species  | xgboost | metadata |  -0.2569 | -0.4878 | -0.0261 |  0.0299   |         40 |      50 |
-| species  | logbook | metadata |   0.1042 | -0.0327 |  0.241  |  0.133    |         40 |      50 |
+| family   | model   | floor    |   margin |     low |   high |   p_value |   agreeing |   folds |
+|:---------|:--------|:---------|---------:|--------:|-------:|----------:|-----------:|--------:|
+| species  | xgboost | metadata |  -0.3426 | -0.7018 | 0.0166 |    0.0571 |          5 |       5 |
+| species  | xgboost | logbook  |  -0.3716 | -0.8694 | 0.1262 |    0.107  |          4 |       5 |
+| species  | logbook | metadata |   0.029  | -0.1844 | 0.2425 |    0.725  |          3 |       5 |
 
 ## Species
 
@@ -29,10 +29,10 @@ The control sees native sample rate, year, clip duration and file size; it sees 
 audio. It is a floor rather than the floor, and the table after this one measures
 against the highest any model that hears nothing reaches.
 
-| model   |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
-|:--------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| logbook | 0.9305 |    0.8263 |   0.1042 | -0.0327 |  0.241  |    0.133  |         40 |      50 | species  |
-| xgboost | 0.5694 |    0.8263 |  -0.2569 | -0.4878 | -0.0261 |    0.0299 |         40 |      50 | species  |
+| model   |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
+|:--------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
+| logbook | 0.9272 |    0.8982 |   0.029  | -0.1844 | 0.2425 |    0.725  |          3 |       5 | species  |
+| xgboost | 0.5556 |    0.8982 |  -0.3426 | -0.7018 | 0.0166 |    0.0571 |          5 |       5 | species  |
 
 ### Margin over logbook, the strongest model that hears no audio
 
@@ -40,37 +40,40 @@ against the highest any model that hears nothing reaches.
 collection code the field note opens with. None of that is the animal, so this is the
 number an audio result has to clear before it is evidence about whales.
 
-| model   |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
-|:--------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| xgboost | 0.5694 |    0.9305 |  -0.3611 | -0.5607 | -0.1615 |  0.000666 |         50 |      50 | species  |
+| model   |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
+|:--------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
+| xgboost | 0.5556 |    0.9272 |  -0.3716 | -0.8694 | 0.1262 |     0.107 |          4 |       5 | species  |
 
 ### Every model, with the range the recordings support
 
-The interval comes from resampling whole tapes with replacement. Cuts from one tape
-are near duplicates, so resampling clips would count the same recording many times
-and produce an interval several times too narrow.
+The interval comes from resampling whole groups with replacement, where the group is
+whatever this configuration's folds held out and the `unit` column names it. Cuts from
+one recording are near duplicates, so resampling clips would count the same recording
+many times and produce an interval several times too narrow. Resampling tapes under a
+fold rule that holds out places is the same mistake one level up, and it reported an
+interval 59% narrower than the design supports.
 
-| model    |   estimate |    low |   high |   tapes |
-|:---------|-----------:|-------:|-------:|--------:|
-| xgboost  |     0.6201 | 0.4935 | 0.772  |     129 |
-| logbook  |     0.9565 | 0.8367 | 0.9978 |     129 |
-| metadata |     0.9207 | 0.8241 | 0.9838 |     129 |
+| model    |   estimate |    low |   high |   groups | unit           |
+|:---------|-----------:|-------:|-------:|---------:|:---------------|
+| xgboost  |     0.6005 | 0.387  | 0.7507 |       24 | place_shuffled |
+| logbook  |     0.9652 | 0.8281 | 0.9964 |       24 | place_shuffled |
+| metadata |     0.9246 | 0.7481 | 0.9771 |       24 | place_shuffled |
 
 ### Spread across folds
 
 | model    |   mean |    std |
 |:---------|-------:|-------:|
-| xgboost  | 0.5694 | 0.1437 |
-| logbook  | 0.9305 | 0.1138 |
-| metadata | 0.8263 | 0.1619 |
+| xgboost  | 0.5556 | 0.1621 |
+| logbook  | 0.9272 | 0.1108 |
+| metadata | 0.8982 | 0.0994 |
 
 ### Per species recall
 
 | model    |   HumpbackWhale |   SpermWhale |   KillerWhale |
 |:---------|----------------:|-------------:|--------------:|
-| xgboost  |          0.7392 |       0.8233 |        0.5898 |
-| logbook  |          0.9988 |       0.9652 |        0.8681 |
-| metadata |          0.777  |       0.9315 |        0.9086 |
+| xgboost  |          0.768  |       0.8022 |        0.6324 |
+| logbook  |          0.9963 |       0.9908 |        0.879  |
+| metadata |          0.9585 |       0.9565 |        0.9084 |
 
 One of these recordings carries more than one of the classes above, across HumpbackWhale and SpermWhale. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
 
@@ -88,18 +91,18 @@ column and reads as a collapse the predictions do not contain.
 
 | giveaway           | model    | subset                                 |   clips |   classes_scored |   classes_total |   folds |   macro_f1_mean |   macro_f1_std |
 |:-------------------|:---------|:---------------------------------------|--------:|-----------------:|----------------:|--------:|----------------:|---------------:|
-| native sample rate | xgboost  | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.5434 |         0.1925 |
-| native sample rate | xgboost  | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.5025 |         0.1605 |
-| collection code    | xgboost  | collection code not recorded           |     359 |                2 |               3 |      30 |          0.3589 |         0.2187 |
-| collection code    | xgboost  | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.6203 |         0.1944 |
-| native sample rate | logbook  | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.772  |         0.2887 |
-| native sample rate | logbook  | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.7944 |         0.2654 |
+| native sample rate | xgboost  | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.4916 |         0.2016 |
+| native sample rate | xgboost  | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.5351 |         0.1776 |
+| collection code    | xgboost  | collection code not recorded           |     359 |                2 |               3 |      30 |          0.3976 |         0.1455 |
+| collection code    | xgboost  | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.5908 |         0.2057 |
+| native sample rate | logbook  | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.6634 |         0.2267 |
+| native sample rate | logbook  | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.8572 |         0.173  |
 | collection code    | logbook  | collection code not recorded           |     359 |                2 |               3 |      30 |          0.5    |         0.4152 |
-| collection code    | logbook  | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.9886 |         0.0231 |
-| native sample rate | metadata | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.6289 |         0.2605 |
-| native sample rate | metadata | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.7863 |         0.2252 |
+| collection code    | logbook  | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.985  |         0.0184 |
+| native sample rate | metadata | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.6244 |         0.1805 |
+| native sample rate | metadata | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.8539 |         0.1305 |
 | collection code    | metadata | collection code not recorded           |     359 |                2 |               3 |      30 |          0.6118 |         0.2874 |
-| collection code    | metadata | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.8444 |         0.1405 |
+| collection code    | metadata | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.9211 |         0.0844 |
 
 ### Accuracy against coverage
 
@@ -110,17 +113,17 @@ cross validation already wrote.
 
 | model   |   coverage |   threshold |   predictions |   clips |   accuracy |   macro_f1 |
 |:--------|-----------:|------------:|--------------:|--------:|-----------:|-----------:|
-| xgboost |     1      |      0.3336 |         40880 |    4088 |     0.7023 |     0.6218 |
-| xgboost |     0.9502 |      0.421  |         38845 |    3920 |     0.7276 |     0.6452 |
-| xgboost |     0.9001 |      0.4705 |         36795 |    3752 |     0.741  |     0.6564 |
-| xgboost |     0.8    |      0.541  |         32705 |    3336 |     0.7633 |     0.6773 |
-| xgboost |     0.7002 |      0.5982 |         28625 |    2923 |     0.771  |     0.6684 |
-| xgboost |     0.6002 |      0.6632 |         24535 |    2508 |     0.7781 |     0.6394 |
-| xgboost |     0.5    |      0.7236 |         20440 |    2105 |     0.7737 |     0.5694 |
-| xgboost |     0.4002 |      0.8434 |         16360 |    1636 |     0.7848 |     0.4823 |
-| xgboost |     0.3001 |      0.9629 |         12270 |    1227 |     0.8077 |     0.3953 |
-| xgboost |     0.2001 |      0.9955 |          8180 |     818 |     0.8863 |     0.5102 |
-| xgboost |     0.1    |      0.9995 |          4090 |     409 |     0.9927 |     0.3321 |
+| xgboost |     1      |      0.336  |         40880 |    4088 |     0.6869 |     0.6005 |
+| xgboost |     0.9501 |      0.4342 |         38840 |    3884 |     0.7039 |     0.6145 |
+| xgboost |     0.9002 |      0.4915 |         36800 |    3680 |     0.7177 |     0.6259 |
+| xgboost |     0.8001 |      0.5665 |         32710 |    3271 |     0.7487 |     0.6495 |
+| xgboost |     0.7001 |      0.6505 |         28620 |    2862 |     0.7631 |     0.6431 |
+| xgboost |     0.6    |      0.7125 |         24530 |    2453 |     0.7709 |     0.6275 |
+| xgboost |     0.5    |      0.7679 |         20440 |    2044 |     0.7696 |     0.5734 |
+| xgboost |     0.4002 |      0.8561 |         16360 |    1636 |     0.794  |     0.5428 |
+| xgboost |     0.3001 |      0.9641 |         12270 |    1227 |     0.8101 |     0.4516 |
+| xgboost |     0.2001 |      0.996  |          8180 |     818 |     0.8998 |     0.7379 |
+| xgboost |     0.1    |      0.9995 |          4090 |     409 |     0.9951 |     0.6242 |
 
 ### Figures
 

@@ -17,13 +17,13 @@ Columns beside the margin say what the design resolves. `folds` counts every fol
 
 | family   | model         | floor    |   margin |     low |    high |   p_value |   agreeing |   folds |
 |:---------|:--------------|:---------|---------:|--------:|--------:|----------:|-----------:|--------:|
-| species  | xgboost       | logbook  |  -0.6698 | -0.7419 | -0.5977 |  6.3e-24  |         50 |      50 |
-| species  | xgboost+probe | logbook  |  -0.5508 | -0.6607 | -0.4409 |  1.58e-13 |         50 |      50 |
-| species  | probe         | logbook  |  -0.5467 | -0.6576 | -0.4359 |  2.68e-13 |         50 |      50 |
-| species  | logbook       | metadata |   0.3699 |  0.1478 |  0.592  |  0.00158  |         50 |      50 |
-| species  | xgboost       | metadata |  -0.2999 | -0.4828 | -0.117  |  0.00183  |         50 |      50 |
-| species  | xgboost+probe | metadata |  -0.181  | -0.4071 |  0.0451 |  0.114    |         40 |      50 |
-| species  | probe         | metadata |  -0.1769 | -0.4158 |  0.0621 |  0.143    |         40 |      50 |
+| species  | xgboost       | logbook  |  -0.6602 | -0.7804 | -0.54   |  0.000108 |          5 |       5 |
+| species  | xgboost+probe | logbook  |  -0.5412 | -0.7329 | -0.3496 |  0.00143  |          5 |       5 |
+| species  | probe         | logbook  |  -0.5371 | -0.7309 | -0.3434 |  0.00153  |          5 |       5 |
+| species  | logbook       | metadata |   0.3603 | -0.0625 |  0.783  |  0.0771   |          5 |       5 |
+| species  | xgboost       | metadata |  -0.2999 | -0.661  |  0.0611 |  0.0824   |          5 |       5 |
+| species  | xgboost+probe | metadata |  -0.181  | -0.6273 |  0.2654 |  0.323    |          4 |       5 |
+| species  | probe         | metadata |  -0.1769 | -0.6486 |  0.2948 |  0.357    |          4 |       5 |
 
 ## Species
 
@@ -33,12 +33,12 @@ The control sees native sample rate, year, clip duration and file size; it sees 
 audio. It is a floor rather than the floor, and the table after this one measures
 against the highest any model that hears nothing reaches.
 
-| model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
-|:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| logbook       | 0.9911 |    0.6212 |   0.3699 |  0.1478 |  0.592  |   0.00158 |         50 |      50 | species  |
-| probe         | 0.4444 |    0.6212 |  -0.1769 | -0.4158 |  0.0621 |   0.143   |         40 |      50 | species  |
-| xgboost+probe | 0.4403 |    0.6212 |  -0.181  | -0.4071 |  0.0451 |   0.114   |         40 |      50 | species  |
-| xgboost       | 0.3213 |    0.6212 |  -0.2999 | -0.4828 | -0.117  |   0.00183 |         50 |      50 | species  |
+| model         |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
+|:--------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
+| logbook       | 0.9815 |    0.6212 |   0.3603 | -0.0625 | 0.783  |    0.0771 |          5 |       5 | species  |
+| probe         | 0.4444 |    0.6212 |  -0.1769 | -0.6486 | 0.2948 |    0.357  |          4 |       5 | species  |
+| xgboost+probe | 0.4403 |    0.6212 |  -0.181  | -0.6273 | 0.2654 |    0.323  |          4 |       5 | species  |
+| xgboost       | 0.3213 |    0.6212 |  -0.2999 | -0.661  | 0.0611 |    0.0824 |          5 |       5 | species  |
 
 ### Margin over logbook, the strongest model that hears no audio
 
@@ -48,30 +48,33 @@ number an audio result has to clear before it is evidence about whales.
 
 | model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
 |:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| probe         | 0.4444 |    0.9911 |  -0.5467 | -0.6576 | -0.4359 |  2.68e-13 |         50 |      50 | species  |
-| xgboost+probe | 0.4403 |    0.9911 |  -0.5508 | -0.6607 | -0.4409 |  1.58e-13 |         50 |      50 | species  |
-| xgboost       | 0.3213 |    0.9911 |  -0.6698 | -0.7419 | -0.5977 |  6.3e-24  |         50 |      50 | species  |
+| probe         | 0.4444 |    0.9815 |  -0.5371 | -0.7309 | -0.3434 |  0.00153  |          5 |       5 | species  |
+| xgboost+probe | 0.4403 |    0.9815 |  -0.5412 | -0.7329 | -0.3496 |  0.00143  |          5 |       5 | species  |
+| xgboost       | 0.3213 |    0.9815 |  -0.6602 | -0.7804 | -0.54   |  0.000108 |          5 |       5 | species  |
 
 ### Every model, with the range the recordings support
 
-The interval comes from resampling whole tapes with replacement. Cuts from one tape
-are near duplicates, so resampling clips would count the same recording many times
-and produce an interval several times too narrow.
+The interval comes from resampling whole groups with replacement, where the group is
+whatever this configuration's folds held out and the `unit` column names it. Cuts from
+one recording are near duplicates, so resampling clips would count the same recording
+many times and produce an interval several times too narrow. Resampling tapes under a
+fold rule that holds out places is the same mistake one level up, and it reported an
+interval 59% narrower than the design supports.
 
-| model         |   estimate |    low |   high |   tapes |
-|:--------------|-----------:|-------:|-------:|--------:|
-| xgboost       |     0.317  | 0.2342 | 0.4083 |     129 |
-| logbook       |     0.9909 | 0.9663 | 0.9984 |     129 |
-| probe         |     0.4446 | 0.3589 | 0.515  |     129 |
-| xgboost+probe |     0.4308 | 0.3474 | 0.4975 |     129 |
-| metadata      |     0.6059 | 0.4756 | 0.7107 |     129 |
+| model         |   estimate |    low |   high |   groups | unit   |
+|:--------------|-----------:|-------:|-------:|---------:|:-------|
+| xgboost       |     0.317  | 0.2117 | 0.4877 |       24 | place  |
+| logbook       |     0.9878 | 0.9438 | 0.9989 |       24 | place  |
+| probe         |     0.4446 | 0.3163 | 0.5816 |       24 | place  |
+| xgboost+probe |     0.4308 | 0.3061 | 0.5799 |       24 | place  |
+| metadata      |     0.6059 | 0.3554 | 0.9346 |       24 | place  |
 
 ### Spread across folds
 
 | model         |   mean |    std |
 |:--------------|-------:|-------:|
 | xgboost       | 0.3213 | 0.0655 |
-| logbook       | 0.9911 | 0.0133 |
+| logbook       | 0.9815 | 0.0184 |
 | probe         | 0.4444 | 0.0965 |
 | xgboost+probe | 0.4403 | 0.0959 |
 | metadata      | 0.6212 | 0.2179 |
@@ -81,7 +84,7 @@ and produce an interval several times too narrow.
 | model         |   HumpbackWhale |   SpermWhale |   KillerWhale |
 |:--------------|----------------:|-------------:|--------------:|
 | xgboost       |          0.4094 |       0.5948 |        0.4078 |
-| logbook       |          0.9972 |       0.9807 |        0.993  |
+| logbook       |          1      |       0.9241 |        0.9983 |
 | probe         |          0.6117 |       0.5889 |        0.4767 |
 | xgboost+probe |          0.6544 |       0.6001 |        0.4812 |
 | metadata      |          0.8334 |       0.9669 |        0.4116 |
@@ -106,10 +109,10 @@ column and reads as a collapse the predictions do not contain.
 | native sample rate | xgboost       | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.2609 |         0.1615 |
 | collection code    | xgboost       | collection code not recorded           |     359 |                2 |               3 |      30 |          0.4838 |         0.3526 |
 | collection code    | xgboost       | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.3517 |         0.089  |
-| native sample rate | logbook       | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.6444 |         0.1818 |
-| native sample rate | logbook       | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.8667 |         0.165  |
-| collection code    | logbook       | collection code not recorded           |     359 |                2 |               3 |      30 |          0.4762 |         0.0342 |
-| collection code    | logbook       | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.9903 |         0.0154 |
+| native sample rate | logbook       | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.6598 |         0.2131 |
+| native sample rate | logbook       | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.847  |         0.1671 |
+| collection code    | logbook       | collection code not recorded           |     359 |                2 |               3 |      30 |          0.54   |         0.3665 |
+| collection code    | logbook       | collection code unique to a species    |    3729 |                3 |               3 |      50 |          0.9898 |         0.0152 |
 | native sample rate | probe         | native sample rate shared by species   |     834 |                3 |               3 |      50 |          0.476  |         0.1148 |
 | native sample rate | probe         | native sample rate unique to a species |    3254 |                3 |               3 |      50 |          0.3561 |         0.1018 |
 | collection code    | probe         | collection code not recorded           |     359 |                2 |               3 |      30 |          0.2766 |         0.1086 |

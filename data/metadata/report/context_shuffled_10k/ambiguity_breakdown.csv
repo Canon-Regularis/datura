@@ -1,13 +1,13 @@
 giveaway,model,subset,clips,classes_scored,classes_total,folds,macro_f1_mean,macro_f1_std
-native sample rate,xgboost,native sample rate shared by species,834,3,3,50,0.5433506818,0.1924843499
-native sample rate,xgboost,native sample rate unique to a species,3254,3,3,50,0.50247712,0.1604555827
-collection code,xgboost,collection code not recorded,359,2,3,30,0.3588866995,0.2187050135
-collection code,xgboost,collection code unique to a species,3729,3,3,50,0.6203422795,0.1944302609
-native sample rate,logbook,native sample rate shared by species,834,3,3,50,0.7720245938,0.2887370685
-native sample rate,logbook,native sample rate unique to a species,3254,3,3,50,0.7944282556,0.265443301
+native sample rate,xgboost,native sample rate shared by species,834,3,3,50,0.4916028599,0.2016188154
+native sample rate,xgboost,native sample rate unique to a species,3254,3,3,50,0.5350755598,0.1776169218
+collection code,xgboost,collection code not recorded,359,2,3,30,0.397560307,0.1454597062
+collection code,xgboost,collection code unique to a species,3729,3,3,50,0.5907911099,0.2057297488
+native sample rate,logbook,native sample rate shared by species,834,3,3,50,0.6633950864,0.2266645502
+native sample rate,logbook,native sample rate unique to a species,3254,3,3,50,0.8571786247,0.1729662193
 collection code,logbook,collection code not recorded,359,2,3,30,0.5,0.4152273993
-collection code,logbook,collection code unique to a species,3729,3,3,50,0.9885827622,0.0230663037
-native sample rate,metadata,native sample rate shared by species,834,3,3,50,0.6288585411,0.2604714263
-native sample rate,metadata,native sample rate unique to a species,3254,3,3,50,0.7863482939,0.2252201509
+collection code,logbook,collection code unique to a species,3729,3,3,50,0.9850018807,0.0184119861
+native sample rate,metadata,native sample rate shared by species,834,3,3,50,0.6243550292,0.1804982321
+native sample rate,metadata,native sample rate unique to a species,3254,3,3,50,0.853913002,0.1305171179
 collection code,metadata,collection code not recorded,359,2,3,30,0.611827957,0.2874076048
-collection code,metadata,collection code unique to a species,3729,3,3,50,0.8444443351,0.1405067099
+collection code,metadata,collection code unique to a species,3729,3,3,50,0.9211015151,0.0844088598

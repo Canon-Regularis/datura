@@ -40,7 +40,7 @@ the five fold split, so fifty estimates each; `log mel CNN, 2.8 M` ran one split
 
 | model | macro-F1 | audio |
 | --- | --- | --- |
-| logbook | 0.997 ± 0.005 | no |
+| logbook | 0.997 ± 0.010 | no |
 | metadata | 0.868 ± 0.134 | no |
 | XGBoost and probe averaged | 0.765 ± 0.089 | yes |
 | acoustic descriptors, XGBoost | 0.752 ± 0.070 | yes |
@@ -130,33 +130,59 @@ twentieth of the network's.
 No. This is the result that matters most and it is negative.
 
 A tape grouped fold proves no recording sits on both sides of the boundary. It does not prove the
-model survives a place, a hydrophone or a recording chain it has never heard. `configs/context.yaml`
-differs from `configs/base.yaml` in one line, the column folds are grouped on, and XGBoost falls
-from 0.752 to 0.321 macro-F1 across that one line. A guess drawn from the class shares reaches
-0.333, so a model trained on other places is worth nothing at a place it has never heard.
+model survives a place, a hydrophone or a recording chain it has never heard.
+`configs/context.yaml` differs from `configs/base.yaml` in one line, the column folds are grouped
+on, and XGBoost falls from 0.752 to 0.321 macro-F1 across that one line. A guess drawn from the
+class shares reaches 0.333, so a model trained on other places is worth nothing at a place it has
+never heard.
 
-Most of that is the place rather than the arithmetic, and it takes a control to say so. Grouping by
-place leaves 24 groups where the tape rule leaves 134, so folds are far coarser and lose far more
-training data. `configs/context_shuffled.yaml` separates the two: pseudo places dealt at random,
-matched to the real ones group for group, species for species and tape for tape, so the split loses
-the same data and keeps none of the geography.
+Some of that fall is the fold geometry rather than the place. Grouping by place leaves 24 groups
+where the tape rule leaves 134, so five folds hold out 7.8 groups instead of 27 and one group can
+own most of a test fold. `configs/context_shuffled.yaml` is the control that separates the two:
+pseudo places dealt at random inside each species, matched to the real ones group for group,
+species for species and tape for tape, so the split loses the same data and keeps none of the
+geography.
 
 | what is being scored | macro-F1 | cost |
 | --- | --- | --- |
 | tape held out, all 4,160 clips | 0.752 | |
 | the same predictions on the 4,088 clips a place split can score | 0.744 | 0.008 |
-| pseudo places, same structure and no real place | 0.569 | 0.175 |
-| real places | 0.321 | 0.248 |
+| pseudo places, same structure and no real place | 0.556 | 0.189 |
+| real places | 0.321 | 0.234 |
 
-The fold geometry costs 0.175 and the identity of the place costs 0.248. The 72 clips carrying no
+The fold geometry costs 0.189 and the identity of the place costs 0.234. The 72 clips carrying no
 site, which base scores and a place split cannot, account for the remaining 0.008. So the model is
 not failing to learn. It is learning the recording.
 
-This corrects a weaker version of the same experiment that grouped on 39 tape linked contexts and
-put the place cost at 0.029. Site names that no tape connects stayed separate there, so six groups
-were all Dominica, five were all Bermuda, and the two Oregon aquariums were two places. 52% of held
-out clips sat in a fold whose place was also in the training set, and a half leaked test reported a
-fifth of the effect. `recording_places` merges them by name: 47 sites become 39 contexts become 24
+| model | tape held out | place held out | change |
+| --- | --- | --- | --- |
+| logbook | 0.997 | 0.982 | -0.016 |
+| metadata | 0.868 | 0.621 | -0.247 |
+| XGBoost and probe averaged | 0.765 | 0.440 | -0.324 |
+| wav2vec2 probe | 0.739 | 0.444 | -0.295 |
+| acoustic descriptors, XGBoost | 0.752 | 0.321 | -0.431 |
+
+The logbook barely moves, because the collection code names the species wherever the recording was
+made. That is the cleanest statement of the confound this project measures: the paperwork travels
+and the audio does not. Measured against it under these folds, XGBoost is 0.660 behind at
+p = 1.1e-04 and the probe 0.537 behind at p = 1.5e-03, both on five folds and both resolving.
+
+That row is only trustworthy because of how the control encodes a name, and getting it wrong was
+worth more than the effect being measured. A site coded to its position in the alphabet is an
+ordinal, so a split can only ask whether the code is above a threshold, and the answer for a name
+the model never saw is decided by where the alphabet put it. Under tape folds that is invisible,
+because a held out tape almost always carries a name the training tapes carried too. Under place
+folds every held out name is new. Five encodings carrying identical information scored 0.7211,
+0.9908, 0.9911, 0.9990 and 0.9993 on the same folds, and moving the absent name sentinel from one
+end of the axis to the other was worth 0.278 by itself. One column per name removes the axis: an
+unseen name is zero everywhere and the tree falls back on what it knows. The same comparison under
+that encoding spans 0.018.
+
+The group is the physical place rather than the raw site, and both weaker versions of it leaked.
+Grouping on the site alone put whole tapes on both sides of a fold, because six tapes carry clips
+the notes place at more than one site. Merging the sites a tape links fixed that and left a second
+leak: names no tape connects stayed apart, so six groups were all Dominica and 52% of held out clips
+sat in a fold whose place was also in the training set. 47 sites become 39 contexts become 24
 places, and no place, site or tape now crosses a fold boundary.
 
 Three things bound how hard this can be pushed.
@@ -168,32 +194,12 @@ control measures and subtracts, and it also means a single fold moves the mean a
 
 Repeats buy nothing at this grouping. Ten repeats of the place split produce 1 distinct partition
 against 10 for the tape split, because `StratifiedGroupKFold` over two dozen groups is very nearly
-deterministic. The fifty rows behind 0.321 are five folds scored under ten
-model seeds, so the fold count printed beside it overstates the evidence tenfold and the spread is a
-between fold range rather than a sampling uncertainty.
+deterministic. Every number here rests on five folds, and the paired test says five rather than
+fifty, which it did not until the arithmetic was corrected.
 
 The pseudo places match the real ones on tapes per group and not on clips per group, 44 against a
 median of 57, so the control is not a perfect twin. Dealing it under many seeds and reading 0.321 as
 a percentile of that null is the experiment that would close this, and it has not been run.
-
-| model | tape held out | place held out | change |
-| --- | --- | --- | --- |
-| logbook | 0.997 | 0.991 | -0.006 |
-| metadata | 0.868 | 0.621 | -0.247 |
-| XGBoost and probe averaged | 0.765 | 0.440 | -0.324 |
-| wav2vec2 probe | 0.739 | 0.444 | -0.295 |
-| acoustic descriptors, XGBoost | 0.752 | 0.321 | -0.431 |
-
-The logbook barely moves, because the collection code identifies the species wherever the recording
-was made. That is the cleanest statement of the confound this project measures: the paperwork
-transfers across places and the audio does not.
-
-The audio models change order here, and that is the one encouraging line in this section. The
-frozen speech encoder is the weakest of the pair on held out recordings and the strongest on held
-out places, 0.444 against 0.321, so representations pretrained elsewhere give up less when the
-recording chain changes than descriptors computed from this corpus do. The pseudo place control was
-run for the trees only, so the split between geometry and place is measured for that row and
-assumed for the others.
 
 ## The control that beats it
 
@@ -202,11 +208,11 @@ on this task. Every audio model loses to it.
 
 | comparison | margin | 95% interval | p | agreeing |
 | --- | --- | --- | --- | --- |
-| XGBoost | -0.245 | -0.318 to -0.172 | 1.7e-08 | 50 of 50 |
-| wav2vec2 probe | -0.258 | -0.353 to -0.164 | 1.3e-06 | 50 of 50 |
-| CNN 0.15 M | -0.288 | -0.436 to -0.140 | 2.9e-04 | 50 of 50 |
-| CNN 2.8 M | -0.285 | -0.514 to -0.056 | 0.026 | 5 of 5 |
-| logbook against metadata | +0.130 | -0.012 to +0.271 | 0.072 | 45 of 50 |
+| XGBoost | -0.245 | -0.319 to -0.171 | 2.4e-08 | 50 of 50 |
+| wav2vec2 probe | -0.258 | -0.351 to -0.165 | 1.1e-06 | 50 of 50 |
+| CNN 0.15 M | -0.288 | -0.437 to -0.138 | 3.2e-04 | 50 of 50 |
+| CNN 2.8 M | -0.286 | -0.515 to -0.058 | 0.025 | 5 of 5 |
+| logbook against metadata | +0.129 | -0.009 to +0.268 | 0.067 | 44 of 50 |
 
 Every audio comparison resolves and every one of them is negative. Three carry the full fifty
 splits. That result is a measurement of the corpus: the paperwork attached to a Watkins recording
@@ -217,8 +223,8 @@ Measured against the metadata control instead, the same XGBoost comparison is -0
 which settles nothing. The floor was in the wrong place until the logbook was built.
 
 Narrow band replication at 5120 Hz, which keeps all 14 humpback tapes instead of 12: XGBoost lands
-0.247 below the logbook at p = 2.5e-04 with 50 of 50 agreeing, and 0.150 below the metadata control
-at p = 0.012 with 46 of 50. The probe lands 0.274 below the logbook at p = 4.0e-06. Two bands, the
+0.250 below the logbook at p = 2.5e-04 with 50 of 50 agreeing, and 0.150 below the metadata control
+at p = 0.012 with 46 of 50. The probe lands 0.276 below the logbook at p = 2.9e-06. Two bands, the
 same ordering.
 
 ## Three fields that name the species
@@ -241,7 +247,7 @@ Splitting held out clips on what a field does to the species:
 
 | model | rate unique | rate shared | code unique | code absent |
 | --- | --- | --- | --- | --- |
-| logbook | 0.932 | 0.864 | 0.998 | 0.638 |
+| logbook | 0.933 | 0.923 | 0.997 | 0.693 |
 | metadata | 0.878 | 0.683 | 0.867 | 0.698 |
 | acoustic, XGBoost | 0.705 | 0.661 | 0.750 | 0.616 |
 | wav2vec2 probe | 0.679 | 0.708 | 0.746 | 0.514 |
@@ -259,9 +265,10 @@ If the acoustic models were leaning on equipment signature rather than on the an
 would be far wider. The metadata control loses 19 points across the same split and the CNN loses
 one.
 
-The logbook falls from 0.998 to 0.638 on the clips with no code. Everything else falls too, and the
-metadata control finishes highest at 0.698 while never seeing a code at all, so the fall is a
-property of those 359 clips rather than of the field they are missing.
+The logbook falls from 0.997 to 0.693 on the clips with no code, and the metadata control lands on
+0.698 while never seeing a code at all. Two models with very different inputs finishing within half
+a point of each other says the fall is a property of those 359 clips rather than of the field they
+are missing.
 
 Eleven species is where a genuinely shared code exists. On the 2,581 clips whose code is used by more
 than one of them the logbook still reaches 0.666 against XGBoost's 0.304, so what the paperwork
@@ -285,18 +292,18 @@ independent recordings is 228. Sample size claims use the second.
 
 | model | 3 species | 11 species |
 | --- | --- | --- |
-| logbook | 0.997 | 0.920 |
+| logbook | 0.997 | 0.973 |
 | metadata | 0.868 | 0.575 |
 | acoustic, XGBoost | 0.752 | 0.425 |
 | wav2vec2 probe | 0.739 | 0.437 |
 
-Every score falls, and the gap widens rather than narrowing. XGBoost lands 0.495 below the logbook
-at p = 3.4e-16 with 50 of 50 agreeing, against -0.245 on three species, and the probe 0.483 below at
-p = 3.8e-15. The pretrained encoder is fractionally ahead of the hand engineered features here,
+Every score falls, and the gap widens rather than narrowing. XGBoost lands 0.548 below the logbook
+at p = 5.5e-15 with 50 of 50 agreeing, against -0.245 on three species, and the probe 0.536 below at
+p = 5.0e-20. The pretrained encoder is fractionally ahead of the hand engineered features here,
 0.437 against 0.425, and both are less than half of what the paperwork reaches.
 
-The metadata control loses most of its standing: 0.575 against the logbook's 0.920, a gap of 0.345
-at p = 4.6e-09 with 50 of 50 agreeing, where on three species that gap was 0.130 and did not
+The metadata control loses most of its standing: 0.575 against the logbook's 0.973, a gap of 0.398
+at p = 1.5e-08 with 50 of 50 agreeing, where on three species that gap was 0.129 and did not
 resolve.
 
 Which field carries the logbook changes with breadth. On three species the collection code alone
@@ -325,19 +332,20 @@ a single split.
 
 | task | audio | control | margin | p | agreeing |
 | --- | --- | --- | --- | --- | --- |
-| killer whale, click | 0.597 | 0.472 | +0.125 | 0.13 | 37 of 50 |
-| killer whale, whistle | 0.567 | 0.523 | +0.045 | 0.19 | 36 of 50 |
-| sperm whale, whistle | 0.713 | 0.674 | +0.039 | 0.80 | 26 of 50 |
-| killer whale, call | 0.695 | 0.662 | +0.033 | 0.82 | 29 of 50 |
-| killer whale, squeal | 0.769 | 0.763 | +0.006 | 0.96 | 29 of 50 |
-| sperm whale, click | 0.710 | 0.740 | -0.030 | 0.61 | 25 of 50 |
-| killer whale, chirp | 0.556 | 0.607 | -0.052 | 0.28 | 32 of 50 |
-| sperm whale, coda | 0.577 | 0.739 | -0.162 | 0.023 | 46 of 50 |
-| sperm whale, coda, CNN | 0.453 | 0.678 | -0.224 | 0.19 | 5 of 5 |
+| killer whale, click | 0.597 | 0.481 | +0.116 | 0.198 | 37 of 50 |
+| killer whale, whistle | 0.567 | 0.524 | +0.043 | 0.202 | 36 of 50 |
+| killer whale, squeal | 0.769 | 0.733 | +0.036 | 0.733 | 32 of 50 |
+| sperm whale, click | 0.710 | 0.741 | -0.032 | 0.582 | 29 of 50 |
+| sperm whale, whistle | 0.713 | 0.746 | -0.034 | 0.841 | 31 of 50 |
+| killer whale, chirp | 0.556 | 0.619 | -0.063 | 0.135 | 34 of 50 |
+| killer whale, call | 0.695 | 0.772 | -0.077 | 0.406 | 30 of 50 |
+| sperm whale, coda | 0.577 | 0.671 | -0.094 | 0.144 | 39 of 50 |
+| sperm whale, coda, CNN | 0.453 | 0.631 | -0.178 | 0.127 | 5 of 5 |
 
-Five of nine margins are positive and not one of them resolves. The single comparison that does
-resolve runs the other way: on sperm whale coda the control beats the audio by 0.162 at p = 0.023
-with 46 of 50 folds agreeing.
+Three of nine margins are positive and not one comparison resolves in either direction. Sperm whale
+coda used to be the exception, at -0.162 with p = 0.023, and it stopped being one when the control
+learned to read a site name as a name rather than as a position in the alphabet. The audio models
+here are unchanged; only the bar they are measured against moved.
 
 This table used to read the opposite way, and the reason is worth stating. The control was once
 denied the four header fields, clip duration among them. A Watkins note is written against a whole
@@ -420,7 +428,7 @@ ten repeats, and a second set that does cross the threshold on repeats alone is 
 
 **How many comparisons.** Forty six are reported across the five configurations, so reading each at
 0.05 on its own expects more than one to clear the bar carrying nothing.
-`data/metadata/report/MULTIPLICITY.md` adjusts across all of them at once. Twenty two survive, and every
+`data/metadata/report/MULTIPLICITY.md` adjusts across all of them at once. Eighteen survive, and every
 one is either an audio model losing to a model that hears nothing or one no-audio model beating
 another. Not a single positive audio comparison survives, in any configuration.
 

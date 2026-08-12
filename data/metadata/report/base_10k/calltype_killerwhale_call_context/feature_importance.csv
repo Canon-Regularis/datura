@@ -1,417 +1,697 @@
 feature,gain,repeat,fold
-longitude,0.8513681292533875,0,0
-site_code,0.03780462220311165,0,0
-native_sample_rate,0.029967064037919044,0,0
-duration_seconds,0.021826840937137604,0,0
-bytes_on_disk,0.020447753369808197,0,0
-cond_water_noise,0.015690846368670464,0,0
-cond_no_visual,0.006772517692297697,0,0
-year,0.006049810443073511,0,0
-collection_code,0.0052777244709432125,0,0
-latitude,0.004794703796505928,0,0
+"site_Kikvika, Norway",0.6976752281188965,0,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.20820961892604828,0,0
+native_sample_rate,0.018602265045046806,0,0
+duration_seconds,0.01361086592078209,0,0
+bytes_on_disk,0.012766510248184204,0,0
+cond_water_noise,0.008629884570837021,0,0
+cond_no_visual,0.008015753701329231,0,0
+"site_Andenes, Norway",0.007090541068464518,0,0
+site_Oregon Coast Aquarium,0.006653195712715387,0,0
+year,0.005832286551594734,0,0
+latitude,0.0056313807144761086,0,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.003934163134545088,0,0
+collection_code_BE7A,0.003348278347402811,0,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,0
+"site_Dabob Bay, Seattle, Washington",0.0,0,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,0
+"site_T3 Ice Island, Canada",0.0,0,0
+"site_Vancouver, British Columbia",0.0,0,0
+longitude,0.0,0,0
 cond_ship_noise,0.0,0,0
 cond_engine_noise,0.0,0,0
 cond_reverberation,0.0,0,0
 cond_night_recording,0.0,0,0
 cond_tape_speed_note,0.0,0,0
-longitude,0.8270813822746277,0,1
-site_code,0.07583631575107574,0,1
-duration_seconds,0.018264494836330414,0,1
-cond_water_noise,0.011621278710663319,0,1
-collection_code,0.010459179989993572,0,1
-year,0.010428967885673046,0,1
-native_sample_rate,0.01035826001316309,0,1
-bytes_on_disk,0.010264413431286812,0,1
-cond_reverberation,0.009662213735282421,0,1
-latitude,0.008112779818475246,0,1
-cond_no_visual,0.007910656742751598,0,1
+"site_Kikvika, Norway",0.7554512619972229,0,1
+longitude,0.10774008929729462,0,1
+"site_Vancouver, British Columbia",0.04060175642371178,0,1
+"site_Outside St. John's Hbr., Newfoundland",0.014405966736376286,0,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.01336947176605463,0,1
+native_sample_rate,0.010526381433010101,0,1
+duration_seconds,0.009872399270534515,0,1
+bytes_on_disk,0.007489050272852182,0,1
+cond_water_noise,0.005783495493233204,0,1
+collection_code_BE7A,0.0056525240652263165,0,1
+cond_reverberation,0.005373967811465263,0,1
+latitude,0.005161030683666468,0,1
+year,0.0050681717693805695,0,1
+cond_no_visual,0.00485659297555685,0,1
+site_Oregon Coast Aquarium,0.004581157583743334,0,1
+"site_Andenes, Norway",0.004066749941557646,0,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,1
+"site_Dabob Bay, Seattle, Washington",0.0,0,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,1
+"site_T3 Ice Island, Canada",0.0,0,1
 cond_ship_noise,0.0,0,1
 cond_engine_noise,0.0,0,1
 cond_night_recording,0.0,0,1
 cond_tape_speed_note,0.0,0,1
-latitude,0.7144787311553955,0,2
-year,0.15199585258960724,0,2
-duration_seconds,0.031147900968790054,0,2
-bytes_on_disk,0.027246123179793358,0,2
-site_code,0.02102254144847393,0,2
-cond_reverberation,0.0200909823179245,0,2
-collection_code,0.01606530323624611,0,2
-cond_water_noise,0.010049724020063877,0,2
-native_sample_rate,0.004431727342307568,0,2
-cond_no_visual,0.003471001284196973,0,2
+latitude,0.626594603061676,0,2
+year,0.18583020567893982,0,2
+"site_Kikvika, Norway",0.05238598957657814,0,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.028373755514621735,0,2
+duration_seconds,0.019613703712821007,0,2
+bytes_on_disk,0.014755054377019405,0,2
+"site_Dabob Bay, Seattle, Washington",0.014001266099512577,0,2
+cond_reverberation,0.013521461747586727,0,2
+collection_code_BE7A,0.011386324651539326,0,2
+cond_water_noise,0.00946096796542406,0,2
+"site_T3 Ice Island, Canada",0.00852939672768116,0,2
+"site_Vancouver, British Columbia",0.005364123731851578,0,2
+native_sample_rate,0.004647877067327499,0,2
+cond_no_visual,0.00392195163294673,0,2
+site_Oregon Coast Aquarium,0.0016132696764543653,0,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,2
+"site_Andenes, Norway",0.0,0,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,2
 longitude,0.0,0,2
 cond_ship_noise,0.0,0,2
 cond_engine_noise,0.0,0,2
 cond_night_recording,0.0,0,2
 cond_tape_speed_note,0.0,0,2
-collection_code,0.553954005241394,0,3
-longitude,0.22552542388439178,0,3
-year,0.08909748494625092,0,3
-native_sample_rate,0.023744724690914154,0,3
-duration_seconds,0.020334517583251,0,3
-bytes_on_disk,0.017145507037639618,0,3
-latitude,0.01566959172487259,0,3
-site_code,0.014769628643989563,0,3
-cond_no_visual,0.014413540251553059,0,3
-cond_reverberation,0.014301341958343983,0,3
-cond_night_recording,0.007763746194541454,0,3
-cond_water_noise,0.003280478296801448,0,3
+"site_Kikvika, Norway",0.5032886266708374,0,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.2640269994735718,0,3
+year,0.07563497871160507,0,3
+longitude,0.020988062024116516,0,3
+native_sample_rate,0.020948048681020737,0,3
+duration_seconds,0.018261468037962914,0,3
+bytes_on_disk,0.014981267973780632,0,3
+latitude,0.014142878353595734,0,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.013415677472949028,0,3
+cond_reverberation,0.01248155441135168,0,3
+cond_no_visual,0.010979341343045235,0,3
+"site_Andenes, Norway",0.010812891647219658,0,3
+site_Oregon Coast Aquarium,0.01054989080876112,0,3
+cond_night_recording,0.006319605279713869,0,3
+cond_water_noise,0.002838863991200924,0,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.00032985556754283607,0,3
+"site_Dabob Bay, Seattle, Washington",0.0,0,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,3
+"site_T3 Ice Island, Canada",0.0,0,3
+"site_Vancouver, British Columbia",0.0,0,3
+collection_code_BE7A,0.0,0,3
 cond_ship_noise,0.0,0,3
 cond_engine_noise,0.0,0,3
 cond_tape_speed_note,0.0,0,3
-longitude,0.757551372051239,0,4
-site_code,0.08081762492656708,0,4
-bytes_on_disk,0.03882727399468422,0,4
-native_sample_rate,0.028742138296365738,0,4
-cond_no_visual,0.022725090384483337,0,4
-latitude,0.02029363438487053,0,4
-duration_seconds,0.017542215064167976,0,4
-cond_water_noise,0.01651013456285,0,4
-cond_reverberation,0.010912627913057804,0,4
-collection_code,0.006077817641198635,0,4
-year,0.0,0,4
+"site_Kikvika, Norway",0.4587205946445465,0,4
+longitude,0.2498750537633896,0,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.10970410704612732,0,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.04580508545041084,0,4
+year,0.019533751532435417,0,4
+latitude,0.0186941958963871,0,4
+bytes_on_disk,0.016866371035575867,0,4
+"site_Andenes, Norway",0.013431750237941742,0,4
+cond_no_visual,0.010867048986256123,0,4
+native_sample_rate,0.010042719542980194,0,4
+"site_Dabob Bay, Seattle, Washington",0.008829284459352493,0,4
+cond_reverberation,0.008603970520198345,0,4
+duration_seconds,0.00824012141674757,0,4
+cond_water_noise,0.008005516603589058,0,4
+cond_night_recording,0.004593363497406244,0,4
+collection_code_BE7A,0.003229310503229499,0,4
+site_Oregon Coast Aquarium,0.0028702085837721825,0,4
+"site_T3 Ice Island, Canada",0.002087577013298869,0,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,0,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,0,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,0,4
+"site_Vancouver, British Columbia",0.0,0,4
 cond_ship_noise,0.0,0,4
 cond_engine_noise,0.0,0,4
-cond_night_recording,0.0,0,4
 cond_tape_speed_note,0.0,0,4
-longitude,0.855950117111206,1,0
-site_code,0.04155462980270386,1,0
-native_sample_rate,0.03003881685435772,1,0
-duration_seconds,0.02128213457763195,1,0
-bytes_on_disk,0.018808094784617424,1,0
-cond_water_noise,0.011219383217394352,1,0
-cond_no_visual,0.0062817297875881195,1,0
-collection_code,0.005501152481883764,1,0
-latitude,0.0053260307759046555,1,0
-year,0.004037830978631973,1,0
+"site_Kikvika, Norway",0.6739624738693237,1,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.21355171501636505,1,0
+native_sample_rate,0.017502855509519577,1,0
+longitude,0.014031828381121159,1,0
+duration_seconds,0.013293509371578693,1,0
+bytes_on_disk,0.012805714271962643,1,0
+year,0.012622381560504436,1,0
+"site_T3 Ice Island, Canada",0.00754499202594161,1,0
+cond_water_noise,0.007079843897372484,1,0
+cond_no_visual,0.0064710890874266624,1,0
+"site_Andenes, Norway",0.005873064510524273,1,0
+latitude,0.005197515711188316,1,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.003963057417422533,1,0
+collection_code_BE7A,0.0035473306197673082,1,0
+site_Oregon Coast Aquarium,0.0022896751761436462,1,0
+"site_Dabob Bay, Seattle, Washington",0.00026299463934265077,1,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,0
+"site_Vancouver, British Columbia",0.0,1,0
 cond_ship_noise,0.0,1,0
 cond_engine_noise,0.0,1,0
 cond_reverberation,0.0,1,0
 cond_night_recording,0.0,1,0
 cond_tape_speed_note,0.0,1,0
-latitude,0.6988399624824524,1,1
-year,0.10923337936401367,1,1
-longitude,0.08093259483575821,1,1
-site_code,0.03304535895586014,1,1
-duration_seconds,0.03068932332098484,1,1
-bytes_on_disk,0.0164323840290308,1,1
-cond_reverberation,0.014372201636433601,1,1
-collection_code,0.007438243366777897,1,1
-cond_water_noise,0.005528865847736597,1,1
-cond_no_visual,0.0034876305144280195,1,1
-native_sample_rate,0.0,1,1
+latitude,0.7061257362365723,1,1
+"site_Kikvika, Norway",0.11243904381990433,1,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.07049427181482315,1,1
+"site_Dabob Bay, Seattle, Washington",0.025366418063640594,1,1
+duration_seconds,0.021057095378637314,1,1
+year,0.014816905371844769,1,1
+cond_reverberation,0.012697409838438034,1,1
+bytes_on_disk,0.01163556519895792,1,1
+collection_code_BE7A,0.005892356391996145,1,1
+cond_water_noise,0.005848987959325314,1,1
+site_Oregon Coast Aquarium,0.005657457746565342,1,1
+native_sample_rate,0.004960432182997465,1,1
+cond_no_visual,0.003008288564160466,1,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,1,1
+"site_Andenes, Norway",0.0,1,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,1
+"site_T3 Ice Island, Canada",0.0,1,1
+"site_Vancouver, British Columbia",0.0,1,1
+longitude,0.0,1,1
 cond_ship_noise,0.0,1,1
 cond_engine_noise,0.0,1,1
 cond_night_recording,0.0,1,1
 cond_tape_speed_note,0.0,1,1
-longitude,0.6972516775131226,1,2
-site_code,0.13616687059402466,1,2
-cond_reverberation,0.025298312306404114,1,2
-bytes_on_disk,0.02011076919734478,1,2
-duration_seconds,0.020003188401460648,1,2
-cond_no_visual,0.019846463575959206,1,2
-latitude,0.016668682917952538,1,2
-year,0.015997882932424545,1,2
-cond_water_noise,0.013217853382229805,1,2
-native_sample_rate,0.012842408381402493,1,2
-collection_code,0.01255693007260561,1,2
-cond_night_recording,0.010039009153842926,1,2
+"site_Kikvika, Norway",0.5037453174591064,1,2
+longitude,0.25667670369148254,1,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.06047380715608597,1,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.03997132182121277,1,2
+"site_Vancouver, British Columbia",0.03186716139316559,1,2
+year,0.018522821366786957,1,2
+cond_reverberation,0.011832565069198608,1,2
+site_Oregon Coast Aquarium,0.011422145180404186,1,2
+bytes_on_disk,0.009578987024724483,1,2
+duration_seconds,0.008818306028842926,1,2
+cond_no_visual,0.008716318756341934,1,2
+latitude,0.006446515675634146,1,2
+native_sample_rate,0.006330569740384817,1,2
+collection_code_BE7A,0.0056830099783837795,1,2
+cond_night_recording,0.005504929926246405,1,2
+cond_water_noise,0.005481601692736149,1,2
+"site_Outside St. John's Hbr., Newfoundland",0.0051901498809456825,1,2
+"site_T3 Ice Island, Canada",0.003737757680937648,1,2
+"site_Andenes, Norway",0.0,1,2
+"site_Dabob Bay, Seattle, Washington",0.0,1,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,2
 cond_ship_noise,0.0,1,2
 cond_engine_noise,0.0,1,2
 cond_tape_speed_note,0.0,1,2
-collection_code,0.5513469576835632,1,3
-longitude,0.2902173399925232,1,3
-site_code,0.05130898579955101,1,3
-bytes_on_disk,0.01761697605252266,1,3
-native_sample_rate,0.016910549253225327,1,3
-cond_reverberation,0.015091195702552795,1,3
-year,0.014844474382698536,1,3
-duration_seconds,0.013595354743301868,1,3
-latitude,0.00874257180839777,1,3
-cond_no_visual,0.007779755163937807,1,3
-cond_water_noise,0.006505623925477266,1,3
-cond_night_recording,0.006040302105247974,1,3
+"site_Kikvika, Norway",0.4868723750114441,1,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.2582854628562927,1,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.061547864228487015,1,3
+year,0.034481752663850784,1,3
+bytes_on_disk,0.017504312098026276,1,3
+native_sample_rate,0.01713363453745842,1,3
+"site_T3 Ice Island, Canada",0.014952188357710838,1,3
+"site_Andenes, Norway",0.012898498214781284,1,3
+duration_seconds,0.011374278925359249,1,3
+site_Oregon Coast Aquarium,0.011117436923086643,1,3
+cond_no_visual,0.010481693781912327,1,3
+cond_reverberation,0.010372085496783257,1,3
+longitude,0.010200582444667816,1,3
+latitude,0.009827302768826485,1,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.00782632827758789,1,3
+"site_Dabob Bay, Seattle, Washington",0.007767233531922102,1,3
+"site_Vancouver, British Columbia",0.007603239268064499,1,3
+cond_water_noise,0.005344491917639971,1,3
+cond_night_recording,0.004409221466630697,1,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,3
+collection_code_BE7A,0.0,1,3
 cond_ship_noise,0.0,1,3
 cond_engine_noise,0.0,1,3
 cond_tape_speed_note,0.0,1,3
-longitude,0.7699306607246399,1,4
-site_code,0.08112134039402008,1,4
-bytes_on_disk,0.032148219645023346,1,4
-native_sample_rate,0.03163846954703331,1,4
-cond_water_noise,0.016186727210879326,1,4
-latitude,0.0161051657050848,1,4
-duration_seconds,0.0160913597792387,1,4
-year,0.01563693769276142,1,4
-cond_reverberation,0.010175344534218311,1,4
-cond_night_recording,0.006235988344997168,1,4
-collection_code,0.004729649983346462,1,4
+"site_Kikvika, Norway",0.5047134757041931,1,4
+longitude,0.20040123164653778,1,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.10576920211315155,1,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.05117785930633545,1,4
+year,0.029900016263127327,1,4
+latitude,0.026675458997488022,1,4
+bytes_on_disk,0.01618209294974804,1,4
+"site_Andenes, Norway",0.01453745923936367,1,4
+native_sample_rate,0.011775308288633823,1,4
+cond_no_visual,0.008348924107849598,1,4
+cond_water_noise,0.008259212598204613,1,4
+duration_seconds,0.007880264893174171,1,4
+cond_reverberation,0.00583995645865798,1,4
+cond_night_recording,0.0031836119014769793,1,4
+collection_code_BE7A,0.0027531618252396584,1,4
+site_Oregon Coast Aquarium,0.0026027564890682697,1,4
+"site_Dabob Bay, Seattle, Washington",0.0,1,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,1,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,1,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,1,4
+"site_T3 Ice Island, Canada",0.0,1,4
+"site_Vancouver, British Columbia",0.0,1,4
 cond_ship_noise,0.0,1,4
 cond_engine_noise,0.0,1,4
-cond_no_visual,0.0,1,4
 cond_tape_speed_note,0.0,1,4
-longitude,0.8534741997718811,2,0
-site_code,0.0369626060128212,2,0
-native_sample_rate,0.02796929143369198,2,0
-duration_seconds,0.02437288500368595,2,0
-cond_water_noise,0.015616532415151596,2,0
-bytes_on_disk,0.014311443082988262,2,0
-cond_no_visual,0.008611815981566906,2,0
-year,0.00821893010288477,2,0
-collection_code,0.006126393098384142,2,0
-latitude,0.004335888661444187,2,0
+"site_Kikvika, Norway",0.7031073570251465,2,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.2019406110048294,2,0
+native_sample_rate,0.018954411149024963,2,0
+duration_seconds,0.015151148661971092,2,0
+year,0.011405735276639462,2,0
+cond_water_noise,0.010032818652689457,2,0
+bytes_on_disk,0.008554141968488693,2,0
+cond_no_visual,0.0076797339133918285,2,0
+latitude,0.005842004902660847,2,0
+site_Oregon Coast Aquarium,0.005276829469949007,2,0
+"site_Andenes, Norway",0.004444994032382965,2,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.003903542645275593,2,0
+collection_code_BE7A,0.0037066449876874685,2,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,0
+"site_Dabob Bay, Seattle, Washington",0.0,2,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,0
+"site_T3 Ice Island, Canada",0.0,2,0
+"site_Vancouver, British Columbia",0.0,2,0
+longitude,0.0,2,0
 cond_ship_noise,0.0,2,0
 cond_engine_noise,0.0,2,0
 cond_reverberation,0.0,2,0
 cond_night_recording,0.0,2,0
 cond_tape_speed_note,0.0,2,0
-longitude,0.8308142423629761,2,1
-site_code,0.07045738399028778,2,1
-duration_seconds,0.02027864195406437,2,1
-cond_water_noise,0.011829770170152187,2,1
-collection_code,0.01042386144399643,2,1
-year,0.01034152414649725,2,1
-cond_reverberation,0.009979428723454475,2,1
-bytes_on_disk,0.009914333932101727,2,1
-native_sample_rate,0.009470081888139248,2,1
-latitude,0.008748331107199192,2,1
-cond_no_visual,0.007742415647953749,2,1
+"site_Kikvika, Norway",0.7651886940002441,2,1
+longitude,0.09177664667367935,2,1
+"site_Vancouver, British Columbia",0.04232227802276611,2,1
+"site_Outside St. John's Hbr., Newfoundland",0.014644680544734001,2,1
+native_sample_rate,0.011512973345816135,2,1
+duration_seconds,0.010448839515447617,2,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.010125837288796902,2,1
+bytes_on_disk,0.008111825212836266,2,1
+cond_water_noise,0.006741133518517017,2,1
+collection_code_BE7A,0.006195339374244213,2,1
+cond_reverberation,0.0058779045939445496,2,1
+year,0.005853069014847279,2,1
+latitude,0.005814073607325554,2,1
+site_Oregon Coast Aquarium,0.005362456664443016,2,1
+cond_no_visual,0.005133568309247494,2,1
+"site_Andenes, Norway",0.004890644922852516,2,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,2,1
+"site_Dabob Bay, Seattle, Washington",0.0,2,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,1
+"site_T3 Ice Island, Canada",0.0,2,1
 cond_ship_noise,0.0,2,1
 cond_engine_noise,0.0,2,1
 cond_night_recording,0.0,2,1
 cond_tape_speed_note,0.0,2,1
-longitude,0.7056775093078613,2,2
-site_code,0.1417277455329895,2,2
-cond_reverberation,0.022188449278473854,2,2
-cond_no_visual,0.0194627046585083,2,2
-duration_seconds,0.01783270202577114,2,2
-bytes_on_disk,0.01587945595383644,2,2
-collection_code,0.01583212986588478,2,2
-year,0.015584416687488556,2,2
-native_sample_rate,0.012143094092607498,2,2
-cond_night_recording,0.012057148851454258,2,2
-cond_water_noise,0.011536689475178719,2,2
-latitude,0.010077948682010174,2,2
+"site_Kikvika, Norway",0.5785098075866699,2,2
+longitude,0.20214679837226868,2,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.05116993933916092,2,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.03885333985090256,2,2
+"site_Vancouver, British Columbia",0.030658267438411713,2,2
+site_Oregon Coast Aquarium,0.021136200055480003,2,2
+cond_reverberation,0.008517148904502392,2,2
+duration_seconds,0.007905242964625359,2,2
+cond_no_visual,0.007475195452570915,2,2
+bytes_on_disk,0.00716897239908576,2,2
+"site_Outside St. John's Hbr., Newfoundland",0.007124824449419975,2,2
+year,0.006643419619649649,2,2
+collection_code_BE7A,0.006540731526911259,2,2
+native_sample_rate,0.00592833524569869,2,2
+cond_night_recording,0.005391404964029789,2,2
+cond_water_noise,0.005221354775130749,2,2
+latitude,0.004982911050319672,2,2
+"site_Dabob Bay, Seattle, Washington",0.004626110661774874,2,2
+"site_Andenes, Norway",0.0,2,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,2
+"site_T3 Ice Island, Canada",0.0,2,2
 cond_ship_noise,0.0,2,2
 cond_engine_noise,0.0,2,2
 cond_tape_speed_note,0.0,2,2
-collection_code,0.5522704720497131,2,3
-longitude,0.22546209394931793,2,3
-year,0.09632421284914017,2,3
-native_sample_rate,0.02368883788585663,2,3
-bytes_on_disk,0.02278425358235836,2,3
-duration_seconds,0.017115356400609016,2,3
-latitude,0.012964563444256783,2,3
-cond_reverberation,0.01294588204473257,2,3
-site_code,0.012486150488257408,2,3
-cond_no_visual,0.011401905678212643,2,3
-cond_night_recording,0.00820937566459179,2,3
-cond_water_noise,0.004346923436969519,2,3
+"site_Kikvika, Norway",0.49532508850097656,2,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.2586086690425873,2,3
+year,0.08522474765777588,2,3
+native_sample_rate,0.02103973738849163,2,3
+longitude,0.02077547460794449,2,3
+bytes_on_disk,0.020349979400634766,2,3
+duration_seconds,0.015150843188166618,2,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.01400569174438715,2,3
+cond_reverberation,0.011623254045844078,2,3
+latitude,0.011418593116104603,2,3
+"site_Andenes, Norway",0.01053880900144577,2,3
+cond_no_visual,0.00980871357023716,2,3
+site_Oregon Coast Aquarium,0.008303910493850708,2,3
+cond_night_recording,0.007315149065107107,2,3
+"site_Vancouver, British Columbia",0.006725721061229706,2,3
+cond_water_noise,0.00378560577519238,2,3
+"site_Dabob Bay, Seattle, Washington",0.0,2,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,3
+"site_T3 Ice Island, Canada",0.0,2,3
+collection_code_BE7A,0.0,2,3
 cond_ship_noise,0.0,2,3
 cond_engine_noise,0.0,2,3
 cond_tape_speed_note,0.0,2,3
-longitude,0.7684646844863892,2,4
-site_code,0.07716173678636551,2,4
-native_sample_rate,0.03172743692994118,2,4
-bytes_on_disk,0.030854349955916405,2,4
-latitude,0.018636586144566536,2,4
-cond_no_visual,0.017060406506061554,2,4
-duration_seconds,0.016909481957554817,2,4
-cond_water_noise,0.016412628814578056,2,4
-cond_reverberation,0.01008967962116003,2,4
-cond_night_recording,0.005294547416269779,2,4
-collection_code,0.004677679855376482,2,4
-year,0.0027107312344014645,2,4
+"site_Kikvika, Norway",0.5464853644371033,2,4
+longitude,0.20630614459514618,2,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.10011565685272217,2,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.040593475103378296,2,4
+latitude,0.033564526587724686,2,4
+year,0.026292363181710243,2,4
+bytes_on_disk,0.012364833615720272,2,4
+"site_Andenes, Norway",0.012128603644669056,2,4
+cond_water_noise,0.007582710590213537,2,4
+duration_seconds,0.007356212940067053,2,4
+cond_reverberation,0.004332851618528366,2,4
+collection_code_BE7A,0.0017400113865733147,2,4
+site_Oregon Coast Aquarium,0.0011371808359399438,2,4
+"site_Dabob Bay, Seattle, Washington",0.0,2,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,2,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,2,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,2,4
+"site_T3 Ice Island, Canada",0.0,2,4
+"site_Vancouver, British Columbia",0.0,2,4
+native_sample_rate,0.0,2,4
 cond_ship_noise,0.0,2,4
 cond_engine_noise,0.0,2,4
+cond_night_recording,0.0,2,4
+cond_no_visual,0.0,2,4
 cond_tape_speed_note,0.0,2,4
-longitude,0.8374024629592896,3,0
-native_sample_rate,0.03160852938890457,3,0
-duration_seconds,0.02794664539396763,3,0
-bytes_on_disk,0.02351382188498974,3,0
-latitude,0.018719971179962158,3,0
-site_code,0.014519757591187954,3,0
-cond_reverberation,0.0113631971180439,3,0
-collection_code,0.01118285208940506,3,0
-cond_no_visual,0.010798507370054722,3,0
-cond_water_noise,0.009262465871870518,3,0
-year,0.003681765403598547,3,0
+"site_Kikvika, Norway",0.6954570412635803,3,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.20410433411598206,3,0
+native_sample_rate,0.018191877752542496,3,0
+duration_seconds,0.016120662912726402,3,0
+year,0.013091688975691795,3,0
+bytes_on_disk,0.013063705526292324,3,0
+latitude,0.0086377477273345,3,0
+cond_reverberation,0.006544683128595352,3,0
+collection_code_BE7A,0.006441928446292877,3,0
+cond_no_visual,0.005993624683469534,3,0
+cond_water_noise,0.0053023649379611015,3,0
+"site_Andenes, Norway",0.004561383277177811,3,0
+site_Oregon Coast Aquarium,0.002489034552127123,3,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,0
+"site_Dabob Bay, Seattle, Washington",0.0,3,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,0
+"site_T3 Ice Island, Canada",0.0,3,0
+"site_Vancouver, British Columbia",0.0,3,0
+longitude,0.0,3,0
 cond_ship_noise,0.0,3,0
 cond_engine_noise,0.0,3,0
 cond_night_recording,0.0,3,0
 cond_tape_speed_note,0.0,3,0
-latitude,0.7145522236824036,3,1
-year,0.11020100116729736,3,1
-longitude,0.09159495681524277,3,1
-duration_seconds,0.030398711562156677,3,1
-bytes_on_disk,0.023515800014138222,3,1
-site_code,0.0165596604347229,3,1
-collection_code,0.004937484860420227,3,1
-cond_no_visual,0.0035217886324971914,3,1
-native_sample_rate,0.0031902880873531103,3,1
-cond_water_noise,0.0015280848601832986,3,1
+latitude,0.6539905667304993,3,1
+"site_Kikvika, Norway",0.15981362760066986,3,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.08151151239871979,3,1
+year,0.03952472656965256,3,1
+duration_seconds,0.021073084324598312,3,1
+bytes_on_disk,0.018050553277134895,3,1
+"site_T3 Ice Island, Canada",0.007140481844544411,3,1
+native_sample_rate,0.006159614305943251,3,1
+cond_no_visual,0.003734864993020892,3,1
+collection_code_BE7A,0.003683679271489382,3,1
+"site_Vancouver, British Columbia",0.0031206009443849325,3,1
+cond_water_noise,0.0021967203356325626,3,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,1
+"site_Andenes, Norway",0.0,3,1
+"site_Dabob Bay, Seattle, Washington",0.0,3,1
+site_Oregon Coast Aquarium,0.0,3,1
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,1
+longitude,0.0,3,1
 cond_ship_noise,0.0,3,1
 cond_engine_noise,0.0,3,1
 cond_reverberation,0.0,3,1
 cond_night_recording,0.0,3,1
 cond_tape_speed_note,0.0,3,1
-longitude,0.6893644332885742,3,2
-site_code,0.13116148114204407,3,2
-cond_reverberation,0.02726704627275467,3,2
-duration_seconds,0.020615117624402046,3,2
-bytes_on_disk,0.019677836447954178,3,2
-cond_no_visual,0.019004110246896744,3,2
-latitude,0.018181927502155304,3,2
-cond_water_noise,0.01817556470632553,3,2
-year,0.01713275909423828,3,2
-native_sample_rate,0.013953566551208496,3,2
-collection_code,0.013205419294536114,3,2
-cond_night_recording,0.012260748073458672,3,2
+"site_Kikvika, Norway",0.4991607367992401,3,2
+longitude,0.24557428061962128,3,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.06611327081918716,3,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.04125169292092323,3,2
+"site_Vancouver, British Columbia",0.03207450732588768,3,2
+year,0.018021272495388985,3,2
+cond_reverberation,0.012784774415194988,3,2
+site_Oregon Coast Aquarium,0.012490706518292427,3,2
+bytes_on_disk,0.009934047237038612,3,2
+duration_seconds,0.009483078494668007,3,2
+cond_water_noise,0.008862389251589775,3,2
+cond_no_visual,0.008754219859838486,3,2
+native_sample_rate,0.006960900500416756,3,2
+"site_Outside St. John's Hbr., Newfoundland",0.006521718110889196,3,2
+collection_code_BE7A,0.006128036417067051,3,2
+cond_night_recording,0.005906334146857262,3,2
+latitude,0.0058913943357765675,3,2
+"site_T3 Ice Island, Canada",0.004086616449058056,3,2
+"site_Andenes, Norway",0.0,3,2
+"site_Dabob Bay, Seattle, Washington",0.0,3,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,2
 cond_ship_noise,0.0,3,2
 cond_engine_noise,0.0,3,2
 cond_tape_speed_note,0.0,3,2
-latitude,0.37713000178337097,3,3
-year,0.34891796112060547,3,3
-longitude,0.15498854219913483,3,3
-site_code,0.03967195376753807,3,3
-duration_seconds,0.018833233043551445,3,3
-native_sample_rate,0.015822701156139374,3,3
-cond_water_noise,0.013475978747010231,3,3
-collection_code,0.012112111784517765,3,3
-bytes_on_disk,0.011727476492524147,3,3
-cond_no_visual,0.00732008833438158,3,3
+year,0.37942054867744446,3,3
+latitude,0.29096677899360657,3,3
+"site_Kikvika, Norway",0.10923956334590912,3,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.09606202691793442,3,3
+"site_Outside St. John's Hbr., Newfoundland",0.046972259879112244,3,3
+duration_seconds,0.013826876878738403,3,3
+site_Oregon Coast Aquarium,0.013312287628650665,3,3
+cond_water_noise,0.011453193612396717,3,3
+bytes_on_disk,0.010804188437759876,3,3
+longitude,0.01002103928476572,3,3
+"site_Andenes, Norway",0.007923142984509468,3,3
+native_sample_rate,0.0059930128045380116,3,3
+collection_code_BE7A,0.004005104769021273,3,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,3,3
+"site_Dabob Bay, Seattle, Washington",0.0,3,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,3,3
+"site_T3 Ice Island, Canada",0.0,3,3
+"site_Vancouver, British Columbia",0.0,3,3
 cond_ship_noise,0.0,3,3
 cond_engine_noise,0.0,3,3
 cond_reverberation,0.0,3,3
 cond_night_recording,0.0,3,3
+cond_no_visual,0.0,3,3
 cond_tape_speed_note,0.0,3,3
-longitude,0.6829941868782043,3,4
-site_code,0.15869000554084778,3,4
-year,0.027130672708153725,3,4
-bytes_on_disk,0.020004410296678543,3,4
-native_sample_rate,0.01954173482954502,3,4
-cond_water_noise,0.018610702827572823,3,4
-duration_seconds,0.018363460898399353,3,4
-cond_reverberation,0.015575799159705639,3,4
-latitude,0.014714431948959827,3,4
-cond_night_recording,0.009592657908797264,3,4
-cond_no_visual,0.009421071037650108,3,4
-collection_code,0.005360846407711506,3,4
+"site_Kikvika, Norway",0.4936724305152893,3,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.2531571388244629,3,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.07498759776353836,3,4
+year,0.04771099239587784,3,4
+native_sample_rate,0.021813947707414627,3,4
+bytes_on_disk,0.014510061591863632,3,4
+"site_Andenes, Norway",0.013549456372857094,3,4
+site_Oregon Coast Aquarium,0.01293532457202673,3,4
+duration_seconds,0.009877623990178108,3,4
+cond_water_noise,0.009798028506338596,3,4
+"site_Dabob Bay, Seattle, Washington",0.008879556320607662,3,4
+latitude,0.008875850588083267,3,4
+cond_no_visual,0.008373522199690342,3,4
+cond_reverberation,0.007139734923839569,3,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.006669359281659126,3,4
+cond_night_recording,0.0055444613099098206,3,4
+collection_code_BE7A,0.002504899399355054,3,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,3,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,3,4
+"site_T3 Ice Island, Canada",0.0,3,4
+"site_Vancouver, British Columbia",0.0,3,4
+longitude,0.0,3,4
 cond_ship_noise,0.0,3,4
 cond_engine_noise,0.0,3,4
 cond_tape_speed_note,0.0,3,4
-longitude,0.8347290754318237,4,0
-site_code,0.05540943518280983,4,0
-year,0.026182051748037338,4,0
-native_sample_rate,0.02547048218548298,4,0
-duration_seconds,0.01846185140311718,4,0
-bytes_on_disk,0.015195496380329132,4,0
-cond_water_noise,0.014028956182301044,4,0
-collection_code,0.004984208848327398,4,0
-latitude,0.0033690687268972397,4,0
-cond_no_visual,0.002169335726648569,4,0
+"site_Kikvika, Norway",0.724226713180542,4,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.197829931974411,4,0
+native_sample_rate,0.01795629970729351,4,0
+year,0.014091409742832184,4,0
+duration_seconds,0.010957716964185238,4,0
+bytes_on_disk,0.00940717477351427,4,0
+cond_water_noise,0.008526504971086979,4,0
+"site_T3 Ice Island, Canada",0.0076226480305194855,4,0
+latitude,0.006352303083986044,4,0
+collection_code_BE7A,0.003029297338798642,4,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,0
+"site_Andenes, Norway",0.0,4,0
+"site_Dabob Bay, Seattle, Washington",0.0,4,0
+site_Oregon Coast Aquarium,0.0,4,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,0
+"site_Vancouver, British Columbia",0.0,4,0
+longitude,0.0,4,0
 cond_ship_noise,0.0,4,0
 cond_engine_noise,0.0,4,0
 cond_reverberation,0.0,4,0
 cond_night_recording,0.0,4,0
+cond_no_visual,0.0,4,0
 cond_tape_speed_note,0.0,4,0
-longitude,0.8575806617736816,4,1
-site_code,0.06588150560855865,4,1
-duration_seconds,0.01838935911655426,4,1
-native_sample_rate,0.010334155522286892,4,1
-cond_water_noise,0.010271565057337284,4,1
-bytes_on_disk,0.00907791219651699,4,1
-latitude,0.00865578930824995,4,1
-year,0.008417721837759018,4,1
-cond_no_visual,0.006653397344052792,4,1
-collection_code,0.0047379848547279835,4,1
+"site_Kikvika, Norway",0.7957161068916321,4,1
+longitude,0.08653539419174194,4,1
+"site_Vancouver, British Columbia",0.03548792749643326,4,1
+"site_Outside St. John's Hbr., Newfoundland",0.012358046136796474,4,1
+native_sample_rate,0.01031019352376461,4,1
+duration_seconds,0.009984773583710194,4,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.008685968816280365,4,1
+bytes_on_disk,0.0070567321963608265,4,1
+cond_water_noise,0.006181653589010239,4,1
+latitude,0.005394992418587208,4,1
+site_Oregon Coast Aquarium,0.005111526232212782,4,1
+year,0.004929730668663979,4,1
+cond_no_visual,0.0046294559724628925,4,1
+collection_code_BE7A,0.0038200418930500746,4,1
+"site_Andenes, Norway",0.0037974826991558075,4,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,1
+"site_Dabob Bay, Seattle, Washington",0.0,4,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,1
+"site_T3 Ice Island, Canada",0.0,4,1
 cond_ship_noise,0.0,4,1
 cond_engine_noise,0.0,4,1
 cond_reverberation,0.0,4,1
 cond_night_recording,0.0,4,1
 cond_tape_speed_note,0.0,4,1
-latitude,0.6895765662193298,4,2
-year,0.17223471403121948,4,2
-duration_seconds,0.0384906604886055,4,2
-site_code,0.023094823583960533,4,2
-cond_reverberation,0.02011069841682911,4,2
-bytes_on_disk,0.019260002300143242,4,2
-collection_code,0.016069458797574043,4,2
-cond_water_noise,0.013057994656264782,4,2
-cond_no_visual,0.004778810776770115,4,2
-native_sample_rate,0.0033262353390455246,4,2
+latitude,0.6296696066856384,4,2
+year,0.190839946269989,4,2
+"site_Kikvika, Norway",0.04598704352974892,4,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.028549538925290108,4,2
+duration_seconds,0.02200893871486187,4,2
+"site_Dabob Bay, Seattle, Washington",0.015010413713753223,4,2
+cond_reverberation,0.012625988572835922,4,2
+cond_water_noise,0.011684814468026161,4,2
+bytes_on_disk,0.011313063092529774,4,2
+collection_code_BE7A,0.010784875601530075,4,2
+"site_T3 Ice Island, Canada",0.008155209012329578,4,2
+"site_Vancouver, British Columbia",0.005390210077166557,4,2
+cond_no_visual,0.004109126981347799,4,2
+site_Oregon Coast Aquarium,0.002840328263118863,4,2
+native_sample_rate,0.0010308502241969109,4,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,2
+"site_Andenes, Norway",0.0,4,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,4,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,2
 longitude,0.0,4,2
 cond_ship_noise,0.0,4,2
 cond_engine_noise,0.0,4,2
 cond_night_recording,0.0,4,2
 cond_tape_speed_note,0.0,4,2
-latitude,0.3067014217376709,4,3
-year,0.29834431409835815,4,3
-collection_code,0.1949986070394516,4,3
-longitude,0.11412081867456436,4,3
-site_code,0.034793347120285034,4,3
-bytes_on_disk,0.015273122116923332,4,3
-native_sample_rate,0.014697514474391937,4,3
-duration_seconds,0.012009730562567711,4,3
-cond_water_noise,0.009061154909431934,4,3
+year,0.3748842775821686,4,3
+latitude,0.2997278869152069,4,3
+"site_Kikvika, Norway",0.1049632728099823,4,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.08530822396278381,4,3
+"site_Outside St. John's Hbr., Newfoundland",0.045938216149806976,4,3
+bytes_on_disk,0.017310811206698418,4,3
+native_sample_rate,0.01399934571236372,4,3
+longitude,0.01163800060749054,4,3
+duration_seconds,0.010456746444106102,4,3
+site_Oregon Coast Aquarium,0.01019144244492054,4,3
+cond_water_noise,0.008146381936967373,4,3
+"site_Andenes, Norway",0.008044088259339333,4,3
+"site_T3 Ice Island, Canada",0.006452550645917654,4,3
+collection_code_BE7A,0.0029387467075139284,4,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,3
+"site_Dabob Bay, Seattle, Washington",0.0,4,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,3
+"site_Vancouver, British Columbia",0.0,4,3
 cond_ship_noise,0.0,4,3
 cond_engine_noise,0.0,4,3
 cond_reverberation,0.0,4,3
 cond_night_recording,0.0,4,3
 cond_no_visual,0.0,4,3
 cond_tape_speed_note,0.0,4,3
-longitude,0.7533922791481018,4,4
-site_code,0.06808288395404816,4,4
-latitude,0.03977370262145996,4,4
-year,0.025744657963514328,4,4
-cond_no_visual,0.022725431248545647,4,4
-duration_seconds,0.022152673453092575,4,4
-cond_water_noise,0.019889598712325096,4,4
-bytes_on_disk,0.01849885657429695,4,4
-native_sample_rate,0.013724609278142452,4,4
-cond_reverberation,0.010027658194303513,4,4
-collection_code,0.005987643264234066,4,4
+"site_Kikvika, Norway",0.5125744342803955,4,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.2706260681152344,4,4
+"site_Outside St. John's Hbr., Newfoundland",0.06397303938865662,4,4
+native_sample_rate,0.018563641235232353,4,4
+year,0.018173543736338615,4,4
+site_Oregon Coast Aquarium,0.012940295971930027,4,4
+cond_no_visual,0.012160997837781906,4,4
+duration_seconds,0.011986756697297096,4,4
+"site_T3 Ice Island, Canada",0.011901088058948517,4,4
+"site_Andenes, Norway",0.010867414996027946,4,4
+cond_water_noise,0.010669383220374584,4,4
+"site_Vancouver, British Columbia",0.010640236549079418,4,4
+longitude,0.009828556329011917,4,4
+bytes_on_disk,0.00965812150388956,4,4
+latitude,0.005491163115948439,4,4
+cond_reverberation,0.005324825178831816,4,4
+collection_code_BE7A,0.00462036207318306,4,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,4,4
+"site_Dabob Bay, Seattle, Washington",0.0,4,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,4,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,4,4
 cond_ship_noise,0.0,4,4
 cond_engine_noise,0.0,4,4
 cond_night_recording,0.0,4,4
 cond_tape_speed_note,0.0,4,4
-longitude,0.8497106432914734,5,0
-site_code,0.03824591264128685,5,0
-native_sample_rate,0.02979903854429722,5,0
-duration_seconds,0.0220785029232502,5,0
-bytes_on_disk,0.021815795451402664,5,0
-cond_water_noise,0.012542587704956532,5,0
-cond_no_visual,0.008240745402872562,5,0
-year,0.00765164103358984,5,0
-collection_code,0.005645789206027985,5,0
-latitude,0.00426940293982625,5,0
+"site_Kikvika, Norway",0.7058331966400146,5,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.20439136028289795,5,0
+native_sample_rate,0.018447518348693848,5,0
+duration_seconds,0.014129528775811195,5,0
+bytes_on_disk,0.013711078092455864,5,0
+cond_no_visual,0.00912334956228733,5,0
+cond_water_noise,0.008973309770226479,5,0
+year,0.006762856151908636,5,0
+latitude,0.005698412656784058,5,0
+site_Oregon Coast Aquarium,0.005330598913133144,5,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0040678041987121105,5,0
+collection_code_BE7A,0.0035309852100908756,5,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,0
+"site_Andenes, Norway",0.0,5,0
+"site_Dabob Bay, Seattle, Washington",0.0,5,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,0
+"site_T3 Ice Island, Canada",0.0,5,0
+"site_Vancouver, British Columbia",0.0,5,0
+longitude,0.0,5,0
 cond_ship_noise,0.0,5,0
 cond_engine_noise,0.0,5,0
 cond_reverberation,0.0,5,0
 cond_night_recording,0.0,5,0
 cond_tape_speed_note,0.0,5,0
-longitude,0.8248752355575562,5,1
-site_code,0.07829427719116211,5,1
-duration_seconds,0.017358720302581787,5,1
-cond_water_noise,0.011362217366695404,5,1
-bytes_on_disk,0.011070877313613892,5,1
-cond_reverberation,0.010249419137835503,5,1
-collection_code,0.010141568258404732,5,1
-native_sample_rate,0.009888151660561562,5,1
-year,0.00986265018582344,5,1
-latitude,0.008830814622342587,5,1
-cond_no_visual,0.00806612242013216,5,1
+"site_Kikvika, Norway",0.7507079839706421,5,1
+longitude,0.09967947006225586,5,1
+"site_Vancouver, British Columbia",0.04315477982163429,5,1
+"site_Outside St. John's Hbr., Newfoundland",0.01551776472479105,5,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.011604906991124153,5,1
+native_sample_rate,0.010539351031184196,5,1
+duration_seconds,0.009798622690141201,5,1
+bytes_on_disk,0.008103559724986553,5,1
+cond_water_noise,0.0062996079213917255,5,1
+latitude,0.006155211944133043,5,1
+cond_reverberation,0.006103023421019316,5,1
+collection_code_BE7A,0.00583879416808486,5,1
+site_Oregon Coast Aquarium,0.005817831959575415,5,1
+year,0.005728153977543116,5,1
+cond_no_visual,0.005469913128763437,5,1
+"site_Andenes, Norway",0.00542921107262373,5,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.004051807802170515,5,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,1
+"site_Dabob Bay, Seattle, Washington",0.0,5,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,1
+"site_T3 Ice Island, Canada",0.0,5,1
 cond_ship_noise,0.0,5,1
 cond_engine_noise,0.0,5,1
 cond_night_recording,0.0,5,1
 cond_tape_speed_note,0.0,5,1
-latitude,0.9020843505859375,5,2
-site_code,0.04553334414958954,5,2
-duration_seconds,0.022306008264422417,5,2
-bytes_on_disk,0.014740086160600185,5,2
-collection_code,0.006026517599821091,5,2
-cond_water_noise,0.0036804783158004284,5,2
-native_sample_rate,0.003220323706045747,5,2
-cond_no_visual,0.002408855129033327,5,2
+latitude,0.7871279716491699,5,2
+"site_Kikvika, Norway",0.08280237764120102,5,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.031039290130138397,5,2
+"site_Vancouver, British Columbia",0.025445621460676193,5,2
+duration_seconds,0.02247217670083046,5,2
+bytes_on_disk,0.015445966273546219,5,2
+"site_T3 Ice Island, Canada",0.010276438668370247,5,2
+site_Oregon Coast Aquarium,0.006653601303696632,5,2
+collection_code_BE7A,0.006454808171838522,5,2
+native_sample_rate,0.006188653875142336,5,2
+cond_water_noise,0.00394204119220376,5,2
+cond_no_visual,0.002150998217985034,5,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,2
+"site_Andenes, Norway",0.0,5,2
+"site_Dabob Bay, Seattle, Washington",0.0,5,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,2
 year,0.0,5,2
 longitude,0.0,5,2
 cond_ship_noise,0.0,5,2
@@ -419,332 +699,552 @@ cond_engine_noise,0.0,5,2
 cond_reverberation,0.0,5,2
 cond_night_recording,0.0,5,2
 cond_tape_speed_note,0.0,5,2
-collection_code,0.5302330851554871,5,3
-longitude,0.23412325978279114,5,3
-year,0.0728970542550087,5,3
-site_code,0.05525674670934677,5,3
-bytes_on_disk,0.02459099143743515,5,3
-native_sample_rate,0.021703513339161873,5,3
-latitude,0.016013961285352707,5,3
-duration_seconds,0.014272951520979404,5,3
-cond_reverberation,0.011144406162202358,5,3
-cond_no_visual,0.009378097020089626,5,3
-cond_night_recording,0.006688084919005632,5,3
-cond_water_noise,0.0036977643612772226,5,3
+"site_Kikvika, Norway",0.484315425157547,5,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.24064432084560394,5,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.07262414693832397,5,3
+year,0.0570778027176857,5,3
+bytes_on_disk,0.0222159530967474,5,3
+native_sample_rate,0.021299947053194046,5,3
+longitude,0.019543221220374107,5,3
+site_Oregon Coast Aquarium,0.014156514778733253,5,3
+duration_seconds,0.01236962340772152,5,3
+latitude,0.00986240804195404,5,3
+"site_Andenes, Norway",0.009751955047249794,5,3
+"site_Dabob Bay, Seattle, Washington",0.00951413530856371,5,3
+cond_reverberation,0.009458072483539581,5,3
+cond_no_visual,0.00857095792889595,5,3
+cond_night_recording,0.005312596447765827,5,3
+cond_water_noise,0.0032829628325998783,5,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,5,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,3
+"site_T3 Ice Island, Canada",0.0,5,3
+"site_Vancouver, British Columbia",0.0,5,3
+collection_code_BE7A,0.0,5,3
 cond_ship_noise,0.0,5,3
 cond_engine_noise,0.0,5,3
 cond_tape_speed_note,0.0,5,3
-longitude,0.6356151700019836,5,4
-latitude,0.15243665874004364,5,4
-year,0.049996402114629745,5,4
-site_code,0.04101347178220749,5,4
-native_sample_rate,0.030781399458646774,5,4
-bytes_on_disk,0.02346460148692131,5,4
-cond_no_visual,0.019459767267107964,5,4
-cond_water_noise,0.017441006377339363,5,4
-duration_seconds,0.014676975086331367,5,4
-cond_reverberation,0.01053770724684,5,4
-collection_code,0.00457674078643322,5,4
+"site_Kikvika, Norway",0.45678403973579407,5,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.274710088968277,5,4
+latitude,0.057469189167022705,5,4
+"site_Outside St. John's Hbr., Newfoundland",0.0544750802218914,5,4
+year,0.043444208800792694,5,4
+native_sample_rate,0.01715828850865364,5,4
+"site_T3 Ice Island, Canada",0.014663689769804478,5,4
+bytes_on_disk,0.014380558393895626,5,4
+longitude,0.011461854912340641,5,4
+cond_no_visual,0.010112619027495384,5,4
+cond_water_noise,0.009939919225871563,5,4
+duration_seconds,0.008411078713834286,5,4
+"site_Andenes, Norway",0.007945140823721886,5,4
+site_Oregon Coast Aquarium,0.007231562864035368,5,4
+cond_reverberation,0.006112902890890837,5,4
+collection_code_BE7A,0.003657710272818804,5,4
+"site_Dabob Bay, Seattle, Washington",0.002042075851932168,5,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,5,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,5,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,5,4
+"site_Vancouver, British Columbia",0.0,5,4
 cond_ship_noise,0.0,5,4
 cond_engine_noise,0.0,5,4
 cond_night_recording,0.0,5,4
 cond_tape_speed_note,0.0,5,4
-longitude,0.8750512003898621,6,0
-native_sample_rate,0.032003313302993774,6,0
-bytes_on_disk,0.026831157505512238,6,0
-duration_seconds,0.022113744169473648,6,0
-year,0.01676556095480919,6,0
-cond_reverberation,0.009683485142886639,6,0
-collection_code,0.009678994305431843,6,0
-cond_water_noise,0.005572372116148472,6,0
-cond_no_visual,0.0023001644294708967,6,0
-site_code,0.0,6,0
+"site_Kikvika, Norway",0.7198646664619446,6,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.2077828198671341,6,0
+native_sample_rate,0.01696345955133438,6,0
+year,0.014293782413005829,6,0
+bytes_on_disk,0.014221942983567715,6,0
+duration_seconds,0.01172146201133728,6,0
+cond_reverberation,0.005132763180881739,6,0
+collection_code_BE7A,0.005130382254719734,6,0
+cond_water_noise,0.002953653922304511,6,0
+cond_no_visual,0.0012192096328362823,6,0
+site_Oregon Coast Aquarium,0.0007158354856073856,6,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,0
+"site_Andenes, Norway",0.0,6,0
+"site_Dabob Bay, Seattle, Washington",0.0,6,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,0
+"site_T3 Ice Island, Canada",0.0,6,0
+"site_Vancouver, British Columbia",0.0,6,0
 latitude,0.0,6,0
+longitude,0.0,6,0
 cond_ship_noise,0.0,6,0
 cond_engine_noise,0.0,6,0
 cond_night_recording,0.0,6,0
 cond_tape_speed_note,0.0,6,0
-longitude,0.8428543210029602,6,1
-site_code,0.06494911760091782,6,1
-duration_seconds,0.0205807164311409,6,1
-year,0.012671755626797676,6,1
-latitude,0.010121080093085766,6,1
-collection_code,0.009547125548124313,6,1
-bytes_on_disk,0.009356933645904064,6,1
-cond_reverberation,0.00898013822734356,6,1
-cond_water_noise,0.008303155191242695,6,1
-native_sample_rate,0.007410386577248573,6,1
-cond_no_visual,0.005225256085395813,6,1
+"site_Kikvika, Norway",0.7694250345230103,6,1
+longitude,0.0929989144206047,6,1
+"site_Vancouver, British Columbia",0.037190381437540054,6,1
+"site_Outside St. John's Hbr., Newfoundland",0.013990302570164204,6,1
+native_sample_rate,0.01169736310839653,6,1
+duration_seconds,0.01102058682590723,6,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.010791785083711147,6,1
+bytes_on_disk,0.009254473261535168,6,1
+year,0.006538244429975748,6,1
+cond_water_noise,0.00626099668443203,6,1
+cond_reverberation,0.006012832745909691,6,1
+collection_code_BE7A,0.005562820006161928,6,1
+latitude,0.005453403107821941,6,1
+site_Oregon Coast Aquarium,0.00504076573997736,6,1
+cond_no_visual,0.004801180679351091,6,1
+"site_Andenes, Norway",0.003960942383855581,6,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,6,1
+"site_Dabob Bay, Seattle, Washington",0.0,6,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,1
+"site_T3 Ice Island, Canada",0.0,6,1
 cond_ship_noise,0.0,6,1
 cond_engine_noise,0.0,6,1
 cond_night_recording,0.0,6,1
 cond_tape_speed_note,0.0,6,1
-longitude,0.6859990954399109,6,2
-site_code,0.142652690410614,6,2
-cond_reverberation,0.02120337449014187,6,2
-bytes_on_disk,0.020958583801984787,6,2
-duration_seconds,0.019953807815909386,6,2
-cond_no_visual,0.019584668800234795,6,2
-native_sample_rate,0.01779351569712162,6,2
-collection_code,0.0177218709141016,6,2
-cond_water_noise,0.017084592953324318,6,2
-year,0.013053360395133495,6,2
-latitude,0.01201695017516613,6,2
-cond_night_recording,0.01197750773280859,6,2
+"site_Kikvika, Norway",0.5642009377479553,6,2
+longitude,0.21127048134803772,6,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.06990227103233337,6,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.03955569118261337,6,2
+"site_Vancouver, British Columbia",0.029958980157971382,6,2
+cond_reverberation,0.008390157483518124,6,2
+"site_Outside St. John's Hbr., Newfoundland",0.008293871767818928,6,2
+bytes_on_disk,0.008238001726567745,6,2
+duration_seconds,0.008098496124148369,6,2
+cond_no_visual,0.007762211374938488,6,2
+collection_code_BE7A,0.0071873739361763,6,2
+cond_water_noise,0.006375569850206375,6,2
+native_sample_rate,0.005989954806864262,6,2
+year,0.0057382890954613686,6,2
+site_Oregon Coast Aquarium,0.0057297153398394585,6,2
+cond_night_recording,0.005162248387932777,6,2
+"site_Dabob Bay, Seattle, Washington",0.004204332362860441,6,2
+latitude,0.0039414092898368835,6,2
+"site_Andenes, Norway",0.0,6,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,2
+"site_T3 Ice Island, Canada",0.0,6,2
 cond_ship_noise,0.0,6,2
 cond_engine_noise,0.0,6,2
 cond_tape_speed_note,0.0,6,2
-collection_code,0.5363009572029114,6,3
-longitude,0.24164320528507233,6,3
-site_code,0.058433935046195984,6,3
-year,0.046707529574632645,6,3
-bytes_on_disk,0.0283727515488863,6,3
-native_sample_rate,0.02440853789448738,6,3
-cond_reverberation,0.018713027238845825,6,3
-duration_seconds,0.011801999993622303,6,3
-cond_no_visual,0.010447078384459019,6,3
-latitude,0.010386661626398563,6,3
-cond_night_recording,0.007302200887352228,6,3
-cond_water_noise,0.005482100881636143,6,3
+"site_Kikvika, Norway",0.4635426998138428,6,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.2363186478614807,6,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.06852670758962631,6,3
+year,0.06164727732539177,6,3
+bytes_on_disk,0.02467048354446888,6,3
+native_sample_rate,0.02330835722386837,6,3
+longitude,0.018414342775940895,6,3
+cond_reverberation,0.016538439318537712,6,3
+latitude,0.013448545709252357,6,3
+site_Oregon Coast Aquarium,0.012053902260959148,6,3
+cond_no_visual,0.0120403366163373,6,3
+"site_Dabob Bay, Seattle, Washington",0.010110517032444477,6,3
+"site_Andenes, Norway",0.010077779181301594,6,3
+duration_seconds,0.009631204418838024,6,3
+cond_night_recording,0.008342449553310871,6,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.006910025142133236,6,3
+cond_water_noise,0.004418215714395046,6,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,3
+"site_T3 Ice Island, Canada",0.0,6,3
+"site_Vancouver, British Columbia",0.0,6,3
+collection_code_BE7A,0.0,6,3
 cond_ship_noise,0.0,6,3
 cond_engine_noise,0.0,6,3
 cond_tape_speed_note,0.0,6,3
-longitude,0.7652048468589783,6,4
-site_code,0.07071590423583984,6,4
-bytes_on_disk,0.027936168015003204,6,4
-latitude,0.02767004258930683,6,4
-native_sample_rate,0.025029253214597702,6,4
-cond_no_visual,0.0206821970641613,6,4
-year,0.017648572102189064,6,4
-duration_seconds,0.016147997230291367,6,4
-cond_water_noise,0.01534940768033266,6,4
-cond_reverberation,0.009581689722836018,6,4
-collection_code,0.004033925477415323,6,4
+"site_Kikvika, Norway",0.5489919185638428,6,4
+longitude,0.2045104056596756,6,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.10456862300634384,6,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.03997864946722984,6,4
+latitude,0.03273618221282959,6,4
+year,0.02276884950697422,6,4
+"site_Andenes, Norway",0.01264418289065361,6,4
+bytes_on_disk,0.012165866792201996,6,4
+cond_water_noise,0.007543044630438089,6,4
+duration_seconds,0.007322477176785469,6,4
+cond_reverberation,0.004314968828111887,6,4
+collection_code_BE7A,0.0017262790352106094,6,4
+site_Oregon Coast Aquarium,0.00072858901694417,6,4
+"site_Dabob Bay, Seattle, Washington",0.0,6,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,6,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,6,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,6,4
+"site_T3 Ice Island, Canada",0.0,6,4
+"site_Vancouver, British Columbia",0.0,6,4
+native_sample_rate,0.0,6,4
 cond_ship_noise,0.0,6,4
 cond_engine_noise,0.0,6,4
 cond_night_recording,0.0,6,4
+cond_no_visual,0.0,6,4
 cond_tape_speed_note,0.0,6,4
-longitude,0.8335869908332825,7,0
-latitude,0.028791844844818115,7,0
-native_sample_rate,0.027793392539024353,7,0
-duration_seconds,0.025571126490831375,7,0
-bytes_on_disk,0.02049991488456726,7,0
-site_code,0.01937699317932129,7,0
-collection_code,0.010922222398221493,7,0
-cond_reverberation,0.010890397243201733,7,0
-cond_no_visual,0.010317114181816578,7,0
-cond_water_noise,0.008568331599235535,7,0
-year,0.003681700676679611,7,0
+"site_Kikvika, Norway",0.6862989664077759,7,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.20415052771568298,7,0
+native_sample_rate,0.01706816628575325,7,0
+duration_seconds,0.015043292194604874,7,0
+"site_Andenes, Norway",0.012220506556332111,7,0
+bytes_on_disk,0.012110501527786255,7,0
+latitude,0.011995077133178711,7,0
+year,0.011809276416897774,7,0
+collection_code_BE7A,0.006439607124775648,7,0
+cond_reverberation,0.0062150838784873486,7,0
+cond_no_visual,0.0057320361956954,7,0
+cond_water_noise,0.004995912313461304,7,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0037367295008152723,7,0
+site_Oregon Coast Aquarium,0.0021843500435352325,7,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,0
+"site_Dabob Bay, Seattle, Washington",0.0,7,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,0
+"site_T3 Ice Island, Canada",0.0,7,0
+"site_Vancouver, British Columbia",0.0,7,0
+longitude,0.0,7,0
 cond_ship_noise,0.0,7,0
 cond_engine_noise,0.0,7,0
 cond_night_recording,0.0,7,0
 cond_tape_speed_note,0.0,7,0
-longitude,0.8558098673820496,7,1
-site_code,0.06558121740818024,7,1
-duration_seconds,0.018008552491664886,7,1
-year,0.011706222780048847,7,1
-bytes_on_disk,0.011082193814218044,7,1
-native_sample_rate,0.010226534679532051,7,1
-latitude,0.008991708047688007,7,1
-cond_water_noise,0.00799240730702877,7,1
-cond_no_visual,0.005433035083115101,7,1
-collection_code,0.005168169736862183,7,1
+"site_Kikvika, Norway",0.7674235105514526,7,1
+longitude,0.09361522644758224,7,1
+"site_Vancouver, British Columbia",0.04698973149061203,7,1
+"site_Outside St. John's Hbr., Newfoundland",0.014586986973881721,7,1
+native_sample_rate,0.012524901889264584,7,1
+duration_seconds,0.010557538829743862,7,1
+bytes_on_disk,0.008552328683435917,7,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.008301487192511559,7,1
+cond_water_noise,0.00639720493927598,7,1
+latitude,0.006107862573117018,7,1
+year,0.0055084521882236,7,1
+cond_no_visual,0.005403199233114719,7,1
+site_Oregon Coast Aquarium,0.004757620394229889,7,1
+collection_code_BE7A,0.004740945529192686,7,1
+"site_Andenes, Norway",0.004532964434474707,7,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,1
+"site_Dabob Bay, Seattle, Washington",0.0,7,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,1
+"site_T3 Ice Island, Canada",0.0,7,1
 cond_ship_noise,0.0,7,1
 cond_engine_noise,0.0,7,1
 cond_reverberation,0.0,7,1
 cond_night_recording,0.0,7,1
 cond_tape_speed_note,0.0,7,1
-latitude,0.7042752504348755,7,2
-year,0.16500380635261536,7,2
-duration_seconds,0.03979649022221565,7,2
-site_code,0.022959280759096146,7,2
-cond_reverberation,0.020131073892116547,7,2
-bytes_on_disk,0.0186089389026165,7,2
-collection_code,0.016218651086091995,7,2
-cond_water_noise,0.005246786400675774,7,2
-cond_no_visual,0.0043334984220564365,7,2
-native_sample_rate,0.0034261548426002264,7,2
+latitude,0.6340466141700745,7,2
+year,0.17857781052589417,7,2
+"site_Kikvika, Norway",0.048040084540843964,7,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.030332664027810097,7,2
+duration_seconds,0.023927105590701103,7,2
+"site_Dabob Bay, Seattle, Washington",0.015289180912077427,7,2
+cond_reverberation,0.012612385675311089,7,2
+bytes_on_disk,0.011065058410167694,7,2
+collection_code_BE7A,0.010603213682770729,7,2
+"site_T3 Ice Island, Canada",0.00862350407987833,7,2
+cond_water_noise,0.008095772005617619,7,2
+native_sample_rate,0.007860081270337105,7,2
+"site_Vancouver, British Columbia",0.005347379948943853,7,2
+cond_no_visual,0.00406856881454587,7,2
+site_Oregon Coast Aquarium,0.0015106245409697294,7,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,7,2
+"site_Andenes, Norway",0.0,7,2
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,2
 longitude,0.0,7,2
 cond_ship_noise,0.0,7,2
 cond_engine_noise,0.0,7,2
 cond_night_recording,0.0,7,2
 cond_tape_speed_note,0.0,7,2
-collection_code,0.5246977806091309,7,3
-longitude,0.23689860105514526,7,3
-year,0.09035369753837585,7,3
-site_code,0.03363976627588272,7,3
-bytes_on_disk,0.021657979115843773,7,3
-native_sample_rate,0.020014693960547447,7,3
-cond_reverberation,0.018657321110367775,7,3
-duration_seconds,0.015554988756775856,7,3
-cond_night_recording,0.011810884810984135,7,3
-cond_no_visual,0.01180026214569807,7,3
-latitude,0.009368154220283031,7,3
-cond_water_noise,0.005545990541577339,7,3
+"site_Kikvika, Norway",0.4952336251735687,7,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.24831846356391907,7,3
+year,0.08129454404115677,7,3
+bytes_on_disk,0.02124077081680298,7,3
+native_sample_rate,0.02009107731282711,7,3
+longitude,0.019757311791181564,7,3
+cond_reverberation,0.016635971143841743,7,3
+site_Oregon Coast Aquarium,0.01589340902864933,7,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.014165383763611317,7,3
+duration_seconds,0.014087623916566372,7,3
+latitude,0.013662089593708515,7,3
+cond_no_visual,0.01136974897235632,7,3
+"site_Andenes, Norway",0.01018563099205494,7,3
+cond_night_recording,0.0071815261617302895,7,3
+"site_Vancouver, British Columbia",0.005791100673377514,7,3
+cond_water_noise,0.0047893160954117775,7,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0003024086181540042,7,3
+"site_Dabob Bay, Seattle, Washington",0.0,7,3
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,3
+"site_T3 Ice Island, Canada",0.0,7,3
+collection_code_BE7A,0.0,7,3
 cond_ship_noise,0.0,7,3
 cond_engine_noise,0.0,7,3
 cond_tape_speed_note,0.0,7,3
-longitude,0.7306928038597107,7,4
-site_code,0.07673816382884979,7,4
-bytes_on_disk,0.03774431720376015,7,4
-year,0.032642193138599396,7,4
-native_sample_rate,0.02559765987098217,7,4
-latitude,0.025518033653497696,7,4
-cond_no_visual,0.019108517095446587,7,4
-duration_seconds,0.017849568277597427,7,4
-cond_water_noise,0.016631625592708588,7,4
-cond_reverberation,0.011254968121647835,7,4
-collection_code,0.006222157273441553,7,4
+"site_Kikvika, Norway",0.45390135049819946,7,4
+longitude,0.2631378173828125,7,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.10068319737911224,7,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.05091054365038872,7,4
+year,0.02187834121286869,7,4
+latitude,0.018106505274772644,7,4
+bytes_on_disk,0.016364550217986107,7,4
+"site_Andenes, Norway",0.01354378554970026,7,4
+native_sample_rate,0.00925483088940382,7,4
+cond_reverberation,0.008861037902534008,7,4
+cond_no_visual,0.008820431306958199,7,4
+duration_seconds,0.008562427945435047,7,4
+cond_water_noise,0.00824942346662283,7,4
+"site_Dabob Bay, Seattle, Washington",0.007815646938979626,7,4
+collection_code_BE7A,0.003249224042519927,7,4
+cond_night_recording,0.0031722541898489,7,4
+site_Oregon Coast Aquarium,0.0027498553972691298,7,4
+"site_T3 Ice Island, Canada",0.0007388184312731028,7,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,7,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,7,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,7,4
+"site_Vancouver, British Columbia",0.0,7,4
 cond_ship_noise,0.0,7,4
 cond_engine_noise,0.0,7,4
-cond_night_recording,0.0,7,4
 cond_tape_speed_note,0.0,7,4
-longitude,0.8356778621673584,8,0
-site_code,0.04272318258881569,8,0
-native_sample_rate,0.032788775861263275,8,0
-duration_seconds,0.022864704951643944,8,0
-bytes_on_disk,0.01937444694340229,8,0
-cond_reverberation,0.011032956652343273,8,0
-collection_code,0.010086423717439175,8,0
-cond_water_noise,0.008536433801054955,8,0
-latitude,0.0071522849611938,8,0
-year,0.005045122001320124,8,0
-cond_no_visual,0.0047177704982459545,8,0
+"site_Kikvika, Norway",0.6645094752311707,8,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.2106831818819046,8,0
+native_sample_rate,0.01685737445950508,8,0
+duration_seconds,0.014743156731128693,8,0
+bytes_on_disk,0.013690449297428131,8,0
+year,0.013061472214758396,8,0
+longitude,0.010049263015389442,8,0
+"site_T3 Ice Island, Canada",0.007620528340339661,8,0
+cond_reverberation,0.007472921162843704,8,0
+latitude,0.006760692223906517,8,0
+collection_code_BE7A,0.006681747268885374,8,0
+"site_Andenes, Norway",0.0064016347751021385,8,0
+site_Oregon Coast Aquarium,0.00599148403853178,8,0
+cond_no_visual,0.005989955738186836,8,0
+cond_water_noise,0.005322736222296953,8,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.00416385754942894,8,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,0
+"site_Dabob Bay, Seattle, Washington",0.0,8,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,8,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,0
+"site_Vancouver, British Columbia",0.0,8,0
 cond_ship_noise,0.0,8,0
 cond_engine_noise,0.0,8,0
 cond_night_recording,0.0,8,0
 cond_tape_speed_note,0.0,8,0
-longitude,0.8534247279167175,8,1
-site_code,0.06332089006900787,8,1
-duration_seconds,0.016756592318415642,8,1
-bytes_on_disk,0.013787868432700634,8,1
-latitude,0.0106295645236969,8,1
-native_sample_rate,0.009895462542772293,8,1
-year,0.009873799048364162,8,1
-cond_water_noise,0.009073340333998203,8,1
-cond_no_visual,0.0067361341789364815,8,1
-collection_code,0.006501676514744759,8,1
+"site_Kikvika, Norway",0.7339937686920166,8,1
+longitude,0.10694517940282822,8,1
+"site_Vancouver, British Columbia",0.05737704783678055,8,1
+year,0.015200468711555004,8,1
+native_sample_rate,0.014012257568538189,8,1
+duration_seconds,0.009901613928377628,8,1
+"site_Outside St. John's Hbr., Newfoundland",0.008941762149333954,8,1
+bytes_on_disk,0.008648206479847431,8,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.007191769778728485,8,1
+cond_water_noise,0.0068701948039233685,8,1
+latitude,0.006170882843434811,8,1
+cond_no_visual,0.005467390175908804,8,1
+site_Oregon Coast Aquarium,0.005442989058792591,8,1
+"site_Andenes, Norway",0.005346251651644707,8,1
+collection_code_BE7A,0.004391038790345192,8,1
+"site_T3 Ice Island, Canada",0.004099125042557716,8,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,1
+"site_Dabob Bay, Seattle, Washington",0.0,8,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,1
 cond_ship_noise,0.0,8,1
 cond_engine_noise,0.0,8,1
 cond_reverberation,0.0,8,1
 cond_night_recording,0.0,8,1
 cond_tape_speed_note,0.0,8,1
-longitude,0.6691510081291199,8,2
-site_code,0.1592339724302292,8,2
-cond_reverberation,0.02802516520023346,8,2
-cond_no_visual,0.02196219004690647,8,2
-bytes_on_disk,0.021818239241838455,8,2
-year,0.019779067486524582,8,2
-latitude,0.018630655482411385,8,2
-duration_seconds,0.017840737476944923,8,2
-native_sample_rate,0.015028774738311768,8,2
-collection_code,0.010749461129307747,8,2
-cond_night_recording,0.009476936422288418,8,2
-cond_water_noise,0.008303768932819366,8,2
+"site_Kikvika, Norway",0.5963895320892334,8,2
+longitude,0.18801669776439667,8,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.050930384546518326,8,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.03325553238391876,8,2
+"site_Vancouver, British Columbia",0.028661051765084267,8,2
+site_Oregon Coast Aquarium,0.017696574330329895,8,2
+"site_Outside St. John's Hbr., Newfoundland",0.013233084231615067,8,2
+cond_reverberation,0.009572506882250309,8,2
+bytes_on_disk,0.008620346896350384,8,2
+year,0.007722252979874611,8,2
+duration_seconds,0.007629805244505405,8,2
+cond_no_visual,0.007041973527520895,8,2
+latitude,0.006421876605600119,8,2
+native_sample_rate,0.005953407846391201,8,2
+"site_Dabob Bay, Seattle, Washington",0.004970138892531395,8,2
+collection_code_BE7A,0.00495470967143774,8,2
+cond_night_recording,0.00449530640617013,8,2
+cond_water_noise,0.004434770438820124,8,2
+"site_Andenes, Norway",0.0,8,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,2
+"site_T3 Ice Island, Canada",0.0,8,2
 cond_ship_noise,0.0,8,2
 cond_engine_noise,0.0,8,2
 cond_tape_speed_note,0.0,8,2
-latitude,0.7241178750991821,8,3
-longitude,0.07669959962368011,8,3
-site_code,0.07495103776454926,8,3
-collection_code,0.03587402030825615,8,3
-native_sample_rate,0.022471293807029724,8,3
-year,0.021590765565633774,8,3
-duration_seconds,0.018864033743739128,8,3
-cond_water_noise,0.010683072730898857,8,3
-bytes_on_disk,0.009692792780697346,8,3
-cond_no_visual,0.005055507179349661,8,3
+latitude,0.5457150340080261,8,3
+"site_Andenes, Norway",0.20907078683376312,8,3
+"site_Kikvika, Norway",0.07926402986049652,8,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.05724180117249489,8,3
+"site_Outside St. John's Hbr., Newfoundland",0.04257529601454735,8,3
+duration_seconds,0.014290984719991684,8,3
+cond_water_noise,0.01283902209252119,8,3
+year,0.01056007668375969,8,3
+native_sample_rate,0.008756128139793873,8,3
+bytes_on_disk,0.007491474039852619,8,3
+"site_T3 Ice Island, Canada",0.0052256775088608265,8,3
+"site_Vancouver, British Columbia",0.00339620653539896,8,3
+cond_no_visual,0.002290487987920642,8,3
+site_Oregon Coast Aquarium,0.0012830897467210889,8,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,3
+"site_Dabob Bay, Seattle, Washington",0.0,8,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,3
+collection_code_BE7A,0.0,8,3
+longitude,0.0,8,3
 cond_ship_noise,0.0,8,3
 cond_engine_noise,0.0,8,3
 cond_reverberation,0.0,8,3
 cond_night_recording,0.0,8,3
 cond_tape_speed_note,0.0,8,3
-latitude,0.5603629350662231,8,4
-longitude,0.2946072220802307,8,4
-site_code,0.0772530734539032,8,4
-native_sample_rate,0.013888590037822723,8,4
-cond_water_noise,0.010445314459502697,8,4
-duration_seconds,0.010327770374715328,8,4
-bytes_on_disk,0.009963804855942726,8,4
-year,0.00924721360206604,8,4
-cond_reverberation,0.005576435476541519,8,4
-cond_no_visual,0.0054304637014865875,8,4
-collection_code,0.0028971813153475523,8,4
+latitude,0.357424259185791,8,4
+"site_Kikvika, Norway",0.26899033784866333,8,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.1429438441991806,8,4
+year,0.11535719037055969,8,4
+"site_Outside St. John's Hbr., Newfoundland",0.03821411728858948,8,4
+native_sample_rate,0.011710956692695618,8,4
+"site_Andenes, Norway",0.00855918787419796,8,4
+"site_T3 Ice Island, Canada",0.008159907534718513,8,4
+duration_seconds,0.007846052758395672,8,4
+bytes_on_disk,0.007657856214791536,8,4
+cond_water_noise,0.007181675639003515,8,4
+longitude,0.006465764716267586,8,4
+site_Oregon Coast Aquarium,0.006106451153755188,8,4
+cond_no_visual,0.005900382064282894,8,4
+cond_reverberation,0.004524139687418938,8,4
+collection_code_BE7A,0.002957879798486829,8,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,8,4
+"site_Dabob Bay, Seattle, Washington",0.0,8,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,8,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,8,4
+"site_Vancouver, British Columbia",0.0,8,4
 cond_ship_noise,0.0,8,4
 cond_engine_noise,0.0,8,4
 cond_night_recording,0.0,8,4
 cond_tape_speed_note,0.0,8,4
-longitude,0.8336410522460938,9,0
-site_code,0.042340874671936035,9,0
-native_sample_rate,0.02846340648829937,9,0
-duration_seconds,0.023232271894812584,9,0
-bytes_on_disk,0.01838831976056099,9,0
-year,0.012731069698929787,9,0
-cond_reverberation,0.009521359577775002,9,0
-collection_code,0.00928786676377058,9,0
-latitude,0.008569988422095776,9,0
-cond_water_noise,0.008086846210062504,9,0
-cond_no_visual,0.005736894439905882,9,0
+"site_Kikvika, Norway",0.6772590279579163,9,0
+"site_Oregon Coastal Aquarium, Newport, OR",0.20653469860553741,9,0
+native_sample_rate,0.016930153593420982,9,0
+duration_seconds,0.015553344041109085,9,0
+year,0.014674954116344452,9,0
+bytes_on_disk,0.0130531070753932,9,0
+longitude,0.008697682991623878,9,0
+"site_T3 Ice Island, Canada",0.007356386631727219,9,0
+cond_reverberation,0.006677787750959396,9,0
+latitude,0.006572484038770199,9,0
+collection_code_BE7A,0.006238505244255066,9,0
+cond_no_visual,0.0057803126983344555,9,0
+site_Oregon Coast Aquarium,0.005689482670277357,9,0
+cond_water_noise,0.005513446871191263,9,0
+"site_Andenes, Norway",0.0034685854334384203,9,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,0
+"site_Dabob Bay, Seattle, Washington",0.0,9,0
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,0
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,0
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,0
+"site_Vancouver, British Columbia",0.0,9,0
 cond_ship_noise,0.0,9,0
 cond_engine_noise,0.0,9,0
 cond_night_recording,0.0,9,0
 cond_tape_speed_note,0.0,9,0
-longitude,0.8304140567779541,9,1
-site_code,0.07546821981668472,9,1
-duration_seconds,0.017929455265402794,9,1
-cond_water_noise,0.011281698010861874,9,1
-year,0.0107496352866292,9,1
-collection_code,0.010680164210498333,9,1
-bytes_on_disk,0.010441976599395275,9,1
-cond_reverberation,0.010174303315579891,9,1
-native_sample_rate,0.008860141038894653,9,1
-latitude,0.008168958127498627,9,1
-cond_no_visual,0.005831405054777861,9,1
+"site_Kikvika, Norway",0.7775510549545288,9,1
+longitude,0.0879485160112381,9,1
+"site_Vancouver, British Columbia",0.037764716893434525,9,1
+"site_Outside St. John's Hbr., Newfoundland",0.012774767354130745,9,1
+native_sample_rate,0.011777962557971478,9,1
+"site_Oregon Coastal Aquarium, Newport, OR",0.009884923696517944,9,1
+duration_seconds,0.009009940549731255,9,1
+bytes_on_disk,0.008202007040381432,9,1
+cond_water_noise,0.006142173893749714,9,1
+year,0.0055648330599069595,9,1
+cond_reverberation,0.005561211612075567,9,1
+latitude,0.0050394474528729916,9,1
+collection_code_BE7A,0.005032775923609734,9,1
+cond_no_visual,0.0048554278910160065,9,1
+site_Oregon Coast Aquarium,0.004465360194444656,9,1
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0043777842074632645,9,1
+"site_Andenes, Norway",0.0040471297688782215,9,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,1
+"site_Dabob Bay, Seattle, Washington",0.0,9,1
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,1
+"site_T3 Ice Island, Canada",0.0,9,1
 cond_ship_noise,0.0,9,1
 cond_engine_noise,0.0,9,1
 cond_night_recording,0.0,9,1
 cond_tape_speed_note,0.0,9,1
-longitude,0.7021418213844299,9,2
-site_code,0.14881271123886108,9,2
-cond_reverberation,0.0233505479991436,9,2
-duration_seconds,0.017345676198601723,9,2
-cond_no_visual,0.0170805212110281,9,2
-year,0.01675458624958992,9,2
-bytes_on_disk,0.016246121376752853,9,2
-native_sample_rate,0.013195510022342205,9,2
-latitude,0.012806941755115986,9,2
-cond_water_noise,0.012023331597447395,9,2
-collection_code,0.01158093847334385,9,2
-cond_night_recording,0.008661245927214622,9,2
+"site_Kikvika, Norway",0.5904626250267029,9,2
+longitude,0.17539794743061066,9,2
+"site_Oregon Coastal Aquarium, Newport, OR",0.050616197288036346,9,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0374877043068409,9,2
+site_Oregon Coast Aquarium,0.02872396819293499,9,2
+"site_Vancouver, British Columbia",0.02798193320631981,9,2
+"site_Outside St. John's Hbr., Newfoundland",0.013520883396267891,9,2
+cond_reverberation,0.009949407540261745,9,2
+bytes_on_disk,0.00912293791770935,9,2
+duration_seconds,0.008222676813602448,9,2
+native_sample_rate,0.007857007905840874,9,2
+cond_no_visual,0.007585312705487013,9,2
+latitude,0.006971134804189205,9,2
+year,0.006430027540773153,9,2
+cond_night_recording,0.005282512865960598,9,2
+collection_code_BE7A,0.005121956579387188,9,2
+"site_Dabob Bay, Seattle, Washington",0.005033481400460005,9,2
+cond_water_noise,0.004232334904372692,9,2
+"site_Andenes, Norway",0.0,9,2
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,2
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,2
+"site_T3 Ice Island, Canada",0.0,9,2
 cond_ship_noise,0.0,9,2
 cond_engine_noise,0.0,9,2
 cond_tape_speed_note,0.0,9,2
-latitude,0.7344292998313904,9,3
-site_code,0.0729602500796318,9,3
-longitude,0.07048826664686203,9,3
-collection_code,0.03558806702494621,9,3
-native_sample_rate,0.02236342988908291,9,3
-year,0.020938407629728317,9,3
-duration_seconds,0.019244110211730003,9,3
-bytes_on_disk,0.010548845864832401,9,3
-cond_water_noise,0.00822807289659977,9,3
-cond_no_visual,0.005211285315454006,9,3
+latitude,0.5492904782295227,9,3
+"site_Andenes, Norway",0.20584668219089508,9,3
+"site_Kikvika, Norway",0.08045348525047302,9,3
+"site_Oregon Coastal Aquarium, Newport, OR",0.0570630244910717,9,3
+"site_Outside St. John's Hbr., Newfoundland",0.04139965400099754,9,3
+duration_seconds,0.01447021309286356,9,3
+cond_water_noise,0.012519910000264645,9,3
+year,0.010298137553036213,9,3
+bytes_on_disk,0.008747532032430172,9,3
+native_sample_rate,0.008448167704045773,9,3
+"site_T3 Ice Island, Canada",0.005273348651826382,9,3
+"site_Vancouver, British Columbia",0.0029941413085907698,9,3
+cond_no_visual,0.0018634337466210127,9,3
+site_Oregon Coast Aquarium,0.0013317890698090196,9,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,9,3
+"site_Dabob Bay, Seattle, Washington",0.0,9,3
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,3
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,3
+collection_code_BE7A,0.0,9,3
+longitude,0.0,9,3
 cond_ship_noise,0.0,9,3
 cond_engine_noise,0.0,9,3
 cond_reverberation,0.0,9,3
 cond_night_recording,0.0,9,3
 cond_tape_speed_note,0.0,9,3
-longitude,0.7358329892158508,9,4
-site_code,0.07900187373161316,9,4
-cond_no_visual,0.031731557101011276,9,4
-latitude,0.031110333278775215,9,4
-native_sample_rate,0.029286576434969902,9,4
-bytes_on_disk,0.02854745276272297,9,4
-duration_seconds,0.019776755943894386,9,4
-cond_water_noise,0.016210153698921204,9,4
-cond_reverberation,0.011987702921032906,9,4
-year,0.01035816315561533,9,4
-collection_code,0.006156438495963812,9,4
+"site_Kikvika, Norway",0.4399714469909668,9,4
+longitude,0.273773729801178,9,4
+"site_Oregon Coastal Aquarium, Newport, OR",0.107523612678051,9,4
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.05145556479692459,9,4
+year,0.02085965871810913,9,4
+latitude,0.019633376970887184,9,4
+"site_Andenes, Norway",0.014355459250509739,9,4
+native_sample_rate,0.012686870992183685,9,4
+bytes_on_disk,0.012654269114136696,9,4
+cond_no_visual,0.010564162395894527,9,4
+duration_seconds,0.009276087395846844,9,4
+cond_water_noise,0.008038856089115143,9,4
+cond_reverberation,0.0076866233721375465,9,4
+"site_Dabob Bay, Seattle, Washington",0.0072106062434613705,9,4
+collection_code_BE7A,0.003132990561425686,9,4
+"site_T3 Ice Island, Canada",0.0011006067506968975,9,4
+site_Oregon Coast Aquarium,7.60284237912856e-05,9,4
+"site_Outside St. John's Hbr., Newfoundland",0.0,9,4
+"site_Saanich Inlet, Victoria, VAncouver Island, British Columbia, Canada",0.0,9,4
+"site_Saanich Inlet, Victoria, Vancouver Island, British Columbia, Canada",0.0,9,4
+"site_Vancouver, British Columbia",0.0,9,4
 cond_ship_noise,0.0,9,4
 cond_engine_noise,0.0,9,4
 cond_night_recording,0.0,9,4

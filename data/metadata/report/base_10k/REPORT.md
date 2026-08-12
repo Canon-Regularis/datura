@@ -17,26 +17,26 @@ Columns beside the margin say what the design resolves. `folds` counts every fol
 
 | family                       | model                              | floor                                |   margin |     low |    high |   p_value |   agreeing |   folds |
 |:-----------------------------|:-----------------------------------|:-------------------------------------|---------:|--------:|--------:|----------:|-----------:|--------:|
-| species                      | xgboost                            | logbook                              |  -0.245  | -0.3181 | -0.172  |  1.66e-08 |         50 |      50 |
-| species                      | probe                              | logbook                              |  -0.2583 | -0.3525 | -0.1642 |  1.3e-06  |         50 |      50 |
-| species                      | xgboost+probe                      | logbook                              |  -0.2327 | -0.3251 | -0.1402 |  6.39e-06 |         50 |      50 |
-| species                      | cnn_small                          | logbook                              |  -0.2878 | -0.4358 | -0.1398 |  0.000285 |         50 |      50 |
-| calltype_spermwhale_coda     | calltype_spermwhale_coda           | calltype_spermwhale_coda_context     |  -0.1622 | -0.3015 | -0.0229 |  0.0234   |         46 |      50 |
-| species                      | cnn                                | logbook                              |  -0.2848 | -0.5136 | -0.056  |  0.0259   |          5 |       5 |
-| species                      | logbook                            | metadata                             |   0.1296 | -0.0123 |  0.2715 |  0.0724   |         45 |      50 |
-| calltype_killerwhale_click   | calltype_killerwhale_click         | calltype_killerwhale_click_context   |   0.1249 | -0.0398 |  0.2897 |  0.134    |         37 |      50 |
+| species                      | xgboost                            | logbook                              |  -0.2448 | -0.3189 | -0.1708 |  2.37e-08 |         50 |      50 |
+| species                      | probe                              | logbook                              |  -0.2581 | -0.3514 | -0.1648 |  1.11e-06 |         50 |      50 |
+| species                      | xgboost+probe                      | logbook                              |  -0.2324 | -0.3257 | -0.1392 |  7.44e-06 |         50 |      50 |
+| species                      | cnn_small                          | logbook                              |  -0.2876 | -0.4368 | -0.1383 |  0.000319 |         50 |      50 |
+| species                      | cnn                                | logbook                              |  -0.2863 | -0.515  | -0.0576 |  0.0254   |          5 |       5 |
+| species                      | logbook                            | metadata                             |   0.1294 | -0.0093 |  0.2681 |  0.0667   |         44 |      50 |
+| calltype_spermwhale_coda     | calltype_spermwhale_coda_cnn_small | calltype_spermwhale_coda_context     |  -0.1776 | -0.4344 |  0.0792 |  0.127    |          5 |       5 |
+| calltype_killerwhale_chirp   | calltype_killerwhale_chirp         | calltype_killerwhale_chirp_context   |  -0.0632 | -0.1467 |  0.0204 |  0.135    |         34 |      50 |
+| calltype_spermwhale_coda     | calltype_spermwhale_coda           | calltype_spermwhale_coda_context     |  -0.094  | -0.2212 |  0.0331 |  0.144    |         39 |      50 |
 | species                      | probe                              | metadata                             |  -0.1287 | -0.3049 |  0.0474 |  0.148    |         39 |      50 |
-| calltype_spermwhale_coda     | calltype_spermwhale_coda_cnn_small | calltype_spermwhale_coda_context     |  -0.2242 | -0.6154 |  0.1669 |  0.187    |          5 |       5 |
-| calltype_killerwhale_whistle | calltype_killerwhale_whistle       | calltype_killerwhale_whistle_context |   0.0446 | -0.0232 |  0.1124 |  0.192    |         36 |      50 |
+| calltype_killerwhale_click   | calltype_killerwhale_click         | calltype_killerwhale_click_context   |   0.1155 | -0.0623 |  0.2933 |  0.198    |         37 |      50 |
 | species                      | cnn_small                          | metadata                             |  -0.1582 | -0.4016 |  0.0853 |  0.198    |         40 |      50 |
+| calltype_killerwhale_whistle | calltype_killerwhale_whistle       | calltype_killerwhale_whistle_context |   0.0435 | -0.0241 |  0.1111 |  0.202    |         36 |      50 |
 | species                      | xgboost                            | metadata                             |  -0.1154 | -0.3101 |  0.0793 |  0.239    |         38 |      50 |
-| calltype_killerwhale_chirp   | calltype_killerwhale_chirp         | calltype_killerwhale_chirp_context   |  -0.0515 | -0.1466 |  0.0435 |  0.281    |         32 |      50 |
 | species                      | xgboost+probe                      | metadata                             |  -0.1031 | -0.2952 |  0.0891 |  0.286    |         38 |      50 |
 | species                      | cnn                                | metadata                             |  -0.1702 | -0.6573 |  0.3169 |  0.387    |          4 |       5 |
-| calltype_spermwhale_click    | calltype_spermwhale_click          | calltype_spermwhale_click_context    |  -0.0301 | -0.1463 |  0.0862 |  0.606    |         25 |      50 |
-| calltype_spermwhale_whistle  | calltype_spermwhale_whistle        | calltype_spermwhale_whistle_context  |   0.0387 | -0.2676 |  0.3451 |  0.8      |         26 |      50 |
-| calltype_killerwhale_call    | calltype_killerwhale_call          | calltype_killerwhale_call_context    |   0.0332 | -0.2549 |  0.3213 |  0.818    |         29 |      50 |
-| calltype_killerwhale_squeal  | calltype_killerwhale_squeal        | calltype_killerwhale_squeal_context  |   0.0056 | -0.2236 |  0.2348 |  0.961    |         29 |      50 |
+| calltype_killerwhale_call    | calltype_killerwhale_call          | calltype_killerwhale_call_context    |  -0.0773 | -0.2628 |  0.1082 |  0.406    |         30 |      50 |
+| calltype_spermwhale_click    | calltype_spermwhale_click          | calltype_spermwhale_click_context    |  -0.0317 | -0.1467 |  0.0832 |  0.582    |         29 |      50 |
+| calltype_killerwhale_squeal  | calltype_killerwhale_squeal        | calltype_killerwhale_squeal_context  |   0.0361 | -0.1751 |  0.2472 |  0.733    |         32 |      50 |
+| calltype_spermwhale_whistle  | calltype_spermwhale_whistle        | calltype_spermwhale_whistle_context  |  -0.0335 | -0.3673 |  0.3002 |  0.841    |         31 |      50 |
 
 ## Species
 
@@ -48,7 +48,7 @@ against the highest any model that hears nothing reaches.
 
 | model         |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
 |:--------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
-| logbook       | 0.9974 |    0.8678 |   0.1296 | -0.0123 | 0.2715 |    0.0724 |         45 |      50 | species  |
+| logbook       | 0.9972 |    0.8678 |   0.1294 | -0.0093 | 0.2681 |    0.0667 |         44 |      50 | species  |
 | xgboost+probe | 0.7647 |    0.8678 |  -0.1031 | -0.2952 | 0.0891 |    0.286  |         38 |      50 | species  |
 | xgboost       | 0.7524 |    0.8678 |  -0.1154 | -0.3101 | 0.0793 |    0.239  |         38 |      50 | species  |
 | probe         | 0.7391 |    0.8678 |  -0.1287 | -0.3049 | 0.0474 |    0.148  |         39 |      50 | species  |
@@ -63,27 +63,30 @@ number an audio result has to clear before it is evidence about whales.
 
 | model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
 |:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| xgboost+probe | 0.7647 |    0.9974 |  -0.2327 | -0.3251 | -0.1402 |  6.39e-06 |         50 |      50 | species  |
-| xgboost       | 0.7524 |    0.9974 |  -0.245  | -0.3181 | -0.172  |  1.66e-08 |         50 |      50 | species  |
-| probe         | 0.7391 |    0.9974 |  -0.2583 | -0.3525 | -0.1642 |  1.3e-06  |         50 |      50 | species  |
-| cnn           | 0.7135 |    0.9983 |  -0.2848 | -0.5136 | -0.056  |  0.0259   |          5 |       5 | species  |
-| cnn_small     | 0.7096 |    0.9974 |  -0.2878 | -0.4358 | -0.1398 |  0.000285 |         50 |      50 | species  |
+| xgboost+probe | 0.7647 |    0.9972 |  -0.2324 | -0.3257 | -0.1392 |  7.44e-06 |         50 |      50 | species  |
+| xgboost       | 0.7524 |    0.9972 |  -0.2448 | -0.3189 | -0.1708 |  2.37e-08 |         50 |      50 | species  |
+| probe         | 0.7391 |    0.9972 |  -0.2581 | -0.3514 | -0.1648 |  1.11e-06 |         50 |      50 | species  |
+| cnn           | 0.7135 |    0.9998 |  -0.2863 | -0.515  | -0.0576 |  0.0254   |          5 |       5 | species  |
+| cnn_small     | 0.7096 |    0.9972 |  -0.2876 | -0.4368 | -0.1383 |  0.000319 |         50 |      50 | species  |
 
 ### Every model, with the range the recordings support
 
-The interval comes from resampling whole tapes with replacement. Cuts from one tape
-are near duplicates, so resampling clips would count the same recording many times
-and produce an interval several times too narrow.
+The interval comes from resampling whole groups with replacement, where the group is
+whatever this configuration's folds held out and the `unit` column names it. Cuts from
+one recording are near duplicates, so resampling clips would count the same recording
+many times and produce an interval several times too narrow. Resampling tapes under a
+fold rule that holds out places is the same mistake one level up, and it reported an
+interval 59% narrower than the design supports.
 
-| model         |   estimate |    low |   high |   tapes |
-|:--------------|-----------:|-------:|-------:|--------:|
-| xgboost       |     0.7265 | 0.6191 | 0.8387 |     134 |
-| cnn           |     0.7064 | 0.5737 | 0.8671 |     134 |
-| cnn_small     |     0.6849 | 0.5497 | 0.8535 |     134 |
-| logbook       |     0.9987 | 0.9935 | 1      |     134 |
-| probe         |     0.7512 | 0.6313 | 0.8358 |     134 |
-| xgboost+probe |     0.7802 | 0.6634 | 0.8682 |     134 |
-| metadata      |     0.9343 | 0.7962 | 0.9832 |     134 |
+| model         |   estimate |    low |   high |   groups | unit    |
+|:--------------|-----------:|-------:|-------:|---------:|:--------|
+| xgboost       |     0.7265 | 0.6191 | 0.8387 |      134 | tape_id |
+| cnn           |     0.7064 | 0.5737 | 0.8671 |      134 | tape_id |
+| cnn_small     |     0.6849 | 0.5497 | 0.8535 |      134 | tape_id |
+| logbook       |     0.9998 | 0.9992 | 1      |      134 | tape_id |
+| probe         |     0.7512 | 0.6313 | 0.8358 |      134 | tape_id |
+| xgboost+probe |     0.7802 | 0.6634 | 0.8682 |      134 | tape_id |
+| metadata      |     0.9343 | 0.7962 | 0.9832 |      134 | tape_id |
 
 ### Spread across folds
 
@@ -92,7 +95,7 @@ and produce an interval several times too narrow.
 | xgboost       | 0.7524 | 0.0698 |
 | cnn           | 0.7135 | 0.123  |
 | cnn_small     | 0.7096 | 0.1418 |
-| logbook       | 0.9974 | 0.0045 |
+| logbook       | 0.9972 | 0.0096 |
 | probe         | 0.7391 | 0.0902 |
 | xgboost+probe | 0.7647 | 0.0889 |
 | metadata      | 0.8678 | 0.1344 |
@@ -104,7 +107,7 @@ and produce an interval several times too narrow.
 | xgboost       |          0.5734 |       0.8688 |        0.8854 |
 | cnn           |          0.4956 |       0.8828 |        0.9007 |
 | cnn_small     |          0.5292 |       0.8602 |        0.8741 |
-| logbook       |          0.9952 |       0.9955 |        0.9996 |
+| logbook       |          0.9982 |       0.9899 |        0.9999 |
 | probe         |          0.6466 |       0.8131 |        0.8588 |
 | xgboost+probe |          0.6358 |       0.8655 |        0.8824 |
 | metadata      |          0.6804 |       0.9889 |        0.9443 |
@@ -137,10 +140,10 @@ column and reads as a collapse the predictions do not contain.
 | native sample rate | cnn_small     | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.6712 |         0.1708 |
 | collection code    | cnn_small     | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6091 |         0.2279 |
 | collection code    | cnn_small     | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7075 |         0.1446 |
-| native sample rate | logbook       | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.8636 |         0.1655 |
-| native sample rate | logbook       | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.932  |         0.1341 |
-| collection code    | logbook       | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6384 |         0.2945 |
-| collection code    | logbook       | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.9977 |         0.0048 |
+| native sample rate | logbook       | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.9229 |         0.1356 |
+| native sample rate | logbook       | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.9326 |         0.1352 |
+| collection code    | logbook       | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6934 |         0.2464 |
+| collection code    | logbook       | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.9973 |         0.0101 |
 | native sample rate | probe         | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.7084 |         0.1286 |
 | native sample rate | probe         | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.679  |         0.1312 |
 | collection code    | probe         | collection code not recorded           |     359 |                2 |               3 |      43 |          0.5139 |         0.2721 |
@@ -252,12 +255,12 @@ to carry any given call whatever the animal was doing.
 
 | model                     |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                    |
 |:--------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:--------------------------|
-| calltype_killerwhale_call |  0.695 |    0.6618 |   0.0332 | -0.2549 | 0.3213 |     0.818 |         29 |      50 | calltype_killerwhale_call |
+| calltype_killerwhale_call |  0.695 |    0.7724 |  -0.0773 | -0.2628 | 0.1082 |     0.406 |         30 |      50 | calltype_killerwhale_call |
 
-| model                             |   estimate |    low |   high |   tapes |
-|:----------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_killerwhale_call         |     0.7016 | 0.5506 | 0.8309 |      65 |
-| calltype_killerwhale_call_context |     0.647  | 0.5023 | 0.7769 |      65 |
+| model                             |   estimate |    low |   high |   groups | unit    |
+|:----------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_killerwhale_call         |     0.7016 | 0.5506 | 0.8309 |       65 | tape_id |
+| calltype_killerwhale_call_context |     0.7571 | 0.6354 | 0.8506 |       65 | tape_id |
 
 ## KillerWhale, chirp
 
@@ -268,12 +271,12 @@ to carry any given call whatever the animal was doing.
 
 | model                      |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                     |
 |:---------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------------------------|
-| calltype_killerwhale_chirp | 0.5556 |    0.6071 |  -0.0515 | -0.1466 | 0.0435 |     0.281 |         32 |      50 | calltype_killerwhale_chirp |
+| calltype_killerwhale_chirp | 0.5556 |    0.6188 |  -0.0632 | -0.1467 | 0.0204 |     0.135 |         34 |      50 | calltype_killerwhale_chirp |
 
-| model                              |   estimate |    low |   high |   tapes |
-|:-----------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_killerwhale_chirp         |     0.5865 | 0.525  | 0.6463 |      65 |
-| calltype_killerwhale_chirp_context |     0.6208 | 0.4956 | 0.7126 |      65 |
+| model                              |   estimate |    low |   high |   groups | unit    |
+|:-----------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_killerwhale_chirp         |     0.5865 | 0.525  | 0.6463 |       65 | tape_id |
+| calltype_killerwhale_chirp_context |     0.6617 | 0.5314 | 0.7216 |       65 | tape_id |
 
 ## KillerWhale, click
 
@@ -284,12 +287,12 @@ to carry any given call whatever the animal was doing.
 
 | model                      |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                     |
 |:---------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------------------------|
-| calltype_killerwhale_click |  0.597 |    0.4721 |   0.1249 | -0.0398 | 0.2897 |     0.134 |         37 |      50 | calltype_killerwhale_click |
+| calltype_killerwhale_click |  0.597 |    0.4815 |   0.1155 | -0.0623 | 0.2933 |     0.198 |         37 |      50 | calltype_killerwhale_click |
 
-| model                              |   estimate |    low |   high |   tapes |
-|:-----------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_killerwhale_click         |     0.6029 | 0.4501 | 0.724  |      65 |
-| calltype_killerwhale_click_context |     0.4833 | 0.3926 | 0.5927 |      65 |
+| model                              |   estimate |    low |   high |   groups | unit    |
+|:-----------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_killerwhale_click         |     0.6029 | 0.4501 | 0.724  |       65 | tape_id |
+| calltype_killerwhale_click_context |     0.4864 | 0.3956 | 0.5937 |       65 | tape_id |
 
 ## KillerWhale, squeal
 
@@ -300,12 +303,12 @@ to carry any given call whatever the animal was doing.
 
 | model                       |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                      |
 |:----------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:----------------------------|
-| calltype_killerwhale_squeal |  0.769 |    0.7634 |   0.0056 | -0.2236 | 0.2348 |     0.961 |         29 |      50 | calltype_killerwhale_squeal |
+| calltype_killerwhale_squeal |  0.769 |     0.733 |   0.0361 | -0.1751 | 0.2472 |     0.733 |         32 |      50 | calltype_killerwhale_squeal |
 
-| model                               |   estimate |    low |   high |   tapes |
-|:------------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_killerwhale_squeal         |     0.7524 | 0.5217 | 0.9223 |      65 |
-| calltype_killerwhale_squeal_context |     0.7523 | 0.5623 | 0.9075 |      65 |
+| model                               |   estimate |    low |   high |   groups | unit    |
+|:------------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_killerwhale_squeal         |     0.7524 | 0.5217 | 0.9223 |       65 | tape_id |
+| calltype_killerwhale_squeal_context |     0.7343 | 0.5305 | 0.8774 |       65 | tape_id |
 
 ## KillerWhale, whistle
 
@@ -316,12 +319,12 @@ to carry any given call whatever the animal was doing.
 
 | model                        |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                       |
 |:-----------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:-----------------------------|
-| calltype_killerwhale_whistle | 0.5671 |    0.5225 |   0.0446 | -0.0232 | 0.1124 |     0.192 |         36 |      50 | calltype_killerwhale_whistle |
+| calltype_killerwhale_whistle | 0.5671 |    0.5236 |   0.0435 | -0.0241 | 0.1111 |     0.202 |         36 |      50 | calltype_killerwhale_whistle |
 
-| model                                |   estimate |    low |   high |   tapes |
-|:-------------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_killerwhale_whistle         |     0.6038 | 0.5077 | 0.643  |      65 |
-| calltype_killerwhale_whistle_context |     0.5392 | 0.4706 | 0.5971 |      65 |
+| model                                |   estimate |    low |   high |   groups | unit    |
+|:-------------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_killerwhale_whistle         |     0.6038 | 0.5077 | 0.643  |       65 | tape_id |
+| calltype_killerwhale_whistle_context |     0.5389 | 0.4706 | 0.5964 |       65 | tape_id |
 
 ## SpermWhale, click
 
@@ -332,12 +335,12 @@ to carry any given call whatever the animal was doing.
 
 | model                     |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                    |
 |:--------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:--------------------------|
-| calltype_spermwhale_click | 0.7097 |    0.7397 |  -0.0301 | -0.1463 | 0.0862 |     0.606 |         25 |      50 | calltype_spermwhale_click |
+| calltype_spermwhale_click | 0.7097 |    0.7414 |  -0.0317 | -0.1467 | 0.0832 |     0.582 |         29 |      50 | calltype_spermwhale_click |
 
-| model                             |   estimate |    low |   high |   tapes |
-|:----------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_spermwhale_click         |     0.7378 | 0.6021 |  0.829 |      58 |
-| calltype_spermwhale_click_context |     0.7474 | 0.6078 |  0.836 |      58 |
+| model                             |   estimate |    low |   high |   groups | unit    |
+|:----------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_spermwhale_click         |     0.7378 | 0.6021 | 0.829  |       58 | tape_id |
+| calltype_spermwhale_click_context |     0.7596 | 0.6152 | 0.8441 |       58 | tape_id |
 
 ## SpermWhale, coda
 
@@ -346,16 +349,16 @@ and none of the recording. That includes clip duration, which matters here more 
 anywhere else: a note is written against a whole cut, so a longer cut is more likely
 to carry any given call whatever the animal was doing.
 
-| model                              |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family                   |
-|:-----------------------------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:-------------------------|
-| calltype_spermwhale_coda           | 0.577  |    0.7392 |  -0.1622 | -0.3015 | -0.0229 |    0.0234 |         46 |      50 | calltype_spermwhale_coda |
-| calltype_spermwhale_coda_cnn_small | 0.4533 |    0.6775 |  -0.2242 | -0.6154 |  0.1669 |    0.187  |          5 |       5 | calltype_spermwhale_coda |
+| model                              |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                   |
+|:-----------------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:-------------------------|
+| calltype_spermwhale_coda           | 0.577  |    0.6711 |  -0.094  | -0.2212 | 0.0331 |     0.144 |         39 |      50 | calltype_spermwhale_coda |
+| calltype_spermwhale_coda_cnn_small | 0.4533 |    0.6309 |  -0.1776 | -0.4344 | 0.0792 |     0.127 |          5 |       5 | calltype_spermwhale_coda |
 
-| model                              |   estimate |    low |   high |   tapes |
-|:-----------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_spermwhale_coda           |     0.5522 | 0.4563 | 0.6293 |      38 |
-| calltype_spermwhale_coda_cnn_small |     0.4721 | 0.355  | 0.5768 |      38 |
-| calltype_spermwhale_coda_context   |     0.6613 | 0.4983 | 0.8122 |      38 |
+| model                              |   estimate |    low |   high |   groups | unit    |
+|:-----------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_spermwhale_coda           |     0.5522 | 0.4563 | 0.6293 |       38 | tape_id |
+| calltype_spermwhale_coda_cnn_small |     0.4721 | 0.355  | 0.5768 |       38 | tape_id |
+| calltype_spermwhale_coda_context   |     0.622  | 0.4605 | 0.7677 |       38 | tape_id |
 
 ## SpermWhale, whistle
 
@@ -366,9 +369,9 @@ to carry any given call whatever the animal was doing.
 
 | model                       |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family                      |
 |:----------------------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:----------------------------|
-| calltype_spermwhale_whistle | 0.7129 |    0.6741 |   0.0387 | -0.2676 | 0.3451 |       0.8 |         26 |      50 | calltype_spermwhale_whistle |
+| calltype_spermwhale_whistle | 0.7129 |    0.7464 |  -0.0335 | -0.3673 | 0.3002 |     0.841 |         31 |      50 | calltype_spermwhale_whistle |
 
-| model                               |   estimate |    low |   high |   tapes |
-|:------------------------------------|-----------:|-------:|-------:|--------:|
-| calltype_spermwhale_whistle         |     0.782  | 0.4868 | 0.8965 |      58 |
-| calltype_spermwhale_whistle_context |     0.6649 | 0.4505 | 0.8857 |      58 |
+| model                               |   estimate |    low |   high |   groups | unit    |
+|:------------------------------------|-----------:|-------:|-------:|---------:|:--------|
+| calltype_spermwhale_whistle         |     0.782  | 0.4868 | 0.8965 |       58 | tape_id |
+| calltype_spermwhale_whistle_context |     0.6868 | 0.4593 | 0.916  |       58 | tape_id |

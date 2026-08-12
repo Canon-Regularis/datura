@@ -1,57 +1,161 @@
 feature,gain,repeat,fold
-duration_seconds,0.2776556611061096,0,0
-site_code,0.20650164783000946,0,0
-native_sample_rate,0.11764656752347946,0,0
-year,0.09576357901096344,0,0
-bytes_on_disk,0.0925619974732399,0,0
-longitude,0.07858805358409882,0,0
-collection_code,0.06336752325296402,0,0
-latitude,0.038658637553453445,0,0
-cond_ship_noise,0.029256293550133705,0,0
+site_DOMINICA,0.44293299317359924,0,0
+native_sample_rate,0.12591493129730225,0,0
+"site_Sable Island, Nova Scotia",0.11651778966188431,0,0
+site_Dominica IsBD,0.0892510861158371,0,0
+duration_seconds,0.0501917339861393,0,0
+bytes_on_disk,0.04615851491689682,0,0
+year,0.039965495467185974,0,0
+longitude,0.02827969193458557,0,0
+site_N end of Dominica,0.022524915635585785,0,0
+latitude,0.015667300671339035,0,0
+"site_Near Filicudi, Italy",0.01306307502090931,0,0
+site_50 mi. NE Malta,0.009228513576090336,0,0
+site_Dominica,0.000303938752040267,0,0
+"site_3-4 mi. off Roseau, Dominica",0.0,0,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,0
+site_Bequia,0.0,0,0
+site_Bermuda,0.0,0,0
+site_BermudaBD,0.0,0,0
+site_Delaware,0.0,0,0
+site_Dominica  E,0.0,0,0
+site_Dominica Is,0.0,0,0
+"site_Gully, SE Sable I., Canada  BD",0.0,0,0
+"site_Ligurian Sea, NW Italy",0.0,0,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,0
+site_Madeira,0.0,0,0
+site_N of Selina,0.0,0,0
+"site_N of Selina, Sicily",0.0,0,0
+"site_South of Sable Island, North Atlantic",0.0,0,0
+site_W of Browns Bank,0.0,0,0
+collection_code_BA2A,0.0,0,0
+collection_code_BD10A,0.0,0,0
+collection_code_BD15A,0.0,0,0
+collection_code_BE3B,0.0,0,0
+collection_code_BE3C,0.0,0,0
+cond_ship_noise,0.0,0,0
 cond_engine_noise,0.0,0,0
 cond_reverberation,0.0,0,0
 cond_water_noise,0.0,0,0
 cond_night_recording,0.0,0,0
 cond_no_visual,0.0,0,0
 cond_tape_speed_note,0.0,0,0
-duration_seconds,0.29536259174346924,0,1
-year,0.19201111793518066,0,1
-longitude,0.171678826212883,0,1
-bytes_on_disk,0.12511438131332397,0,1
-collection_code,0.0702696368098259,0,1
-native_sample_rate,0.06907877326011658,0,1
-site_code,0.05044903606176376,0,1
-cond_ship_noise,0.026035714894533157,0,1
-latitude,0.0,0,1
+longitude,0.3468139171600342,0,1
+duration_seconds,0.16354233026504517,0,1
+year,0.10209795087575912,0,1
+"site_Sable Island, Nova Scotia",0.08000096678733826,0,1
+bytes_on_disk,0.07531338185071945,0,1
+site_Dominica IsBD,0.05705416947603226,0,1
+site_Dominica,0.04065676033496857,0,1
+site_Dominica  E,0.03764710575342178,0,1
+native_sample_rate,0.03475550189614296,0,1
+latitude,0.015957383438944817,0,1
+cond_ship_noise,0.013819425366818905,0,1
+site_DOMINICA,0.012445456348359585,0,1
+"site_Near Filicudi, Italy",0.007729113567620516,0,1
+site_Delaware,0.007296692579984665,0,1
+site_50 mi. NE Malta,0.004869873635470867,0,1
+"site_3-4 mi. off Roseau, Dominica",0.0,0,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,1
+site_Bequia,0.0,0,1
+site_Bermuda,0.0,0,1
+site_BermudaBD,0.0,0,1
+site_Dominica Is,0.0,0,1
+"site_Gully, SE Sable I., Canada  BD",0.0,0,1
+"site_Ligurian Sea, NW Italy",0.0,0,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,1
+site_Madeira,0.0,0,1
+site_N end of Dominica,0.0,0,1
+site_N of Selina,0.0,0,1
+"site_N of Selina, Sicily",0.0,0,1
+"site_South of Sable Island, North Atlantic",0.0,0,1
+site_W of Browns Bank,0.0,0,1
+collection_code_BA2A,0.0,0,1
+collection_code_BD10A,0.0,0,1
+collection_code_BD15A,0.0,0,1
+collection_code_BE3B,0.0,0,1
+collection_code_BE3C,0.0,0,1
 cond_engine_noise,0.0,0,1
 cond_reverberation,0.0,0,1
 cond_water_noise,0.0,0,1
 cond_night_recording,0.0,0,1
 cond_no_visual,0.0,0,1
 cond_tape_speed_note,0.0,0,1
-year,0.27894940972328186,0,2
-duration_seconds,0.22710596024990082,0,2
-site_code,0.19190280139446259,0,2
-longitude,0.07713179290294647,0,2
-bytes_on_disk,0.06846630573272705,0,2
-native_sample_rate,0.06726762652397156,0,2
-latitude,0.055885523557662964,0,2
-cond_ship_noise,0.016815530136227608,0,2
-collection_code,0.016475025564432144,0,2
+site_DOMINICA,0.5503955483436584,0,2
+duration_seconds,0.09429913014173508,0,2
+year,0.06875038892030716,0,2
+bytes_on_disk,0.06598982959985733,0,2
+native_sample_rate,0.06304966658353806,0,2
+site_Dominica,0.04091230779886246,0,2
+site_Dominica IsBD,0.035568516701459885,0,2
+latitude,0.03182753175497055,0,2
+site_N end of Dominica,0.03013009764254093,0,2
+collection_code_BA2A,0.007613313850015402,0,2
+site_Delaware,0.006046242080628872,0,2
+site_Dominica Is,0.003527324413880706,0,2
+site_N of Selina,0.0018900544382631779,0,2
+"site_3-4 mi. off Roseau, Dominica",0.0,0,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,2
+site_50 mi. NE Malta,0.0,0,2
+site_Bequia,0.0,0,2
+site_Bermuda,0.0,0,2
+site_BermudaBD,0.0,0,2
+site_Dominica  E,0.0,0,2
+"site_Gully, SE Sable I., Canada  BD",0.0,0,2
+"site_Ligurian Sea, NW Italy",0.0,0,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,2
+site_Madeira,0.0,0,2
+"site_N of Selina, Sicily",0.0,0,2
+"site_Near Filicudi, Italy",0.0,0,2
+"site_Sable Island, Nova Scotia",0.0,0,2
+"site_South of Sable Island, North Atlantic",0.0,0,2
+site_W of Browns Bank,0.0,0,2
+collection_code_BD10A,0.0,0,2
+collection_code_BD15A,0.0,0,2
+collection_code_BE3B,0.0,0,2
+collection_code_BE3C,0.0,0,2
+longitude,0.0,0,2
+cond_ship_noise,0.0,0,2
 cond_engine_noise,0.0,0,2
 cond_reverberation,0.0,0,2
 cond_water_noise,0.0,0,2
 cond_night_recording,0.0,0,2
 cond_no_visual,0.0,0,2
 cond_tape_speed_note,0.0,0,2
-year,0.48618122935295105,0,3
-duration_seconds,0.14626502990722656,0,3
-native_sample_rate,0.10422525554895401,0,3
-collection_code,0.08115889132022858,0,3
-bytes_on_disk,0.06603103876113892,0,3
-site_code,0.04709218442440033,0,3
-longitude,0.036629315465688705,0,3
-latitude,0.032416991889476776,0,3
+year,0.4685007631778717,0,3
+duration_seconds,0.0890587568283081,0,3
+site_DOMINICA,0.07341338694095612,0,3
+native_sample_rate,0.061753347516059875,0,3
+site_Dominica IsBD,0.059779275208711624,0,3
+collection_code_BE3B,0.048909835517406464,0,3
+bytes_on_disk,0.04011311009526253,0,3
+latitude,0.033461809158325195,0,3
+"site_Ligurian Sea, NW Italy",0.0322924442589283,0,3
+longitude,0.03126739338040352,0,3
+site_Delaware,0.024564122781157494,0,3
+site_N end of Dominica,0.0182180255651474,0,3
+site_Dominica,0.011006839573383331,0,3
+site_Dominica Is,0.003856223775073886,0,3
+site_50 mi. NE Malta,0.002457418479025364,0,3
+site_N of Selina,0.001142272143624723,0,3
+"site_Sable Island, Nova Scotia",0.00020491731993388385,0,3
+"site_3-4 mi. off Roseau, Dominica",0.0,0,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,3
+site_Bequia,0.0,0,3
+site_Bermuda,0.0,0,3
+site_BermudaBD,0.0,0,3
+site_Dominica  E,0.0,0,3
+"site_Gully, SE Sable I., Canada  BD",0.0,0,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,3
+site_Madeira,0.0,0,3
+"site_N of Selina, Sicily",0.0,0,3
+"site_Near Filicudi, Italy",0.0,0,3
+"site_South of Sable Island, North Atlantic",0.0,0,3
+site_W of Browns Bank,0.0,0,3
+collection_code_BA2A,0.0,0,3
+collection_code_BD10A,0.0,0,3
+collection_code_BD15A,0.0,0,3
+collection_code_BE3C,0.0,0,3
 cond_ship_noise,0.0,0,3
 cond_engine_noise,0.0,0,3
 cond_reverberation,0.0,0,3
@@ -59,14 +163,40 @@ cond_water_noise,0.0,0,3
 cond_night_recording,0.0,0,3
 cond_no_visual,0.0,0,3
 cond_tape_speed_note,0.0,0,3
-longitude,0.26029661297798157,0,4
-collection_code,0.23240697383880615,0,4
-duration_seconds,0.150063157081604,0,4
-year,0.14683756232261658,0,4
-native_sample_rate,0.12812912464141846,0,4
-bytes_on_disk,0.04232122749090195,0,4
-site_code,0.02980201505124569,0,4
-latitude,0.010143347084522247,0,4
+collection_code_BE3B,0.19776436686515808,0,4
+latitude,0.16677963733673096,0,4
+native_sample_rate,0.1405683308839798,0,4
+year,0.13537637889385223,0,4
+duration_seconds,0.1294952929019928,0,4
+longitude,0.09517252445220947,0,4
+bytes_on_disk,0.04349713400006294,0,4
+site_DOMINICA,0.03865116462111473,0,4
+site_Dominica,0.02313404716551304,0,4
+site_N end of Dominica,0.019947603344917297,0,4
+"site_Near Filicudi, Italy",0.005710502155125141,0,4
+site_Dominica Is,0.003902973374351859,0,4
+"site_3-4 mi. off Roseau, Dominica",0.0,0,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,4
+site_50 mi. NE Malta,0.0,0,4
+site_Bequia,0.0,0,4
+site_Bermuda,0.0,0,4
+site_BermudaBD,0.0,0,4
+site_Delaware,0.0,0,4
+site_Dominica  E,0.0,0,4
+site_Dominica IsBD,0.0,0,4
+"site_Gully, SE Sable I., Canada  BD",0.0,0,4
+"site_Ligurian Sea, NW Italy",0.0,0,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,0,4
+site_Madeira,0.0,0,4
+site_N of Selina,0.0,0,4
+"site_N of Selina, Sicily",0.0,0,4
+"site_Sable Island, Nova Scotia",0.0,0,4
+"site_South of Sable Island, North Atlantic",0.0,0,4
+site_W of Browns Bank,0.0,0,4
+collection_code_BA2A,0.0,0,4
+collection_code_BD10A,0.0,0,4
+collection_code_BD15A,0.0,0,4
+collection_code_BE3C,0.0,0,4
 cond_ship_noise,0.0,0,4
 cond_engine_noise,0.0,0,4
 cond_reverberation,0.0,0,4
@@ -74,29 +204,81 @@ cond_water_noise,0.0,0,4
 cond_night_recording,0.0,0,4
 cond_no_visual,0.0,0,4
 cond_tape_speed_note,0.0,0,4
-duration_seconds,0.29128769040107727,1,0
-year,0.2032245546579361,1,0
-site_code,0.1778521090745926,1,0
-latitude,0.13884352147579193,1,0
-native_sample_rate,0.06950028240680695,1,0
-longitude,0.06511131674051285,1,0
-bytes_on_disk,0.03930022194981575,1,0
-cond_ship_noise,0.014880269765853882,1,0
-collection_code,0.0,1,0
+site_DOMINICA,0.18557216227054596,1,0
+duration_seconds,0.1604974865913391,1,0
+longitude,0.15907514095306396,1,0
+site_Dominica,0.15501584112644196,1,0
+"site_Sable Island, Nova Scotia",0.12774425745010376,1,0
+year,0.0753774419426918,1,0
+native_sample_rate,0.050560761243104935,1,0
+bytes_on_disk,0.043538354337215424,1,0
+site_Dominica  E,0.01622876152396202,1,0
+cond_ship_noise,0.01120799407362938,1,0
+"site_Near Filicudi, Italy",0.009405488148331642,1,0
+site_50 mi. NE Malta,0.005776354111731052,1,0
+"site_3-4 mi. off Roseau, Dominica",0.0,1,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,0
+site_Bequia,0.0,1,0
+site_Bermuda,0.0,1,0
+site_BermudaBD,0.0,1,0
+site_Delaware,0.0,1,0
+site_Dominica Is,0.0,1,0
+site_Dominica IsBD,0.0,1,0
+"site_Gully, SE Sable I., Canada  BD",0.0,1,0
+"site_Ligurian Sea, NW Italy",0.0,1,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,0
+site_Madeira,0.0,1,0
+site_N end of Dominica,0.0,1,0
+site_N of Selina,0.0,1,0
+"site_N of Selina, Sicily",0.0,1,0
+"site_South of Sable Island, North Atlantic",0.0,1,0
+site_W of Browns Bank,0.0,1,0
+collection_code_BA2A,0.0,1,0
+collection_code_BD10A,0.0,1,0
+collection_code_BD15A,0.0,1,0
+collection_code_BE3B,0.0,1,0
+collection_code_BE3C,0.0,1,0
+latitude,0.0,1,0
 cond_engine_noise,0.0,1,0
 cond_reverberation,0.0,1,0
 cond_water_noise,0.0,1,0
 cond_night_recording,0.0,1,0
 cond_no_visual,0.0,1,0
 cond_tape_speed_note,0.0,1,0
-duration_seconds,0.27818843722343445,1,1
-native_sample_rate,0.19399762153625488,1,1
-year,0.15085196495056152,1,1
-site_code,0.1304282397031784,1,1
-bytes_on_disk,0.08605963736772537,1,1
-collection_code,0.06789049506187439,1,1
-latitude,0.05181817337870598,1,1
-longitude,0.04076546058058739,1,1
+"site_Sable Island, Nova Scotia",0.23083335161209106,1,1
+duration_seconds,0.1719243973493576,1,1
+site_DOMINICA,0.09215626865625381,1,1
+year,0.08956003934144974,1,1
+native_sample_rate,0.0770249292254448,1,1
+collection_code_BE3B,0.07614655047655106,1,1
+latitude,0.052242573350667953,1,1
+bytes_on_disk,0.04487971216440201,1,1
+site_Dominica,0.039778243750333786,1,1
+site_Dominica  E,0.03759479522705078,1,1
+site_N end of Dominica,0.02617700770497322,1,1
+collection_code_BA2A,0.023826992139220238,1,1
+site_Delaware,0.01632862351834774,1,1
+longitude,0.011901399120688438,1,1
+site_50 mi. NE Malta,0.0065770018845796585,1,1
+"site_Near Filicudi, Italy",0.0030481412541121244,1,1
+"site_3-4 mi. off Roseau, Dominica",0.0,1,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,1
+site_Bequia,0.0,1,1
+site_Bermuda,0.0,1,1
+site_BermudaBD,0.0,1,1
+site_Dominica Is,0.0,1,1
+site_Dominica IsBD,0.0,1,1
+"site_Gully, SE Sable I., Canada  BD",0.0,1,1
+"site_Ligurian Sea, NW Italy",0.0,1,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,1
+site_Madeira,0.0,1,1
+site_N of Selina,0.0,1,1
+"site_N of Selina, Sicily",0.0,1,1
+"site_South of Sable Island, North Atlantic",0.0,1,1
+site_W of Browns Bank,0.0,1,1
+collection_code_BD10A,0.0,1,1
+collection_code_BD15A,0.0,1,1
+collection_code_BE3C,0.0,1,1
 cond_ship_noise,0.0,1,1
 cond_engine_noise,0.0,1,1
 cond_reverberation,0.0,1,1
@@ -104,44 +286,122 @@ cond_water_noise,0.0,1,1
 cond_night_recording,0.0,1,1
 cond_no_visual,0.0,1,1
 cond_tape_speed_note,0.0,1,1
-site_code,0.32619789242744446,1,2
-duration_seconds,0.2967102825641632,1,2
-year,0.12220991402864456,1,2
-bytes_on_disk,0.0796593725681305,1,2
-native_sample_rate,0.07503022998571396,1,2
-cond_ship_noise,0.042879778891801834,1,2
-longitude,0.0224884282797575,1,2
-collection_code,0.02219070866703987,1,2
-latitude,0.01263340748846531,1,2
+site_DOMINICA,0.6128762364387512,1,2
+duration_seconds,0.10415388643741608,1,2
+native_sample_rate,0.06935469806194305,1,2
+year,0.06566252559423447,1,2
+site_Dominica IsBD,0.05355481430888176,1,2
+bytes_on_disk,0.04486485570669174,1,2
+cond_ship_noise,0.016251903027296066,1,2
+site_Dominica,0.006989539600908756,1,2
+site_Bermuda,0.006412400398403406,1,2
+latitude,0.006176039110869169,1,2
+site_50 mi. NE Malta,0.005770031362771988,1,2
+longitude,0.00527897197753191,1,2
+site_Dominica Is,0.0026540665421634912,1,2
+"site_3-4 mi. off Roseau, Dominica",0.0,1,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,2
+site_Bequia,0.0,1,2
+site_BermudaBD,0.0,1,2
+site_Delaware,0.0,1,2
+site_Dominica  E,0.0,1,2
+"site_Gully, SE Sable I., Canada  BD",0.0,1,2
+"site_Ligurian Sea, NW Italy",0.0,1,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,2
+site_Madeira,0.0,1,2
+site_N end of Dominica,0.0,1,2
+site_N of Selina,0.0,1,2
+"site_N of Selina, Sicily",0.0,1,2
+"site_Near Filicudi, Italy",0.0,1,2
+"site_Sable Island, Nova Scotia",0.0,1,2
+"site_South of Sable Island, North Atlantic",0.0,1,2
+site_W of Browns Bank,0.0,1,2
+collection_code_BA2A,0.0,1,2
+collection_code_BD10A,0.0,1,2
+collection_code_BD15A,0.0,1,2
+collection_code_BE3B,0.0,1,2
+collection_code_BE3C,0.0,1,2
 cond_engine_noise,0.0,1,2
 cond_reverberation,0.0,1,2
 cond_water_noise,0.0,1,2
 cond_night_recording,0.0,1,2
 cond_no_visual,0.0,1,2
 cond_tape_speed_note,0.0,1,2
-collection_code,0.28418466448783875,1,3
-duration_seconds,0.2537417411804199,1,3
-native_sample_rate,0.19091694056987762,1,3
-longitude,0.0768897756934166,1,3
-site_code,0.06906663626432419,1,3
-bytes_on_disk,0.0599035806953907,1,3
-year,0.05045551061630249,1,3
-cond_ship_noise,0.0075250291265547276,1,3
-latitude,0.007316139526665211,1,3
+duration_seconds,0.233698308467865,1,3
+site_N end of Dominica,0.21152538061141968,1,3
+native_sample_rate,0.1916428655385971,1,3
+site_DOMINICA,0.11010633409023285,1,3
+longitude,0.07678442448377609,1,3
+year,0.06502450257539749,1,3
+bytes_on_disk,0.06446181237697601,1,3
+site_Dominica,0.01573229394853115,1,3
+site_Bermuda,0.009727881290018559,1,3
+cond_ship_noise,0.008611150085926056,1,3
+latitude,0.0048917364329099655,1,3
+site_Dominica IsBD,0.0038050971925258636,1,3
+site_Dominica Is,0.002834784332662821,1,3
+site_N of Selina,0.0011534389341250062,1,3
+"site_3-4 mi. off Roseau, Dominica",0.0,1,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,3
+site_50 mi. NE Malta,0.0,1,3
+site_Bequia,0.0,1,3
+site_BermudaBD,0.0,1,3
+site_Delaware,0.0,1,3
+site_Dominica  E,0.0,1,3
+"site_Gully, SE Sable I., Canada  BD",0.0,1,3
+"site_Ligurian Sea, NW Italy",0.0,1,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,3
+site_Madeira,0.0,1,3
+"site_N of Selina, Sicily",0.0,1,3
+"site_Near Filicudi, Italy",0.0,1,3
+"site_Sable Island, Nova Scotia",0.0,1,3
+"site_South of Sable Island, North Atlantic",0.0,1,3
+site_W of Browns Bank,0.0,1,3
+collection_code_BA2A,0.0,1,3
+collection_code_BD10A,0.0,1,3
+collection_code_BD15A,0.0,1,3
+collection_code_BE3B,0.0,1,3
+collection_code_BE3C,0.0,1,3
 cond_engine_noise,0.0,1,3
 cond_reverberation,0.0,1,3
 cond_water_noise,0.0,1,3
 cond_night_recording,0.0,1,3
 cond_no_visual,0.0,1,3
 cond_tape_speed_note,0.0,1,3
-duration_seconds,0.28834787011146545,1,4
-year,0.23402921855449677,1,4
-bytes_on_disk,0.13277111947536469,1,4
-native_sample_rate,0.12327231466770172,1,4
-site_code,0.08208803087472916,1,4
-collection_code,0.07197127491235733,1,4
-longitude,0.04806014895439148,1,4
-latitude,0.01946006715297699,1,4
+"site_Sable Island, Nova Scotia",0.17028112709522247,1,4
+duration_seconds,0.14358435571193695,1,4
+year,0.14202941954135895,1,4
+site_DOMINICA,0.13411861658096313,1,4
+bytes_on_disk,0.0777428150177002,1,4
+collection_code_BE3B,0.07508180290460587,1,4
+native_sample_rate,0.05373552814126015,1,4
+site_Dominica  E,0.042265016585588455,1,4
+collection_code_BA2A,0.03872745856642723,1,4
+site_Dominica IsBD,0.036908216774463654,1,4
+site_Delaware,0.01916906237602234,1,4
+site_N end of Dominica,0.018740734085440636,1,4
+site_Dominica,0.01749126985669136,1,4
+latitude,0.014903953298926353,1,4
+"site_Near Filicudi, Italy",0.014742493629455566,1,4
+"site_Ligurian Sea, NW Italy",0.0004780843446496874,1,4
+"site_3-4 mi. off Roseau, Dominica",0.0,1,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,1,4
+site_50 mi. NE Malta,0.0,1,4
+site_Bequia,0.0,1,4
+site_Bermuda,0.0,1,4
+site_BermudaBD,0.0,1,4
+site_Dominica Is,0.0,1,4
+"site_Gully, SE Sable I., Canada  BD",0.0,1,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,1,4
+site_Madeira,0.0,1,4
+site_N of Selina,0.0,1,4
+"site_N of Selina, Sicily",0.0,1,4
+"site_South of Sable Island, North Atlantic",0.0,1,4
+site_W of Browns Bank,0.0,1,4
+collection_code_BD10A,0.0,1,4
+collection_code_BD15A,0.0,1,4
+collection_code_BE3C,0.0,1,4
+longitude,0.0,1,4
 cond_ship_noise,0.0,1,4
 cond_engine_noise,0.0,1,4
 cond_reverberation,0.0,1,4
@@ -149,43 +409,121 @@ cond_water_noise,0.0,1,4
 cond_night_recording,0.0,1,4
 cond_no_visual,0.0,1,4
 cond_tape_speed_note,0.0,1,4
-duration_seconds,0.27805694937705994,2,0
-site_code,0.2351250797510147,2,0
-year,0.1272507905960083,2,0
-longitude,0.12227080762386322,2,0
-native_sample_rate,0.0919569879770279,2,0
-bytes_on_disk,0.07823770493268967,2,0
-latitude,0.035652726888656616,2,0
-collection_code,0.018867501989006996,2,0
-cond_ship_noise,0.012581449933350086,2,0
+site_Dominica,0.29787030816078186,2,0
+site_DOMINICA,0.2296566516160965,2,0
+duration_seconds,0.13784575462341309,2,0
+longitude,0.12101049721240997,2,0
+bytes_on_disk,0.05723143741488457,2,0
+year,0.05622686818242073,2,0
+latitude,0.029420280829072,2,0
+site_N end of Dominica,0.022543679922819138,2,0
+native_sample_rate,0.021893981844186783,2,0
+"site_Near Filicudi, Italy",0.01994500495493412,2,0
+cond_ship_noise,0.0063555436208844185,2,0
+"site_3-4 mi. off Roseau, Dominica",0.0,2,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,0
+site_50 mi. NE Malta,0.0,2,0
+site_Bequia,0.0,2,0
+site_Bermuda,0.0,2,0
+site_BermudaBD,0.0,2,0
+site_Delaware,0.0,2,0
+site_Dominica  E,0.0,2,0
+site_Dominica Is,0.0,2,0
+site_Dominica IsBD,0.0,2,0
+"site_Gully, SE Sable I., Canada  BD",0.0,2,0
+"site_Ligurian Sea, NW Italy",0.0,2,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,0
+site_Madeira,0.0,2,0
+site_N of Selina,0.0,2,0
+"site_N of Selina, Sicily",0.0,2,0
+"site_Sable Island, Nova Scotia",0.0,2,0
+"site_South of Sable Island, North Atlantic",0.0,2,0
+site_W of Browns Bank,0.0,2,0
+collection_code_BA2A,0.0,2,0
+collection_code_BD10A,0.0,2,0
+collection_code_BD15A,0.0,2,0
+collection_code_BE3B,0.0,2,0
+collection_code_BE3C,0.0,2,0
 cond_engine_noise,0.0,2,0
 cond_reverberation,0.0,2,0
 cond_water_noise,0.0,2,0
 cond_night_recording,0.0,2,0
 cond_no_visual,0.0,2,0
 cond_tape_speed_note,0.0,2,0
-duration_seconds,0.3753942847251892,2,1
-year,0.20561835169792175,2,1
-bytes_on_disk,0.13002042472362518,2,1
-site_code,0.08536110818386078,2,1
-native_sample_rate,0.07116318494081497,2,1
-longitude,0.07022876292467117,2,1
-latitude,0.03707428649067879,2,1
-cond_ship_noise,0.025139587000012398,2,1
-collection_code,0.0,2,1
+duration_seconds,0.27602770924568176,2,1
+year,0.19157211482524872,2,1
+"site_Sable Island, Nova Scotia",0.11499316990375519,2,1
+bytes_on_disk,0.1038651391863823,2,1
+site_Dominica IsBD,0.09372909367084503,2,1
+native_sample_rate,0.045873429626226425,2,1
+site_N end of Dominica,0.03286626935005188,2,1
+latitude,0.029288118705153465,2,1
+site_Delaware,0.026253562420606613,2,1
+cond_ship_noise,0.022938378155231476,2,1
+"site_Near Filicudi, Italy",0.0218987874686718,2,1
+site_Dominica,0.02120726928114891,2,1
+site_DOMINICA,0.013901777565479279,2,1
+site_Dominica Is,0.004206276498734951,2,1
+"site_Ligurian Sea, NW Italy",0.0013789132935926318,2,1
+"site_3-4 mi. off Roseau, Dominica",0.0,2,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,1
+site_50 mi. NE Malta,0.0,2,1
+site_Bequia,0.0,2,1
+site_Bermuda,0.0,2,1
+site_BermudaBD,0.0,2,1
+site_Dominica  E,0.0,2,1
+"site_Gully, SE Sable I., Canada  BD",0.0,2,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,1
+site_Madeira,0.0,2,1
+site_N of Selina,0.0,2,1
+"site_N of Selina, Sicily",0.0,2,1
+"site_South of Sable Island, North Atlantic",0.0,2,1
+site_W of Browns Bank,0.0,2,1
+collection_code_BA2A,0.0,2,1
+collection_code_BD10A,0.0,2,1
+collection_code_BD15A,0.0,2,1
+collection_code_BE3B,0.0,2,1
+collection_code_BE3C,0.0,2,1
+longitude,0.0,2,1
 cond_engine_noise,0.0,2,1
 cond_reverberation,0.0,2,1
 cond_water_noise,0.0,2,1
 cond_night_recording,0.0,2,1
 cond_no_visual,0.0,2,1
 cond_tape_speed_note,0.0,2,1
-duration_seconds,0.34880077838897705,2,2
-site_code,0.3262455463409424,2,2
-year,0.14843694865703583,2,2
-native_sample_rate,0.07142142206430435,2,2
-collection_code,0.046255968511104584,2,2
-bytes_on_disk,0.042134057730436325,2,2
-latitude,0.016705255955457687,2,2
+site_DOMINICA,0.6067267060279846,2,2
+duration_seconds,0.10280541330575943,2,2
+year,0.07987532764673233,2,2
+native_sample_rate,0.048445187509059906,2,2
+site_Dominica  E,0.037727389484643936,2,2
+bytes_on_disk,0.03173813968896866,2,2
+site_Dominica IsBD,0.025781571865081787,2,2
+site_Delaware,0.022613463923335075,2,2
+site_N end of Dominica,0.020884616300463676,2,2
+latitude,0.020209327340126038,2,2
+site_Dominica Is,0.0031928587704896927,2,2
+"site_3-4 mi. off Roseau, Dominica",0.0,2,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,2
+site_50 mi. NE Malta,0.0,2,2
+site_Bequia,0.0,2,2
+site_Bermuda,0.0,2,2
+site_BermudaBD,0.0,2,2
+site_Dominica,0.0,2,2
+"site_Gully, SE Sable I., Canada  BD",0.0,2,2
+"site_Ligurian Sea, NW Italy",0.0,2,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,2
+site_Madeira,0.0,2,2
+site_N of Selina,0.0,2,2
+"site_N of Selina, Sicily",0.0,2,2
+"site_Near Filicudi, Italy",0.0,2,2
+"site_Sable Island, Nova Scotia",0.0,2,2
+"site_South of Sable Island, North Atlantic",0.0,2,2
+site_W of Browns Bank,0.0,2,2
+collection_code_BA2A,0.0,2,2
+collection_code_BD10A,0.0,2,2
+collection_code_BD15A,0.0,2,2
+collection_code_BE3B,0.0,2,2
+collection_code_BE3C,0.0,2,2
 longitude,0.0,2,2
 cond_ship_noise,0.0,2,2
 cond_engine_noise,0.0,2,2
@@ -194,29 +532,81 @@ cond_water_noise,0.0,2,2
 cond_night_recording,0.0,2,2
 cond_no_visual,0.0,2,2
 cond_tape_speed_note,0.0,2,2
-year,0.4940184950828552,2,3
-native_sample_rate,0.12886136770248413,2,3
-duration_seconds,0.09869349747896194,2,3
-site_code,0.08278904855251312,2,3
-cond_ship_noise,0.057189200073480606,2,3
-bytes_on_disk,0.054567851126194,2,3
-collection_code,0.049857549369335175,2,3
-latitude,0.02375786192715168,2,3
-longitude,0.010265152901411057,2,3
+site_DOMINICA,0.37825122475624084,2,3
+year,0.15976202487945557,2,3
+duration_seconds,0.10080605000257492,2,3
+native_sample_rate,0.06436707079410553,2,3
+site_Delaware,0.058432456105947495,2,3
+site_Dominica IsBD,0.036342501640319824,2,3
+site_Dominica,0.035626187920570374,2,3
+site_N end of Dominica,0.03403940051794052,2,3
+bytes_on_disk,0.032393842935562134,2,3
+latitude,0.029718508943915367,2,3
+cond_ship_noise,0.022415753453969955,2,3
+"site_Ligurian Sea, NW Italy",0.018376382067799568,2,3
+longitude,0.012074386700987816,2,3
+site_50 mi. NE Malta,0.009905949234962463,2,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.005679790396243334,2,3
+site_N of Selina,0.0018084897892549634,2,3
+"site_3-4 mi. off Roseau, Dominica",0.0,2,3
+site_Bequia,0.0,2,3
+site_Bermuda,0.0,2,3
+site_BermudaBD,0.0,2,3
+site_Dominica  E,0.0,2,3
+site_Dominica Is,0.0,2,3
+"site_Gully, SE Sable I., Canada  BD",0.0,2,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,3
+site_Madeira,0.0,2,3
+"site_N of Selina, Sicily",0.0,2,3
+"site_Near Filicudi, Italy",0.0,2,3
+"site_Sable Island, Nova Scotia",0.0,2,3
+"site_South of Sable Island, North Atlantic",0.0,2,3
+site_W of Browns Bank,0.0,2,3
+collection_code_BA2A,0.0,2,3
+collection_code_BD10A,0.0,2,3
+collection_code_BD15A,0.0,2,3
+collection_code_BE3B,0.0,2,3
+collection_code_BE3C,0.0,2,3
 cond_engine_noise,0.0,2,3
 cond_reverberation,0.0,2,3
 cond_water_noise,0.0,2,3
 cond_night_recording,0.0,2,3
 cond_no_visual,0.0,2,3
 cond_tape_speed_note,0.0,2,3
-year,0.30689629912376404,2,4
-duration_seconds,0.21495254337787628,2,4
-bytes_on_disk,0.13502410054206848,2,4
-collection_code,0.12359660863876343,2,4
-native_sample_rate,0.12355087697505951,2,4
-longitude,0.0348585769534111,2,4
-latitude,0.0316719152033329,2,4
-site_code,0.029449062421917915,2,4
+year,0.23889000713825226,2,4
+duration_seconds,0.160465270280838,2,4
+"site_Ligurian Sea, NW Italy",0.11927712708711624,2,4
+bytes_on_disk,0.10888738930225372,2,4
+site_DOMINICA,0.10074789077043533,2,4
+collection_code_BA2A,0.09708222001791,2,4
+native_sample_rate,0.06121603399515152,2,4
+latitude,0.03637629374861717,2,4
+site_N end of Dominica,0.02827196754515171,2,4
+site_Delaware,0.02197231911122799,2,4
+longitude,0.01266782358288765,2,4
+"site_Near Filicudi, Italy",0.011761844158172607,2,4
+site_Dominica,0.0023838060442358255,2,4
+"site_3-4 mi. off Roseau, Dominica",0.0,2,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,2,4
+site_50 mi. NE Malta,0.0,2,4
+site_Bequia,0.0,2,4
+site_Bermuda,0.0,2,4
+site_BermudaBD,0.0,2,4
+site_Dominica  E,0.0,2,4
+site_Dominica Is,0.0,2,4
+site_Dominica IsBD,0.0,2,4
+"site_Gully, SE Sable I., Canada  BD",0.0,2,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,2,4
+site_Madeira,0.0,2,4
+site_N of Selina,0.0,2,4
+"site_N of Selina, Sicily",0.0,2,4
+"site_Sable Island, Nova Scotia",0.0,2,4
+"site_South of Sable Island, North Atlantic",0.0,2,4
+site_W of Browns Bank,0.0,2,4
+collection_code_BD10A,0.0,2,4
+collection_code_BD15A,0.0,2,4
+collection_code_BE3B,0.0,2,4
+collection_code_BE3C,0.0,2,4
 cond_ship_noise,0.0,2,4
 cond_engine_noise,0.0,2,4
 cond_reverberation,0.0,2,4
@@ -224,14 +614,40 @@ cond_water_noise,0.0,2,4
 cond_night_recording,0.0,2,4
 cond_no_visual,0.0,2,4
 cond_tape_speed_note,0.0,2,4
-duration_seconds,0.31765276193618774,3,0
-longitude,0.28447863459587097,3,0
-site_code,0.20041339099407196,3,0
-year,0.06552009284496307,3,0
-bytes_on_disk,0.061265792697668076,3,0
-native_sample_rate,0.042014770209789276,3,0
-latitude,0.028654536232352257,3,0
-collection_code,0.0,3,0
+site_DOMINICA,0.5210433602333069,3,0
+bytes_on_disk,0.09645859152078629,3,0
+native_sample_rate,0.08852876722812653,3,0
+duration_seconds,0.08307883888483047,3,0
+longitude,0.07797697931528091,3,0
+latitude,0.04596184939146042,3,0
+"site_Near Filicudi, Italy",0.024389158934354782,3,0
+site_N end of Dominica,0.022016389295458794,3,0
+site_Dominica,0.021987317129969597,3,0
+year,0.018558768555521965,3,0
+"site_3-4 mi. off Roseau, Dominica",0.0,3,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,0
+site_50 mi. NE Malta,0.0,3,0
+site_Bequia,0.0,3,0
+site_Bermuda,0.0,3,0
+site_BermudaBD,0.0,3,0
+site_Delaware,0.0,3,0
+site_Dominica  E,0.0,3,0
+site_Dominica Is,0.0,3,0
+site_Dominica IsBD,0.0,3,0
+"site_Gully, SE Sable I., Canada  BD",0.0,3,0
+"site_Ligurian Sea, NW Italy",0.0,3,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,0
+site_Madeira,0.0,3,0
+site_N of Selina,0.0,3,0
+"site_N of Selina, Sicily",0.0,3,0
+"site_Sable Island, Nova Scotia",0.0,3,0
+"site_South of Sable Island, North Atlantic",0.0,3,0
+site_W of Browns Bank,0.0,3,0
+collection_code_BA2A,0.0,3,0
+collection_code_BD10A,0.0,3,0
+collection_code_BD15A,0.0,3,0
+collection_code_BE3B,0.0,3,0
+collection_code_BE3C,0.0,3,0
 cond_ship_noise,0.0,3,0
 cond_engine_noise,0.0,3,0
 cond_reverberation,0.0,3,0
@@ -239,28 +655,80 @@ cond_water_noise,0.0,3,0
 cond_night_recording,0.0,3,0
 cond_no_visual,0.0,3,0
 cond_tape_speed_note,0.0,3,0
-duration_seconds,0.31929105520248413,3,1
-longitude,0.3187977969646454,3,1
-year,0.13199737668037415,3,1
-bytes_on_disk,0.07567386329174042,3,1
-site_code,0.07008132338523865,3,1
-native_sample_rate,0.04861407354474068,3,1
-latitude,0.02073690854012966,3,1
-cond_ship_noise,0.014807622879743576,3,1
-collection_code,0.0,3,1
+longitude,0.23661844432353973,3,1
+duration_seconds,0.2180706113576889,3,1
+site_DOMINICA,0.13304829597473145,3,1
+year,0.0836164727807045,3,1
+site_Delaware,0.06678763031959534,3,1
+latitude,0.053655508905649185,3,1
+bytes_on_disk,0.05296218395233154,3,1
+site_Dominica IsBD,0.042201656848192215,3,1
+native_sample_rate,0.03408646956086159,3,1
+site_Dominica,0.026385612785816193,3,1
+"site_Ligurian Sea, NW Italy",0.016192780807614326,3,1
+"site_Near Filicudi, Italy",0.011152317747473717,3,1
+site_50 mi. NE Malta,0.010459206998348236,3,1
+cond_ship_noise,0.010382530279457569,3,1
+site_Dominica Is,0.004380260594189167,3,1
+"site_3-4 mi. off Roseau, Dominica",0.0,3,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,1
+site_Bequia,0.0,3,1
+site_Bermuda,0.0,3,1
+site_BermudaBD,0.0,3,1
+site_Dominica  E,0.0,3,1
+"site_Gully, SE Sable I., Canada  BD",0.0,3,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,1
+site_Madeira,0.0,3,1
+site_N end of Dominica,0.0,3,1
+site_N of Selina,0.0,3,1
+"site_N of Selina, Sicily",0.0,3,1
+"site_Sable Island, Nova Scotia",0.0,3,1
+"site_South of Sable Island, North Atlantic",0.0,3,1
+site_W of Browns Bank,0.0,3,1
+collection_code_BA2A,0.0,3,1
+collection_code_BD10A,0.0,3,1
+collection_code_BD15A,0.0,3,1
+collection_code_BE3B,0.0,3,1
+collection_code_BE3C,0.0,3,1
 cond_engine_noise,0.0,3,1
 cond_reverberation,0.0,3,1
 cond_water_noise,0.0,3,1
 cond_night_recording,0.0,3,1
 cond_no_visual,0.0,3,1
 cond_tape_speed_note,0.0,3,1
-duration_seconds,0.36267054080963135,3,2
-site_code,0.32158058881759644,3,2
-year,0.19899292290210724,3,2
-native_sample_rate,0.051048800349235535,3,2
-bytes_on_disk,0.03909756615757942,3,2
-collection_code,0.014249877072870731,3,2
-latitude,0.012359734624624252,3,2
+site_DOMINICA,0.6662846207618713,3,2
+duration_seconds,0.11121537536382675,3,2
+year,0.08050661534070969,3,2
+native_sample_rate,0.039770983159542084,3,2
+bytes_on_disk,0.03739439696073532,3,2
+site_Delaware,0.03597318381071091,3,2
+site_N end of Dominica,0.017915932461619377,3,2
+latitude,0.00853014551103115,3,2
+site_Dominica Is,0.002408682368695736,3,2
+"site_3-4 mi. off Roseau, Dominica",0.0,3,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,2
+site_50 mi. NE Malta,0.0,3,2
+site_Bequia,0.0,3,2
+site_Bermuda,0.0,3,2
+site_BermudaBD,0.0,3,2
+site_Dominica,0.0,3,2
+site_Dominica  E,0.0,3,2
+site_Dominica IsBD,0.0,3,2
+"site_Gully, SE Sable I., Canada  BD",0.0,3,2
+"site_Ligurian Sea, NW Italy",0.0,3,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,2
+site_Madeira,0.0,3,2
+site_N of Selina,0.0,3,2
+"site_N of Selina, Sicily",0.0,3,2
+"site_Near Filicudi, Italy",0.0,3,2
+"site_Sable Island, Nova Scotia",0.0,3,2
+"site_South of Sable Island, North Atlantic",0.0,3,2
+site_W of Browns Bank,0.0,3,2
+collection_code_BA2A,0.0,3,2
+collection_code_BD10A,0.0,3,2
+collection_code_BD15A,0.0,3,2
+collection_code_BE3B,0.0,3,2
+collection_code_BE3C,0.0,3,2
 longitude,0.0,3,2
 cond_ship_noise,0.0,3,2
 cond_engine_noise,0.0,3,2
@@ -269,43 +737,121 @@ cond_water_noise,0.0,3,2
 cond_night_recording,0.0,3,2
 cond_no_visual,0.0,3,2
 cond_tape_speed_note,0.0,3,2
-year,0.4912189841270447,3,3
-native_sample_rate,0.13411898910999298,3,3
-duration_seconds,0.12540173530578613,3,3
-collection_code,0.08147576451301575,3,3
-bytes_on_disk,0.049379102885723114,3,3
-site_code,0.04446101188659668,3,3
-cond_ship_noise,0.03270972520112991,3,3
-latitude,0.021248692646622658,3,3
-longitude,0.01998598501086235,3,3
+year,0.36394885182380676,3,3
+site_Dominica,0.12475703656673431,3,3
+duration_seconds,0.09299983084201813,3,3
+native_sample_rate,0.085338294506073,3,3
+site_Delaware,0.06378258764743805,3,3
+"site_Ligurian Sea, NW Italy",0.059416916221380234,3,3
+site_N end of Dominica,0.04083368182182312,3,3
+bytes_on_disk,0.03541180118918419,3,3
+site_DOMINICA,0.028673136606812477,3,3
+longitude,0.025428976863622665,3,3
+site_Dominica  E,0.02162083052098751,3,3
+cond_ship_noise,0.020912691950798035,3,3
+latitude,0.016976820304989815,3,3
+site_50 mi. NE Malta,0.007270158734172583,3,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0062569063156843185,3,3
+site_Dominica Is,0.005255375523120165,3,3
+site_N of Selina,0.0011161606526002288,3,3
+"site_3-4 mi. off Roseau, Dominica",0.0,3,3
+site_Bequia,0.0,3,3
+site_Bermuda,0.0,3,3
+site_BermudaBD,0.0,3,3
+site_Dominica IsBD,0.0,3,3
+"site_Gully, SE Sable I., Canada  BD",0.0,3,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,3
+site_Madeira,0.0,3,3
+"site_N of Selina, Sicily",0.0,3,3
+"site_Near Filicudi, Italy",0.0,3,3
+"site_Sable Island, Nova Scotia",0.0,3,3
+"site_South of Sable Island, North Atlantic",0.0,3,3
+site_W of Browns Bank,0.0,3,3
+collection_code_BA2A,0.0,3,3
+collection_code_BD10A,0.0,3,3
+collection_code_BD15A,0.0,3,3
+collection_code_BE3B,0.0,3,3
+collection_code_BE3C,0.0,3,3
 cond_engine_noise,0.0,3,3
 cond_reverberation,0.0,3,3
 cond_water_noise,0.0,3,3
 cond_night_recording,0.0,3,3
 cond_no_visual,0.0,3,3
 cond_tape_speed_note,0.0,3,3
-duration_seconds,0.2351720780134201,3,4
-year,0.1816658079624176,3,4
-native_sample_rate,0.16107386350631714,3,4
-collection_code,0.12361305952072144,3,4
-longitude,0.08422509580850601,3,4
-site_code,0.08057508617639542,3,4
-cond_ship_noise,0.05997338891029358,3,4
-bytes_on_disk,0.0460892990231514,3,4
-latitude,0.0276122335344553,3,4
+duration_seconds,0.1684676557779312,3,4
+site_DOMINICA,0.16722051799297333,3,4
+year,0.11117400228977203,3,4
+collection_code_BA2A,0.11101728677749634,3,4
+site_Delaware,0.09466324746608734,3,4
+latitude,0.08169537782669067,3,4
+longitude,0.06895337253808975,3,4
+native_sample_rate,0.05958357825875282,3,4
+site_N end of Dominica,0.057220708578825,3,4
+site_Dominica IsBD,0.030070902779698372,3,4
+cond_ship_noise,0.026884017512202263,3,4
+bytes_on_disk,0.011529317125678062,3,4
+site_50 mi. NE Malta,0.011519959196448326,3,4
+"site_3-4 mi. off Roseau, Dominica",0.0,3,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,3,4
+site_Bequia,0.0,3,4
+site_Bermuda,0.0,3,4
+site_BermudaBD,0.0,3,4
+site_Dominica,0.0,3,4
+site_Dominica  E,0.0,3,4
+site_Dominica Is,0.0,3,4
+"site_Gully, SE Sable I., Canada  BD",0.0,3,4
+"site_Ligurian Sea, NW Italy",0.0,3,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,3,4
+site_Madeira,0.0,3,4
+site_N of Selina,0.0,3,4
+"site_N of Selina, Sicily",0.0,3,4
+"site_Near Filicudi, Italy",0.0,3,4
+"site_Sable Island, Nova Scotia",0.0,3,4
+"site_South of Sable Island, North Atlantic",0.0,3,4
+site_W of Browns Bank,0.0,3,4
+collection_code_BD10A,0.0,3,4
+collection_code_BD15A,0.0,3,4
+collection_code_BE3B,0.0,3,4
+collection_code_BE3C,0.0,3,4
 cond_engine_noise,0.0,3,4
 cond_reverberation,0.0,3,4
 cond_water_noise,0.0,3,4
 cond_night_recording,0.0,3,4
 cond_no_visual,0.0,3,4
 cond_tape_speed_note,0.0,3,4
-duration_seconds,0.39256373047828674,4,0
-site_code,0.29397091269493103,4,0
-native_sample_rate,0.1144971251487732,4,0
-bytes_on_disk,0.09694689512252808,4,0
-year,0.07790656387805939,4,0
-latitude,0.0241148192435503,4,0
-collection_code,0.0,4,0
+site_DOMINICA,0.6329677104949951,4,0
+duration_seconds,0.10140135884284973,4,0
+native_sample_rate,0.08530624210834503,4,0
+bytes_on_disk,0.07947459816932678,4,0
+year,0.03516796603798866,4,0
+site_N end of Dominica,0.02346857078373432,4,0
+"site_Sable Island, Nova Scotia",0.022459132596850395,4,0
+"site_Near Filicudi, Italy",0.015888681635260582,4,0
+site_Dominica Is,0.0033019999973475933,4,0
+site_Dominica,0.0005636934074573219,4,0
+"site_3-4 mi. off Roseau, Dominica",0.0,4,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,0
+site_50 mi. NE Malta,0.0,4,0
+site_Bequia,0.0,4,0
+site_Bermuda,0.0,4,0
+site_BermudaBD,0.0,4,0
+site_Delaware,0.0,4,0
+site_Dominica  E,0.0,4,0
+site_Dominica IsBD,0.0,4,0
+"site_Gully, SE Sable I., Canada  BD",0.0,4,0
+"site_Ligurian Sea, NW Italy",0.0,4,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,0
+site_Madeira,0.0,4,0
+site_N of Selina,0.0,4,0
+"site_N of Selina, Sicily",0.0,4,0
+"site_South of Sable Island, North Atlantic",0.0,4,0
+site_W of Browns Bank,0.0,4,0
+collection_code_BA2A,0.0,4,0
+collection_code_BD10A,0.0,4,0
+collection_code_BD15A,0.0,4,0
+collection_code_BE3B,0.0,4,0
+collection_code_BE3C,0.0,4,0
+latitude,0.0,4,0
 longitude,0.0,4,0
 cond_ship_noise,0.0,4,0
 cond_engine_noise,0.0,4,0
@@ -314,44 +860,122 @@ cond_water_noise,0.0,4,0
 cond_night_recording,0.0,4,0
 cond_no_visual,0.0,4,0
 cond_tape_speed_note,0.0,4,0
-duration_seconds,0.2732912600040436,4,1
-bytes_on_disk,0.23675738275051117,4,1
-year,0.19374899566173553,4,1
-native_sample_rate,0.09266626089811325,4,1
-site_code,0.06959722191095352,4,1
-longitude,0.06633003056049347,4,1
-cond_ship_noise,0.03561261668801308,4,1
-latitude,0.031996238976716995,4,1
-collection_code,0.0,4,1
+duration_seconds,0.23282580077648163,4,1
+year,0.21138115227222443,4,1
+bytes_on_disk,0.1514822393655777,4,1
+"site_Sable Island, Nova Scotia",0.12252628058195114,4,1
+native_sample_rate,0.08376272022724152,4,1
+latitude,0.038740698248147964,4,1
+cond_ship_noise,0.03507186844944954,4,1
+site_N end of Dominica,0.030720524489879608,4,1
+site_Delaware,0.03057388961315155,4,1
+site_DOMINICA,0.02602997049689293,4,1
+site_Dominica,0.020419374108314514,4,1
+"site_Near Filicudi, Italy",0.013980232179164886,4,1
+"site_Ligurian Sea, NW Italy",0.0024852368514984846,4,1
+"site_3-4 mi. off Roseau, Dominica",0.0,4,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,1
+site_50 mi. NE Malta,0.0,4,1
+site_Bequia,0.0,4,1
+site_Bermuda,0.0,4,1
+site_BermudaBD,0.0,4,1
+site_Dominica  E,0.0,4,1
+site_Dominica Is,0.0,4,1
+site_Dominica IsBD,0.0,4,1
+"site_Gully, SE Sable I., Canada  BD",0.0,4,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,1
+site_Madeira,0.0,4,1
+site_N of Selina,0.0,4,1
+"site_N of Selina, Sicily",0.0,4,1
+"site_South of Sable Island, North Atlantic",0.0,4,1
+site_W of Browns Bank,0.0,4,1
+collection_code_BA2A,0.0,4,1
+collection_code_BD10A,0.0,4,1
+collection_code_BD15A,0.0,4,1
+collection_code_BE3B,0.0,4,1
+collection_code_BE3C,0.0,4,1
+longitude,0.0,4,1
 cond_engine_noise,0.0,4,1
 cond_reverberation,0.0,4,1
 cond_water_noise,0.0,4,1
 cond_night_recording,0.0,4,1
 cond_no_visual,0.0,4,1
 cond_tape_speed_note,0.0,4,1
-site_code,0.30496150255203247,4,2
-duration_seconds,0.19216671586036682,4,2
-year,0.15131822228431702,4,2
-bytes_on_disk,0.09733684360980988,4,2
-collection_code,0.09033213555812836,4,2
-latitude,0.06249439716339111,4,2
-native_sample_rate,0.041744887828826904,4,2
-cond_ship_noise,0.03806491196155548,4,2
-longitude,0.021580317988991737,4,2
+site_DOMINICA,0.3468477427959442,4,2
+"site_Sable Island, Nova Scotia",0.1173265129327774,4,2
+collection_code_BE3B,0.08155684918165207,4,2
+year,0.06638544797897339,4,2
+duration_seconds,0.06321196258068085,4,2
+site_Dominica IsBD,0.06006534770131111,4,2
+cond_ship_noise,0.05770160257816315,4,2
+native_sample_rate,0.045285191386938095,4,2
+bytes_on_disk,0.04244028031826019,4,2
+site_Dominica,0.026715097948908806,4,2
+latitude,0.025397630408406258,4,2
+collection_code_BA2A,0.024403562769293785,4,2
+site_Dominica  E,0.021999724209308624,4,2
+site_N end of Dominica,0.016479631885886192,4,2
+site_50 mi. NE Malta,0.004183432087302208,4,2
+"site_3-4 mi. off Roseau, Dominica",0.0,4,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,2
+site_Bequia,0.0,4,2
+site_Bermuda,0.0,4,2
+site_BermudaBD,0.0,4,2
+site_Delaware,0.0,4,2
+site_Dominica Is,0.0,4,2
+"site_Gully, SE Sable I., Canada  BD",0.0,4,2
+"site_Ligurian Sea, NW Italy",0.0,4,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,2
+site_Madeira,0.0,4,2
+site_N of Selina,0.0,4,2
+"site_N of Selina, Sicily",0.0,4,2
+"site_Near Filicudi, Italy",0.0,4,2
+"site_South of Sable Island, North Atlantic",0.0,4,2
+site_W of Browns Bank,0.0,4,2
+collection_code_BD10A,0.0,4,2
+collection_code_BD15A,0.0,4,2
+collection_code_BE3C,0.0,4,2
+longitude,0.0,4,2
 cond_engine_noise,0.0,4,2
 cond_reverberation,0.0,4,2
 cond_water_noise,0.0,4,2
 cond_night_recording,0.0,4,2
 cond_no_visual,0.0,4,2
 cond_tape_speed_note,0.0,4,2
-year,0.614748477935791,4,3
-duration_seconds,0.09406757354736328,4,3
-native_sample_rate,0.09004398435354233,4,3
-site_code,0.07241012901067734,4,3
-bytes_on_disk,0.06805722415447235,4,3
-latitude,0.03001376800239086,4,3
-collection_code,0.028032930567860603,4,3
-longitude,0.0026259347796440125,4,3
+year,0.44874337315559387,4,3
+site_DOMINICA,0.104460209608078,4,3
+site_Dominica,0.07193977385759354,4,3
+duration_seconds,0.06713937222957611,4,3
+native_sample_rate,0.05755472183227539,4,3
+site_Delaware,0.051543451845645905,4,3
+site_N end of Dominica,0.04447397589683533,4,3
+bytes_on_disk,0.04354291781783104,4,3
+site_Dominica  E,0.04169094190001488,4,3
+"site_Ligurian Sea, NW Italy",0.03499942645430565,4,3
+latitude,0.020759405568242073,4,3
+longitude,0.007600629702210426,4,3
+site_50 mi. NE Malta,0.003178158774971962,4,3
+site_Dominica Is,0.0016585626872256398,4,3
+site_N of Selina,0.0007150775636546314,4,3
+"site_3-4 mi. off Roseau, Dominica",0.0,4,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,3
+site_Bequia,0.0,4,3
+site_Bermuda,0.0,4,3
+site_BermudaBD,0.0,4,3
+site_Dominica IsBD,0.0,4,3
+"site_Gully, SE Sable I., Canada  BD",0.0,4,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,3
+site_Madeira,0.0,4,3
+"site_N of Selina, Sicily",0.0,4,3
+"site_Near Filicudi, Italy",0.0,4,3
+"site_Sable Island, Nova Scotia",0.0,4,3
+"site_South of Sable Island, North Atlantic",0.0,4,3
+site_W of Browns Bank,0.0,4,3
+collection_code_BA2A,0.0,4,3
+collection_code_BD10A,0.0,4,3
+collection_code_BD15A,0.0,4,3
+collection_code_BE3B,0.0,4,3
+collection_code_BE3C,0.0,4,3
 cond_ship_noise,0.0,4,3
 cond_engine_noise,0.0,4,3
 cond_reverberation,0.0,4,3
@@ -359,29 +983,81 @@ cond_water_noise,0.0,4,3
 cond_night_recording,0.0,4,3
 cond_no_visual,0.0,4,3
 cond_tape_speed_note,0.0,4,3
-duration_seconds,0.27796217799186707,4,4
-year,0.17927156388759613,4,4
-longitude,0.178536519408226,4,4
-site_code,0.1534944623708725,4,4
-native_sample_rate,0.09150810539722443,4,4
-bytes_on_disk,0.04411942511796951,4,4
-latitude,0.042396511882543564,4,4
-cond_ship_noise,0.03271118178963661,4,4
-collection_code,0.0,4,4
+duration_seconds,0.2001791000366211,4,4
+site_Dominica,0.15101438760757446,4,4
+year,0.14079415798187256,4,4
+longitude,0.12385161221027374,4,4
+site_DOMINICA,0.10750520974397659,4,4
+latitude,0.08103455603122711,4,4
+site_Delaware,0.042697641998529434,4,4
+native_sample_rate,0.03632533550262451,4,4
+bytes_on_disk,0.03154578432440758,4,4
+site_N end of Dominica,0.024418041110038757,4,4
+cond_ship_noise,0.022761540487408638,4,4
+site_50 mi. NE Malta,0.019740015268325806,4,4
+"site_Ligurian Sea, NW Italy",0.01579442247748375,4,4
+"site_Near Filicudi, Italy",0.0023381568025797606,4,4
+"site_3-4 mi. off Roseau, Dominica",0.0,4,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,4,4
+site_Bequia,0.0,4,4
+site_Bermuda,0.0,4,4
+site_BermudaBD,0.0,4,4
+site_Dominica  E,0.0,4,4
+site_Dominica Is,0.0,4,4
+site_Dominica IsBD,0.0,4,4
+"site_Gully, SE Sable I., Canada  BD",0.0,4,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,4,4
+site_Madeira,0.0,4,4
+site_N of Selina,0.0,4,4
+"site_N of Selina, Sicily",0.0,4,4
+"site_Sable Island, Nova Scotia",0.0,4,4
+"site_South of Sable Island, North Atlantic",0.0,4,4
+site_W of Browns Bank,0.0,4,4
+collection_code_BA2A,0.0,4,4
+collection_code_BD10A,0.0,4,4
+collection_code_BD15A,0.0,4,4
+collection_code_BE3B,0.0,4,4
+collection_code_BE3C,0.0,4,4
 cond_engine_noise,0.0,4,4
 cond_reverberation,0.0,4,4
 cond_water_noise,0.0,4,4
 cond_night_recording,0.0,4,4
 cond_no_visual,0.0,4,4
 cond_tape_speed_note,0.0,4,4
-year,0.34755653142929077,5,0
-duration_seconds,0.25287243723869324,5,0
-site_code,0.13601553440093994,5,0
-latitude,0.1036761999130249,5,0
-bytes_on_disk,0.07725676894187927,5,0
-native_sample_rate,0.04969067871570587,5,0
-longitude,0.02184622548520565,5,0
-collection_code,0.011085597798228264,5,0
+site_DOMINICA,0.2612817883491516,5,0
+site_Dominica,0.22113437950611115,5,0
+year,0.1345021277666092,5,0
+longitude,0.12551668286323547,5,0
+duration_seconds,0.10793697088956833,5,0
+bytes_on_disk,0.08150088787078857,5,0
+site_N end of Dominica,0.02575516141951084,5,0
+native_sample_rate,0.02500518225133419,5,0
+site_50 mi. NE Malta,0.015216137282550335,5,0
+"site_Near Filicudi, Italy",0.002150706946849823,5,0
+"site_3-4 mi. off Roseau, Dominica",0.0,5,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,0
+site_Bequia,0.0,5,0
+site_Bermuda,0.0,5,0
+site_BermudaBD,0.0,5,0
+site_Delaware,0.0,5,0
+site_Dominica  E,0.0,5,0
+site_Dominica Is,0.0,5,0
+site_Dominica IsBD,0.0,5,0
+"site_Gully, SE Sable I., Canada  BD",0.0,5,0
+"site_Ligurian Sea, NW Italy",0.0,5,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,0
+site_Madeira,0.0,5,0
+site_N of Selina,0.0,5,0
+"site_N of Selina, Sicily",0.0,5,0
+"site_Sable Island, Nova Scotia",0.0,5,0
+"site_South of Sable Island, North Atlantic",0.0,5,0
+site_W of Browns Bank,0.0,5,0
+collection_code_BA2A,0.0,5,0
+collection_code_BD10A,0.0,5,0
+collection_code_BD15A,0.0,5,0
+collection_code_BE3B,0.0,5,0
+collection_code_BE3C,0.0,5,0
+latitude,0.0,5,0
 cond_ship_noise,0.0,5,0
 cond_engine_noise,0.0,5,0
 cond_reverberation,0.0,5,0
@@ -389,14 +1065,40 @@ cond_water_noise,0.0,5,0
 cond_night_recording,0.0,5,0
 cond_no_visual,0.0,5,0
 cond_tape_speed_note,0.0,5,0
-duration_seconds,0.24975697696208954,5,1
-year,0.21196302771568298,5,1
-bytes_on_disk,0.17123234272003174,5,1
-site_code,0.1023692786693573,5,1
-native_sample_rate,0.08997897058725357,5,1
-collection_code,0.07169042527675629,5,1
-longitude,0.05433204025030136,5,1
-latitude,0.04867688938975334,5,1
+"site_Sable Island, Nova Scotia",0.23048049211502075,5,1
+duration_seconds,0.15124376118183136,5,1
+year,0.12406597286462784,5,1
+bytes_on_disk,0.1067732647061348,5,1
+collection_code_BE3B,0.06367973983287811,5,1
+site_Dominica,0.056727126240730286,5,1
+site_DOMINICA,0.05367607995867729,5,1
+site_Dominica  E,0.04702206328511238,5,1
+native_sample_rate,0.042481016367673874,5,1
+collection_code_BA2A,0.02825983613729477,5,1
+site_N end of Dominica,0.02626146376132965,5,1
+site_Delaware,0.02389511466026306,5,1
+latitude,0.023306990042328835,5,1
+longitude,0.013956747017800808,5,1
+site_50 mi. NE Malta,0.005474973004311323,5,1
+"site_Near Filicudi, Italy",0.002695415634661913,5,1
+"site_3-4 mi. off Roseau, Dominica",0.0,5,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,1
+site_Bequia,0.0,5,1
+site_Bermuda,0.0,5,1
+site_BermudaBD,0.0,5,1
+site_Dominica Is,0.0,5,1
+site_Dominica IsBD,0.0,5,1
+"site_Gully, SE Sable I., Canada  BD",0.0,5,1
+"site_Ligurian Sea, NW Italy",0.0,5,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,1
+site_Madeira,0.0,5,1
+site_N of Selina,0.0,5,1
+"site_N of Selina, Sicily",0.0,5,1
+"site_South of Sable Island, North Atlantic",0.0,5,1
+site_W of Browns Bank,0.0,5,1
+collection_code_BD10A,0.0,5,1
+collection_code_BD15A,0.0,5,1
+collection_code_BE3C,0.0,5,1
 cond_ship_noise,0.0,5,1
 cond_engine_noise,0.0,5,1
 cond_reverberation,0.0,5,1
@@ -404,14 +1106,40 @@ cond_water_noise,0.0,5,1
 cond_night_recording,0.0,5,1
 cond_no_visual,0.0,5,1
 cond_tape_speed_note,0.0,5,1
-duration_seconds,0.28985655307769775,5,2
-year,0.27246013283729553,5,2
-site_code,0.24151061475276947,5,2
-collection_code,0.0838792696595192,5,2
-native_sample_rate,0.04373971000313759,5,2
-cond_ship_noise,0.02532428689301014,5,2
-bytes_on_disk,0.024592429399490356,5,2
-latitude,0.01863689161837101,5,2
+site_DOMINICA,0.47602924704551697,5,2
+duration_seconds,0.09109365940093994,5,2
+year,0.08957644551992416,5,2
+collection_code_BE3B,0.06553994864225388,5,2
+latitude,0.0562940388917923,5,2
+native_sample_rate,0.03683481737971306,5,2
+site_Dominica  E,0.036484528332948685,5,2
+site_Dominica,0.03568156436085701,5,2
+bytes_on_disk,0.03254198655486107,5,2
+collection_code_BA2A,0.031429167836904526,5,2
+site_N end of Dominica,0.021468739956617355,5,2
+cond_ship_noise,0.019983867183327675,5,2
+site_Delaware,0.0062042176723480225,5,2
+site_N of Selina,0.0008377597550861537,5,2
+"site_3-4 mi. off Roseau, Dominica",0.0,5,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,2
+site_50 mi. NE Malta,0.0,5,2
+site_Bequia,0.0,5,2
+site_Bermuda,0.0,5,2
+site_BermudaBD,0.0,5,2
+site_Dominica Is,0.0,5,2
+site_Dominica IsBD,0.0,5,2
+"site_Gully, SE Sable I., Canada  BD",0.0,5,2
+"site_Ligurian Sea, NW Italy",0.0,5,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,2
+site_Madeira,0.0,5,2
+"site_N of Selina, Sicily",0.0,5,2
+"site_Near Filicudi, Italy",0.0,5,2
+"site_Sable Island, Nova Scotia",0.0,5,2
+"site_South of Sable Island, North Atlantic",0.0,5,2
+site_W of Browns Bank,0.0,5,2
+collection_code_BD10A,0.0,5,2
+collection_code_BD15A,0.0,5,2
+collection_code_BE3C,0.0,5,2
 longitude,0.0,5,2
 cond_engine_noise,0.0,5,2
 cond_reverberation,0.0,5,2
@@ -419,29 +1147,81 @@ cond_water_noise,0.0,5,2
 cond_night_recording,0.0,5,2
 cond_no_visual,0.0,5,2
 cond_tape_speed_note,0.0,5,2
-year,0.3805571496486664,5,3
-duration_seconds,0.11409927904605865,5,3
-native_sample_rate,0.1089608371257782,5,3
-longitude,0.10877218097448349,5,3
-bytes_on_disk,0.09888939559459686,5,3
-collection_code,0.07608463615179062,5,3
-site_code,0.05457274615764618,5,3
-cond_ship_noise,0.03980087488889694,5,3
-latitude,0.018262917175889015,5,3
+year,0.3611379563808441,5,3
+site_DOMINICA,0.09621649980545044,5,3
+duration_seconds,0.08292356133460999,5,3
+native_sample_rate,0.07334120571613312,5,3
+site_Dominica,0.07332801818847656,5,3
+bytes_on_disk,0.06368426978588104,5,3
+site_Dominica  E,0.05528878793120384,5,3
+site_N end of Dominica,0.048555538058280945,5,3
+site_Delaware,0.039157819002866745,5,3
+"site_Ligurian Sea, NW Italy",0.035103119909763336,5,3
+longitude,0.028637301176786423,5,3
+cond_ship_noise,0.027521882206201553,5,3
+"site_Sable Island, Nova Scotia",0.010551078245043755,5,3
+latitude,0.004552912432700396,5,3
+"site_3-4 mi. off Roseau, Dominica",0.0,5,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,3
+site_50 mi. NE Malta,0.0,5,3
+site_Bequia,0.0,5,3
+site_Bermuda,0.0,5,3
+site_BermudaBD,0.0,5,3
+site_Dominica Is,0.0,5,3
+site_Dominica IsBD,0.0,5,3
+"site_Gully, SE Sable I., Canada  BD",0.0,5,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,5,3
+site_Madeira,0.0,5,3
+site_N of Selina,0.0,5,3
+"site_N of Selina, Sicily",0.0,5,3
+"site_Near Filicudi, Italy",0.0,5,3
+"site_South of Sable Island, North Atlantic",0.0,5,3
+site_W of Browns Bank,0.0,5,3
+collection_code_BA2A,0.0,5,3
+collection_code_BD10A,0.0,5,3
+collection_code_BD15A,0.0,5,3
+collection_code_BE3B,0.0,5,3
+collection_code_BE3C,0.0,5,3
 cond_engine_noise,0.0,5,3
 cond_reverberation,0.0,5,3
 cond_water_noise,0.0,5,3
 cond_night_recording,0.0,5,3
 cond_no_visual,0.0,5,3
 cond_tape_speed_note,0.0,5,3
-duration_seconds,0.292142391204834,5,4
-longitude,0.206501305103302,5,4
-native_sample_rate,0.14136828482151031,5,4
-latitude,0.1234908252954483,5,4
-year,0.10498205572366714,5,4
-site_code,0.08125864714384079,5,4
-bytes_on_disk,0.05025649815797806,5,4
-collection_code,0.0,5,4
+duration_seconds,0.19779425859451294,5,4
+longitude,0.19635756313800812,5,4
+site_Dominica,0.11428479850292206,5,4
+native_sample_rate,0.10105688869953156,5,4
+year,0.07576736062765121,5,4
+site_N end of Dominica,0.05238065496087074,5,4
+site_DOMINICA,0.04993544518947601,5,4
+"site_Lower end of Lanzarote Is., Canary I.",0.04467351362109184,5,4
+bytes_on_disk,0.03873372822999954,5,4
+site_Dominica IsBD,0.0364375077188015,5,4
+latitude,0.03452069312334061,5,4
+site_Delaware,0.033863361924886703,5,4
+"site_Near Filicudi, Italy",0.014802539721131325,5,4
+site_Dominica Is,0.009391628205776215,5,4
+"site_3-4 mi. off Roseau, Dominica",0.0,5,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,5,4
+site_50 mi. NE Malta,0.0,5,4
+site_Bequia,0.0,5,4
+site_Bermuda,0.0,5,4
+site_BermudaBD,0.0,5,4
+site_Dominica  E,0.0,5,4
+"site_Gully, SE Sable I., Canada  BD",0.0,5,4
+"site_Ligurian Sea, NW Italy",0.0,5,4
+site_Madeira,0.0,5,4
+site_N of Selina,0.0,5,4
+"site_N of Selina, Sicily",0.0,5,4
+"site_Sable Island, Nova Scotia",0.0,5,4
+"site_South of Sable Island, North Atlantic",0.0,5,4
+site_W of Browns Bank,0.0,5,4
+collection_code_BA2A,0.0,5,4
+collection_code_BD10A,0.0,5,4
+collection_code_BD15A,0.0,5,4
+collection_code_BE3B,0.0,5,4
+collection_code_BE3C,0.0,5,4
 cond_ship_noise,0.0,5,4
 cond_engine_noise,0.0,5,4
 cond_reverberation,0.0,5,4
@@ -449,13 +1229,39 @@ cond_water_noise,0.0,5,4
 cond_night_recording,0.0,5,4
 cond_no_visual,0.0,5,4
 cond_tape_speed_note,0.0,5,4
-site_code,0.2957800328731537,6,0
-duration_seconds,0.27023038268089294,6,0
-latitude,0.21845749020576477,6,0
-year,0.09122499823570251,6,0
-native_sample_rate,0.07105501741170883,6,0
-bytes_on_disk,0.05325208976864815,6,0
-collection_code,0.0,6,0
+site_DOMINICA,0.7104246020317078,6,0
+duration_seconds,0.15281905233860016,6,0
+bytes_on_disk,0.04605310782790184,6,0
+native_sample_rate,0.045860406011343,6,0
+year,0.04409719631075859,6,0
+site_Dominica Is,0.0007150782621465623,6,0
+site_Dominica,3.062935502384789e-05,6,0
+"site_3-4 mi. off Roseau, Dominica",0.0,6,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,0
+site_50 mi. NE Malta,0.0,6,0
+site_Bequia,0.0,6,0
+site_Bermuda,0.0,6,0
+site_BermudaBD,0.0,6,0
+site_Delaware,0.0,6,0
+site_Dominica  E,0.0,6,0
+site_Dominica IsBD,0.0,6,0
+"site_Gully, SE Sable I., Canada  BD",0.0,6,0
+"site_Ligurian Sea, NW Italy",0.0,6,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,0
+site_Madeira,0.0,6,0
+site_N end of Dominica,0.0,6,0
+site_N of Selina,0.0,6,0
+"site_N of Selina, Sicily",0.0,6,0
+"site_Near Filicudi, Italy",0.0,6,0
+"site_Sable Island, Nova Scotia",0.0,6,0
+"site_South of Sable Island, North Atlantic",0.0,6,0
+site_W of Browns Bank,0.0,6,0
+collection_code_BA2A,0.0,6,0
+collection_code_BD10A,0.0,6,0
+collection_code_BD15A,0.0,6,0
+collection_code_BE3B,0.0,6,0
+collection_code_BE3C,0.0,6,0
+latitude,0.0,6,0
 longitude,0.0,6,0
 cond_ship_noise,0.0,6,0
 cond_engine_noise,0.0,6,0
@@ -464,134 +1270,368 @@ cond_water_noise,0.0,6,0
 cond_night_recording,0.0,6,0
 cond_no_visual,0.0,6,0
 cond_tape_speed_note,0.0,6,0
-duration_seconds,0.297769159078598,6,1
-longitude,0.15285661816596985,6,1
-collection_code,0.12632334232330322,6,1
-bytes_on_disk,0.09833924472332001,6,1
-site_code,0.0972132608294487,6,1
-native_sample_rate,0.08911677449941635,6,1
-year,0.052309513092041016,6,1
-latitude,0.04313504695892334,6,1
-cond_ship_noise,0.0429370142519474,6,1
+duration_seconds,0.1742754876613617,6,1
+site_DOMINICA,0.13909341394901276,6,1
+collection_code_BE3B,0.0964842364192009,6,1
+longitude,0.09413070976734161,6,1
+site_Dominica IsBD,0.07591427862644196,6,1
+site_N end of Dominica,0.05933557078242302,6,1
+native_sample_rate,0.0565527118742466,6,1
+collection_code_BA2A,0.05107761546969414,6,1
+bytes_on_disk,0.04675200954079628,6,1
+site_Delaware,0.045009221881628036,6,1
+year,0.043618153780698776,6,1
+cond_ship_noise,0.028311314061284065,6,1
+latitude,0.027638936415314674,6,1
+site_50 mi. NE Malta,0.025213850662112236,6,1
+"site_Near Filicudi, Italy",0.01993836835026741,6,1
+site_Dominica,0.009031608700752258,6,1
+site_Bermuda,0.0076225935481488705,6,1
+"site_3-4 mi. off Roseau, Dominica",0.0,6,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,1
+site_Bequia,0.0,6,1
+site_BermudaBD,0.0,6,1
+site_Dominica  E,0.0,6,1
+site_Dominica Is,0.0,6,1
+"site_Gully, SE Sable I., Canada  BD",0.0,6,1
+"site_Ligurian Sea, NW Italy",0.0,6,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,1
+site_Madeira,0.0,6,1
+site_N of Selina,0.0,6,1
+"site_N of Selina, Sicily",0.0,6,1
+"site_Sable Island, Nova Scotia",0.0,6,1
+"site_South of Sable Island, North Atlantic",0.0,6,1
+site_W of Browns Bank,0.0,6,1
+collection_code_BD10A,0.0,6,1
+collection_code_BD15A,0.0,6,1
+collection_code_BE3C,0.0,6,1
 cond_engine_noise,0.0,6,1
 cond_reverberation,0.0,6,1
 cond_water_noise,0.0,6,1
 cond_night_recording,0.0,6,1
 cond_no_visual,0.0,6,1
 cond_tape_speed_note,0.0,6,1
-site_code,0.3409671187400818,6,2
-duration_seconds,0.2234123796224594,6,2
-year,0.12173748016357422,6,2
-latitude,0.10795900970697403,6,2
-bytes_on_disk,0.10578353703022003,6,2
-native_sample_rate,0.0526578389108181,6,2
-collection_code,0.023654013872146606,6,2
-cond_ship_noise,0.014473008923232555,6,2
-longitude,0.009355644695460796,6,2
+site_DOMINICA,0.4525420367717743,6,2
+longitude,0.09101737290620804,6,2
+duration_seconds,0.07486537843942642,6,2
+year,0.0612514428794384,6,2
+site_Dominica IsBD,0.05484425276517868,6,2
+bytes_on_disk,0.05080932006239891,6,2
+latitude,0.04656785726547241,6,2
+site_Delaware,0.041387561708688736,6,2
+native_sample_rate,0.03602395951747894,6,2
+site_Dominica  E,0.027829516679048538,6,2
+cond_ship_noise,0.022545412182807922,6,2
+site_Dominica,0.011719132773578167,6,2
+collection_code_BA2A,0.011215225793421268,6,2
+site_Bermuda,0.009103209711611271,6,2
+site_50 mi. NE Malta,0.008278284221887589,6,2
+"site_3-4 mi. off Roseau, Dominica",0.0,6,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,2
+site_Bequia,0.0,6,2
+site_BermudaBD,0.0,6,2
+site_Dominica Is,0.0,6,2
+"site_Gully, SE Sable I., Canada  BD",0.0,6,2
+"site_Ligurian Sea, NW Italy",0.0,6,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,2
+site_Madeira,0.0,6,2
+site_N end of Dominica,0.0,6,2
+site_N of Selina,0.0,6,2
+"site_N of Selina, Sicily",0.0,6,2
+"site_Near Filicudi, Italy",0.0,6,2
+"site_Sable Island, Nova Scotia",0.0,6,2
+"site_South of Sable Island, North Atlantic",0.0,6,2
+site_W of Browns Bank,0.0,6,2
+collection_code_BD10A,0.0,6,2
+collection_code_BD15A,0.0,6,2
+collection_code_BE3B,0.0,6,2
+collection_code_BE3C,0.0,6,2
 cond_engine_noise,0.0,6,2
 cond_reverberation,0.0,6,2
 cond_water_noise,0.0,6,2
 cond_night_recording,0.0,6,2
 cond_no_visual,0.0,6,2
 cond_tape_speed_note,0.0,6,2
-year,0.5030576586723328,6,3
-duration_seconds,0.14409106969833374,6,3
-native_sample_rate,0.11452275514602661,6,3
-bytes_on_disk,0.06454447656869888,6,3
-collection_code,0.05593446269631386,6,3
-cond_ship_noise,0.04117792844772339,6,3
-site_code,0.03288371488451958,6,3
-latitude,0.027459990233182907,6,3
-longitude,0.016328006982803345,6,3
+year,0.41205906867980957,6,3
+duration_seconds,0.09411711245775223,6,3
+site_DOMINICA,0.08423507958650589,6,3
+native_sample_rate,0.07383275777101517,6,3
+site_Delaware,0.0586579367518425,6,3
+bytes_on_disk,0.042162638157606125,6,3
+site_Dominica,0.03943165764212608,6,3
+"site_Ligurian Sea, NW Italy",0.03852735832333565,6,3
+cond_ship_noise,0.02709047868847847,6,3
+site_N end of Dominica,0.026678914204239845,6,3
+latitude,0.022373002022504807,6,3
+longitude,0.02217809483408928,6,3
+collection_code_BA2A,0.01938655599951744,6,3
+"site_Sable Island, Nova Scotia",0.012521042488515377,6,3
+site_50 mi. NE Malta,0.010070553980767727,6,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.006541812792420387,6,3
+site_Dominica  E,0.00453363498672843,6,3
+site_Dominica Is,0.0037383928429335356,6,3
+site_N of Selina,0.0018639727495610714,6,3
+"site_3-4 mi. off Roseau, Dominica",0.0,6,3
+site_Bequia,0.0,6,3
+site_Bermuda,0.0,6,3
+site_BermudaBD,0.0,6,3
+site_Dominica IsBD,0.0,6,3
+"site_Gully, SE Sable I., Canada  BD",0.0,6,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,3
+site_Madeira,0.0,6,3
+"site_N of Selina, Sicily",0.0,6,3
+"site_Near Filicudi, Italy",0.0,6,3
+"site_South of Sable Island, North Atlantic",0.0,6,3
+site_W of Browns Bank,0.0,6,3
+collection_code_BD10A,0.0,6,3
+collection_code_BD15A,0.0,6,3
+collection_code_BE3B,0.0,6,3
+collection_code_BE3C,0.0,6,3
 cond_engine_noise,0.0,6,3
 cond_reverberation,0.0,6,3
 cond_water_noise,0.0,6,3
 cond_night_recording,0.0,6,3
 cond_no_visual,0.0,6,3
 cond_tape_speed_note,0.0,6,3
-duration_seconds,0.2045116126537323,6,4
-collection_code,0.1860865205526352,6,4
-year,0.1532815545797348,6,4
-native_sample_rate,0.145954892039299,6,4
-longitude,0.12566302716732025,6,4
-site_code,0.07774598896503448,6,4
-bytes_on_disk,0.05434943363070488,6,4
-latitude,0.033423468470573425,6,4
-cond_ship_noise,0.01898350566625595,6,4
+duration_seconds,0.1839132457971573,6,4
+site_N end of Dominica,0.14977480471134186,6,4
+year,0.13395991921424866,6,4
+site_DOMINICA,0.12592658400535583,6,4
+latitude,0.11846543103456497,6,4
+native_sample_rate,0.09540743380784988,6,4
+longitude,0.04419794678688049,6,4
+bytes_on_disk,0.030577221885323524,6,4
+"site_Near Filicudi, Italy",0.029475819319486618,6,4
+"site_Ligurian Sea, NW Italy",0.02558000572025776,6,4
+site_Delaware,0.02023787796497345,6,4
+cond_ship_noise,0.01334319356828928,6,4
+site_Dominica,0.012469645589590073,6,4
+site_50 mi. NE Malta,0.011145372875034809,6,4
+site_Dominica Is,0.003961217124015093,6,4
+site_N of Selina,0.001564266043715179,6,4
+"site_3-4 mi. off Roseau, Dominica",0.0,6,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,6,4
+site_Bequia,0.0,6,4
+site_Bermuda,0.0,6,4
+site_BermudaBD,0.0,6,4
+site_Dominica  E,0.0,6,4
+site_Dominica IsBD,0.0,6,4
+"site_Gully, SE Sable I., Canada  BD",0.0,6,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,6,4
+site_Madeira,0.0,6,4
+"site_N of Selina, Sicily",0.0,6,4
+"site_Sable Island, Nova Scotia",0.0,6,4
+"site_South of Sable Island, North Atlantic",0.0,6,4
+site_W of Browns Bank,0.0,6,4
+collection_code_BA2A,0.0,6,4
+collection_code_BD10A,0.0,6,4
+collection_code_BD15A,0.0,6,4
+collection_code_BE3B,0.0,6,4
+collection_code_BE3C,0.0,6,4
 cond_engine_noise,0.0,6,4
 cond_reverberation,0.0,6,4
 cond_water_noise,0.0,6,4
 cond_night_recording,0.0,6,4
 cond_no_visual,0.0,6,4
 cond_tape_speed_note,0.0,6,4
-duration_seconds,0.2864561676979065,7,0
-year,0.2534393072128296,7,0
-site_code,0.1419694423675537,7,0
-latitude,0.11103090643882751,7,0
-native_sample_rate,0.07311811298131943,7,0
-bytes_on_disk,0.0725989043712616,7,0
-cond_ship_noise,0.03238042816519737,7,0
-longitude,0.027905162423849106,7,0
-collection_code,0.0011015768395736814,7,0
+site_DOMINICA,0.3270629942417145,7,0
+site_Dominica,0.27778756618499756,7,0
+duration_seconds,0.09537981450557709,7,0
+longitude,0.08049793541431427,7,0
+year,0.05868649482727051,7,0
+bytes_on_disk,0.0443221814930439,7,0
+cond_ship_noise,0.029001111164689064,7,0
+site_Dominica  E,0.027686646208167076,7,0
+"site_Sable Island, Nova Scotia",0.026661770418286324,7,0
+site_50 mi. NE Malta,0.014529513195157051,7,0
+native_sample_rate,0.01384628564119339,7,0
+"site_Near Filicudi, Italy",0.004537635948508978,7,0
+"site_3-4 mi. off Roseau, Dominica",0.0,7,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,0
+site_Bequia,0.0,7,0
+site_Bermuda,0.0,7,0
+site_BermudaBD,0.0,7,0
+site_Delaware,0.0,7,0
+site_Dominica Is,0.0,7,0
+site_Dominica IsBD,0.0,7,0
+"site_Gully, SE Sable I., Canada  BD",0.0,7,0
+"site_Ligurian Sea, NW Italy",0.0,7,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,0
+site_Madeira,0.0,7,0
+site_N end of Dominica,0.0,7,0
+site_N of Selina,0.0,7,0
+"site_N of Selina, Sicily",0.0,7,0
+"site_South of Sable Island, North Atlantic",0.0,7,0
+site_W of Browns Bank,0.0,7,0
+collection_code_BA2A,0.0,7,0
+collection_code_BD10A,0.0,7,0
+collection_code_BD15A,0.0,7,0
+collection_code_BE3B,0.0,7,0
+collection_code_BE3C,0.0,7,0
+latitude,0.0,7,0
 cond_engine_noise,0.0,7,0
 cond_reverberation,0.0,7,0
 cond_water_noise,0.0,7,0
 cond_night_recording,0.0,7,0
 cond_no_visual,0.0,7,0
 cond_tape_speed_note,0.0,7,0
-duration_seconds,0.2587030529975891,7,1
-native_sample_rate,0.19357940554618835,7,1
-year,0.18739478290081024,7,1
-site_code,0.13771465420722961,7,1
-bytes_on_disk,0.07004252821207047,7,1
-collection_code,0.04181645065546036,7,1
-latitude,0.04086460545659065,7,1
-longitude,0.04080358147621155,7,1
-cond_ship_noise,0.029080985113978386,7,1
+"site_Sable Island, Nova Scotia",0.21362216770648956,7,1
+duration_seconds,0.16193626821041107,7,1
+native_sample_rate,0.1378161460161209,7,1
+year,0.11636623740196228,7,1
+site_Dominica IsBD,0.08302943408489227,7,1
+site_DOMINICA,0.06466510891914368,7,1
+bytes_on_disk,0.04891876503825188,7,1
+collection_code_BA2A,0.03609474003314972,7,1
+latitude,0.03320985287427902,7,1
+longitude,0.027844568714499474,7,1
+site_Delaware,0.02483968622982502,7,1
+"site_Near Filicudi, Italy",0.0193680077791214,7,1
+cond_ship_noise,0.01875101961195469,7,1
+site_Dominica,0.006901068147271872,7,1
+site_50 mi. NE Malta,0.006636850535869598,7,1
+"site_3-4 mi. off Roseau, Dominica",0.0,7,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,1
+site_Bequia,0.0,7,1
+site_Bermuda,0.0,7,1
+site_BermudaBD,0.0,7,1
+site_Dominica  E,0.0,7,1
+site_Dominica Is,0.0,7,1
+"site_Gully, SE Sable I., Canada  BD",0.0,7,1
+"site_Ligurian Sea, NW Italy",0.0,7,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,1
+site_Madeira,0.0,7,1
+site_N end of Dominica,0.0,7,1
+site_N of Selina,0.0,7,1
+"site_N of Selina, Sicily",0.0,7,1
+"site_South of Sable Island, North Atlantic",0.0,7,1
+site_W of Browns Bank,0.0,7,1
+collection_code_BD10A,0.0,7,1
+collection_code_BD15A,0.0,7,1
+collection_code_BE3B,0.0,7,1
+collection_code_BE3C,0.0,7,1
 cond_engine_noise,0.0,7,1
 cond_reverberation,0.0,7,1
 cond_water_noise,0.0,7,1
 cond_night_recording,0.0,7,1
 cond_no_visual,0.0,7,1
 cond_tape_speed_note,0.0,7,1
-site_code,0.356991171836853,7,2
-duration_seconds,0.29737138748168945,7,2
-year,0.1496312916278839,7,2
-bytes_on_disk,0.0828632190823555,7,2
-native_sample_rate,0.05181353911757469,7,2
-cond_ship_noise,0.02176622860133648,7,2
-collection_code,0.017448991537094116,7,2
-longitude,0.013047289103269577,7,2
-latitude,0.0090669309720397,7,2
+site_DOMINICA,0.4290294647216797,7,2
+"site_Sable Island, Nova Scotia",0.1609475463628769,7,2
+site_Delaware,0.1074770912528038,7,2
+duration_seconds,0.07522720098495483,7,2
+year,0.05282795429229736,7,2
+native_sample_rate,0.03788197040557861,7,2
+bytes_on_disk,0.03604857251048088,7,2
+site_Dominica,0.030929084867239,7,2
+latitude,0.028668727725744247,7,2
+site_Dominica  E,0.022550376132130623,7,2
+longitude,0.007945802994072437,7,2
+site_50 mi. NE Malta,0.006523792631924152,7,2
+site_Dominica Is,0.003942442592233419,7,2
+"site_3-4 mi. off Roseau, Dominica",0.0,7,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,2
+site_Bequia,0.0,7,2
+site_Bermuda,0.0,7,2
+site_BermudaBD,0.0,7,2
+site_Dominica IsBD,0.0,7,2
+"site_Gully, SE Sable I., Canada  BD",0.0,7,2
+"site_Ligurian Sea, NW Italy",0.0,7,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,2
+site_Madeira,0.0,7,2
+site_N end of Dominica,0.0,7,2
+site_N of Selina,0.0,7,2
+"site_N of Selina, Sicily",0.0,7,2
+"site_Near Filicudi, Italy",0.0,7,2
+"site_South of Sable Island, North Atlantic",0.0,7,2
+site_W of Browns Bank,0.0,7,2
+collection_code_BA2A,0.0,7,2
+collection_code_BD10A,0.0,7,2
+collection_code_BD15A,0.0,7,2
+collection_code_BE3B,0.0,7,2
+collection_code_BE3C,0.0,7,2
+cond_ship_noise,0.0,7,2
 cond_engine_noise,0.0,7,2
 cond_reverberation,0.0,7,2
 cond_water_noise,0.0,7,2
 cond_night_recording,0.0,7,2
 cond_no_visual,0.0,7,2
 cond_tape_speed_note,0.0,7,2
-year,0.5345192551612854,7,3
-native_sample_rate,0.11571675539016724,7,3
-duration_seconds,0.09314735978841782,7,3
-site_code,0.06294523924589157,7,3
-cond_ship_noise,0.05966133251786232,7,3
-collection_code,0.05420796945691109,7,3
-latitude,0.04392249882221222,7,3
-bytes_on_disk,0.028945492580533028,7,3
-longitude,0.0069341217167675495,7,3
+site_DOMINICA,0.32344308495521545,7,3
+year,0.3169880509376526,7,3
+native_sample_rate,0.07110033184289932,7,3
+duration_seconds,0.05781194195151329,7,3
+site_Delaware,0.054081764072179794,7,3
+collection_code_BA2A,0.0405086912214756,7,3
+site_Dominica IsBD,0.030896829441189766,7,3
+"site_Ligurian Sea, NW Italy",0.030391165986657143,7,3
+bytes_on_disk,0.017287421971559525,7,3
+latitude,0.01615583524107933,7,3
+cond_ship_noise,0.014256935566663742,7,3
+site_N end of Dominica,0.01076098345220089,7,3
+site_Dominica,0.010436052456498146,7,3
+site_50 mi. NE Malta,0.00486390246078372,7,3
+site_N of Selina,0.0010170349851250648,7,3
+"site_3-4 mi. off Roseau, Dominica",0.0,7,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,3
+site_Bequia,0.0,7,3
+site_Bermuda,0.0,7,3
+site_BermudaBD,0.0,7,3
+site_Dominica  E,0.0,7,3
+site_Dominica Is,0.0,7,3
+"site_Gully, SE Sable I., Canada  BD",0.0,7,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,3
+site_Madeira,0.0,7,3
+"site_N of Selina, Sicily",0.0,7,3
+"site_Near Filicudi, Italy",0.0,7,3
+"site_Sable Island, Nova Scotia",0.0,7,3
+"site_South of Sable Island, North Atlantic",0.0,7,3
+site_W of Browns Bank,0.0,7,3
+collection_code_BD10A,0.0,7,3
+collection_code_BD15A,0.0,7,3
+collection_code_BE3B,0.0,7,3
+collection_code_BE3C,0.0,7,3
+longitude,0.0,7,3
 cond_engine_noise,0.0,7,3
 cond_reverberation,0.0,7,3
 cond_water_noise,0.0,7,3
 cond_night_recording,0.0,7,3
 cond_no_visual,0.0,7,3
 cond_tape_speed_note,0.0,7,3
-duration_seconds,0.2959064245223999,7,4
-collection_code,0.1497080773115158,7,4
-native_sample_rate,0.13943710923194885,7,4
-site_code,0.1302364468574524,7,4
-longitude,0.12417615950107574,7,4
-year,0.1115473061800003,7,4
-bytes_on_disk,0.03686806559562683,7,4
-latitude,0.012120360508561134,7,4
+site_DOMINICA,0.2801157832145691,7,4
+duration_seconds,0.18154485523700714,7,4
+longitude,0.1101805567741394,7,4
+site_Delaware,0.09741184860467911,7,4
+site_N end of Dominica,0.08576537668704987,7,4
+year,0.06495921313762665,7,4
+latitude,0.05478111281991005,7,4
+native_sample_rate,0.0396590419113636,7,4
+"site_Sable Island, Nova Scotia",0.030489934608340263,7,4
+site_Dominica,0.029658040031790733,7,4
+bytes_on_disk,0.024029206484556198,7,4
+site_Dominica Is,0.001404993119649589,7,4
+"site_3-4 mi. off Roseau, Dominica",0.0,7,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,7,4
+site_50 mi. NE Malta,0.0,7,4
+site_Bequia,0.0,7,4
+site_Bermuda,0.0,7,4
+site_BermudaBD,0.0,7,4
+site_Dominica  E,0.0,7,4
+site_Dominica IsBD,0.0,7,4
+"site_Gully, SE Sable I., Canada  BD",0.0,7,4
+"site_Ligurian Sea, NW Italy",0.0,7,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,7,4
+site_Madeira,0.0,7,4
+site_N of Selina,0.0,7,4
+"site_N of Selina, Sicily",0.0,7,4
+"site_Near Filicudi, Italy",0.0,7,4
+"site_South of Sable Island, North Atlantic",0.0,7,4
+site_W of Browns Bank,0.0,7,4
+collection_code_BA2A,0.0,7,4
+collection_code_BD10A,0.0,7,4
+collection_code_BD15A,0.0,7,4
+collection_code_BE3B,0.0,7,4
+collection_code_BE3C,0.0,7,4
 cond_ship_noise,0.0,7,4
 cond_engine_noise,0.0,7,4
 cond_reverberation,0.0,7,4
@@ -599,14 +1639,40 @@ cond_water_noise,0.0,7,4
 cond_night_recording,0.0,7,4
 cond_no_visual,0.0,7,4
 cond_tape_speed_note,0.0,7,4
-year,0.32147422432899475,8,0
-duration_seconds,0.2887534499168396,8,0
-site_code,0.18469658493995667,8,0
-latitude,0.07673326134681702,8,0
-native_sample_rate,0.05059134587645531,8,0
-longitude,0.040873005986213684,8,0
-bytes_on_disk,0.03687813878059387,8,0
-collection_code,0.0,8,0
+duration_seconds,0.20557555556297302,8,0
+site_Dominica,0.20372650027275085,8,0
+site_DOMINICA,0.16837802529335022,8,0
+year,0.15589958429336548,8,0
+longitude,0.12135682255029678,8,0
+bytes_on_disk,0.04741359502077103,8,0
+native_sample_rate,0.04147479310631752,8,0
+site_N end of Dominica,0.04119180142879486,8,0
+"site_Near Filicudi, Italy",0.014983365312218666,8,0
+"site_3-4 mi. off Roseau, Dominica",0.0,8,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,0
+site_50 mi. NE Malta,0.0,8,0
+site_Bequia,0.0,8,0
+site_Bermuda,0.0,8,0
+site_BermudaBD,0.0,8,0
+site_Delaware,0.0,8,0
+site_Dominica  E,0.0,8,0
+site_Dominica Is,0.0,8,0
+site_Dominica IsBD,0.0,8,0
+"site_Gully, SE Sable I., Canada  BD",0.0,8,0
+"site_Ligurian Sea, NW Italy",0.0,8,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,0
+site_Madeira,0.0,8,0
+site_N of Selina,0.0,8,0
+"site_N of Selina, Sicily",0.0,8,0
+"site_Sable Island, Nova Scotia",0.0,8,0
+"site_South of Sable Island, North Atlantic",0.0,8,0
+site_W of Browns Bank,0.0,8,0
+collection_code_BA2A,0.0,8,0
+collection_code_BD10A,0.0,8,0
+collection_code_BD15A,0.0,8,0
+collection_code_BE3B,0.0,8,0
+collection_code_BE3C,0.0,8,0
+latitude,0.0,8,0
 cond_ship_noise,0.0,8,0
 cond_engine_noise,0.0,8,0
 cond_reverberation,0.0,8,0
@@ -614,29 +1680,81 @@ cond_water_noise,0.0,8,0
 cond_night_recording,0.0,8,0
 cond_no_visual,0.0,8,0
 cond_tape_speed_note,0.0,8,0
-duration_seconds,0.37626418471336365,8,1
-year,0.21558403968811035,8,1
-site_code,0.12424148619174957,8,1
-native_sample_rate,0.12059029936790466,8,1
-bytes_on_disk,0.09544159471988678,8,1
-latitude,0.04025479033589363,8,1
-cond_ship_noise,0.02146504446864128,8,1
-longitude,0.00615857494994998,8,1
-collection_code,0.0,8,1
+duration_seconds,0.25524210929870605,8,1
+"site_Sable Island, Nova Scotia",0.24043816328048706,8,1
+year,0.13568513095378876,8,1
+site_DOMINICA,0.07745826244354248,8,1
+native_sample_rate,0.07039900124073029,8,1
+site_Dominica,0.06330062448978424,8,1
+bytes_on_disk,0.05335318297147751,8,1
+site_Dominica  E,0.0521693080663681,8,1
+latitude,0.021796537563204765,8,1
+cond_ship_noise,0.01433300506323576,8,1
+"site_Near Filicudi, Italy",0.012002935633063316,8,1
+site_50 mi. NE Malta,0.0038217727560549974,8,1
+"site_3-4 mi. off Roseau, Dominica",0.0,8,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,1
+site_Bequia,0.0,8,1
+site_Bermuda,0.0,8,1
+site_BermudaBD,0.0,8,1
+site_Delaware,0.0,8,1
+site_Dominica Is,0.0,8,1
+site_Dominica IsBD,0.0,8,1
+"site_Gully, SE Sable I., Canada  BD",0.0,8,1
+"site_Ligurian Sea, NW Italy",0.0,8,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,1
+site_Madeira,0.0,8,1
+site_N end of Dominica,0.0,8,1
+site_N of Selina,0.0,8,1
+"site_N of Selina, Sicily",0.0,8,1
+"site_South of Sable Island, North Atlantic",0.0,8,1
+site_W of Browns Bank,0.0,8,1
+collection_code_BA2A,0.0,8,1
+collection_code_BD10A,0.0,8,1
+collection_code_BD15A,0.0,8,1
+collection_code_BE3B,0.0,8,1
+collection_code_BE3C,0.0,8,1
+longitude,0.0,8,1
 cond_engine_noise,0.0,8,1
 cond_reverberation,0.0,8,1
 cond_water_noise,0.0,8,1
 cond_night_recording,0.0,8,1
 cond_no_visual,0.0,8,1
 cond_tape_speed_note,0.0,8,1
-duration_seconds,0.28739801049232483,8,2
-year,0.22337253391742706,8,2
-site_code,0.15598759055137634,8,2
-bytes_on_disk,0.14016231894493103,8,2
-collection_code,0.1274932324886322,8,2
-native_sample_rate,0.048218805342912674,8,2
-longitude,0.009983119554817677,8,2
-latitude,0.007384398952126503,8,2
+site_DOMINICA,0.5299383401870728,8,2
+duration_seconds,0.09417935460805893,8,2
+year,0.07809902727603912,8,2
+bytes_on_disk,0.06220635399222374,8,2
+site_Dominica  E,0.048805296421051025,8,2
+native_sample_rate,0.04646168276667595,8,2
+site_Dominica,0.03769475221633911,8,2
+site_Delaware,0.03449185565114021,8,2
+latitude,0.03438594192266464,8,2
+"site_Sable Island, Nova Scotia",0.00991661287844181,8,2
+collection_code_BA2A,0.008433331735432148,8,2
+site_50 mi. NE Malta,0.005333519075065851,8,2
+longitude,0.004763418808579445,8,2
+site_N of Selina,0.0026504304260015488,8,2
+site_Dominica Is,0.002640149090439081,8,2
+"site_3-4 mi. off Roseau, Dominica",0.0,8,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,2
+site_Bequia,0.0,8,2
+site_Bermuda,0.0,8,2
+site_BermudaBD,0.0,8,2
+site_Dominica IsBD,0.0,8,2
+"site_Gully, SE Sable I., Canada  BD",0.0,8,2
+"site_Ligurian Sea, NW Italy",0.0,8,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,2
+site_Madeira,0.0,8,2
+site_N end of Dominica,0.0,8,2
+"site_N of Selina, Sicily",0.0,8,2
+"site_Near Filicudi, Italy",0.0,8,2
+"site_South of Sable Island, North Atlantic",0.0,8,2
+site_W of Browns Bank,0.0,8,2
+collection_code_BD10A,0.0,8,2
+collection_code_BD15A,0.0,8,2
+collection_code_BE3B,0.0,8,2
+collection_code_BE3C,0.0,8,2
 cond_ship_noise,0.0,8,2
 cond_engine_noise,0.0,8,2
 cond_reverberation,0.0,8,2
@@ -644,44 +1762,122 @@ cond_water_noise,0.0,8,2
 cond_night_recording,0.0,8,2
 cond_no_visual,0.0,8,2
 cond_tape_speed_note,0.0,8,2
-year,0.3680632412433624,8,3
-cond_ship_noise,0.2004237025976181,8,3
-native_sample_rate,0.12196741998195648,8,3
-duration_seconds,0.09249386191368103,8,3
-collection_code,0.067694291472435,8,3
-site_code,0.057492371648550034,8,3
-latitude,0.04544360563158989,8,3
-bytes_on_disk,0.031767863780260086,8,3
-longitude,0.014653677120804787,8,3
+site_DOMINICA,0.32633745670318604,8,3
+cond_ship_noise,0.19640487432479858,8,3
+year,0.09742894768714905,8,3
+duration_seconds,0.07965663820505142,8,3
+site_Delaware,0.053668148815631866,8,3
+native_sample_rate,0.05317708104848862,8,3
+collection_code_BE3B,0.05274742469191551,8,3
+"site_Ligurian Sea, NW Italy",0.032195813953876495,8,3
+site_Dominica IsBD,0.023978399112820625,8,3
+bytes_on_disk,0.02294042333960533,8,3
+latitude,0.021677611395716667,8,3
+site_N end of Dominica,0.014214478433132172,8,3
+site_Dominica,0.012726271525025368,8,3
+longitude,0.006216411478817463,8,3
+site_50 mi. NE Malta,0.005702979862689972,8,3
+site_N of Selina,0.0009270399459637702,8,3
+"site_3-4 mi. off Roseau, Dominica",0.0,8,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,3
+site_Bequia,0.0,8,3
+site_Bermuda,0.0,8,3
+site_BermudaBD,0.0,8,3
+site_Dominica  E,0.0,8,3
+site_Dominica Is,0.0,8,3
+"site_Gully, SE Sable I., Canada  BD",0.0,8,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,8,3
+site_Madeira,0.0,8,3
+"site_N of Selina, Sicily",0.0,8,3
+"site_Near Filicudi, Italy",0.0,8,3
+"site_Sable Island, Nova Scotia",0.0,8,3
+"site_South of Sable Island, North Atlantic",0.0,8,3
+site_W of Browns Bank,0.0,8,3
+collection_code_BA2A,0.0,8,3
+collection_code_BD10A,0.0,8,3
+collection_code_BD15A,0.0,8,3
+collection_code_BE3C,0.0,8,3
 cond_engine_noise,0.0,8,3
 cond_reverberation,0.0,8,3
 cond_water_noise,0.0,8,3
 cond_night_recording,0.0,8,3
 cond_no_visual,0.0,8,3
 cond_tape_speed_note,0.0,8,3
-longitude,0.21695765852928162,8,4
-native_sample_rate,0.17372144758701324,8,4
-collection_code,0.17328356206417084,8,4
-duration_seconds,0.14290544390678406,8,4
-year,0.0889902412891388,8,4
-site_code,0.06295250356197357,8,4
-bytes_on_disk,0.05809933692216873,8,4
-cond_ship_noise,0.053610365837812424,8,4
-latitude,0.02947944588959217,8,4
+native_sample_rate,0.19328254461288452,8,4
+longitude,0.14404930174350739,8,4
+collection_code_BA2A,0.12488124519586563,8,4
+duration_seconds,0.11621100455522537,8,4
+site_DOMINICA,0.0822051465511322,8,4
+year,0.07119519263505936,8,4
+latitude,0.062170591205358505,8,4
+bytes_on_disk,0.04717501625418663,8,4
+site_N end of Dominica,0.04403296858072281,8,4
+cond_ship_noise,0.03501254692673683,8,4
+site_Dominica IsBD,0.023862702772021294,8,4
+"site_Lower end of Lanzarote Is., Canary I.",0.02084793895483017,8,4
+site_Delaware,0.012634999118745327,8,4
+site_Dominica,0.011229114606976509,8,4
+"site_Near Filicudi, Italy",0.005899820942431688,8,4
+"site_Ligurian Sea, NW Italy",0.005309883039444685,8,4
+"site_3-4 mi. off Roseau, Dominica",0.0,8,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,8,4
+site_50 mi. NE Malta,0.0,8,4
+site_Bequia,0.0,8,4
+site_Bermuda,0.0,8,4
+site_BermudaBD,0.0,8,4
+site_Dominica  E,0.0,8,4
+site_Dominica Is,0.0,8,4
+"site_Gully, SE Sable I., Canada  BD",0.0,8,4
+site_Madeira,0.0,8,4
+site_N of Selina,0.0,8,4
+"site_N of Selina, Sicily",0.0,8,4
+"site_Sable Island, Nova Scotia",0.0,8,4
+"site_South of Sable Island, North Atlantic",0.0,8,4
+site_W of Browns Bank,0.0,8,4
+collection_code_BD10A,0.0,8,4
+collection_code_BD15A,0.0,8,4
+collection_code_BE3B,0.0,8,4
+collection_code_BE3C,0.0,8,4
 cond_engine_noise,0.0,8,4
 cond_reverberation,0.0,8,4
 cond_water_noise,0.0,8,4
 cond_night_recording,0.0,8,4
 cond_no_visual,0.0,8,4
 cond_tape_speed_note,0.0,8,4
-duration_seconds,0.3818923830986023,9,0
-year,0.26863935589790344,9,0
-site_code,0.18067291378974915,9,0
-native_sample_rate,0.06279498338699341,9,0
-bytes_on_disk,0.043997298926115036,9,0
-latitude,0.02703409641981125,9,0
-longitude,0.022619642317295074,9,0
-collection_code,0.012349379248917103,9,0
+site_Dominica,0.3520946800708771,9,0
+site_DOMINICA,0.2588006556034088,9,0
+duration_seconds,0.14432385563850403,9,0
+"site_Near Filicudi, Italy",0.08540011197328568,9,0
+year,0.06551393866539001,9,0
+bytes_on_disk,0.04454372450709343,9,0
+site_N end of Dominica,0.016704261302947998,9,0
+native_sample_rate,0.014264188706874847,9,0
+longitude,0.007032127119600773,9,0
+latitude,0.005852225702255964,9,0
+"site_Sable Island, Nova Scotia",0.005470259580761194,9,0
+"site_3-4 mi. off Roseau, Dominica",0.0,9,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,0
+site_50 mi. NE Malta,0.0,9,0
+site_Bequia,0.0,9,0
+site_Bermuda,0.0,9,0
+site_BermudaBD,0.0,9,0
+site_Delaware,0.0,9,0
+site_Dominica  E,0.0,9,0
+site_Dominica Is,0.0,9,0
+site_Dominica IsBD,0.0,9,0
+"site_Gully, SE Sable I., Canada  BD",0.0,9,0
+"site_Ligurian Sea, NW Italy",0.0,9,0
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,0
+site_Madeira,0.0,9,0
+site_N of Selina,0.0,9,0
+"site_N of Selina, Sicily",0.0,9,0
+"site_South of Sable Island, North Atlantic",0.0,9,0
+site_W of Browns Bank,0.0,9,0
+collection_code_BA2A,0.0,9,0
+collection_code_BD10A,0.0,9,0
+collection_code_BD15A,0.0,9,0
+collection_code_BE3B,0.0,9,0
+collection_code_BE3C,0.0,9,0
 cond_ship_noise,0.0,9,0
 cond_engine_noise,0.0,9,0
 cond_reverberation,0.0,9,0
@@ -689,60 +1885,164 @@ cond_water_noise,0.0,9,0
 cond_night_recording,0.0,9,0
 cond_no_visual,0.0,9,0
 cond_tape_speed_note,0.0,9,0
-longitude,0.3197290599346161,9,1
-duration_seconds,0.30829137563705444,9,1
-year,0.12158035486936569,9,1
-site_code,0.05673078075051308,9,1
-native_sample_rate,0.05550827831029892,9,1
-bytes_on_disk,0.053990039974451065,9,1
-latitude,0.0441342256963253,9,1
-cond_ship_noise,0.02929750084877014,9,1
-collection_code,0.01073837373405695,9,1
+longitude,0.24794501066207886,9,1
+duration_seconds,0.21358610689640045,9,1
+year,0.13441482186317444,9,1
+site_Delaware,0.06995008140802383,9,1
+latitude,0.0691324770450592,9,1
+site_DOMINICA,0.04670208692550659,9,1
+site_Dominica IsBD,0.04400210082530975,9,1
+bytes_on_disk,0.04115476459264755,9,1
+native_sample_rate,0.03722428157925606,9,1
+"site_Near Filicudi, Italy",0.021160205826163292,9,1
+site_Bequia,0.01941075548529625,9,1
+cond_ship_noise,0.01805867999792099,9,1
+"site_Ligurian Sea, NW Italy",0.016682112589478493,9,1
+site_Dominica,0.0158318392932415,9,1
+site_Dominica Is,0.004744706209748983,9,1
+"site_3-4 mi. off Roseau, Dominica",0.0,9,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,1
+site_50 mi. NE Malta,0.0,9,1
+site_Bermuda,0.0,9,1
+site_BermudaBD,0.0,9,1
+site_Dominica  E,0.0,9,1
+"site_Gully, SE Sable I., Canada  BD",0.0,9,1
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,1
+site_Madeira,0.0,9,1
+site_N end of Dominica,0.0,9,1
+site_N of Selina,0.0,9,1
+"site_N of Selina, Sicily",0.0,9,1
+"site_Sable Island, Nova Scotia",0.0,9,1
+"site_South of Sable Island, North Atlantic",0.0,9,1
+site_W of Browns Bank,0.0,9,1
+collection_code_BA2A,0.0,9,1
+collection_code_BD10A,0.0,9,1
+collection_code_BD15A,0.0,9,1
+collection_code_BE3B,0.0,9,1
+collection_code_BE3C,0.0,9,1
 cond_engine_noise,0.0,9,1
 cond_reverberation,0.0,9,1
 cond_water_noise,0.0,9,1
 cond_night_recording,0.0,9,1
 cond_no_visual,0.0,9,1
 cond_tape_speed_note,0.0,9,1
-duration_seconds,0.26690417528152466,9,2
-site_code,0.25403091311454773,9,2
-year,0.12684635818004608,9,2
-longitude,0.10656742006540298,9,2
-latitude,0.06784039735794067,9,2
-bytes_on_disk,0.0542931854724884,9,2
-native_sample_rate,0.048664167523384094,9,2
-collection_code,0.0408465601503849,9,2
-cond_ship_noise,0.03400685638189316,9,2
+site_DOMINICA,0.5291780233383179,9,2
+duration_seconds,0.08952303975820541,9,2
+native_sample_rate,0.08155922591686249,9,2
+year,0.06795749068260193,9,2
+site_Dominica IsBD,0.05947890132665634,9,2
+bytes_on_disk,0.05800345912575722,9,2
+latitude,0.04439118877053261,9,2
+site_Dominica  E,0.03456940874457359,9,2
+site_N end of Dominica,0.024837763980031013,9,2
+cond_ship_noise,0.01050154585391283,9,2
+"site_3-4 mi. off Roseau, Dominica",0.0,9,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,2
+site_50 mi. NE Malta,0.0,9,2
+site_Bequia,0.0,9,2
+site_Bermuda,0.0,9,2
+site_BermudaBD,0.0,9,2
+site_Delaware,0.0,9,2
+site_Dominica,0.0,9,2
+site_Dominica Is,0.0,9,2
+"site_Gully, SE Sable I., Canada  BD",0.0,9,2
+"site_Ligurian Sea, NW Italy",0.0,9,2
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,2
+site_Madeira,0.0,9,2
+site_N of Selina,0.0,9,2
+"site_N of Selina, Sicily",0.0,9,2
+"site_Near Filicudi, Italy",0.0,9,2
+"site_Sable Island, Nova Scotia",0.0,9,2
+"site_South of Sable Island, North Atlantic",0.0,9,2
+site_W of Browns Bank,0.0,9,2
+collection_code_BA2A,0.0,9,2
+collection_code_BD10A,0.0,9,2
+collection_code_BD15A,0.0,9,2
+collection_code_BE3B,0.0,9,2
+collection_code_BE3C,0.0,9,2
+longitude,0.0,9,2
 cond_engine_noise,0.0,9,2
 cond_reverberation,0.0,9,2
 cond_water_noise,0.0,9,2
 cond_night_recording,0.0,9,2
 cond_no_visual,0.0,9,2
 cond_tape_speed_note,0.0,9,2
-year,0.4462962746620178,9,3
-duration_seconds,0.1333140730857849,9,3
-native_sample_rate,0.11624590307474136,9,3
-collection_code,0.09466861188411713,9,3
-bytes_on_disk,0.07469525933265686,9,3
-site_code,0.05593757703900337,9,3
-cond_ship_noise,0.033714063465595245,9,3
-latitude,0.02683335915207863,9,3
-longitude,0.018294842913746834,9,3
+year,0.4127868711948395,9,3
+site_Dominica IsBD,0.08363298326730728,9,3
+duration_seconds,0.0819598138332367,9,3
+site_DOMINICA,0.0803198292851448,9,3
+native_sample_rate,0.075202077627182,9,3
+collection_code_BE3B,0.056430283933877945,9,3
+bytes_on_disk,0.04680202156305313,9,3
+latitude,0.043074414134025574,9,3
+site_Delaware,0.038640208542346954,9,3
+"site_Ligurian Sea, NW Italy",0.027254832908511162,9,3
+cond_ship_noise,0.024574492126703262,9,3
+site_Dominica,0.015701478347182274,9,3
+site_N end of Dominica,0.011261755600571632,9,3
+site_50 mi. NE Malta,0.0023589066695421934,9,3
+"site_3-4 mi. off Roseau, Dominica",0.0,9,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,3
+site_Bequia,0.0,9,3
+site_Bermuda,0.0,9,3
+site_BermudaBD,0.0,9,3
+site_Dominica  E,0.0,9,3
+site_Dominica Is,0.0,9,3
+"site_Gully, SE Sable I., Canada  BD",0.0,9,3
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,3
+site_Madeira,0.0,9,3
+site_N of Selina,0.0,9,3
+"site_N of Selina, Sicily",0.0,9,3
+"site_Near Filicudi, Italy",0.0,9,3
+"site_Sable Island, Nova Scotia",0.0,9,3
+"site_South of Sable Island, North Atlantic",0.0,9,3
+site_W of Browns Bank,0.0,9,3
+collection_code_BA2A,0.0,9,3
+collection_code_BD10A,0.0,9,3
+collection_code_BD15A,0.0,9,3
+collection_code_BE3C,0.0,9,3
+longitude,0.0,9,3
 cond_engine_noise,0.0,9,3
 cond_reverberation,0.0,9,3
 cond_water_noise,0.0,9,3
 cond_night_recording,0.0,9,3
 cond_no_visual,0.0,9,3
 cond_tape_speed_note,0.0,9,3
-duration_seconds,0.2683120667934418,9,4
-native_sample_rate,0.14115136861801147,9,4
-year,0.13820122182369232,9,4
-longitude,0.12355226278305054,9,4
-collection_code,0.12051157653331757,9,4
-site_code,0.10553256422281265,9,4
-bytes_on_disk,0.05882116034626961,9,4
-cond_ship_noise,0.026928862556815147,9,4
-latitude,0.016988877207040787,9,4
+duration_seconds,0.22545550763607025,9,4
+site_DOMINICA,0.17119239270687103,9,4
+longitude,0.15673422813415527,9,4
+site_N end of Dominica,0.10617932677268982,9,4
+site_Delaware,0.09507185220718384,9,4
+native_sample_rate,0.06065754219889641,9,4
+year,0.05605841800570488,9,4
+bytes_on_disk,0.04400816559791565,9,4
+site_Dominica,0.041611216962337494,9,4
+cond_ship_noise,0.02686377614736557,9,4
+site_50 mi. NE Malta,0.01188748050481081,9,4
+"site_Near Filicudi, Italy",0.004159293137490749,9,4
+"site_Sable Island, Nova Scotia",0.00012074075493728742,9,4
+"site_3-4 mi. off Roseau, Dominica",0.0,9,4
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,9,4
+site_Bequia,0.0,9,4
+site_Bermuda,0.0,9,4
+site_BermudaBD,0.0,9,4
+site_Dominica  E,0.0,9,4
+site_Dominica Is,0.0,9,4
+site_Dominica IsBD,0.0,9,4
+"site_Gully, SE Sable I., Canada  BD",0.0,9,4
+"site_Ligurian Sea, NW Italy",0.0,9,4
+"site_Lower end of Lanzarote Is., Canary I.",0.0,9,4
+site_Madeira,0.0,9,4
+site_N of Selina,0.0,9,4
+"site_N of Selina, Sicily",0.0,9,4
+"site_South of Sable Island, North Atlantic",0.0,9,4
+site_W of Browns Bank,0.0,9,4
+collection_code_BA2A,0.0,9,4
+collection_code_BD10A,0.0,9,4
+collection_code_BD15A,0.0,9,4
+collection_code_BE3B,0.0,9,4
+collection_code_BE3C,0.0,9,4
+latitude,0.0,9,4
 cond_engine_noise,0.0,9,4
 cond_reverberation,0.0,9,4
 cond_water_noise,0.0,9,4
