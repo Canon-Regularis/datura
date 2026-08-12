@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from src.data import annotations as ann
 from src.data.annotations import (
     AnnotationError,
     annotate,
@@ -201,3 +202,45 @@ def test_attaching_context_refuses_notes_that_were_parsed_without_it():
 
     with pytest.raises(AnnotationError, match="collection_code"):
         attach_context(index, stale)
+
+
+def test_attaching_context_twice_changes_nothing():
+    """It did not, and that broke a whole pipeline stage in silence.
+
+    The manifest gained a ``site`` and a ``collection_code`` when the place held out
+    experiment was built. This merge then produced ``site_x`` and ``site_y``, the plain
+    name stopped existing, and the call type stage, which passes its own output back
+    through here, began failing on every run. Nothing caught it because no test runs
+    that stage and the failure was a traceback in a log nobody read.
+    """
+    index = pd.DataFrame(
+        {
+            "clip_id": ["6001200A", "6001200B"],
+            "species": ["KillerWhale", "KillerWhale"],
+            "window_index": [0, 0],
+        }
+    )
+    parsed = pd.DataFrame(
+        {
+            "clip_id": ["6001200A", "6001200B"],
+            "site": ["Bermuda", "Dominica"],
+            "latitude": [32.3, 15.4],
+            "longitude": [-64.8, -61.4],
+            "collection_code": ["BE7A", "BA2A"],
+            "cond_ship_noise": [True, False],
+        }
+    )
+
+    once = ann.attach_context(index, parsed)
+    twice = ann.attach_context(once, parsed)
+
+    assert list(twice.columns) == list(once.columns), "a second attach renamed the columns"
+    assert len(twice) == len(once), "and it must not fan the rows out either"
+    assert list(twice["site"]) == ["Bermuda", "Dominica"]
+    assert not [column for column in twice.columns if column.endswith(("_x", "_y"))]
+
+
+def test_attaching_context_still_refuses_notes_that_carry_none():
+    thin = pd.DataFrame({"clip_id": ["6001200A"], "site": ["Bermuda"]})
+    with pytest.raises(ann.AnnotationError, match="collection_code"):
+        ann.attach_context(pd.DataFrame({"clip_id": ["6001200A"]}), thin)

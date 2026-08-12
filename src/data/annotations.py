@@ -217,12 +217,23 @@ def attach_context(index: pd.DataFrame, parsed: pd.DataFrame) -> pd.DataFrame:
     adding a column to it would invalidate every cached feature array. Joining here
     costs one merge and leaves the cache alone, which is why every control that sees
     the notes is built this way.
+
+    Only what is missing is joined, and that is not a tidiness measure. The manifest
+    gained a ``site`` and a ``collection_code`` when the place held out experiment was
+    built, so this merge started producing ``site_x`` and ``site_y`` and the plain name
+    stopped existing. The call type stage passes its own output back through here, so
+    it broke, and nothing caught it because no test runs that stage. Joining only the
+    absent columns makes the call idempotent, which is what its callers already assume.
     """
     columns = context_columns(parsed)
     missing = set(columns) - set(parsed.columns)
     if missing:
         raise AnnotationError(f"parsed notes are missing context columns: {sorted(missing)}")
-    return index.merge(parsed[["clip_id", *columns]], on="clip_id", how="left")
+
+    wanted = [column for column in columns if column not in index.columns]
+    if not wanted:
+        return index
+    return index.merge(parsed[["clip_id", *wanted]], on="clip_id", how="left")
 
 
 def _log_summary(frame: pd.DataFrame, species: tuple[str, ...]) -> None:

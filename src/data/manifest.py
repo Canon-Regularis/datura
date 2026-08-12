@@ -88,19 +88,32 @@ def shuffled_places(manifest: pd.DataFrame, seed: int) -> pd.Series:
     What it does not reproduce is clips per group, because tapes carry different numbers
     of cuts: the real median is 57 and this deals 44. The control is therefore close
     rather than exact, and the residual favours it.
+
+    A tape carrying two species is dealt from one pool only. Dealing it from both would
+    assign it twice and the second assignment would win, which would break the tape
+    counts this is built to match. ``base_10k`` has one such tape.
     """
     kept = manifest[manifest["keep"] & (manifest["place"] != "")]
     if kept.empty:
         return pd.Series("", index=manifest.index, dtype=str)
 
-    # Largest place first, so the dealing is stable rather than dependent on row order.
-    shape = kept.groupby(["place", "species"])["tape_id"].nunique().unstack(fill_value=0)
-    shape = shape.loc[shape.sum(axis=1).sort_values(ascending=False).index]
+    # Each tape counted once, under the species that owns most of its clips. A tape
+    # carrying two of them would otherwise appear in both pools, be dealt twice, and
+    # have the second assignment overwrite the first, which breaks the tape counts this
+    # exists to match. base_10k has one such tape.
+    owner = kept.groupby("tape_id")["species"].agg(lambda values: values.value_counts().idxmax())
+    counted = kept.drop_duplicates("tape_id").assign(owner=lambda f: f["tape_id"].map(owner))
+
+    # Largest place first, and stably, so two places of equal size are always dealt in
+    # the same order. The default sort is introsort and is not stable, so the comment
+    # that used to sit here claiming a stable order was wrong.
+    shape = counted.groupby(["place", "owner"])["tape_id"].nunique().unstack(fill_value=0)
+    shape = shape.loc[shape.sum(axis=1).sort_values(ascending=False, kind="stable").index]
 
     generator = np.random.default_rng(seed)
     pools, taken = {}, dict.fromkeys(shape.columns, 0)
     for species in shape.columns:
-        tapes = list(kept.loc[kept["species"] == species, "tape_id"].unique())
+        tapes = list(counted.loc[counted["owner"] == species, "tape_id"].unique())
         generator.shuffle(tapes)
         pools[species] = tapes
 
