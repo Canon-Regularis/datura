@@ -127,15 +127,61 @@ def test_a_higher_target_accuracy_declines_more(cfg):
     assert strict >= lenient
 
 
+def standing(cut_off=0.5, ceiling=0.95, matched=None):
+    return predict.Standing(cut_off=cut_off, ceiling=ceiling, matched=matched)
+
+
 def test_the_report_is_plain_ascii(cfg):
     """It crashed on the default Windows codepage, which is where it is mostly run."""
-    scores = np.array([0.7, 0.2, 0.1])
-    text = predict.render(cfg, "xgboost", scores, None, 0.5)
+    text = predict.render(cfg, "xgboost", np.array([0.7, 0.2, 0.1]), standing())
     text.encode("cp1252")
 
-    declined = predict.render(cfg, "xgboost", np.array([0.4, 0.35, 0.25]), None, 0.5)
+    declined = predict.render(cfg, "xgboost", np.array([0.4, 0.35, 0.25]), standing())
     assert "UNCERTAIN" in declined
     declined.encode("cp1252")
+
+    withheld = predict.render(cfg, "xgboost", np.array([0.9, 0.05, 0.05]), standing(cut_off=None))
+    assert "WITHHELD" in withheld
+    withheld.encode("cp1252")
+
+
+def test_a_model_that_never_reaches_the_target_is_withheld_rather_than_offered(cfg):
+    """The bug: two different absences were both spelled ``None``.
+
+    Under ``configs/context.yaml`` no model exceeds 0.65 accuracy at any coverage, so
+    no threshold earns the 90% target, and the old code read that as "no threshold to
+    apply" and printed the answer with ``Confidence : HIGH``. A model that cannot be
+    right often enough at any coverage has to withhold, not answer freely.
+    """
+    confident = np.array([0.97, 0.02, 0.01])
+
+    never = predict.render(cfg, "xgboost", confident, standing(cut_off=None, ceiling=0.495))
+    assert "WITHHELD" in never
+    assert "49.5%" in never, "and it says how far short the model falls"
+    assert "HIGH" not in never
+
+    unknown = predict.render(cfg, "xgboost", confident, standing(ceiling=None))
+    assert "no coverage table" in unknown, "no curve at all is a different sentence"
+
+
+def test_the_three_states_are_read_off_the_committed_curves(cfg):
+    """Both branches exist in the artifacts, so neither is hypothetical."""
+    from src.config import load_config
+
+    if predict.curve_for(cfg, "xgboost") is None:
+        pytest.skip("no coverage table")
+
+    on_recordings = predict.standing(cfg, "xgboost", 0.85)
+    assert on_recordings.has_curve and on_recordings.reaches_target
+
+    context = load_config("configs/context.yaml")
+    if predict.curve_for(context, "xgboost") is None:
+        pytest.skip("context_10k has no coverage table")
+
+    on_places = predict.standing(context, "xgboost", 0.85)
+    assert on_places.has_curve, "the curve exists"
+    assert not on_places.reaches_target, "and nothing on it reaches 90%"
+    assert on_places.ceiling < predict.TARGET_ACCURACY
 
 
 def test_averaging_two_models_needs_both_of_them(cfg, audio):

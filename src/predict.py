@@ -31,6 +31,7 @@ import argparse
 import logging
 import sys
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -45,7 +46,7 @@ from src.evaluate import coverage
 from src.features import registry as features
 from src.features.views import RowView
 from src.models import registry as models
-from src.results import checkpoint_path, config_directory
+from src.results import checkpoint_path, coverage_path
 
 logger = logging.getLogger(__name__)
 
@@ -135,13 +136,11 @@ def probabilities(cfg: Config, path: Path, names: Sequence[str], fold: int) -> n
                 "use the fold this repository ships."
             ) from error
 
-        # The project's own row view rather than something shaped like one. The trees
-        # branch on isinstance, so a lookalike reached numpy as a nought dimensional
-        # object array. One file has no cache, so this wraps an array already in memory.
+        # One file has no cache behind it, so this wraps an array already in memory.
         # Averaged across windows first, which is how every score in the report is
         # computed. Taking the most confident window instead would report the model's
         # best moment rather than its opinion of the recording.
-        per_window = model.predict_proba(RowView(matrix, np.arange(len(matrix))))
+        per_window = model.predict_proba(RowView.over(matrix))
         votes.append(per_window.mean(axis=0))
 
     # Then averaged across models. Equal weight, because nothing here has been tuned
@@ -151,12 +150,38 @@ def probabilities(cfg: Config, path: Path, names: Sequence[str], fold: int) -> n
 
 def curve_for(cfg: Config, name: str) -> pd.DataFrame | None:
     """This model's measured accuracy against coverage, or nothing if it has none."""
-    path = config_directory(cfg) / "coverage.csv"
+    path = coverage_path(cfg)
     if not path.exists():
         return None
     table = pd.read_csv(path)
     rows = table[table["model"] == name]
     return rows if len(rows) else None
+
+
+@dataclass(frozen=True)
+class Standing:
+    """Whether a model may answer at all, and what its answer is worth.
+
+    Three states, and collapsing two of them is how this command came to print
+    ``Confidence : HIGH`` beside a model that is right 49.5% of the time. There was one
+    nullable float, and ``None`` meant both "this configuration has no curve" and "this
+    model never reaches the target at any coverage". The second is a refusal and the
+    first is an apology, and the code took the confident branch for both.
+    """
+
+    cut_off: float | None
+    ceiling: float | None
+    matched: pd.Series | None
+
+    @property
+    def has_curve(self) -> bool:
+        """Whether anything is known about how often this model is right."""
+        return self.ceiling is not None
+
+    @property
+    def reaches_target(self) -> bool:
+        """Whether declining the least confident clips ever earns the target accuracy."""
+        return self.cut_off is not None
 
 
 def threshold_for(curve: pd.DataFrame | None, target: float = TARGET_ACCURACY) -> float | None:
@@ -166,11 +191,29 @@ def threshold_for(curve: pd.DataFrame | None, target: float = TARGET_ACCURACY) -
     model happens to be. A network whose probabilities are all above 0.9 needs a far
     higher cut off than a tree whose probabilities spread out, and asking both to
     clear the same number gives one of them an abstention rule that never fires.
+
+    ``None`` means no coverage level reaches the target, which is a model that should
+    not be answering. Callers want ``standing``, which can tell that apart from a
+    configuration that has no curve at all.
     """
     if curve is None:
         return None
     good = curve[curve["accuracy"] >= target].sort_values("coverage", ascending=False)
     return float(good.iloc[0]["threshold"]) if len(good) else None
+
+
+def standing(
+    cfg: Config, name: str, confidence: float, target: float = TARGET_ACCURACY
+) -> Standing:
+    """Everything this model's own curve says about a prediction of this confidence."""
+    curve = curve_for(cfg, name)
+    if curve is None:
+        return Standing(cut_off=None, ceiling=None, matched=None)
+    return Standing(
+        cut_off=threshold_for(curve, target),
+        ceiling=float(curve["accuracy"].max()),
+        matched=coverage.band(curve, confidence),
+    )
 
 
 def band(cfg: Config, name: str, confidence: float) -> pd.Series | None:
@@ -179,13 +222,7 @@ def band(cfg: Config, name: str, confidence: float) -> pd.Series | None:
     return coverage.band(curve, confidence) if curve is not None else None
 
 
-def render(
-    cfg: Config,
-    name: str,
-    scores: np.ndarray,
-    matched: pd.Series | None,
-    cut_off: float | None = None,
-) -> str:
+def render(cfg: Config, name: str, scores: np.ndarray, verdict: Standing) -> str:
     """The report a person reads."""
     species = list(cfg.dataset.species)
     order = np.argsort(scores)[::-1]
@@ -194,10 +231,17 @@ def render(
     lines.append("")
 
     best = int(order[0])
-    if cut_off is not None and scores[best] < cut_off:
+    if verdict.has_curve and not verdict.reaches_target:
+        lines += [
+            "  Prediction : WITHHELD",
+            f"  Confidence : this model never reaches {TARGET_ACCURACY:.0%} accuracy at any",
+            f"               coverage. Its best is {verdict.ceiling:.1%}, so no threshold",
+            "               makes an answer from it worth acting on.",
+        ]
+    elif verdict.reaches_target and scores[best] < verdict.cut_off:
         lines += [
             "  Prediction : UNCERTAIN",
-            f"  Confidence : LOW, below the {cut_off:.3f} this model needs to be "
+            f"  Confidence : LOW, below the {verdict.cut_off:.3f} this model needs to be "
             f"{TARGET_ACCURACY:.0%} accurate",
             "",
             "  This recording should not be classified automatically. The model is not",
@@ -205,6 +249,7 @@ def render(
         ]
     else:
         lines.append(f"  Prediction : {species[best]}")
+        matched = verdict.matched
         if matched is not None:
             lines.append(
                 f"  Confidence : {_word(matched['coverage'])}, and on held out recordings "
@@ -213,6 +258,11 @@ def render(
             lines.append(
                 f"               on the most confident {matched['coverage']:.0%} of its predictions"
             )
+        elif verdict.has_curve:
+            lines.append(
+                "  Confidence : below the weakest band this curve measures, so how often it"
+            )
+            lines.append("               is right at this confidence is unknown")
         else:
             lines.append("  Confidence : no coverage table for this configuration")
 
@@ -260,15 +310,8 @@ def main(argv: list[str] | None = None) -> int:
     # ensemble is measured rather than guessed at, exactly like a single model.
     label = "+".join(chosen)
     scores = probabilities(cfg, args.recording, chosen, args.fold)
-    print(
-        render(
-            cfg,
-            label,
-            scores,
-            band(cfg, label, float(scores.max())),
-            threshold_for(curve_for(cfg, label), args.target_accuracy),
-        )
-    )
+    verdict = standing(cfg, label, float(scores.max()), args.target_accuracy)
+    print(render(cfg, label, scores, verdict))
     return 0
 
 
