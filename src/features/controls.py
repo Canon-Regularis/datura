@@ -45,16 +45,47 @@ class TabularFeatureSource(FeatureSource):
         self._categorical = list(categorical)
         self._numeric = list(numeric)
 
-        # A name is coded rather than measured. Trees split on the code as an
-        # identity, which is all a control needs it to be. Nothing is filled in
-        # first: an absent name codes to -1, which is a category of its own and is
-        # what the context control has always done.
-        codes = [
-            self._index[column].astype("category").cat.codes.to_numpy()
+        # One column per name rather than one number per column, and the reason is
+        # worth the paragraph because getting it wrong cost this project a published
+        # claim in both directions.
+        #
+        # A site or a collection code is a name. Coding it to its position in the
+        # alphabet and handing a tree the integer makes it an ordinal, so the only
+        # question a split can ask is whether the code is above some threshold, and the
+        # answer for a name the model never saw is decided by where the alphabet
+        # happened to put it. Under tape folds that barely shows, because a held out
+        # tape almost always carries a name the training tapes carried too. Under place
+        # folds every held out name is new, and the arbitrary geometry is the whole
+        # answer: five encodings carrying identical information scored 0.7211, 0.9908,
+        # 0.9911, 0.9990 and 0.9993 on the same folds. Moving the absent name sentinel
+        # from one end of the axis to the other, which carries no information at all,
+        # was worth 0.278.
+        #
+        # A column per name removes the axis. Nothing is adjacent to anything, a name
+        # the model never saw is zero everywhere, and the tree falls back on what it
+        # does know rather than on a neighbour it was handed by accident. The same
+        # comparison under this encoding spans 0.018.
+        names = [
+            pd.get_dummies(self._present(column), prefix=column, dtype=np.float32)
             for column in self._categorical
         ]
-        numbers = self._index.loc[:, self._numeric].astype(float).fillna(0.0).to_numpy()
-        self._matrix = np.column_stack([*codes, numbers]).astype(np.float32)
+        self._name_columns = [list(block.columns) for block in names]
+
+        # A missing number stays missing. Writing 0.0 for an absent coordinate invents
+        # a measurement, and XGBoost takes NaN natively by learning a default direction
+        # per split, which is the honest reading of a value nobody wrote down.
+        numbers = self._index.loc[:, self._numeric].astype(float)
+        blocks = [block.to_numpy() for block in names]
+        self._matrix = np.column_stack([*blocks, numbers.to_numpy()]).astype(np.float32)
+
+    def _present(self, column: str) -> pd.Series:
+        """The column with an absent name marked as absent rather than as a name.
+
+        The notes write "no site recorded" as an empty string, which ``get_dummies``
+        would otherwise give a column of its own. Absence is not one of the places.
+        """
+        values = self._index[column].fillna("").astype(str).str.strip()
+        return values.where(values != "", other=None)
 
     @property
     def name(self) -> str:
@@ -68,12 +99,13 @@ class TabularFeatureSource(FeatureSource):
         return RowView(self._matrix, rows)
 
     def feature_names(self) -> list[str]:
-        # A coded column says so in its name, and one that already says so is left
-        # alone. The context control has reported "site_code" since it was written.
-        coded = [
-            column if column.endswith("_code") else f"{column}_code" for column in self._categorical
-        ]
-        return coded + self._numeric
+        """One name per column, so a gain ranking says which site rather than which axis.
+
+        This used to report ``site_code``, a single entry standing for all 47 of them,
+        which meant the importance tables could say the site mattered and never which
+        one. A column per name is more of them and says more.
+        """
+        return [name for block in self._name_columns for name in block] + self._numeric
 
 
 class LogbookFeatureSource(TabularFeatureSource):

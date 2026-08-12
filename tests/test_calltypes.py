@@ -148,9 +148,8 @@ def test_the_call_type_control_sees_every_field_the_species_control_sees():
     labels = build_labels({"coda": 12, "click": 12})
     control = LogbookFeatureSource(labels, ["cond_ship_noise"])
 
-    assert control.feature_names() == [
-        "site_code",
-        "collection_code",
+    names = control.feature_names()
+    assert [name for name in names if not name.startswith(("site_", "collection_code_"))] == [
         "native_sample_rate",
         "year",
         "duration_seconds",
@@ -161,10 +160,14 @@ def test_the_call_type_control_sees_every_field_the_species_control_sees():
     ]
 
     matrix = control.matrix(np.arange(len(labels))).to_numpy()
-    assert matrix.shape == (len(labels), 9)
-    # Two sites and two collections in this fixture, so each code takes two values.
-    assert len(np.unique(matrix[:, 0])) == 2
-    assert len(np.unique(matrix[:, 1])) == 2
+    assert matrix.shape == (len(labels), len(names))
+
+    # Two sites and two collections in this fixture, so each gets two columns and every
+    # row claims exactly one of each.
+    for prefix in ("site_", "collection_code_"):
+        columns = [i for i, name in enumerate(names) if name.startswith(prefix)]
+        assert len(columns) == 2
+        assert set(matrix[:, columns].sum(axis=1)) == {1.0}
 
 
 def test_the_call_type_control_refuses_an_index_without_a_site():
