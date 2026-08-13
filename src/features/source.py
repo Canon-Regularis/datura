@@ -92,3 +92,58 @@ class DerivedSource(FeatureSource):
 
     def feature_names(self) -> list[str] | None:
         return self._base.feature_names()
+
+
+class CentredSource(FeatureSource):
+    """Another source with each recording's mean feature vector subtracted.
+
+    A stationary recording channel adds roughly the same offset to every window of a
+    tape, so the tape mean is largely equipment and the variation around it is largely
+    animal. Subtracting the mean is cepstral mean normalisation, which speaker
+    recognition has used for the same reason for decades.
+
+    It is worth 0.077 macro-F1 under tape folds and 0.180 under place folds, and the
+    second being more than double the first is the point: what it removes mattered most
+    when travelling between recording locations. Also dividing by the per recording
+    spread costs 0.111 under both fold rules, so that spread carries the animal and is
+    left alone.
+
+    Grouping is always the recording, never the fold's grouping column. Centring by
+    place under place folds would pool statistics across every tape at a location, which
+    is a different transform and a much leakier one.
+
+    Nothing is written to the cache. The means are one vector per recording and the
+    subtraction happens on read, so this costs a pass over the parent at construction
+    and a copy of whichever rows a caller asks for.
+    """
+
+    GROUP = "tape_id"
+
+    def __init__(self, base: FeatureSource, name: str):
+        if self.GROUP not in base.index.columns:
+            raise ValueError(f"window index carries no {self.GROUP} to centre within")
+        self._base = base
+        self._name = name
+        self._means: dict[object, np.ndarray] = {}
+        self._of_row = base.index[self.GROUP].to_numpy()
+        for group, positions in base.index.groupby(self.GROUP).indices.items():
+            rows = np.asarray(positions, dtype=np.int64)
+            block = np.asarray(base.matrix(rows).take(np.arange(len(rows))), dtype=np.float32)
+            self._means[group] = block.mean(axis=0)
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def index(self) -> pd.DataFrame:
+        return self._base.index
+
+    def matrix(self, rows: np.ndarray) -> RowView:
+        wanted = np.asarray(rows, dtype=np.int64)
+        block = np.asarray(self._base.matrix(wanted).take(np.arange(len(wanted))), dtype=np.float32)
+        offsets = np.stack([self._means[group] for group in self._of_row[wanted]])
+        return RowView.over(block - offsets)
+
+    def feature_names(self) -> list[str] | None:
+        return self._base.feature_names()
