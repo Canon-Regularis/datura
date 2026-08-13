@@ -21,6 +21,7 @@ Columns beside the margin say what the design resolves. `folds` counts every fol
 | species                      | probe                              | logbook                              |  -0.2581 | -0.3514 | -0.1648 |  1.11e-06 |         50 |      50 |
 | species                      | xgboost+probe                      | logbook                              |  -0.2324 | -0.3257 | -0.1392 |  7.44e-06 |         50 |      50 |
 | species                      | cnn_small                          | logbook                              |  -0.2876 | -0.4368 | -0.1383 |  0.000319 |         50 |      50 |
+| species                      | xgboost_centred                    | logbook                              |  -0.1747 | -0.2701 | -0.0793 |  0.000582 |         50 |      50 |
 | species                      | cnn                                | logbook                              |  -0.2863 | -0.515  | -0.0576 |  0.0254   |          5 |       5 |
 | species                      | logbook                            | metadata                             |   0.1294 | -0.0093 |  0.2681 |  0.0667   |         44 |      50 |
 | calltype_spermwhale_coda     | calltype_spermwhale_coda_cnn_small | calltype_spermwhale_coda_context     |  -0.1776 | -0.4344 |  0.0792 |  0.127    |          5 |       5 |
@@ -35,6 +36,7 @@ Columns beside the margin say what the design resolves. `folds` counts every fol
 | species                      | cnn                                | metadata                             |  -0.1702 | -0.6573 |  0.3169 |  0.387    |          4 |       5 |
 | calltype_killerwhale_call    | calltype_killerwhale_call          | calltype_killerwhale_call_context    |  -0.0773 | -0.2628 |  0.1082 |  0.406    |         30 |      50 |
 | calltype_spermwhale_click    | calltype_spermwhale_click          | calltype_spermwhale_click_context    |  -0.0317 | -0.1467 |  0.0832 |  0.582    |         29 |      50 |
+| species                      | xgboost_centred                    | metadata                             |  -0.0453 | -0.2391 |  0.1486 |  0.641    |         36 |      50 |
 | calltype_killerwhale_squeal  | calltype_killerwhale_squeal        | calltype_killerwhale_squeal_context  |   0.0361 | -0.1751 |  0.2472 |  0.733    |         32 |      50 |
 | calltype_spermwhale_whistle  | calltype_spermwhale_whistle        | calltype_spermwhale_whistle_context  |  -0.0335 | -0.3673 |  0.3002 |  0.841    |         31 |      50 |
 
@@ -46,14 +48,15 @@ The control sees native sample rate, year, clip duration and file size; it sees 
 audio. It is a floor rather than the floor, and the table after this one measures
 against the highest any model that hears nothing reaches.
 
-| model         |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
-|:--------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
-| logbook       | 0.9972 |    0.8678 |   0.1294 | -0.0093 | 0.2681 |    0.0667 |         44 |      50 | species  |
-| xgboost+probe | 0.7647 |    0.8678 |  -0.1031 | -0.2952 | 0.0891 |    0.286  |         38 |      50 | species  |
-| xgboost       | 0.7524 |    0.8678 |  -0.1154 | -0.3101 | 0.0793 |    0.239  |         38 |      50 | species  |
-| probe         | 0.7391 |    0.8678 |  -0.1287 | -0.3049 | 0.0474 |    0.148  |         39 |      50 | species  |
-| cnn_small     | 0.7096 |    0.8678 |  -0.1582 | -0.4016 | 0.0853 |    0.198  |         40 |      50 | species  |
-| cnn           | 0.7135 |    0.8837 |  -0.1702 | -0.6573 | 0.3169 |    0.387  |          4 |       5 | species  |
+| model           |   mean |   control |   margin |     low |   high |   p_value |   agreeing |   folds | family   |
+|:----------------|-------:|----------:|---------:|--------:|-------:|----------:|-----------:|--------:|:---------|
+| logbook         | 0.9972 |    0.8678 |   0.1294 | -0.0093 | 0.2681 |    0.0667 |         44 |      50 | species  |
+| xgboost_centred | 0.8225 |    0.8678 |  -0.0453 | -0.2391 | 0.1486 |    0.641  |         36 |      50 | species  |
+| xgboost+probe   | 0.7647 |    0.8678 |  -0.1031 | -0.2952 | 0.0891 |    0.286  |         38 |      50 | species  |
+| xgboost         | 0.7524 |    0.8678 |  -0.1154 | -0.3101 | 0.0793 |    0.239  |         38 |      50 | species  |
+| probe           | 0.7391 |    0.8678 |  -0.1287 | -0.3049 | 0.0474 |    0.148  |         39 |      50 | species  |
+| cnn_small       | 0.7096 |    0.8678 |  -0.1582 | -0.4016 | 0.0853 |    0.198  |         40 |      50 | species  |
+| cnn             | 0.7135 |    0.8837 |  -0.1702 | -0.6573 | 0.3169 |    0.387  |          4 |       5 | species  |
 
 ### Margin over logbook, the strongest model that hears no audio
 
@@ -61,13 +64,14 @@ against the highest any model that hears nothing reaches.
 collection code the field note opens with. None of that is the animal, so this is the
 number an audio result has to clear before it is evidence about whales.
 
-| model         |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
-|:--------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
-| xgboost+probe | 0.7647 |    0.9972 |  -0.2324 | -0.3257 | -0.1392 |  7.44e-06 |         50 |      50 | species  |
-| xgboost       | 0.7524 |    0.9972 |  -0.2448 | -0.3189 | -0.1708 |  2.37e-08 |         50 |      50 | species  |
-| probe         | 0.7391 |    0.9972 |  -0.2581 | -0.3514 | -0.1648 |  1.11e-06 |         50 |      50 | species  |
-| cnn           | 0.7135 |    0.9998 |  -0.2863 | -0.515  | -0.0576 |  0.0254   |          5 |       5 | species  |
-| cnn_small     | 0.7096 |    0.9972 |  -0.2876 | -0.4368 | -0.1383 |  0.000319 |         50 |      50 | species  |
+| model           |   mean |   control |   margin |     low |    high |   p_value |   agreeing |   folds | family   |
+|:----------------|-------:|----------:|---------:|--------:|--------:|----------:|-----------:|--------:|:---------|
+| xgboost_centred | 0.8225 |    0.9972 |  -0.1747 | -0.2701 | -0.0793 |  0.000582 |         50 |      50 | species  |
+| xgboost+probe   | 0.7647 |    0.9972 |  -0.2324 | -0.3257 | -0.1392 |  7.44e-06 |         50 |      50 | species  |
+| xgboost         | 0.7524 |    0.9972 |  -0.2448 | -0.3189 | -0.1708 |  2.37e-08 |         50 |      50 | species  |
+| probe           | 0.7391 |    0.9972 |  -0.2581 | -0.3514 | -0.1648 |  1.11e-06 |         50 |      50 | species  |
+| cnn             | 0.7135 |    0.9998 |  -0.2863 | -0.515  | -0.0576 |  0.0254   |          5 |       5 | species  |
+| cnn_small       | 0.7096 |    0.9972 |  -0.2876 | -0.4368 | -0.1383 |  0.000319 |         50 |      50 | species  |
 
 ### Every model, with the range the recordings support
 
@@ -78,39 +82,42 @@ many times and produce an interval several times too narrow. Resampling tapes un
 fold rule that holds out places is the same mistake one level up, and it reported an
 interval 59% narrower than the design supports.
 
-| model         |   estimate |    low |   high |   groups | unit    |
-|:--------------|-----------:|-------:|-------:|---------:|:--------|
-| xgboost       |     0.7265 | 0.6191 | 0.8387 |      134 | tape_id |
-| cnn           |     0.7064 | 0.5737 | 0.8671 |      134 | tape_id |
-| cnn_small     |     0.6849 | 0.5497 | 0.8535 |      134 | tape_id |
-| logbook       |     0.9998 | 0.9992 | 1      |      134 | tape_id |
-| probe         |     0.7512 | 0.6313 | 0.8358 |      134 | tape_id |
-| xgboost+probe |     0.7802 | 0.6634 | 0.8682 |      134 | tape_id |
-| metadata      |     0.9343 | 0.7962 | 0.9832 |      134 | tape_id |
+| model           |   estimate |    low |   high |   groups | unit    |
+|:----------------|-----------:|-------:|-------:|---------:|:--------|
+| xgboost         |     0.7265 | 0.6191 | 0.8387 |      134 | tape_id |
+| cnn             |     0.7064 | 0.5737 | 0.8671 |      134 | tape_id |
+| cnn_small       |     0.6849 | 0.5497 | 0.8535 |      134 | tape_id |
+| logbook         |     0.9998 | 0.9992 | 1      |      134 | tape_id |
+| probe           |     0.7512 | 0.6313 | 0.8358 |      134 | tape_id |
+| xgboost_centred |     0.8148 | 0.7332 | 0.8892 |      134 | tape_id |
+| xgboost+probe   |     0.7802 | 0.6634 | 0.8682 |      134 | tape_id |
+| metadata        |     0.9343 | 0.7962 | 0.9832 |      134 | tape_id |
 
 ### Spread across folds
 
-| model         |   mean |    std |
-|:--------------|-------:|-------:|
-| xgboost       | 0.7524 | 0.0698 |
-| cnn           | 0.7135 | 0.123  |
-| cnn_small     | 0.7096 | 0.1418 |
-| logbook       | 0.9972 | 0.0096 |
-| probe         | 0.7391 | 0.0902 |
-| xgboost+probe | 0.7647 | 0.0889 |
-| metadata      | 0.8678 | 0.1344 |
+| model           |   mean |    std |
+|:----------------|-------:|-------:|
+| xgboost         | 0.7524 | 0.0698 |
+| cnn             | 0.7135 | 0.123  |
+| cnn_small       | 0.7096 | 0.1418 |
+| logbook         | 0.9972 | 0.0096 |
+| probe           | 0.7391 | 0.0902 |
+| xgboost_centred | 0.8225 | 0.0889 |
+| xgboost+probe   | 0.7647 | 0.0889 |
+| metadata        | 0.8678 | 0.1344 |
 
 ### Per species recall
 
-| model         |   HumpbackWhale |   SpermWhale |   KillerWhale |
-|:--------------|----------------:|-------------:|--------------:|
-| xgboost       |          0.5734 |       0.8688 |        0.8854 |
-| cnn           |          0.4956 |       0.8828 |        0.9007 |
-| cnn_small     |          0.5292 |       0.8602 |        0.8741 |
-| logbook       |          0.9982 |       0.9899 |        0.9999 |
-| probe         |          0.6466 |       0.8131 |        0.8588 |
-| xgboost+probe |          0.6358 |       0.8655 |        0.8824 |
-| metadata      |          0.6804 |       0.9889 |        0.9443 |
+| model           |   HumpbackWhale |   SpermWhale |   KillerWhale |
+|:----------------|----------------:|-------------:|--------------:|
+| xgboost         |          0.5734 |       0.8688 |        0.8854 |
+| cnn             |          0.4956 |       0.8828 |        0.9007 |
+| cnn_small       |          0.5292 |       0.8602 |        0.8741 |
+| logbook         |          0.9982 |       0.9899 |        0.9999 |
+| probe           |          0.6466 |       0.8131 |        0.8588 |
+| xgboost_centred |          0.608  |       0.9219 |        0.9363 |
+| xgboost+probe   |          0.6358 |       0.8655 |        0.8824 |
+| metadata        |          0.6804 |       0.9889 |        0.9443 |
 
 One of these recordings carries more than one of the classes above, across HumpbackWhale and SpermWhale. Grouping keeps each tape whole, so none of them crosses a fold boundary, and they still contribute to two recalls apiece: the classes sharing a tape are not scored on independent evidence.
 
@@ -126,36 +133,40 @@ fewer species than the task does, and it is scored over the ones it holds. Avera
 in a class that cannot appear scores it zero and divides by it anyway, which caps the
 column and reads as a collapse the predictions do not contain.
 
-| giveaway           | model         | subset                                 |   clips |   classes_scored |   classes_total |   folds |   macro_f1_mean |   macro_f1_std |
-|:-------------------|:--------------|:---------------------------------------|--------:|-----------------:|----------------:|--------:|----------------:|---------------:|
-| native sample rate | xgboost       | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6611 |         0.1356 |
-| native sample rate | xgboost       | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.705  |         0.1305 |
-| collection code    | xgboost       | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6165 |         0.2831 |
-| collection code    | xgboost       | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7503 |         0.072  |
-| native sample rate | cnn           | native sample rate shared by species   |     847 |                3 |               3 |       5 |          0.7068 |         0.1369 |
-| native sample rate | cnn           | native sample rate unique to a species |    3313 |                3 |               3 |       5 |          0.6436 |         0.1201 |
-| collection code    | cnn           | collection code not recorded           |     359 |                2 |               3 |       4 |          0.5815 |         0.1652 |
-| collection code    | cnn           | collection code unique to a species    |    3801 |                3 |               3 |       5 |          0.7111 |         0.1245 |
-| native sample rate | cnn_small     | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6713 |         0.1512 |
-| native sample rate | cnn_small     | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.6712 |         0.1708 |
-| collection code    | cnn_small     | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6091 |         0.2279 |
-| collection code    | cnn_small     | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7075 |         0.1446 |
-| native sample rate | logbook       | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.9229 |         0.1356 |
-| native sample rate | logbook       | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.9326 |         0.1352 |
-| collection code    | logbook       | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6934 |         0.2464 |
-| collection code    | logbook       | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.9973 |         0.0101 |
-| native sample rate | probe         | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.7084 |         0.1286 |
-| native sample rate | probe         | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.679  |         0.1312 |
-| collection code    | probe         | collection code not recorded           |     359 |                2 |               3 |      43 |          0.5139 |         0.2721 |
-| collection code    | probe         | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7462 |         0.093  |
-| native sample rate | xgboost+probe | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.719  |         0.1396 |
-| native sample rate | xgboost+probe | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.6991 |         0.1326 |
-| collection code    | xgboost+probe | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6121 |         0.2744 |
-| collection code    | xgboost+probe | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7656 |         0.0887 |
-| native sample rate | metadata      | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6828 |         0.1895 |
-| native sample rate | metadata      | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.8777 |         0.1888 |
-| collection code    | metadata      | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6977 |         0.2474 |
-| collection code    | metadata      | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.8668 |         0.1349 |
+| giveaway           | model           | subset                                 |   clips |   classes_scored |   classes_total |   folds |   macro_f1_mean |   macro_f1_std |
+|:-------------------|:----------------|:---------------------------------------|--------:|-----------------:|----------------:|--------:|----------------:|---------------:|
+| native sample rate | xgboost         | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6611 |         0.1356 |
+| native sample rate | xgboost         | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.705  |         0.1305 |
+| collection code    | xgboost         | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6165 |         0.2831 |
+| collection code    | xgboost         | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7503 |         0.072  |
+| native sample rate | cnn             | native sample rate shared by species   |     847 |                3 |               3 |       5 |          0.7068 |         0.1369 |
+| native sample rate | cnn             | native sample rate unique to a species |    3313 |                3 |               3 |       5 |          0.6436 |         0.1201 |
+| collection code    | cnn             | collection code not recorded           |     359 |                2 |               3 |       4 |          0.5815 |         0.1652 |
+| collection code    | cnn             | collection code unique to a species    |    3801 |                3 |               3 |       5 |          0.7111 |         0.1245 |
+| native sample rate | cnn_small       | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6713 |         0.1512 |
+| native sample rate | cnn_small       | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.6712 |         0.1708 |
+| collection code    | cnn_small       | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6091 |         0.2279 |
+| collection code    | cnn_small       | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7075 |         0.1446 |
+| native sample rate | logbook         | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.9229 |         0.1356 |
+| native sample rate | logbook         | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.9326 |         0.1352 |
+| collection code    | logbook         | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6934 |         0.2464 |
+| collection code    | logbook         | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.9973 |         0.0101 |
+| native sample rate | probe           | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.7084 |         0.1286 |
+| native sample rate | probe           | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.679  |         0.1312 |
+| collection code    | probe           | collection code not recorded           |     359 |                2 |               3 |      43 |          0.5139 |         0.2721 |
+| collection code    | probe           | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7462 |         0.093  |
+| native sample rate | xgboost_centred | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.7019 |         0.1488 |
+| native sample rate | xgboost_centred | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.7655 |         0.1109 |
+| collection code    | xgboost_centred | collection code not recorded           |     359 |                2 |               3 |      43 |          0.5696 |         0.2614 |
+| collection code    | xgboost_centred | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.8249 |         0.0884 |
+| native sample rate | xgboost+probe   | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.719  |         0.1396 |
+| native sample rate | xgboost+probe   | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.6991 |         0.1326 |
+| collection code    | xgboost+probe   | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6121 |         0.2744 |
+| collection code    | xgboost+probe   | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.7656 |         0.0887 |
+| native sample rate | metadata        | native sample rate shared by species   |     847 |                3 |               3 |      50 |          0.6828 |         0.1895 |
+| native sample rate | metadata        | native sample rate unique to a species |    3313 |                3 |               3 |      50 |          0.8777 |         0.1888 |
+| collection code    | metadata        | collection code not recorded           |     359 |                2 |               3 |      43 |          0.6977 |         0.2474 |
+| collection code    | metadata        | collection code unique to a species    |    3801 |                3 |               3 |      50 |          0.8668 |         0.1349 |
 
 ### Accuracy against coverage
 
@@ -164,63 +175,74 @@ threshold. `coverage` is the share kept, and the row at 1.0 is the score reporte
 everywhere else. Nothing is refitted: this reads the held out probabilities the
 cross validation already wrote.
 
-| model         |   coverage |   threshold |   predictions |   clips |   accuracy |   macro_f1 |
-|:--------------|-----------:|------------:|--------------:|--------:|-----------:|-----------:|
-| xgboost       |     1      |      0.3346 |         41600 |    4160 |     0.8298 |     0.7502 |
-| xgboost       |     0.95   |      0.4271 |         39520 |    4145 |     0.8472 |     0.7646 |
-| xgboost       |     0.9    |      0.4665 |         37441 |    4116 |     0.8614 |     0.774  |
-| xgboost       |     0.8    |      0.5297 |         33280 |    4024 |     0.8841 |     0.7839 |
-| xgboost       |     0.7    |      0.5913 |         29120 |    3814 |     0.903  |     0.7933 |
-| xgboost       |     0.6    |      0.6508 |         24960 |    3495 |     0.9151 |     0.7889 |
-| xgboost       |     0.5    |      0.6991 |         20800 |    3219 |     0.9203 |     0.7834 |
-| xgboost       |     0.4    |      0.7423 |         16640 |    2959 |     0.924  |     0.7861 |
-| xgboost       |     0.3    |      0.7888 |         12480 |    2518 |     0.9297 |     0.7922 |
-| xgboost       |     0.2    |      0.8468 |          8321 |    1881 |     0.9368 |     0.7532 |
-| xgboost       |     0.1    |      0.8801 |          4160 |    1169 |     0.9519 |     0.7085 |
-| cnn           |     1      |      0.3731 |          4160 |    4160 |     0.8243 |     0.7064 |
-| cnn           |     0.95   |      0.6    |          3952 |    3952 |     0.8494 |     0.7259 |
-| cnn           |     0.9    |      0.7408 |          3744 |    3744 |     0.8771 |     0.7533 |
-| cnn           |     0.8    |      0.9355 |          3328 |    3328 |     0.9231 |     0.8074 |
-| cnn           |     0.7    |      0.99   |          2912 |    2912 |     0.954  |     0.8467 |
-| cnn           |     0.6    |      0.9989 |          2496 |    2496 |     0.9776 |     0.8769 |
-| cnn           |     0.5    |      0.9999 |          2080 |    2080 |     0.9885 |     0.9064 |
-| cnn           |     0.4    |      1      |          1664 |    1664 |     0.994  |     0.9099 |
-| cnn           |     0.3    |      1      |          1248 |    1248 |     0.9952 |     0.9443 |
-| cnn           |     0.2012 |      1      |           837 |     837 |     1      |     0.6667 |
-| cnn           |     0.195  |      1      |           811 |     811 |     1      |     0.6667 |
-| cnn_small     |     1      |      0.3415 |         41600 |    4160 |     0.8025 |     0.6952 |
-| cnn_small     |     0.95   |      0.5935 |         39520 |    4159 |     0.8239 |     0.7113 |
-| cnn_small     |     0.9    |      0.7145 |         37440 |    4153 |     0.8439 |     0.7264 |
-| cnn_small     |     0.8    |      0.8781 |         33280 |    4099 |     0.8819 |     0.7587 |
-| cnn_small     |     0.7    |      0.9544 |         29120 |    3975 |     0.914  |     0.7941 |
-| cnn_small     |     0.6    |      0.9836 |         24960 |    3759 |     0.9431 |     0.8404 |
-| cnn_small     |     0.5    |      0.9948 |         20800 |    3404 |     0.9666 |     0.8937 |
-| cnn_small     |     0.4    |      0.9984 |         16640 |    3038 |     0.981  |     0.936  |
-| cnn_small     |     0.3    |      0.9996 |         12480 |    2603 |     0.9885 |     0.9626 |
-| cnn_small     |     0.2    |      0.9999 |          8321 |    2048 |     0.9919 |     0.9759 |
-| cnn_small     |     0.1003 |      1      |          4172 |    1302 |     0.9919 |     0.9764 |
-| probe         |     1      |      0.3385 |         41600 |    4160 |     0.8181 |     0.749  |
-| probe         |     0.95   |      0.5204 |         39520 |    4138 |     0.8386 |     0.7689 |
-| probe         |     0.9    |      0.5959 |         37440 |    4071 |     0.8579 |     0.7871 |
-| probe         |     0.8    |      0.7348 |         33280 |    3815 |     0.8913 |     0.8144 |
-| probe         |     0.7    |      0.8509 |         29120 |    3469 |     0.923  |     0.8491 |
-| probe         |     0.6    |      0.9239 |         24960 |    3106 |     0.9435 |     0.8776 |
-| probe         |     0.5    |      0.9628 |         20800 |    2711 |     0.9584 |     0.8995 |
-| probe         |     0.4    |      0.9832 |         16640 |    2296 |     0.9687 |     0.911  |
-| probe         |     0.3    |      0.9933 |         12480 |    1845 |     0.9753 |     0.9179 |
-| probe         |     0.2    |      0.9979 |          8320 |    1296 |     0.9819 |     0.912  |
-| probe         |     0.1    |      0.9996 |          4160 |     734 |     0.9882 |     0.9158 |
-| xgboost+probe |     1      |      0.3382 |         41600 |    4160 |     0.8418 |     0.7729 |
-| xgboost+probe |     0.95   |      0.4635 |         39520 |    4132 |     0.8624 |     0.7925 |
-| xgboost+probe |     0.9    |      0.5076 |         37440 |    4063 |     0.8827 |     0.8136 |
-| xgboost+probe |     0.8    |      0.5958 |         33280 |    3782 |     0.9228 |     0.861  |
-| xgboost+probe |     0.7    |      0.6865 |         29120 |    3391 |     0.9471 |     0.884  |
-| xgboost+probe |     0.6    |      0.7545 |         24960 |    3121 |     0.9583 |     0.8816 |
-| xgboost+probe |     0.5    |      0.8024 |         20800 |    2823 |     0.9643 |     0.8772 |
-| xgboost+probe |     0.4    |      0.8404 |         16640 |    2514 |     0.9677 |     0.869  |
-| xgboost+probe |     0.3    |      0.8679 |         12480 |    2290 |     0.9699 |     0.8651 |
-| xgboost+probe |     0.2    |      0.8975 |          8320 |    1750 |     0.9701 |     0.842  |
-| xgboost+probe |     0.1    |      0.93   |          4160 |    1134 |     0.9803 |     0.7593 |
+| model           |   coverage |   threshold |   predictions |   clips |   accuracy |   macro_f1 |
+|:----------------|-----------:|------------:|--------------:|--------:|-----------:|-----------:|
+| xgboost         |     1      |      0.3346 |         41600 |    4160 |     0.8298 |     0.7502 |
+| xgboost         |     0.95   |      0.4271 |         39520 |    4145 |     0.8472 |     0.7646 |
+| xgboost         |     0.9    |      0.4665 |         37441 |    4116 |     0.8614 |     0.774  |
+| xgboost         |     0.8    |      0.5297 |         33280 |    4024 |     0.8841 |     0.7839 |
+| xgboost         |     0.7    |      0.5913 |         29120 |    3814 |     0.903  |     0.7933 |
+| xgboost         |     0.6    |      0.6508 |         24960 |    3495 |     0.9151 |     0.7889 |
+| xgboost         |     0.5    |      0.6991 |         20800 |    3219 |     0.9203 |     0.7834 |
+| xgboost         |     0.4    |      0.7423 |         16640 |    2959 |     0.924  |     0.7861 |
+| xgboost         |     0.3    |      0.7888 |         12480 |    2518 |     0.9297 |     0.7922 |
+| xgboost         |     0.2    |      0.8468 |          8321 |    1881 |     0.9368 |     0.7532 |
+| xgboost         |     0.1    |      0.8801 |          4160 |    1169 |     0.9519 |     0.7085 |
+| cnn             |     1      |      0.3731 |          4160 |    4160 |     0.8243 |     0.7064 |
+| cnn             |     0.95   |      0.6    |          3952 |    3952 |     0.8494 |     0.7259 |
+| cnn             |     0.9    |      0.7408 |          3744 |    3744 |     0.8771 |     0.7533 |
+| cnn             |     0.8    |      0.9355 |          3328 |    3328 |     0.9231 |     0.8074 |
+| cnn             |     0.7    |      0.99   |          2912 |    2912 |     0.954  |     0.8467 |
+| cnn             |     0.6    |      0.9989 |          2496 |    2496 |     0.9776 |     0.8769 |
+| cnn             |     0.5    |      0.9999 |          2080 |    2080 |     0.9885 |     0.9064 |
+| cnn             |     0.4    |      1      |          1664 |    1664 |     0.994  |     0.9099 |
+| cnn             |     0.3    |      1      |          1248 |    1248 |     0.9952 |     0.9443 |
+| cnn             |     0.2012 |      1      |           837 |     837 |     1      |     0.6667 |
+| cnn             |     0.195  |      1      |           811 |     811 |     1      |     0.6667 |
+| cnn_small       |     1      |      0.3415 |         41600 |    4160 |     0.8025 |     0.6952 |
+| cnn_small       |     0.95   |      0.5935 |         39520 |    4159 |     0.8239 |     0.7113 |
+| cnn_small       |     0.9    |      0.7145 |         37440 |    4153 |     0.8439 |     0.7264 |
+| cnn_small       |     0.8    |      0.8781 |         33280 |    4099 |     0.8819 |     0.7587 |
+| cnn_small       |     0.7    |      0.9544 |         29120 |    3975 |     0.914  |     0.7941 |
+| cnn_small       |     0.6    |      0.9836 |         24960 |    3759 |     0.9431 |     0.8404 |
+| cnn_small       |     0.5    |      0.9948 |         20800 |    3404 |     0.9666 |     0.8937 |
+| cnn_small       |     0.4    |      0.9984 |         16640 |    3038 |     0.981  |     0.936  |
+| cnn_small       |     0.3    |      0.9996 |         12480 |    2603 |     0.9885 |     0.9626 |
+| cnn_small       |     0.2    |      0.9999 |          8321 |    2048 |     0.9919 |     0.9759 |
+| cnn_small       |     0.1003 |      1      |          4172 |    1302 |     0.9919 |     0.9764 |
+| probe           |     1      |      0.3385 |         41600 |    4160 |     0.8181 |     0.749  |
+| probe           |     0.95   |      0.5204 |         39520 |    4138 |     0.8386 |     0.7689 |
+| probe           |     0.9    |      0.5959 |         37440 |    4071 |     0.8579 |     0.7871 |
+| probe           |     0.8    |      0.7348 |         33280 |    3815 |     0.8913 |     0.8144 |
+| probe           |     0.7    |      0.8509 |         29120 |    3469 |     0.923  |     0.8491 |
+| probe           |     0.6    |      0.9239 |         24960 |    3106 |     0.9435 |     0.8776 |
+| probe           |     0.5    |      0.9628 |         20800 |    2711 |     0.9584 |     0.8995 |
+| probe           |     0.4    |      0.9832 |         16640 |    2296 |     0.9687 |     0.911  |
+| probe           |     0.3    |      0.9933 |         12480 |    1845 |     0.9753 |     0.9179 |
+| probe           |     0.2    |      0.9979 |          8320 |    1296 |     0.9819 |     0.912  |
+| probe           |     0.1    |      0.9996 |          4160 |     734 |     0.9882 |     0.9158 |
+| xgboost_centred |     1      |      0.3385 |         41600 |    4160 |     0.8856 |     0.8226 |
+| xgboost_centred |     0.95   |      0.5278 |         39520 |    4145 |     0.906  |     0.8427 |
+| xgboost_centred |     0.9    |      0.6084 |         37440 |    4078 |     0.9243 |     0.8607 |
+| xgboost_centred |     0.8    |      0.7639 |         33280 |    3799 |     0.9504 |     0.8855 |
+| xgboost_centred |     0.7    |      0.8729 |         29120 |    3489 |     0.967  |     0.9051 |
+| xgboost_centred |     0.6    |      0.9345 |         24960 |    3179 |     0.9783 |     0.9203 |
+| xgboost_centred |     0.5    |      0.9711 |         20800 |    2839 |     0.9876 |     0.9334 |
+| xgboost_centred |     0.4    |      0.9887 |         16640 |    2404 |     0.9937 |     0.9399 |
+| xgboost_centred |     0.3    |      0.9959 |         12480 |    1946 |     0.9954 |     0.8877 |
+| xgboost_centred |     0.2    |      0.9987 |          8320 |    1429 |     0.997  |     0.8172 |
+| xgboost_centred |     0.1    |      0.9997 |          4160 |     890 |     0.9974 |     0.662  |
+| xgboost+probe   |     1      |      0.3382 |         41600 |    4160 |     0.8418 |     0.7729 |
+| xgboost+probe   |     0.95   |      0.4635 |         39520 |    4132 |     0.8624 |     0.7925 |
+| xgboost+probe   |     0.9    |      0.5076 |         37440 |    4063 |     0.8827 |     0.8136 |
+| xgboost+probe   |     0.8    |      0.5958 |         33280 |    3782 |     0.9228 |     0.861  |
+| xgboost+probe   |     0.7    |      0.6865 |         29120 |    3391 |     0.9471 |     0.884  |
+| xgboost+probe   |     0.6    |      0.7545 |         24960 |    3121 |     0.9583 |     0.8816 |
+| xgboost+probe   |     0.5    |      0.8024 |         20800 |    2823 |     0.9643 |     0.8772 |
+| xgboost+probe   |     0.4    |      0.8404 |         16640 |    2514 |     0.9677 |     0.869  |
+| xgboost+probe   |     0.3    |      0.8679 |         12480 |    2290 |     0.9699 |     0.8651 |
+| xgboost+probe   |     0.2    |      0.8975 |          8320 |    1750 |     0.9701 |     0.842  |
+| xgboost+probe   |     0.1    |      0.93   |          4160 |    1134 |     0.9803 |     0.7593 |
 
 ### Figures
 
@@ -240,6 +262,8 @@ cross validation already wrote.
 - `feature_importance_logbook.png`
 - `confusion_probe.png`
 - `training_history_probe.png`
+- `confusion_xgboost_centred.png`
+- `feature_importance_xgboost_centred.png`
 - `confusion_xgboost+probe.png`
 - `confusion_metadata.png`
 - `feature_importance_metadata.png`

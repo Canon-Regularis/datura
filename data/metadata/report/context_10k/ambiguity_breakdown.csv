@@ -11,6 +11,10 @@ native sample rate,probe,native sample rate shared by species,834,3,3,50,0.47595
 native sample rate,probe,native sample rate unique to a species,3254,3,3,50,0.3561369647,0.1018113823
 collection code,probe,collection code not recorded,359,2,3,30,0.2766191548,0.1086003655
 collection code,probe,collection code unique to a species,3729,3,3,50,0.4589973578,0.1036379669
+native sample rate,xgboost_centred,native sample rate shared by species,834,3,3,50,0.453834151,0.1576873596
+native sample rate,xgboost_centred,native sample rate unique to a species,3254,3,3,50,0.4992824122,0.1354164267
+collection code,xgboost_centred,collection code not recorded,359,2,3,30,0.3355654762,0.118293163
+collection code,xgboost_centred,collection code unique to a species,3729,3,3,50,0.5671857771,0.1437166506
 native sample rate,xgboost+probe,native sample rate shared by species,834,3,3,50,0.4796932556,0.1163610543
 native sample rate,xgboost+probe,native sample rate unique to a species,3254,3,3,50,0.3545356978,0.1158025824
 collection code,xgboost+probe,collection code not recorded,359,2,3,30,0.2743783602,0.1115346047

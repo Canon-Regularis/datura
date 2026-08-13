@@ -246,12 +246,17 @@ def test_cnn_trains_and_explains_on_synthetic_audio(dataset, manifest):
         name="logmel",
     )
     folds = make_folds(clips_from_index(source.index), dataset)
+    # Every training setting, because the loop no longer supplies a default for any of
+    # them. It used to, and the defaults disagreed with the files they backed onto, so
+    # a misspelled key trained a third longer than the config said and printed nothing.
+    # This dict was short of weight_decay and inherited 0.01 without saying so.
     settings = {
         "model": {"base_width": 4, "n_stages": 2, "blocks_per_stage": 1, "dropout": 0.1},
         "train": {
             "epochs": 1,
             "batch_size": 16,
             "lr": 0.01,
+            "weight_decay": 0.01,
             "warmup_epochs": 0,
             "early_stopping_patience": 1,
             "seed": 0,
