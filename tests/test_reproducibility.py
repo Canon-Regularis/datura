@@ -79,6 +79,12 @@ def test_the_probe_reproduces_its_committed_predictions():
     One fold refitted from scratch has to give back exactly what is committed. If this
     ever fails, either the training path changed or a model that was deterministic
     stopped being so, and both are worth stopping for.
+
+    Refitting needs the encoder cache, which is gitignored and several gigabytes, so a
+    fresh checkout cannot run this and has to say so. It guarded on the committed
+    predictions alone for a while, which are committed, and then raised on the cache
+    that is not. That failed every test job on every platform while the whole suite
+    passed on any machine that had once run the pipeline.
     """
     from src.data.splits import rows_for_clips
     from src.features import registry as features
@@ -91,6 +97,11 @@ def test_the_probe_reproduces_its_committed_predictions():
     needs(committed, "run the pipeline first")
 
     spec = models.get("probe")
+    if not features.cache_exists(spec.source, cfg):
+        pytest.skip(
+            f"no cached {spec.source} features; "
+            f"run python -m src.features.extract --config {cfg.source.name}"
+        )
     source = features.load_source(spec.source, cfg)
     index = source.index
     labels = index["label"].to_numpy()
