@@ -17,8 +17,7 @@ import pandas as pd
 
 from src.data.splits import folds_for_index, rows_for_clips
 from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
-
-SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
+from tests.helpers import clip_rows
 
 
 def collection(tapes_per_species: int, clips_per_tape: int, *, code_per_tape: bool) -> pd.DataFrame:
@@ -27,30 +26,22 @@ def collection(tapes_per_species: int, clips_per_tape: int, *, code_per_tape: bo
     ``code_per_tape`` gives every tape its own code, which is a tape id wearing a
     hat. Otherwise one code covers a whole species, which is what the real notes do.
     """
-    rows = []
-    for label, species in enumerate(SPECIES):
-        for tape in range(tapes_per_species):
-            tape_id = f"{label}{tape:04d}"
-            code = f"C{label}{tape:02d}" if code_per_tape else f"C{label}"
-            for clip in range(clips_per_tape):
-                rows.append(
-                    {
-                        "clip_id": f"{tape_id}{clip:03d}",
-                        "tape_id": tape_id,
-                        "species": species,
-                        "label": label,
-                        "collection_code": code,
-                        # Deliberately uninformative, so the code is the only signal.
-                        "site": "one place",
-                        "latitude": 0.0,
-                        "longitude": 0.0,
-                        "native_sample_rate": 10000,
-                        "year": 1970,
-                        "duration_seconds": 2.0,
-                        "bytes_on_disk": 1000,
-                    }
-                )
-    return pd.DataFrame(rows)
+
+    def paperwork(row: dict) -> dict:
+        tape = row["tape_id"]
+        return {
+            "collection_code": f"C{tape}" if code_per_tape else f"C{row['label']}",
+            # Deliberately uninformative, so the code is the only signal.
+            "site": "one place",
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "native_sample_rate": 10000,
+            "year": 1970,
+            "duration_seconds": 2.0,
+            "bytes_on_disk": 1000,
+        }
+
+    return clip_rows(tapes_per_species, clips_per_tape, extra=paperwork)
 
 
 def score_across_folds(index: pd.DataFrame, source, cfg) -> float:

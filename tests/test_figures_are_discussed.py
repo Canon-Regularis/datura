@@ -27,6 +27,7 @@ import pytest
 from src.config import PROJECT_ROOT, load_config
 from src.evaluate import families, figures
 from tests.conftest import REPORT_CONFIGS
+from tests.helpers import needs
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
 NOTEBOOKS = PROJECT_ROOT / "experiments"
@@ -37,8 +38,7 @@ PLACEHOLDER = re.compile(r"\{[^}]*\}")
 
 
 def committed() -> list[str]:
-    if not REPORTS.exists():
-        pytest.skip("report artifacts absent; run python -m src.evaluate.report first")
+    needs(REPORTS, "run python -m src.evaluate.report first")
     return sorted(path.relative_to(REPORTS).as_posix() for path in REPORTS.rglob("*.png"))
 
 

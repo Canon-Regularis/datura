@@ -10,24 +10,8 @@ from sklearn.metrics import accuracy_score, f1_score
 from src import scoring
 from src.evaluate.occlusion import band_edges
 from src.scoring import aggregate_to_clips, confusion, score, summarise_folds
-
-CLASSES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
-
-
-def window_index(windows_per_clip: dict[str, tuple[int, int]]) -> pd.DataFrame:
-    rows = []
-    for clip_id, (label, count) in windows_per_clip.items():
-        for position in range(count):
-            rows.append(
-                {
-                    "clip_id": clip_id,
-                    "tape_id": clip_id[:5],
-                    "species": CLASSES[label],
-                    "label": label,
-                    "window_index": position,
-                }
-            )
-    return pd.DataFrame(rows)
+from tests.helpers import SPECIES as CLASSES
+from tests.helpers import window_rows as window_index
 
 
 def test_aggregation_averages_windows_within_a_clip():
@@ -88,7 +72,7 @@ def test_score_survives_a_single_class_fold():
 def test_confusion_keeps_class_order():
     matrix = confusion(np.array([0, 1, 2]), np.array([0, 1, 1]), CLASSES)
 
-    assert list(matrix.index) == CLASSES
+    assert tuple(matrix.index) == CLASSES
     assert matrix.loc["KillerWhale", "SpermWhale"] == 1
 
 

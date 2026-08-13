@@ -19,25 +19,11 @@ from src.data.splits import (
     make_folds,
     rows_for_clips,
 )
-
-SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
+from tests.helpers import SPECIES, clip_rows
 
 
 def build_clips(tapes_per_species: int = 8, cuts_per_tape: int = 4) -> pd.DataFrame:
-    rows = []
-    for label, species in enumerate(SPECIES):
-        for tape in range(tapes_per_species):
-            tape_id = f"{label}{tape:04d}"
-            for cut in range(cuts_per_tape):
-                rows.append(
-                    {
-                        "clip_id": f"{tape_id}{cut:03d}",
-                        "tape_id": tape_id,
-                        "species": species,
-                        "label": label,
-                    }
-                )
-    return pd.DataFrame(rows)
+    return clip_rows(tapes_per_species, cuts_per_tape)
 
 
 def test_tape_id_collapses_both_clip_id_forms():

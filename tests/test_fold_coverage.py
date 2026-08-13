@@ -17,6 +17,7 @@ import pandas as pd
 import pytest
 
 from src.config import PROJECT_ROOT
+from tests.helpers import needs
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
 CONFIGS = ["base_10k", "base_5k", "wide_10k"]
@@ -105,8 +106,7 @@ def test_the_two_wide_tape_counts_mean_different_things():
     overstates the design by that much, which the README did until it was corrected.
     """
     manifest = PROJECT_ROOT / "data" / "metadata" / "manifest_wide_10k.parquet"
-    if not manifest.exists():
-        pytest.skip("manifest_wide_10k.parquet absent; run python -m src.data.manifest first")
+    needs(manifest, "run python -m src.data.manifest first")
 
     kept = pd.read_parquet(manifest).query("keep")
     assert kept["tape_id"].nunique() == WIDE_RECORDINGS
@@ -160,8 +160,7 @@ def test_a_caveat_counts_tapes_that_survived_the_filters():
     assert int(mixed["kept"].sum()) == 8, "eight once the filters have run"
 
     manifest = PROJECT_ROOT / "data" / "metadata" / "manifest_wide_10k.parquet"
-    if not manifest.exists():
-        pytest.skip("manifest_wide_10k.parquet absent")
+    needs(manifest, "run the pipeline that writes it")
 
     kept = pd.read_parquet(manifest).query("keep")
     per_tape = kept.groupby("tape_id")["species"].nunique()

@@ -19,6 +19,7 @@ from src import scoring
 from src.config import load_config
 from src.evaluate import coverage
 from src.results import config_directory, predictions_path
+from tests.helpers import needs
 
 CONFIG = "configs/base.yaml"
 
@@ -31,8 +32,7 @@ def cfg():
 @pytest.fixture(scope="module")
 def curve(cfg):
     path = config_directory(cfg) / "coverage.csv"
-    if not path.exists():
-        pytest.skip("coverage.csv absent; run python -m src.evaluate.report first")
+    needs(path, "run python -m src.evaluate.report first")
     return pd.read_csv(path)
 
 

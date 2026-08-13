@@ -20,6 +20,7 @@ import pytest
 from src.config import PROJECT_ROOT, load_config
 from src.evaluate import families, figures, plots
 from tests.conftest import REPORT_CONFIGS
+from tests.helpers import needs
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
 CONFIG_FILE = REPORT_CONFIGS
@@ -48,16 +49,34 @@ def report(name: str) -> list[str]:
     return path.read_text(encoding="utf-8").splitlines()
 
 
+ZERO = {"0", "0.0", "0.0000"}
+SIGNIFICANCE = {"p_value", "q_value"}
+
+
 @pytest.mark.parametrize("name", CONFIGS)
 def test_no_p_value_is_published_as_zero(name):
-    """A p value of exactly zero is a claim no test in this project can make."""
+    """A p value of exactly zero is a claim no test in this project can make.
+
+    It reads the significance columns by position under their own header rather than
+    scanning every cell of every wide table. Scanning found real zeros and called them
+    rounding: under the wide place folds the metadata control has a recall of exactly
+    zero on one class, and an ambiguity table counts a category that never occurs. Both
+    are numbers this report should print as 0, and neither is a p value.
+    """
+    columns: dict[int, str] = {}
     offenders = []
     for line in report(name):
         cells = cells_of(line)
-        if len(cells) < 6 or "p_value" in cells:
+        if not cells:
+            columns = {}
             continue
-        offenders += [cell for cell in cells if cell in {"0", "0.0", "0.0000"}]
-    assert not offenders, f"{name} publishes {len(offenders)} p values as zero"
+        if SIGNIFICANCE & set(cells):
+            columns = {i: cell for i, cell in enumerate(cells) if cell in SIGNIFICANCE}
+            continue
+        offenders += [
+            f"{columns[i]}={cell}" for i, cell in enumerate(cells) if i in columns and cell in ZERO
+        ]
+    assert not offenders, f"{name} publishes {sorted(offenders)} as zero"
 
 
 @pytest.mark.parametrize("name", CONFIGS)
@@ -120,8 +139,7 @@ def test_no_audio_model_beats_the_floor_in_any_configuration():
 
 def test_the_multiplicity_table_covers_every_configuration():
     path = REPORTS / "multiplicity.csv"
-    if not path.exists():
-        pytest.skip("multiplicity.csv absent; run python -m src.evaluate.multiplicity first")
+    needs(path, "run python -m src.evaluate.multiplicity first")
     table = pd.read_csv(path)
 
     assert set(table["config"]) == set(CONFIGS)
@@ -135,8 +153,7 @@ def test_the_multiplicity_table_covers_every_configuration():
 
 def test_the_headline_survives_the_correction():
     path = REPORTS / "multiplicity.csv"
-    if not path.exists():
-        pytest.skip("multiplicity.csv absent; run python -m src.evaluate.multiplicity first")
+    needs(path, "run python -m src.evaluate.multiplicity first")
     table = pd.read_csv(path).set_index(["config", "model", "floor"])
     row = table.loc[("base_10k", "xgboost", "logbook")]
 
@@ -151,8 +168,7 @@ def test_the_headline_figure_draws_its_line_at_the_strongest_floor(monkeypatch):
     reach, in the one figure a reader looks at before any table.
     """
     cfg = load_config("configs/base.yaml")
-    if not (REPORTS / cfg.name / "comparison.csv").exists():
-        pytest.skip("comparison.csv absent; run python -m src.evaluate.report first")
+    needs(REPORTS / cfg.name / "comparison.csv", "run python -m src.evaluate.report first")
 
     seen: dict[str, object] = {}
     monkeypatch.setattr(
@@ -175,14 +191,14 @@ def test_the_headline_figure_draws_its_line_at_the_strongest_floor(monkeypatch):
     figures.draw_all(cfg, family, comparison, ambiguity)
 
     assert seen["floor"] == "logbook"
-    assert "metadata" in seen["silent"] and "xgboost" not in seen["silent"]
+    assert "metadata" in seen["silent"]
+    assert "xgboost" not in seen["silent"]
 
 
 def test_each_giveaway_figure_is_titled_with_its_own_field(monkeypatch):
     """One title was hardcoded, so the collection code chart named the sample rate."""
     cfg = load_config("configs/base.yaml")
-    if not (REPORTS / cfg.name / "comparison.csv").exists():
-        pytest.skip("comparison.csv absent; run python -m src.evaluate.report first")
+    needs(REPORTS / cfg.name / "comparison.csv", "run python -m src.evaluate.report first")
 
     fields: list[str] = []
     monkeypatch.setattr(figures.plots, "model_comparison", lambda *a, **k: a[1])

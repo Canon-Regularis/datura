@@ -7,17 +7,19 @@ beside numbers it cannot be compared with.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 import pandas as pd
 import pytest
 
 from src.evaluate.families import SPECIES_FAMILY, FamilyError, discover, result_names
 from src.results import model_directory
+from tests.helpers import SPECIES
 
-SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
-BINARY = ["absent", "present"]
+BINARY = ("absent", "present")
 
 
-def write_result(config, name: str, class_names: list[str]) -> None:
+def write_result(config, name: str, class_names: Sequence[str]) -> None:
     """The two files a family needs to see: a summary and a confusion matrix."""
     directory = model_directory(config, name)
     directory.mkdir(parents=True, exist_ok=True)
@@ -152,7 +154,7 @@ def test_classes_are_read_from_the_result_rather_than_assumed(config):
 
     by_key = {family.key: family for family in discover(config)}
 
-    assert by_key[SPECIES_FAMILY].class_names == tuple(SPECIES)
+    assert by_key[SPECIES_FAMILY].class_names == SPECIES
     assert by_key["calltype_spermwhale_coda"].class_names == ("absent", "present")
 
 

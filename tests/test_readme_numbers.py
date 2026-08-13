@@ -24,6 +24,7 @@ import pandas as pd
 import pytest
 
 from src.config import PROJECT_ROOT
+from tests.helpers import needs
 
 README = PROJECT_ROOT / "README.md"
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
@@ -106,13 +107,13 @@ CONFIG_FILES = {
 
 @pytest.fixture(scope="module")
 def report_exists() -> None:
-    if not (REPORTS / "base_10k" / "family_margins.csv").exists():
-        pytest.skip("report artifacts absent; run python -m src.evaluate.report first")
+    needs(REPORTS / "base_10k" / "family_margins.csv", "run python -m src.evaluate.report first")
 
 
 SPECIES_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
+    "acoustic descriptors, recording mean removed": "xgboost_centred",
     "XGBoost and probe averaged": "xgboost+probe",
     "acoustic descriptors, XGBoost": "xgboost",
     "wav2vec2 probe": "probe",
@@ -139,11 +140,13 @@ CONTEXT_ROWS = {
     "logbook": "logbook",
     "metadata": "metadata",
     "acoustic descriptors, XGBoost": "xgboost",
+    "the same, recording mean removed": "xgboost_centred",
     "wav2vec2 probe": "probe",
     "XGBoost and probe averaged": "xgboost+probe",
 }
 
 COVERAGE_ROWS = {
+    "acoustic descriptors, recording mean removed": "xgboost_centred",
     "acoustic descriptors, XGBoost": "xgboost",
     "wav2vec2 probe": "probe",
     "log mel CNN, 0.15 M": "cnn_small",
@@ -365,8 +368,7 @@ def test_the_coverage_table_matches_the_artifact(report_exists):
     table because somebody would act on it.
     """
     path = REPORTS / "base_10k" / "coverage.csv"
-    if not path.exists():
-        pytest.skip("coverage.csv absent; run python -m src.evaluate.report first")
+    needs(path, "run python -m src.evaluate.report first")
     curve = pd.read_csv(path)
 
     for cells in rows_of("| model | every clip | most confident 70% |"):
@@ -385,8 +387,7 @@ def test_the_coverage_table_matches_the_artifact(report_exists):
 
 def test_the_coverage_table_lists_every_model_with_a_curve(report_exists):
     path = REPORTS / "base_10k" / "coverage.csv"
-    if not path.exists():
-        pytest.skip("coverage.csv absent")
+    needs(path, "run the pipeline that writes it")
     printed = {COVERAGE_ROWS[cells[0]] for cells in rows_of("| model | every clip |")}
     on_disk = set(pd.read_csv(path)["model"])
     assert on_disk - printed <= {"cnn"}, f"a curve exists for {sorted(on_disk - printed)}"
@@ -473,34 +474,50 @@ def test_the_chance_baselines_are_measured_rather_than_assumed(report_exists):
     assert f"{majority:.3f} for" in text
 
 
-def test_the_context_table_matches_both_reports(report_exists):
-    """One column per fold rule, so a stale figure in either shows up here.
+def test_the_context_table_matches_all_three_reports(report_exists):
+    """One column per fold rule, so a stale figure in any of them shows up here.
 
-    The change column is the number the section exists to report, and it is the
-    difference of two artifacts rather than a figure of its own, so it is recomputed
-    rather than read.
+    The two cost columns are what the section exists to report, and neither is a figure
+    of its own: each is the difference of two artifacts, so both are recomputed rather
+    than read. They also have to add up to the whole drop, which is what makes the
+    split into coarseness and place a decomposition rather than two loose numbers.
     """
-    if not (REPORTS / "context_10k" / "xgboost" / "summary.csv").exists():
-        pytest.skip("context_10k absent; run the pipeline on configs/context.yaml")
+    needs(
+        REPORTS / "context_10k" / "xgboost" / "summary.csv",
+        "run the pipeline on configs/context.yaml",
+    )
+    needs(
+        REPORTS / "context_shuffled_10k" / "probe" / "summary.csv",
+        "run the pipeline on configs/context_shuffled.yaml",
+    )
 
-    for cells in rows_of("| model | tape held out | place held out | change |"):
-        label, held_out_tape, held_out_context, change = cells[:4]
+    header = "| model | tape held out | pseudo places | place held out | coarseness | the place |"
+    for cells in rows_of(header):
+        label, tape, pseudo, place, coarseness, the_place = cells[:6]
         name = CONTEXT_ROWS[label]
 
         scores = {}
-        for config in ("base_10k", "context_10k"):
+        for config in ("base_10k", "context_shuffled_10k", "context_10k"):
             summary = pd.read_csv(REPORTS / config / name / "summary.csv")
             scores[config] = summary[summary["metric"] == "macro_f1"].iloc[0]["mean"]
 
-        assert matches(held_out_tape, scores["base_10k"]), f"{label}: tape held out"
-        assert matches(held_out_context, scores["context_10k"]), f"{label}: context held out"
-        assert matches(change, scores["context_10k"] - scores["base_10k"]), f"{label}: change"
+        assert matches(tape, scores["base_10k"]), f"{label}: tape held out"
+        assert matches(pseudo, scores["context_shuffled_10k"]), f"{label}: pseudo places"
+        assert matches(place, scores["context_10k"]), f"{label}: place held out"
+        assert matches(coarseness, scores["context_shuffled_10k"] - scores["base_10k"]), (
+            f"{label}: coarseness"
+        )
+        assert matches(the_place, scores["context_10k"] - scores["context_shuffled_10k"]), (
+            f"{label}: the place"
+        )
+        assert float(coarseness) + float(the_place) == pytest.approx(
+            scores["context_10k"] - scores["base_10k"], abs=1e-3
+        ), f"{label}: the two costs must account for the whole drop"
 
 
 def test_the_context_table_lists_only_models_that_were_refitted(report_exists):
     directory = REPORTS / "context_10k"
-    if not directory.exists():
-        pytest.skip("context_10k absent")
+    needs(directory, "run the pipeline on configs/context.yaml")
     printed = {CONTEXT_ROWS[cells[0]] for cells in rows_of("| model | tape held out |")}
     on_disk = {path.parent.name for path in directory.glob("*/summary.csv")}
     assert printed <= on_disk, f"the README quotes {sorted(printed - on_disk)} with no result"
@@ -522,8 +539,7 @@ def test_the_context_decomposition_matches_the_artifacts(report_exists):
 
     base, context = load_config("configs/base.yaml"), load_config("configs/context.yaml")
     control = REPORTS / "context_shuffled_10k" / "xgboost" / "summary.csv"
-    if not control.exists():
-        pytest.skip("the coarseness control has not been fitted")
+    needs(control, "run the pipeline on configs/context_shuffled.yaml")
 
     columns = scoring.probability_columns(len(base.dataset.species))
     grouped = load_manifest(context, kept_only=True)
@@ -581,8 +597,7 @@ def test_the_repeats_claim_matches_what_the_splitter_actually_does(report_exists
     counts = {}
     for label, path in (("tape", "configs/base.yaml"), ("context", "configs/context.yaml")):
         cfg = load_config(path)
-        if not manifest_path(cfg).exists():
-            pytest.skip("manifest absent")
+        needs(manifest_path(cfg), "run python -m src.data.manifest first")
         frame = with_a_group(load_manifest(cfg), cfg.split.group_column).reset_index(drop=True)
         labels = frame["label"].to_numpy()
         groups = frame[cfg.split.group_column].to_numpy()
@@ -614,8 +629,7 @@ def test_the_place_merge_is_described_as_the_manifest_has_it(report_exists):
     from src.data.manifest import load_manifest, manifest_path
 
     cfg = load_config("configs/context.yaml")
-    if not manifest_path(cfg).exists():
-        pytest.skip("manifest absent")
+    needs(manifest_path(cfg), "run python -m src.data.manifest first")
     kept = load_manifest(cfg, kept_only=True)
     grouped = kept[kept["place"] != ""]
 
@@ -685,8 +699,7 @@ def test_the_multiplicity_claims_match_the_correction(report_exists):
     the prose kept the old number for exactly as long as nobody looked.
     """
     path = REPORTS / "multiplicity.csv"
-    if not path.exists():
-        pytest.skip("multiplicity.csv absent; run python -m src.evaluate.multiplicity first")
+    needs(path, "run python -m src.evaluate.multiplicity first")
     table = pd.read_csv(path)
     survivors = table[table["rejected"]]
 
@@ -711,8 +724,7 @@ def test_a_repeated_split_is_not_counted_as_independent_evidence(report_exists):
     50 beside that comparison would be the claim this project was built to refuse.
     """
     path = REPORTS / "multiplicity.csv"
-    if not path.exists():
-        pytest.skip("multiplicity.csv absent")
+    needs(path, "run the pipeline that writes it")
     table = pd.read_csv(path).set_index("config")
 
     assert table.loc["base_10k", "folds"].max() == 50, "the tape split does redraw"
@@ -722,3 +734,17 @@ def test_a_repeated_split_is_not_counted_as_independent_evidence(report_exists):
         assert table.loc[config, "folds"].max() < 50, (
             f"{config} publishes 50 folds from a split its grouping cannot redraw"
         )
+
+
+def test_the_opening_quotes_the_coarseness_control(report_exists):
+    """The opening cites it as the reason the place result is a finding.
+
+    It kept the old figure when the control was re-dealt, which is exactly the drift
+    this file exists to catch, and the decomposition table below it was already right.
+    """
+    path = REPORTS / "context_shuffled_10k" / "xgboost" / "summary.csv"
+    needs(path, "run the pipeline that writes it")
+
+    control = pd.read_csv(path).set_index("metric").loc["macro_f1", "mean"]
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    assert f"no geography scores {control:.3f}" in text, f"the control scores {control:.4f}"

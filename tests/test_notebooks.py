@@ -15,6 +15,7 @@ nbformat = pytest.importorskip("nbformat")
 NotebookClient = pytest.importorskip("nbclient").NotebookClient
 
 from src.config import PROJECT_ROOT  # noqa: E402
+from tests.helpers import needs  # noqa: E402
 
 NOTEBOOKS = sorted((PROJECT_ROOT / "experiments").glob("*.ipynb"))
 REPORT = PROJECT_ROOT / "data" / "metadata" / "report" / "base_10k"
@@ -32,8 +33,7 @@ def test_notebook_is_valid(path):
 @pytest.mark.slow
 @pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)
 def test_notebook_runs(path):
-    if not (REPORT / "comparison.csv").exists():
-        pytest.skip("report artifacts absent; run python -m src.pipeline first")
+    needs(REPORT / "comparison.csv", "run python -m src.pipeline first")
 
     notebook = nbformat.read(path, as_version=4)
     client = NotebookClient(

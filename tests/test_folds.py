@@ -8,31 +8,19 @@ split exactly, and every later repeat must move the recordings around.
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pandas as pd
 import pytest
 
 from src.config import Config
 from src.data.splits import folds_for_index
 from src.train.folds import FoldPlan
-
-SPECIES = ["HumpbackWhale", "SpermWhale", "KillerWhale"]
+from tests.helpers import clip_rows
 
 
 def window_index(tapes_per_species: int = 8, clips_per_tape: int = 3) -> pd.DataFrame:
-    rows = []
-    for label, species in enumerate(SPECIES):
-        for tape in range(tapes_per_species):
-            tape_id = f"{label}{tape:04d}"
-            for clip in range(clips_per_tape):
-                rows.append(
-                    {
-                        "clip_id": f"{tape_id}{clip:03d}",
-                        "tape_id": tape_id,
-                        "species": species,
-                        "label": label,
-                    }
-                )
-    return pd.DataFrame(rows)
+    return clip_rows(tapes_per_species, clips_per_tape)
 
 
 @pytest.fixture
@@ -75,5 +63,28 @@ def test_repeats_yield_that_many_splits(cfg):
 
 
 def test_a_plan_of_no_repeats_is_refused():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="at least one repeat"):
         FoldPlan(build=lambda _: [], repeats=0)
+
+
+def test_a_repeat_moves_the_split_seed_and_nothing_else(cfg):
+    """Which is why a repeat that returns the same partition adds nothing at all.
+
+    The warning used to say such repeats vary the model, which reads as a second draw
+    worth having. They do not: a model takes its seed from its own config and never
+    sees the repeat index, so a partition that comes back the same brings the same
+    everything with it. Refitting the probe under the shuffled place folds showed it,
+    with fold zero scoring 0.443 on repeat 0 and 0.443 again on repeat 3.
+
+    A fixture cannot demonstrate the collapse. It needs the real group sizes, and every
+    synthetic index tried here redraws cleanly, so what is pinned is the mechanism.
+    """
+    index = window_index()
+    plan = FoldPlan.repeated(cfg, index, repeats=3)
+
+    for repeat in range(3):
+        shifted = replace(cfg, split=replace(cfg.split, seed=cfg.split.seed + repeat))
+        expected = folds_for_index(index, shifted)
+        built = plan.build(repeat)
+        assert [fold.test_clips for fold in built] == [fold.test_clips for fold in expected]
+        assert [fold.train_clips for fold in built] == [fold.train_clips for fold in expected]
