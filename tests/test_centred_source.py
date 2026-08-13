@@ -144,3 +144,39 @@ def test_the_registry_hands_it_out_under_a_name_of_its_own():
 
     assert registry.ACOUSTIC_CENTRED not in registry.kinds()
     assert registry.ACOUSTIC in registry.kinds()
+
+
+def test_scaling_is_off_by_default_and_available_when_asked():
+    """Both halves matter, and the default is the one that scores better.
+
+    Dividing by the per recording spread is the standard stronger normalisation and it
+    loses ground under every fold rule, so ``acoustic_centred`` does not use it.
+    ``src.evaluate.diagnostics`` measures all three treatments, which is the only reason
+    the option exists.
+    """
+    base = two_tapes()
+    centred = CentredSource(base, name="centred").matrix(np.arange(8)).take(np.arange(8))
+    whitened = CentredSource(base, name="whitened", scale=True).matrix(np.arange(8))
+    whitened = whitened.take(np.arange(8))
+
+    for start in (0, 4):
+        np.testing.assert_allclose(whitened[start : start + 4].mean(axis=0), [0.0, 0.0], atol=1e-6)
+        np.testing.assert_allclose(whitened[start : start + 4].std(axis=0), [1.0, 1.0], atol=1e-6)
+
+    assert not np.allclose(centred, whitened), "the default must not already be scaling"
+
+
+def test_a_constant_feature_survives_scaling():
+    """Dividing by a zero spread would make every window of that recording infinite."""
+    index = pd.DataFrame(
+        {
+            "clip_id": [f"1000{i}" for i in range(3)],
+            "tape_id": ["10000"] * 3,
+            "label": [0] * 3,
+        }
+    )
+    flat = Fake(index, np.array([[5.0, 1.0], [5.0, 2.0], [5.0, 3.0]]))
+    block = CentredSource(flat, name="whitened", scale=True).matrix(np.arange(3)).take(np.arange(3))
+
+    assert np.isfinite(block).all()
+    np.testing.assert_allclose(block[:, 0], [0.0, 0.0, 0.0], atol=1e-6)

@@ -102,11 +102,14 @@ class CentredSource(FeatureSource):
     animal. Subtracting the mean is cepstral mean normalisation, which speaker
     recognition has used for the same reason for decades.
 
-    It is worth 0.077 macro-F1 under tape folds and 0.180 under place folds, and the
-    second being more than double the first is the point: what it removes mattered most
-    when travelling between recording locations. Also dividing by the per recording
-    spread costs 0.111 under both fold rules, so that spread carries the animal and is
-    left alone.
+    It is worth 0.071 macro-F1 under tape folds and 0.225 under place folds, and the
+    second being three times the first is the point: what it removes mattered most when
+    travelling between recording locations.
+
+    ``scale`` also divides by the per recording spread, which is the standard stronger
+    version and is off by default because it is worse. The spread carries the animal, so
+    removing it loses ground under every fold rule. ``src.evaluate.diagnostics`` measures
+    all three treatments side by side.
 
     Grouping is always the recording, never the fold's grouping column. Centring by
     place under place folds would pool statistics across every tape at a location, which
@@ -119,17 +122,21 @@ class CentredSource(FeatureSource):
 
     GROUP = "tape_id"
 
-    def __init__(self, base: FeatureSource, name: str):
+    def __init__(self, base: FeatureSource, name: str, *, scale: bool = False):
         if self.GROUP not in base.index.columns:
             raise ValueError(f"window index carries no {self.GROUP} to centre within")
         self._base = base
         self._name = name
         self._means: dict[object, np.ndarray] = {}
+        self._spreads: dict[object, np.ndarray] = {}
+        self._scale = scale
         self._of_row = base.index[self.GROUP].to_numpy()
         for group, positions in base.index.groupby(self.GROUP).indices.items():
             rows = np.asarray(positions, dtype=np.int64)
             block = np.asarray(base.matrix(rows).take(np.arange(len(rows))), dtype=np.float32)
             self._means[group] = block.mean(axis=0)
+            spread = block.std(axis=0)
+            self._spreads[group] = np.where(spread < 1e-6, 1.0, spread)
 
     @property
     def name(self) -> str:
@@ -142,8 +149,11 @@ class CentredSource(FeatureSource):
     def matrix(self, rows: np.ndarray) -> RowView:
         wanted = np.asarray(rows, dtype=np.int64)
         block = np.asarray(self._base.matrix(wanted).take(np.arange(len(wanted))), dtype=np.float32)
-        offsets = np.stack([self._means[group] for group in self._of_row[wanted]])
-        return RowView.over(block - offsets)
+        groups = self._of_row[wanted]
+        centred = block - np.stack([self._means[group] for group in groups])
+        if not self._scale:
+            return RowView.over(centred)
+        return RowView.over(centred / np.stack([self._spreads[group] for group in groups]))
 
     def feature_names(self) -> list[str] | None:
         return self._base.feature_names()

@@ -748,3 +748,65 @@ def test_the_opening_quotes_the_coarseness_control(report_exists):
     control = pd.read_csv(path).set_index("metric").loc["macro_f1", "mean"]
     text = " ".join(README.read_text(encoding="utf-8").split())
     assert f"no geography scores {control:.3f}" in text, f"the control scores {control:.4f}"
+
+
+DIAGNOSTIC_ROWS = {
+    "species, tapes held out": ("species", "all"),
+    "which of 8 humpback tapes": ("tape", "HumpbackWhale"),
+    "which of 36 sperm whale tapes": ("tape", "SpermWhale"),
+    "which of 56 killer whale tapes": ("tape", "KillerWhale"),
+    "is an unseen humpback tape from Bermuda": ("place is bermuda", "HumpbackWhale"),
+    "is an unseen sperm whale tape from Dominica": ("place is dominica", "SpermWhale"),
+    "is an unseen killer whale tape from Oregon": ("place is oregon", "KillerWhale"),
+    "native rate band, sperm whale": ("native rate band", "SpermWhale"),
+    "native rate band, killer whale": ("native rate band", "KillerWhale"),
+}
+
+
+def test_the_diagnostics_table_matches_the_artifact(report_exists):
+    """The section that says what the audio knows besides the species.
+
+    These are the newest claims here and they were quoted from a scratchpad for a while,
+    which every other number in this document is not allowed to be. The floor column is
+    checked too, because it is the one that decides whether a score means anything and
+    it is easy to compute the wrong way: the macro-F1 of a stratified guess, not its
+    accuracy.
+    """
+    path = REPORTS / "diagnostics_base_10k.csv"
+    needs(path, "run python -m src.evaluate.diagnostics first")
+    table = pd.read_csv(path).set_index(["question", "species", "treatment"])
+
+    header = "| question | raw | centred | whitened | guessing |"
+    seen = set()
+    for cells in rows_of(header):
+        label, raw, centred, whitened, guessing = cells[:5]
+        key = DIAGNOSTIC_ROWS[label]
+        seen.add(key)
+
+        assert matches(raw, table.loc[(*key, "raw"), "macro_f1"]), f"{label}: raw"
+        assert matches(centred, table.loc[(*key, "centred"), "macro_f1"]), f"{label}: centred"
+        assert matches(whitened, table.loc[(*key, "whitened"), "macro_f1"]), f"{label}: whitened"
+        assert matches(guessing, table.loc[(*key, "raw"), "guessing"]), f"{label}: guessing"
+
+    on_disk = {(question, species) for question, species, _ in table.index}
+    assert on_disk == seen, f"printed {sorted(seen)} against {sorted(on_disk)} on disk"
+
+
+def test_the_stronger_normalisation_is_reported_as_the_loss_it_is(report_exists):
+    """``acoustic_centred`` does not divide by the recording's spread, and says why.
+
+    A design decision justified by a number has to carry the number, or the next person
+    reads it as taste and turns it on.
+    """
+    path = REPORTS / "diagnostics_base_10k.csv"
+    needs(path, "run python -m src.evaluate.diagnostics first")
+    table = pd.read_csv(path).set_index(["question", "species", "treatment"])
+
+    scores = {
+        t: table.loc[("species", "all", t), "macro_f1"] for t in ("raw", "centred", "whitened")
+    }
+    assert scores["centred"] > scores["raw"], "centring is supposed to be the gain"
+    assert scores["whitened"] < scores["raw"], "and scaling is supposed to be the loss"
+
+    text = " ".join(README.read_text(encoding="utf-8").split())
+    assert f"costs {scores['raw'] - scores['whitened']:.3f} against the raw descriptors" in text

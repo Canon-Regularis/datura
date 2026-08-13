@@ -28,12 +28,19 @@ from src.data import annotations as annotations_cli
 from src.data.download import fetch
 from src.data.manifest import write_manifest
 from src.errors import DaturaError
+from src.evaluate.diagnostics import build as build_diagnostics
 from src.evaluate.explain import explain_result
 from src.evaluate.report import build as build_report
 from src.features import registry as features
 from src.features.extract import extract_all
 from src.models import registry as models
-from src.results import config_directory, has_results, manifest_path, occlusion_path
+from src.results import (
+    config_directory,
+    diagnostics_path,
+    has_results,
+    manifest_path,
+    occlusion_path,
+)
 from src.train.calltypes import run_call_types
 from src.train.cnn import train_network
 from src.train.xgb import train_trees
@@ -166,6 +173,17 @@ def _reporting_stages(cfg: Config) -> list[Stage]:
                 lambda: occlusion_path(cfg, EXPLAINED_VARIANT).exists(),
             )
         )
+
+    # Before the report, because the report's own tables do not answer this and the
+    # README quotes it beside them. Skipped when it is already on disk: it fits about a
+    # hundred and twenty models and nothing upstream of it changes what they see.
+    stages.append(
+        Stage(
+            "diagnostics",
+            lambda: build_diagnostics(cfg),
+            lambda: diagnostics_path(cfg).exists(),
+        )
+    )
 
     stages.append(
         Stage(

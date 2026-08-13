@@ -59,7 +59,11 @@ def test_the_narrow_band_trains_only_what_it_has_results_for():
 # and reruns every time by design. Anything else pending means a stage would fit a
 # model whose results are already published, and the report it then wrote would
 # disagree with the one in the repository.
-DERIVABLE_OR_CHEAP = {"download", "annotations", "manifest", "features", "report"}
+#
+# ``diagnostics`` is in the set despite being slow. It fits throwaway models to ask what
+# the audio knows besides the species, so it publishes no model and overwrites no
+# committed score, which is the property this test protects.
+DERIVABLE_OR_CHEAP = {"download", "annotations", "manifest", "features", "report", "diagnostics"}
 
 
 @pytest.mark.parametrize("name", sorted(CONFIGS))

@@ -99,6 +99,17 @@ def coverage_path(cfg: Config) -> Path:
     return config_directory(cfg) / COVERAGE_FILE
 
 
+def diagnostics_path(cfg: Config) -> Path:
+    """What the audio identifies other than the species, for one corpus.
+
+    Keyed on the corpus rather than on the configuration, because these questions never
+    ask about the fold rule. ``base_10k``, ``context_10k`` and ``context_shuffled_10k``
+    read one manifest and one feature cache, so keying on the name would compute the
+    same answer three times and invite the three copies to disagree.
+    """
+    return cfg.paths.reports / f"diagnostics_{cfg.corpus}.csv"
+
+
 def comparison_path(cfg: Config) -> Path:
     return config_directory(cfg) / COMPARISON_FILE
 

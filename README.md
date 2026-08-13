@@ -347,34 +347,50 @@ channel changed, the animals changed because dialects are regional, or the class
 measurements are posed inside a single species, so species is not the answer to any of them, and
 they are read against the macro-F1 a guess drawn from the class shares would reach.
 
-| question | macro-F1 | guessing |
-| --- | --- | --- |
-| which of 36 sperm whale tapes, holding out clips | 0.850 | 0.027 |
-| which of 56 killer whale tapes, holding out clips | 0.816 | 0.018 |
-| is an unseen killer whale tape from Oregon | 0.937 | 0.500 |
-| is an unseen sperm whale tape from Dominica | 0.544 | 0.499 |
-| which original sample rate band, sperm whale, holding out tapes | 0.723 | 0.332 |
-| which original sample rate band, killer whale, holding out tapes | 0.594 | 0.502 |
+`src/evaluate/diagnostics.py` writes `diagnostics.csv` beside the other report tables. Three
+treatments of the same descriptors: as extracted, with each recording's mean subtracted, and with
+its spread divided out as well.
 
-The first two say the audio identifies which recording a clip came from more reliably than it
-identifies the species, which scores 0.758 on the same features. Cuts from one tape come from one
-continuous recording, so content similarity contributes and those two are an upper bound.
+| question | raw | centred | whitened | guessing |
+| --- | --- | --- | --- | --- |
+| species, tapes held out | 0.758 | 0.833 | 0.635 | 0.334 |
+| which of 8 humpback tapes | 0.985 | 0.996 | 0.971 | 0.122 |
+| which of 36 sperm whale tapes | 0.850 | 0.841 | 0.726 | 0.028 |
+| which of 56 killer whale tapes | 0.816 | 0.736 | 0.650 | 0.018 |
+| is an unseen humpback tape from Bermuda | 0.687 | 0.699 | 0.419 | 0.496 |
+| is an unseen sperm whale tape from Dominica | 0.544 | 0.568 | 0.453 | 0.500 |
+| is an unseen killer whale tape from Oregon | 0.937 | 0.767 | 0.602 | 0.501 |
+| native rate band, sperm whale | 0.717 | 0.549 | 0.489 | 0.331 |
+| native rate band, killer whale | 0.593 | 0.672 | 0.621 | 0.500 |
 
-The next two hold whole tapes out, so the model has to carry a location signature to a recording it
-has never heard. One is overwhelming and the other is indistinguishable from guessing, and the
-manifest says why: all 49 Oregon tapes are collection `BE7A`, recorded in 1997, at two sample rates.
-The 36 Dominica tapes span five collections, eleven years and nine sample rates. Oregon is one field
-campaign rather than a place, and its signature travels because the tapes share a rig.
+**The audio identifies the recording better than the animal.** Which of 56 killer whale tapes a clip
+came from scores 0.816 where guessing reaches 0.018, and the three way species question scores 0.758
+on the same descriptors. Cuts of one tape come from one continuous recording, so content similarity
+contributes and the tape rows are an upper bound rather than a measurement of the channel alone.
 
-The last two name the mechanism. Every clip is resampled to exactly 10 kHz so that all species share
-one band, and that does not remove the recorder. Sperm whale tapes start at nine rates between 30 kHz
-and 166 kHz, and after all of them are flattened the audio still says which band a clip came from, on
-tapes the model has never heard. Killer whale is weak here for a mundane reason: 43 of its 65 tapes
-are the same 21900 Hz, so there is almost nothing to tell apart.
+**A location signature travels between recordings when the location is one expedition.** The place
+rows hold whole tapes out, so a model has to carry the signature to a recording it has never heard.
+Oregon reaches 0.937 and Dominica sits at guessing, and the manifest says why: all 49 Oregon tapes
+are collection `BE7A`, recorded in 1997, at two sample rates, while the 36 Dominica tapes span five
+collections, eleven years and nine sample rates. Oregon is a field campaign rather than a place.
 
-`native_sample_rate` is one of the four fields the metadata control reads to reach 0.868. The audio
-models recover part of that field from the waveform, so the control is naming a confound the audio
-was already carrying rather than measuring a separate one.
+**Resampling does not remove the recorder.** Every clip is flattened to 10 kHz so all species share
+one band. Sperm whale tapes start at nine rates between 30 kHz and 166 kHz, and the audio still says
+which band an unseen tape came from at 0.717 against a floor of 0.331. Killer whale is weak here for
+a mundane reason: 43 of its 65 tapes are the same 21900 Hz, so there is almost nothing to tell apart.
+`native_sample_rate` is one of the four fields the metadata control reads to reach 0.868, so that
+control is naming a confound the audio was already carrying rather than measuring a separate one.
+
+**The two normalisation columns say which of these can be taken away.** Centring lifts the species
+score from 0.758 to 0.833 while cutting the recording signature: Oregon from 0.937 to 0.767, killer
+whale tape identity from 0.816 to 0.736, sperm whale rate from 0.717 to 0.549. Whitening cuts the
+signature further and takes the species with it, down to 0.635. One transform separates the recording
+from the animal and the other removes both, which is why `acoustic_centred` centres and does not
+scale.
+
+Humpback is the row to read carefully. Eight tapes identified at 0.985, and centring makes it
+better rather than worse. Twelve tapes over five places is too thin to carry an argument, and it is
+reported because leaving it out would be choosing which species to measure.
 
 ### Taking some of it away
 
@@ -395,14 +411,14 @@ removed. Something that mattered equally under both fold rules would be species 
 mattered most when the location changed.
 
 How far to take it was measured rather than chosen. Also dividing by each recording's spread, which
-is the standard stronger version, costs 0.111 under tape folds and 0.110 under place folds. Losing
-the same amount under both fold rules is the signature of removing the animal, so the spread stays.
+is the standard stronger version, costs 0.123 against the raw descriptors. The spread carries the
+animal, so it stays.
 
-Two limits on this. The recording fingerprint survives it: sperm whale tape identification falls from
-0.867 only to 0.857, so most of what identifies a recording is not a constant offset and remains.
-And the mean is estimated over a whole tape, which the prediction command cannot do, because it is
-handed one clip and 1,993 of the 4,160 clips here are a single window. Subtracting a single window's
-own mean leaves nothing.
+Two limits on this. Part of the recording fingerprint survives it: sperm whale tape identification
+falls only from 0.850 to 0.841, so what identifies that species' recordings is not mostly a constant
+offset. And the mean is estimated over a whole tape, which the prediction command cannot do, because
+it is handed one clip and 1,993 of the 4,160 clips here are a single window. Subtracting a single
+window's own mean leaves nothing.
 
 ## Eleven species
 
@@ -601,7 +617,8 @@ src/train/        folds and the repeat plan, one cross validation runner, one se
 src/evaluate/     families groups results, tables builds them, sections composes the
                   document, figures draws it, coverage measures abstention, artifacts
                   writes it, report runs the lot, resolve says what a result name
-                  refers to, plus occlusion and Grad-CAM
+                  refers to, diagnostics asks what the audio knows besides the
+                  species, plus occlusion and Grad-CAM
 experiments/      six notebooks reading committed artifacts, one argument each
 ```
 
@@ -622,6 +639,13 @@ GB archive:
 ```bash
 uv run python -m src.evaluate.report --config configs/base.yaml
 uv run python -m src.evaluate.multiplicity
+```
+
+`diagnostics.csv` is the exception: it fits about a hundred and twenty models rather than reading
+committed ones, so it is a pipeline stage of its own and reruns only when asked.
+
+```bash
+uv run python -m src.evaluate.diagnostics --config configs/base.yaml
 ```
 
 `tests/test_readme_numbers.py` reads the tables out of this file and checks every figure against the

@@ -1,0 +1,28 @@
+question,species,treatment,macro_f1,macro_f1_std,guessing,n_classes,n_clips,held_out
+species,all,raw,0.7575252324,0.1985032993,0.3340559475,3,4160,tapes
+tape,HumpbackWhale,raw,0.9849968194,0.0140144783,0.1224051809,8,533,clips
+place is bermuda,HumpbackWhale,raw,0.6873898984,0.3294696951,0.495772558,2,541,tapes
+tape,KillerWhale,raw,0.815607948,0.0157147714,0.0184103104,56,2566,clips
+place is oregon,KillerWhale,raw,0.9367583875,0.1182429341,0.5009180822,2,2601,tapes
+native rate band,KillerWhale,raw,0.5927234898,0.0522892562,0.4999750662,2,2594,tapes
+tape,SpermWhale,raw,0.8502267075,0.0365324719,0.0276205008,36,917,clips
+place is dominica,SpermWhale,raw,0.5437166771,0.2275472171,0.5004606844,2,946,tapes
+native rate band,SpermWhale,raw,0.7168205302,0.0809383297,0.3312219381,3,1001,tapes
+species,all,centred,0.8325054959,0.0628607514,0.3340559475,3,4160,tapes
+tape,HumpbackWhale,centred,0.9955614844,0.0052295474,0.1224051809,8,533,clips
+place is bermuda,HumpbackWhale,centred,0.6987181351,0.2216302644,0.495772558,2,541,tapes
+tape,KillerWhale,centred,0.7359688482,0.0425244879,0.0184103104,56,2566,clips
+place is oregon,KillerWhale,centred,0.7668975466,0.0826715973,0.5009180822,2,2601,tapes
+native rate band,KillerWhale,centred,0.6717535608,0.1484090203,0.4999750662,2,2594,tapes
+tape,SpermWhale,centred,0.8413238343,0.0290045462,0.0276205008,36,917,clips
+place is dominica,SpermWhale,centred,0.5684300054,0.1431070985,0.5004606844,2,946,tapes
+native rate band,SpermWhale,centred,0.5492961198,0.0589421911,0.3312219381,3,1001,tapes
+species,all,whitened,0.6348943388,0.0547212491,0.3340559475,3,4160,tapes
+tape,HumpbackWhale,whitened,0.9711132819,0.0199160661,0.1224051809,8,533,clips
+place is bermuda,HumpbackWhale,whitened,0.4185213331,0.0720156729,0.495772558,2,541,tapes
+tape,KillerWhale,whitened,0.6504091987,0.0168578755,0.0184103104,56,2566,clips
+place is oregon,KillerWhale,whitened,0.6022456072,0.1637376552,0.5009180822,2,2601,tapes
+native rate band,KillerWhale,whitened,0.62115178,0.0958661123,0.4999750662,2,2594,tapes
+tape,SpermWhale,whitened,0.725677564,0.0388201475,0.0276205008,36,917,clips
+place is dominica,SpermWhale,whitened,0.4530177552,0.1281099469,0.5004606844,2,946,tapes
+native rate band,SpermWhale,whitened,0.4887304606,0.1240908844,0.3312219381,3,1001,tapes
