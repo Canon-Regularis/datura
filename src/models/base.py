@@ -69,10 +69,6 @@ def balanced_class_weights(labels: np.ndarray, n_classes: int) -> np.ndarray:
 class WindowClassifier(ABC):
     """Fits on windows and returns per window class probabilities."""
 
-    @property
-    @abstractmethod
-    def name(self) -> str: ...
-
     @abstractmethod
     def fit(self, train: Batch, validation: Batch, n_classes: int) -> None:
         """Fit on ``train``, using ``validation`` for early stopping only."""

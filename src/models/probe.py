@@ -50,10 +50,6 @@ class EmbeddingProbe(TorchWindowClassifier):
         self.centre: torch.Tensor | None = None
         self.scale: torch.Tensor | None = None
 
-    @property
-    def name(self) -> str:
-        return "probe"
-
     def _prepare(self, train: Batch) -> None:
         """Centre and scale from the training rows of this fold alone.
 
@@ -69,9 +65,20 @@ class EmbeddingProbe(TorchWindowClassifier):
         self.centre = torch.as_tensor(centre, device=self.device)
         self.scale = torch.as_tensor(spread, device=self.device)
 
+    def _standardiser(self) -> tuple[torch.Tensor, torch.Tensor]:
+        """The centre and scale this fold was standardised by.
+
+        Set in ``_prepare``, which the loop runs before anything that reads them. One
+        accessor is what lets that be said once rather than at each of the three uses.
+        """
+        if self.centre is None or self.scale is None:
+            raise RuntimeError("fit must be called before the probe standardises anything")
+        return self.centre, self.scale
+
     def _build(self, n_classes: int) -> nn.Module:
+        centre, _ = self._standardiser()
         return _head(
-            int(self.centre.shape[0]),
+            int(centre.shape[0]),
             int(self._model_settings["hidden"]),
             float(self._model_settings["dropout"]),
             n_classes,
@@ -81,20 +88,20 @@ class EmbeddingProbe(TorchWindowClassifier):
         tensor = torch.as_tensor(np.asarray(features), dtype=torch.float32, device=self.device)
         if tensor.ndim != 2:
             raise ValueError(f"the probe expects one vector per window, got {tuple(tensor.shape)}")
-        if self.centre is None or self.scale is None:
-            raise RuntimeError("fit must be called before the probe standardises anything")
-        return (tensor - self.centre) / self.scale
+        centre, scale = self._standardiser()
+        return (tensor - centre) / scale
 
     def save(self, path: Path) -> None:
         if self.module is None:
             raise RuntimeError("fit must be called before save")
+        centre, scale = self._standardiser()
         path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(
             {
                 "state_dict": self.module.state_dict(),
                 "settings": self._model_settings,
-                "centre": self.centre.cpu(),
-                "scale": self.scale.cpu(),
+                "centre": centre.cpu(),
+                "scale": scale.cpu(),
             },
             path.with_suffix(".pt"),
         )

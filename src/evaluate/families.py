@@ -75,7 +75,7 @@ def strongest_floor(cfg: Config, family: Family) -> str | None:
         return None
 
     scores = {name: _headline_score(cfg, name) for name in floors}
-    best = max(scores, key=scores.get)
+    best = max(scores, key=lambda name: scores[name])
     return None if best == family.control else best
 
 
@@ -118,7 +118,8 @@ def _title(cfg: Config, key: str) -> str:
     parsed = _parsed(cfg, key)
     if parsed is None or not parsed.is_call_type:
         return key.removeprefix(CALL_TYPE_PREFIX).replace("_", " ")
-    return f"{parsed.species}, {parsed.call_type.replace('_', ' ')}"
+    species, call_type = parsed.task
+    return f"{species}, {call_type.replace('_', ' ')}"
 
 
 def _species_family(cfg: Config, names: list[str]) -> Family | None:

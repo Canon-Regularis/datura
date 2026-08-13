@@ -50,7 +50,6 @@ class CrossValidationResult:
     """Everything one model produced across every fold."""
 
     model_name: str
-    config_name: str
     source_name: str
     clip_metrics: pd.DataFrame
     window_metrics: pd.DataFrame
@@ -221,7 +220,6 @@ def run_cross_validation(
     all_predictions = pd.concat(predictions, ignore_index=True)
     return CrossValidationResult(
         model_name=model_name,
-        config_name=cfg.name,
         source_name=source.name,
         clip_metrics=pd.DataFrame(clip_rows),
         window_metrics=pd.DataFrame(window_rows),

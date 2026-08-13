@@ -19,12 +19,28 @@ from src.features.acoustic import AcousticFeatures
 from src.features.base import FeatureExtractor
 from src.features.controls import LogbookFeatureSource, MetadataFeatureSource
 from src.features.encoder import EncoderEmbedding
-from src.features.source import CachedFeatureSource, FeatureSource
+from src.features.source import CachedFeatureSource, CentredSource, FeatureSource
 from src.features.spectrogram import LogMelSpectrogram
 
 ACOUSTIC = "acoustic"
 LOGMEL = "logmel"
 ENCODER = "encoder"
+
+# Representations built by transforming another one rather than by reading audio. They
+# read the parent's cache and write none of their own, so adding one costs a name here
+# and nothing on disk. ``load_source`` resolves them; ``kinds`` does not list them,
+# because there is nothing for the extraction stage to do.
+_DERIVED: dict[str, str] = {}
+
+
+def _derived(name: str, parent: str) -> str:
+    _DERIVED[name] = parent
+    return name
+
+
+# The acoustic descriptors with each recording's mean subtracted. What it is worth, and
+# why the per recording spread is deliberately left alone, is in ``CentredSource``.
+ACOUSTIC_CENTRED = _derived("acoustic_centred", ACOUSTIC)
 
 # The two that hear nothing. They are feature sources like any other and were keyed
 # from a different module, with an if chain in a third resolving which was which, so
@@ -35,7 +51,7 @@ METADATA = "metadata"
 LOGBOOK = "logbook"
 
 
-def _spectral(extractor: type[FeatureExtractor]) -> Callable[[Config], FeatureExtractor]:
+def _spectral(extractor: Callable[..., FeatureExtractor]) -> Callable[[Config], FeatureExtractor]:
     """The wiring the two hand written representations share."""
 
     def build(cfg: Config) -> FeatureExtractor:
@@ -120,17 +136,23 @@ def cache_exists(kind: str, cfg: Config) -> bool:
     Callers name a representation; only the extractor knows which config sections
     its cache key is built from. Asking here keeps ``cache`` from having to import
     this module, which would be a cycle.
+
+    A derived representation has the cache of whatever it is derived from, so asking
+    about it asks about the parent rather than reporting a cache that will never exist.
     """
-    return cache.exists(cfg, build_extractor(kind, cfg))
+    return cache.exists(cfg, build_extractor(_DERIVED.get(kind, kind), cfg))
 
 
-def load_source(kind: str, cfg: Config) -> CachedFeatureSource:
+def load_source(kind: str, cfg: Config) -> FeatureSource:
     """Open the cached features for one representation, ready to train on.
 
     Feature names come from the extractor rather than being repeated here, so a
     report of which descriptors mattered can never drift out of step with the
     columns the model was actually given.
     """
+    if kind in _DERIVED:
+        return CentredSource(load_source(_DERIVED[kind], cfg), name=kind)
+
     extractor = build_extractor(kind, cfg)
     return CachedFeatureSource(
         cache.load_cached(cfg, extractor),

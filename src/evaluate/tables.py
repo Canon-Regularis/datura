@@ -12,7 +12,7 @@ import pandas as pd
 
 from src import scoring, uncertainty
 from src.config import Config
-from src.data import annotations
+from src.data import annotations as field_notes
 from src.data.audit import context as audit
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
@@ -160,8 +160,8 @@ def giveaways(cfg: Config) -> dict[str, pd.Series]:
     """
     manifest = load_manifest(cfg, kept_only=True)
     try:
-        parsed = annotations.load(cfg)
-    except annotations.AnnotationError:
+        parsed = field_notes.load(cfg)
+    except field_notes.AnnotationError:
         return audit.giveaway_labels(manifest)
     return audit.giveaway_labels(manifest, parsed)
 

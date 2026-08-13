@@ -51,8 +51,7 @@ class SpectrogramAugment:
             batch = batch + noise * coin().view(n, 1, 1, 1)
 
         batch = self._mask(batch, coin(), self.freq_mask_bins, n_mels, 2, generator)
-        batch = self._mask(batch, coin(), self.time_mask_frames, n_frames, 3, generator)
-        return batch
+        return self._mask(batch, coin(), self.time_mask_frames, n_frames, 3, generator)
 
     @staticmethod
     def _mask(

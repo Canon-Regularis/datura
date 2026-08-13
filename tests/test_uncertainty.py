@@ -60,7 +60,8 @@ def test_resampling_draws_whole_recordings():
     interval = bootstrap_metric(frame, CLASSES, resamples=200, seed=1)
 
     assert interval.low <= interval.estimate <= interval.high
-    assert interval.low >= 0.0 and interval.high <= 1.0
+    assert interval.low >= 0.0
+    assert interval.high <= 1.0
 
 
 def test_resampling_clips_would_understate_the_interval():
@@ -229,7 +230,8 @@ def test_the_interval_widens_with_the_correction_rather_than_the_p_value_alone()
     corrected = paired_difference(left, right)
     naive = stats.ttest_rel(left.to_numpy(), right.to_numpy()).confidence_interval(0.95)
 
-    assert corrected.low < naive.low and corrected.high > naive.high
+    assert corrected.low < naive.low
+    assert corrected.high > naive.high
 
 
 def test_a_comparison_needs_more_than_one_fold():
@@ -276,8 +278,10 @@ def test_repeats_can_convert_an_unresolved_comparison_into_a_resolved_one():
     five = paired_difference(*repeated(once))
     fifty = paired_difference(*repeated(varied(once, 10)))
 
-    assert not five.resolved and five.p_value == pytest.approx(0.08594, abs=1e-5)
-    assert fifty.resolved and fifty.p_value == pytest.approx(0.00265, abs=1e-5)
+    assert not five.resolved
+    assert five.p_value == pytest.approx(0.08594, abs=1e-5)
+    assert fifty.resolved
+    assert fifty.p_value == pytest.approx(0.00265, abs=1e-5)
     assert fifty.p_value < five.p_value
 
 

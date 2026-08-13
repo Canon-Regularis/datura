@@ -42,7 +42,7 @@ class GradCam:
         def capture(_module, _inputs, output: torch.Tensor) -> None:
             captured["activations"] = output
 
-        handle = self.module.final_stage.register_forward_hook(capture)
+        handle = self.module.final_stage.register_forward_hook(capture)  # type: ignore[union-attr]
         try:
             logits = self.module(inputs)
             predicted = logits.argmax(dim=1)

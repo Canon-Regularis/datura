@@ -17,7 +17,9 @@ def pad_to_length(signal: np.ndarray, length: int, mode: str = "reflect") -> np.
     deficit = length - signal.size
     # Reflection needs at least two samples to bounce between.
     effective_mode = mode if signal.size > 1 else "constant"
-    return np.pad(signal, (0, deficit), mode=effective_mode)
+    # The pad mode comes from the configuration, so it is a str rather than one of
+    # the literals numpy's stub enumerates.
+    return np.pad(signal, (0, deficit), mode=effective_mode)  # type: ignore[call-overload]
 
 
 def window_starts(n_samples: int, window: int, hop: int, max_windows: int = 0) -> list[int]:

@@ -30,7 +30,7 @@ def train_trees(
     *,
     only: str | None = None,
     skip_control: bool = False,
-    repeats: int = 1,
+    repeats: int | None = None,
 ) -> list[Path]:
     """Fit every tree model on one configuration, and say where each landed.
 
@@ -39,12 +39,26 @@ def train_trees(
     between two pieces of the same program: a renamed flag failed at runtime instead of
     at import, integers were stringified so they could be parsed back, and the logic
     below could not be called or tested except through a command line.
+
+    ``repeats`` defaults to what the registry declares, because the cost that decides it
+    belongs beside the model. It used to default to one here and to the registry's ten
+    in the pipeline, so fitting a model by hand gave five folds where a pipeline run
+    gave fifty, and the only sign of it was a fold count in a table nobody reads twice.
     """
     wanted = list(models.trained_by(models.TREES))
     if only:
         wanted = [models.get(only)]
     elif skip_control:
         wanted = [spec for spec in wanted if not spec.is_control]
+
+    # One command fits every tree on one assembly, so they have to agree on how many
+    # times the split is redrawn. Disagreeing would mean a model and the control it is
+    # compared against were scored on different numbers of splits.
+    if repeats is None:
+        declared = {spec.repeats for spec in wanted}
+        if len(declared) != 1:
+            raise ValueError(f"the tree models declare different repeat counts: {sorted(declared)}")
+        repeats = next(iter(declared))
 
     # Grouped by the cached representation each model reads, rather than assuming every
     # tree reads the acoustic descriptors. A model whose source is not cached audio
@@ -73,8 +87,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--repeats",
         type=int,
-        default=1,
-        help="rerun the whole split under fresh seeds, for more estimates of the same quantity",
+        default=None,
+        help=(
+            "rerun the whole split under fresh seeds, for more estimates of the same "
+            "quantity; defaults to what the registry declares"
+        ),
     )
     args = parser.parse_args(argv)
 

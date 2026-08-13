@@ -57,11 +57,14 @@ class FoldPlan:
 
         A fresh seed does not always buy a fresh split. ``StratifiedGroupKFold`` places
         groups greedily by class count, so with few enough groups every seed returns the
-        same partition and the repeats vary only the model. That happened here and went
-        unnoticed: the place grouping has 24 groups and produced one partition from ten
-        repeats, so a score printed as fifty splits rested on five, and the fold count
-        the paired test divides by was ten times too large. It is counted and said out
-        loud rather than assumed.
+        same partition. Only the split seed moves here, and a model takes its own seed
+        from its config, so a repeat that does not move the split is an exact duplicate
+        of the one before it rather than a second draw of anything.
+
+        That happened here and went unnoticed: the place grouping has 24 groups and
+        produced one partition from ten repeats, so a score printed as fifty splits
+        rested on five, and the fold count the paired test divides by was ten times too
+        large. It is counted and said out loud rather than assumed.
         """
 
         def build(repeat: int) -> list[Fold]:
@@ -89,8 +92,9 @@ class FoldPlan:
             return
         logger.warning(
             "%d repeats produced only %d distinct partitions; the grouping has too few "
-            "groups for a fresh seed to move the split, so these repeats vary the model "
-            "and not the data. Read the fold count as %d rather than %d.",
+            "groups for a fresh seed to move the split, and only the split seed moves, "
+            "so the duplicate repeats are exact copies and add nothing. Read the fold "
+            "count as %d rather than %d.",
             self.repeats,
             distinct,
             distinct * len(self.build(0)),

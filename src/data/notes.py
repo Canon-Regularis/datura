@@ -154,7 +154,7 @@ def first_of(value: object) -> object:
     if value is None or isinstance(value, str | bytes | dict):
         return value
     try:
-        return next(iter(value), None)
+        return next(iter(value), None)  # type: ignore[call-overload]
     except TypeError:
         return value
 

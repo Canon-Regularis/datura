@@ -66,5 +66,5 @@ def test_split_pads_a_clip_shorter_than_one_window():
 
 @pytest.mark.parametrize("bad", [(0, 100), (200, 0)])
 def test_rejects_non_positive_sizes(bad):
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="must be positive"):
         window_starts(1000, *bad)

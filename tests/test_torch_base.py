@@ -128,7 +128,9 @@ def test_augmentation_is_off_unless_a_model_asks_for_it():
     inputs = torch.arange(6, dtype=torch.float32).reshape(2, 3)
     generator = torch.Generator().manual_seed(0)
 
-    untouched = TorchWindowClassifier._augment(Tiny(), inputs, generator)
+    # Reaching past the public surface on purpose. The default is a hook with no
+    # caller outside the loop, so this is the only way to pin what it does.
+    untouched = TorchWindowClassifier._augment(Tiny(), inputs, generator)  # noqa: SLF001
     assert untouched is inputs, "the default returns the very batch it was given"
 
     asked = Tiny()

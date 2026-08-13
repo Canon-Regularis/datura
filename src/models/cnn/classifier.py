@@ -36,10 +36,6 @@ class SpectrogramCNN(TorchWindowClassifier):
         self._model_settings = dict(model_settings)
         self._augmentation = SpectrogramAugment(augment_settings)
 
-    @property
-    def name(self) -> str:
-        return "cnn"
-
     def _build(self, n_classes: int) -> MelResNet:
         return MelResNet(n_classes=n_classes, **self._model_settings).to(self.device)
 

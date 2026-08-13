@@ -22,14 +22,9 @@ _IMPORTANCE_ROWS = 60
 
 
 class GradientBoostedTrees(WindowClassifier):
-    def __init__(self, params: dict[str, Any], name: str = "xgboost"):
+    def __init__(self, params: dict[str, Any]):
         self._params = dict(params)
-        self._name = name
         self._model: XGBClassifier | None = None
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     @staticmethod
     def _flatten(features: RowView) -> np.ndarray:

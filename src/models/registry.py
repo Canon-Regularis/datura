@@ -233,6 +233,21 @@ _SPECS: tuple[ModelSpec, ...] = (
         repeats=10,
         summary="a linear probe over frozen pretrained encoder embeddings",
     ),
+    # The same trees on the same descriptors, with each recording's mean subtracted
+    # first. It is the only change measured here that moves an audio score upward, and
+    # it moves the place held out score more than twice as far as the tape held out one.
+    # It shares configs/xgb.yaml, because the point is that nothing but the input moved.
+    ModelSpec(
+        name="xgboost_centred",
+        trainer=TREES,
+        source=features.ACOUSTIC_CENTRED,
+        config_file="configs/xgb.yaml",
+        settings_schema=TREE_SETTINGS,
+        build=_build_trees,
+        load=_load_trees,
+        repeats=10,
+        summary="acoustic descriptors with the recording's mean removed",
+    ),
 )
 
 _BY_NAME = {spec.name: spec for spec in _SPECS}

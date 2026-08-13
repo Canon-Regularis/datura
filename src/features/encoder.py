@@ -214,7 +214,9 @@ class EncoderEmbedding(FeatureExtractor):
             for start in range(0, len(resampled), self._settings.batch_size):
                 block = resampled[start : start + self._settings.batch_size]
                 tensor = torch.from_numpy(block).to(self._device)
-                layers, _ = self._module.extract_features(tensor, num_layers=self._settings.layer)
+                layers, _ = self._module.extract_features(  # type: ignore[attr-defined]
+                    tensor, num_layers=self._settings.layer
+                )
                 pooled.append(self._pool(layers[-1]).cpu().numpy())
 
         stacked = np.concatenate(pooled)

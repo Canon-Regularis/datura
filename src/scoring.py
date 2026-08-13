@@ -55,7 +55,7 @@ def aggregate_to_clips(
             "tape_id": "first",
             "species": "first",
             "label": "first",
-            **{column: "mean" for column in score_columns},
+            **dict.fromkeys(score_columns, "mean"),
         }
     )
     grouped["prediction"] = grouped[score_columns].to_numpy().argmax(axis=1)

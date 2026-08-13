@@ -11,7 +11,7 @@ import logging
 import pandas as pd
 
 from src.config import Config
-from src.data import annotations
+from src.data import annotations as field_notes
 from src.data.audit.collection import audit_tables, cross_species_tapes
 from src.data.audit.context import (
     call_types_by_species,
@@ -43,8 +43,8 @@ def annotation_tables(cfg: Config, manifest: pd.DataFrame) -> dict[str, pd.DataF
     fetched the annotations yet still produces every table it can.
     """
     try:
-        parsed = annotations.load(cfg)
-    except annotations.AnnotationError:
+        parsed = field_notes.load(cfg)
+    except field_notes.AnnotationError:
         logger.info(
             "no parsed field notes yet; run python -m src.data.annotations for the "
             "site and call type tables"

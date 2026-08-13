@@ -58,7 +58,8 @@ def test_the_logbook_gives_every_name_its_own_column():
     names = source.feature_names()
 
     assert matrix.shape[1] == len(names), "a column for every name and a name for every column"
-    assert "site_Bermuda" in names and "site_Cape Cod" in names
+    assert "site_Bermuda" in names
+    assert "site_Cape Cod" in names
     assert "collection_code_BA2A" in names
 
     bermuda = names.index("site_Bermuda")
@@ -98,7 +99,8 @@ def test_the_logbook_leaves_a_missing_number_missing():
     names = source.feature_names()
 
     latitude, longitude = names.index("latitude"), names.index("longitude")
-    assert np.isnan(matrix[4, latitude]) and np.isnan(matrix[4, longitude])
+    assert np.isnan(matrix[4, latitude])
+    assert np.isnan(matrix[4, longitude])
     assert matrix[0, latitude] == pytest.approx(32.3), "a recorded one is untouched"
 
 

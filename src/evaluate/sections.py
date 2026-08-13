@@ -18,6 +18,7 @@ import pandas as pd
 
 from src.config import Config
 from src.evaluate import families, tables
+from src.evaluate.artifacts import SIGNIFICANT_COLUMNS
 
 MARGIN_COLUMNS = (
     "Columns beside the margin say what the design resolves. `folds` counts every fold of "
@@ -27,9 +28,6 @@ MARGIN_COLUMNS = (
     "pointed the same way as the mean, and is worth reading where the p value settles "
     "nothing."
 )
-
-# Columns whose value is meaningless once rounded to a fixed number of places.
-SIGNIFICANT_COLUMNS = ("p_value", "q_value")
 
 
 def markdown(frame: pd.DataFrame, decimals: int = 4) -> str:
