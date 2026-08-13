@@ -1,6 +1,7 @@
 # Sensitivity variant. Drops the common band to 0 to 2560 Hz, which keeps every
 # humpback tape including the three recorded at 5120 Hz. Compare against base.yaml
 # to see whether conclusions depend on the band choice.
+extends: base.yaml
 name: base_5k
 
 # What this variant has actually been run with. The full capacity network and the
@@ -11,65 +12,11 @@ pipeline:
   models: [xgboost, metadata, logbook, cnn_small, probe]
   call_types: []
 
-dataset:
-  archive_url: https://archive.org/download/watkins-marine-mammal-sound-database-full-cuts/Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
-  zip_name: Watkins_Marine_Mammal_Sound_Database_full_cuts.zip
-  archive_sha256: 6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e
-  archive_root: Watkins_Marine_Mammal_Sound_Database
-  species:
-    - HumpbackWhale
-    - SpermWhale
-    - KillerWhale
-
 audio:
   target_sample_rate: 5120
   min_native_sample_rate: 5120
-  window_seconds: 2.0
-  hop_seconds: 1.0
-  min_clip_seconds: 0.5
-  pad_mode: reflect
-  max_windows_per_clip: 16
 
 spectrogram:
-  n_fft: 512
-  hop_length: 64
-  n_mels: 64
-  fmin: 50
+  # Just under the 2560 Hz Nyquist of this band, matching how base.yaml sits just
+  # under its own.
   fmax: 2500
-
-# The pretrained encoder, used frozen. It is here to answer the obvious objection to
-# this project's headline: that a model given no audio wins because the audio models
-# are weak. Only a small head is fitted per fold; these weights never move.
-#
-# A 16 kHz encoder is fed audio band limited to 2560 Hz, so it sees an empty band
-# above that. Every window carries the same empty band, so it separates no species.
-# src/features/encoder.py states the argument and asserts the precondition it rests on.
-#
-# The layer is a prior rather than a tuned value. A speech pretrained transformer puts
-# phonetic structure in its upper layers and more general acoustic structure lower
-# down, and whales are not speech. Selecting it on a test fold would be the mistake
-# this repository exists to document, so it is pinned here.
-encoder:
-  architecture: wav2vec2_base
-  checkpoint: wav2vec2_fairseq_base_ls960.pth
-  url: https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960.pth
-  sha256: 1275f890a623b31b9915295dc01d5049c93dc6de8813406c16dfab9b6bd36056
-  sample_rate: 16000
-  layer: 6
-  pooling: mean
-  embedding_dim: 768
-  batch_size: 32
-
-split:
-  n_folds: 5
-  seed: 1234
-  tape_id_length: 5
-  # Which manifest column folds are grouped over. Watkins fills it from the
-  # tape; a collection of continuous recordings would fill it from site and year.
-  group_column: tape_id
-
-paths:
-  raw: data/raw
-  metadata: data/metadata
-  processed: data/processed
-  reports: data/metadata/report

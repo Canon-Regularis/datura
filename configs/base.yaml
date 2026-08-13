@@ -1,4 +1,5 @@
-# Primary configuration. Every stage of the pipeline reads this file.
+# Primary configuration, and the one every variant extends. A variant states only what
+# it changes; everything below is what it inherits.
 name: base_10k
 
 dataset:
@@ -37,8 +38,9 @@ spectrogram:
 # this project's headline: that a model given no audio wins because the audio models
 # are weak. Only a small head is fitted per fold; these weights never move.
 #
-# A 16 kHz encoder is fed audio band limited to 5000 Hz, so it sees an empty band
-# above that. Every window carries the same empty band, so it separates no species.
+# A 16 kHz encoder is fed audio band limited to well under that, so it sees an empty
+# band above the corpus rate. Every window carries the same empty band, so it separates
+# no species.
 # src/features/encoder.py states the argument and asserts the precondition it rests on.
 #
 # The layer is a prior rather than a tuned value. A speech pretrained transformer puts

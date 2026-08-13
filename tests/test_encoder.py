@@ -47,7 +47,9 @@ def test_building_an_extractor_loads_no_weights(tmp_path):
     assert extractor.output_shape(cfg.audio.window_samples) == (32,)
     assert extractor.cache_sections == ("dataset", "audio", "encoder")
     assert len(extractor.feature_names()) == 32
-    assert extractor._module is None, "asking a shape must not build the model"
+    # The laziness is the claim, and only the private handle can show it. A public
+    # accessor for it would exist solely to be read here.
+    assert extractor._module is None, "asking a shape must not build the model"  # noqa: SLF001
 
 
 def test_the_encoder_cache_key_is_its_own(tmp_path):
@@ -178,10 +180,24 @@ def test_every_committed_config_names_real_weights(name):
 
 
 @pytest.mark.parametrize("name", ["base.yaml", "base_5k.yaml", "wide.yaml"])
-def test_every_committed_config_declares_the_encoder_explicitly(name):
-    """Leaning on the dataclass default would hide the digest from the file that set it."""
-    raw = yaml.safe_load((PROJECT_ROOT / "configs" / name).read_text(encoding="utf-8"))
-    assert "encoder" in raw, f"{name} inherits the encoder section rather than stating it"
+def test_every_committed_config_declares_the_encoder_somewhere_in_its_chain(name):
+    """Leaning on the dataclass default would hide the digest from the file that set it.
+
+    Stated rather than defaulted, and a variant may inherit the statement: the section
+    is nine lines and pinning a checkpoint in five files is how one of them ends up
+    naming weights the other four have moved off.
+    """
+    seen = []
+    path = PROJECT_ROOT / "configs" / name
+    while path is not None:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        seen.append(path.name)
+        if "encoder" in raw:
+            return
+        parent = raw.get("extends")
+        path = (path.parent / str(parent)).resolve() if parent else None
+
+    pytest.fail(f"{name} defaults the encoder; nothing in {seen} declares it")
 
 
 def test_torchaudio_is_the_same_build_as_torch():

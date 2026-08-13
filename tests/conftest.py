@@ -5,20 +5,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from src.config import Config, load_config
+from src.config import Config, experiment_configs, load_config
 
 # Every configuration that produces a report, keyed by the name its results are filed
 # under. Discovered rather than listed, so adding a configuration cannot leave one
 # test correcting across four reports while another checks three. It was listed in two
 # files, and adding context_10k to one of them is what made that a failure.
-REPORT_CONFIGS = {
-    cfg.name: path.name
-    for path, cfg in sorted(
-        (path, load_config(path))
-        for path in (Path(__file__).resolve().parents[1] / "configs").glob("*.yaml")
-        if "dataset" in yaml.safe_load(path.read_text(encoding="utf-8"))
-    )
-}
+REPORT_CONFIGS = {load_config(path).name: path.name for path in experiment_configs()}
 
 _TEMPLATE = {
     "name": "test",

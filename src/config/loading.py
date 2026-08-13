@@ -55,7 +55,17 @@ def _require(
 # Every section a config file may carry. A required one that goes missing is caught
 # where it is read; an optional one that is misspelled was not caught anywhere.
 SECTIONS = frozenset(
-    {"name", "dataset", "audio", "spectrogram", "split", "paths", "pipeline", "encoder"}
+    {
+        "extends",
+        "name",
+        "dataset",
+        "audio",
+        "spectrogram",
+        "split",
+        "paths",
+        "pipeline",
+        "encoder",
+    }
 )
 
 
@@ -133,17 +143,62 @@ def _resolve(value: str) -> Path:
     return path if path.is_absolute() else (PROJECT_ROOT / path).resolve()
 
 
+def _read(source: Path) -> dict[str, Any]:
+    if not source.exists():
+        raise ConfigError(f"config file not found: {source}")
+    raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ConfigError(f"config file {source} must contain a top level mapping")
+    return raw
+
+
+def _overlay(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    """``override`` on top of ``base``, one level down.
+
+    Sections merge key by key so a variant states only what differs, and a list
+    replaces rather than appends: a species set or a model roster is the whole answer
+    to its question, and extending one would give a variant every species its parent
+    has plus its own, which is never what a narrower variant means.
+    """
+    merged = dict(base)
+    for key, value in override.items():
+        current = merged.get(key)
+        if isinstance(current, dict) and isinstance(value, dict):
+            merged[key] = {**current, **value}
+        else:
+            merged[key] = value
+    return merged
+
+
+def _merged(source: Path, seen: tuple[Path, ...] = ()) -> dict[str, Any]:
+    """One config, with whatever it extends underneath it.
+
+    Four of the five experiment configs differed from ``base.yaml`` by nine to fourteen
+    lines of forty four, and the rest was copied. That is not only length: the archive
+    checksum was pinned in five files and the encoder block written out five times, so
+    correcting either meant five correct edits and there was nothing to catch four.
+
+    ``extends`` is resolved against the extending file's own directory, so a config
+    tree can be moved without rewriting the links inside it.
+    """
+    if source in seen:
+        chain = " -> ".join(path.name for path in (*seen, source))
+        raise ConfigError(f"config extends itself: {chain}")
+
+    raw = _read(source)
+    parent = raw.pop("extends", None)
+    if parent is None:
+        return raw
+    return _overlay(_merged((source.parent / str(parent)).resolve(), (*seen, source)), raw)
+
+
 def load_config(path: str | Path) -> Config:
     """Read a YAML config, validate it, and return the typed object."""
     source = Path(path)
     if not source.is_absolute():
         source = (PROJECT_ROOT / source).resolve()
-    if not source.exists():
-        raise ConfigError(f"config file not found: {source}")
 
-    raw = yaml.safe_load(source.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict):
-        raise ConfigError(f"config file {source} must contain a top level mapping")
+    raw = _merged(source)
     if "name" not in raw:
         raise ConfigError("config must define a top level 'name'")
     _check_sections(raw, source)
@@ -232,6 +287,27 @@ def load_config(path: str | Path) -> Config:
         ),
         source=source,
     )
+
+
+def experiment_configs() -> tuple[Path, ...]:
+    """Every configuration that describes a corpus, discovered rather than listed.
+
+    ``configs/`` also holds model hyperparameter files and the call type vocabulary,
+    which are not experiments and do not load through ``load_config``. What marks an
+    experiment is the corpus it describes or the one it inherits, rather than any one
+    section, because a variant states only its differences.
+
+    Listed instead of discovered, this went wrong twice. The multiplicity correction
+    named five configurations in a tuple while the tests globbed the directory, so
+    adding two left every published q value corrected across five sevenths of the
+    comparisons with nothing raising.
+    """
+    found = []
+    for path in sorted((PROJECT_ROOT / "configs").glob("*.yaml")):
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if isinstance(raw, dict) and {"dataset", "extends"} & set(raw):
+            found.append(path)
+    return tuple(found)
 
 
 def load_yaml(path: str | Path) -> dict[str, Any]:

@@ -100,8 +100,9 @@ def test_a_misspelled_section_is_refused_rather_than_defaulted(tmp_path):
     """
     from src.config.loading import SECTIONS
 
-    source = PROJECT_ROOT / "configs" / "wide.yaml"
+    source = PROJECT_ROOT / "configs" / "base.yaml"
     raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+    raw["pipeline"] = {"models": ["xgboost"]}
 
     for real, typo in (("pipeline", "pipelines"), ("encoder", "encodder"), ("split", "splitt")):
         body = dict(raw)
@@ -119,7 +120,9 @@ def test_every_committed_config_uses_only_known_sections():
     """And the guard above does not refuse anything the project actually ships."""
     for path in sorted((PROJECT_ROOT / "configs").glob("*.yaml")):
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if "dataset" not in raw:
+        # A variant states only its differences, so what marks an experiment config is
+        # the corpus it describes or the one it inherits, rather than any one section.
+        if "dataset" not in raw and "extends" not in raw:
             continue  # a model hyperparameter file, not an experiment
         load_config(path)
 
@@ -188,3 +191,78 @@ def test_every_committed_model_file_supplies_every_setting_its_code_reads():
             assert not missing, (
                 f"{spec.config_file} leaves {sorted(missing)} in {block} to a default"
             )
+
+
+def test_a_variant_inherits_what_it_does_not_state(tmp_path):
+    """The whole point of ``extends``, and what it is allowed to leave out.
+
+    ``base_5k.yaml`` names five settings. Everything else it runs on, including the
+    archive checksum and the nine line encoder block, comes from ``base.yaml``, which
+    is the only place either is now written down.
+    """
+    base = load_config(PROJECT_ROOT / "configs" / "base.yaml")
+    variant = load_config(PROJECT_ROOT / "configs" / "base_5k.yaml")
+
+    assert variant.audio.target_sample_rate == 5120, "what it states"
+    assert variant.spectrogram.fmax == 2500
+    assert variant.name == "base_5k"
+
+    assert variant.dataset.archive_sha256 == base.dataset.archive_sha256, "what it inherits"
+    assert variant.encoder == base.encoder
+    assert variant.split == base.split
+    assert variant.audio.window_seconds == base.audio.window_seconds
+    assert variant.spectrogram.n_mels == base.spectrogram.n_mels
+
+
+def test_a_section_merges_key_by_key_and_a_list_replaces(tmp_path):
+    """Two different rules, and confusing them would be quiet either way.
+
+    Merging keys is what lets a variant change one band setting and inherit the other
+    six. Replacing lists is what lets ``wide.yaml`` name eleven species and get eleven
+    rather than fourteen, and what lets a narrower model roster actually be narrower.
+    """
+    wide = load_config(PROJECT_ROOT / "configs" / "wide.yaml")
+    base = load_config(PROJECT_ROOT / "configs" / "base.yaml")
+
+    assert len(wide.dataset.species) == 11
+    assert wide.dataset.zip_name == base.dataset.zip_name, "the rest of the section survives"
+
+    narrow = load_config(PROJECT_ROOT / "configs" / "context.yaml")
+    assert narrow.pipeline.models is not None
+    assert "cnn" not in narrow.pipeline.models, "a roster replaces rather than extends"
+
+
+def test_a_config_that_extends_itself_is_refused(tmp_path):
+    """A cycle would otherwise recurse until the interpreter gave up."""
+    first, second = tmp_path / "first.yaml", tmp_path / "second.yaml"
+    first.write_text("extends: second.yaml\nname: first\n", encoding="utf-8")
+    second.write_text("extends: first.yaml\nname: second\n", encoding="utf-8")
+
+    with pytest.raises(ConfigError, match="extends itself"):
+        load_config(first)
+
+
+def test_extending_a_file_that_is_not_there_says_so(tmp_path):
+    path = tmp_path / "orphan.yaml"
+    path.write_text("extends: nowhere.yaml\nname: orphan\n", encoding="utf-8")
+
+    with pytest.raises(ConfigError, match="not found"):
+        load_config(path)
+
+
+def test_the_variants_carry_no_setting_they_did_not_change():
+    """What the collapse is for: one place to correct the checksum, not five.
+
+    A variant that restates an inherited value is not wrong, and it is the thing that
+    drifts. This keeps the four experiment variants stating only their differences.
+    """
+    base = yaml.safe_load((PROJECT_ROOT / "configs" / "base.yaml").read_text(encoding="utf-8"))
+
+    for name in ("base_5k", "wide", "context", "context_shuffled"):
+        raw = yaml.safe_load((PROJECT_ROOT / f"configs/{name}.yaml").read_text(encoding="utf-8"))
+        assert raw.get("extends") == "base.yaml", f"{name} should inherit rather than restate"
+        for section, block in raw.items():
+            if not isinstance(block, dict):
+                continue
+            repeated = {k: v for k, v in block.items() if base.get(section, {}).get(k) == v}
+            assert not repeated, f"{name}.{section} restates {sorted(repeated)} from base.yaml"

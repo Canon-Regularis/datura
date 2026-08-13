@@ -6,7 +6,7 @@ Callers import from this package. ``sections`` holds the validated dataclasses a
 
 from __future__ import annotations
 
-from src.config.loading import PROJECT_ROOT, load_config, load_yaml
+from src.config.loading import PROJECT_ROOT, experiment_configs, load_config, load_yaml
 from src.config.sections import (
     AudioConfig,
     Config,
@@ -28,6 +28,7 @@ __all__ = [
     "PathsConfig",
     "SpectrogramConfig",
     "SplitConfig",
+    "experiment_configs",
     "load_config",
     "load_yaml",
 ]
