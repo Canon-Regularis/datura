@@ -37,6 +37,9 @@ dev = [
     "pytest>=9.1.1,<10",
     "pytest-cov>=6.0",
     "ruff>=0.16,<0.17",
+    "mypy>=1.14,<2",
+    # PyYAML ships no inline types, and the config loader is the one place that reads YAML.
+    "types-PyYAML>=6.0",
     "pre-commit>=4.0",
     "ipykernel>=6.29",
     "nbclient>=0.10",
@@ -96,13 +99,72 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-# G and LOG keep logging lazy and correctly parameterised.
-select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "G", "LOG"]
+# G and LOG keep logging lazy and correctly parameterised. T20 keeps print out of the
+# library, PT keeps a failing assertion able to say which half failed, ERA stops
+# commented out code accumulating, and SLF makes a test reaching past a public surface
+# state why it had to.
+select = [
+    "E", "F", "I", "UP", "B", "SIM", "RUF", "G", "LOG",
+    "W", "C4", "PERF", "FURB", "RET", "NPY", "PD", "ERA", "PIE", "T10", "T20", "A", "PT", "SLF",
+]
+
+# Deliberately not selected, each for a reason rather than to keep the count down:
+#   D401    58 hits. The non-imperative docstring voice is the house style.
+#   EM      143 hits, and TRY003 the same. Long inline prescriptive messages are the
+#           convention here: an error says what to do next, at the point it is raised.
+#   N818    nine exception names that read as sentences rather than as Error suffixes.
+#   TC      83 hits. It would force TYPE_CHECKING blocks, which this codebase avoids
+#           so that an annotation and the import behind it cannot disagree.
+ignore = [
+    # unstack with a fill value is what these three want. pivot_table aggregates, which
+    # is a different operation that happens to produce the same shape here.
+    "PD010",
+    # `nunique() == 1` is the readable way to say a column is constant, and the frames
+    # it is asked of are a few dozen rows.
+    "PD101",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The prediction command's output is print. Routing it through logging would put a
+# level and a timestamp on the one thing a person ran the command to read.
+"src/predict/__main__.py" = ["T201"]
+
+[tool.mypy]
+files = ["src"]
+python_version = "3.12"
+# soundfile, soxr, librosa, xgboost and tqdm ship no stubs. Their absence is a fact
+# about those packages rather than about this code, and treating it as an error would
+# put a per-import silencer at the top of half the modules.
+ignore_missing_imports = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+# Not strict yet, and the gap is annotations rather than unsoundness: `disallow_untyped_defs`
+# is the next step and `config/`, `results.py`, `uncertainty.py` and `errors.py` already
+# clear it. `tests/` is excluded because 293 of its 350 functions carry no annotations.
+strict = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --strict-markers"
+# -ra so a skip says why. 36 of these skip on a missing committed artifact, and a fresh
+# clone used to report them as passes with nothing on screen to say otherwise.
+addopts = "-q -ra --strict-markers -m 'not slow'"
 markers = [
     "slow: exercises the whole pipeline on synthetic audio, takes a minute or two",
 ]
-filterwarnings = ["ignore::DeprecationWarning"]
+# A warning the project can act on is a failure. The exceptions are libraries announcing
+# their own future or tidying up after themselves, neither of which this project can fix.
+#
+# The last three are one library on one platform. Executing a notebook starts a kernel,
+# and on Windows zmq cannot use the default event loop, so it says so and works around it
+# through tornado, then leaves its sockets to the garbage collector. All three are matched
+# by message rather than by class: a bare RuntimeWarning would also swallow numpy telling
+# us about a divide by zero, and a bare ResourceWarning would swallow a file this project
+# left open. None of them fire on Linux, where CI runs the notebooks.
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore:Proactor event loop does not implement add_reader:RuntimeWarning",
+    "ignore:Unclosed socket:ResourceWarning",
+    "ignore:.*Unclosed socket.*:pytest.PytestUnraisableExceptionWarning",
+]
