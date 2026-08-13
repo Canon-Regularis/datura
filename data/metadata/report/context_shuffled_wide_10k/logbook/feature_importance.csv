@@ -1,0 +1,241 @@
+feature,gain,repeat,fold
+"site_Kikvika, Norway",0.38832229375839233,0,0
+collection_code_BE7A,0.14787660539150238,0,0
+collection_code_BB1A,0.044544417411088943,0,0
+collection_code_BD15C,0.044323746114969254,0,0
+collection_code_AC2A,0.04421176016330719,0,0
+collection_code_AA3A,0.0441807359457016,0,0
+collection_code_CC5A,0.04412885010242462,0,0
+collection_code_BD15L,0.04385728761553764,0,0
+collection_code_BE3C,0.04323229193687439,0,0
+collection_code_CB1A,0.041477616876363754,0,0
+collection_code_BE3B,0.04142662510275841,0,0
+year,0.030833346769213676,0,0
+collection_code_BA2A,0.02920551598072052,0,0
+site_Dominica,0.006135815754532814,0,0
+"site_1 mi. off SE tip of Santa Catalina, Calif.",0.0027581837493926287,0,0
+"site_Gully, SE Sable I., Canada  BD",0.0019217866938561201,0,0
+"site_South of Sable Island, North Atlantic",0.0004421891353558749,0,0
+"site_W of Wallilabu Bay, Bequia",0.00040617233025841415,0,0
+site_Madeira,0.000182719697477296,0,0
+bytes_on_disk,0.00013102299999445677,0,0
+latitude,0.00010882109199883416,0,0
+site_50 mi. NE Malta,9.279337973566726e-05,0,0
+duration_seconds,9.004111052490771e-05,0,0
+cond_water_noise,6.153177673695609e-05,0,0
+cond_reverberation,2.1422147256089374e-05,0,0
+longitude,1.6464800864923745e-05,0,0
+native_sample_rate,1.0000407201005146e-05,0,0
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,0
+"site_1/2 mile South of Castle Rock Sulphur Cones, Antarctica",0.0,0,0
+"site_10 mi. SE of San Pedro Light, Santa Cruz Island, California",0.0,0,0
+"site_11 mi. WSW West Cay, Bequia",0.0,0,0
+"site_11 miles NW of Bimini, Northern Bahamas",0.0,0,0
+site_15 mi. E. Sicily,0.0,0,0
+"site_15 mi. W of Gambell, St. Lawrence I., Alaska",0.0,0,0
+"site_19 mi NNW of Alicudi Island, Italy",0.0,0,0
+"site_2.25 mi. W of Castle Rock, McMurdo Sound",0.0,0,0
+"site_2.25 mi. W of Castle Rock, McMurdo Sound, Antarctica",0.0,0,0
+"site_2.25 mi. west of Castle Rock, McMurdo Sound, Antarctica",0.0,0,0
+"site_3 1/2 mi. ENE of canal, Cape Cod Bay, MA",0.0,0,0
+site_3 mi. WSW St. Vincent,0.0,0,0
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,0
+"site_3-4 mi. off Roseau, Dominica",0.0,0,0
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,0
+site_60 - 70 nautical mi. S of St. Lawrence I.,0.0,0,0
+site_60- 70 nautical mi. S of St. Lawrence I.,0.0,0,0
+site_60-70 nautical mi. S of St. Lawrence I.,0.0,0,0
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,0
+site_90 miles E of Gibraltar,0.0,0,0
+"site_Andenes, Norway",0.0,0,0
+"site_Argus Island, Bermuda",0.0,0,0
+"site_Baie Ste. Catherine, Canada",0.0,0,0
+"site_Baie Ste. Catherine, CanadaX",0.0,0,0
+"site_Bay of Fundy, near Wolves Is.",0.0,0,0
+site_Bequia,0.0,0,0
+site_Bering Strait,0.0,0,0
+site_Bermuda,0.0,0,0
+site_BermudaBD,0.0,0,0
+"site_Bimini, Bahamas",0.0,0,0
+"site_Cape Cod Bay, MA",0.0,0,0
+"site_Castle Harbour, Bermuda",0.0,0,0
+"site_Kikvika, Norway",0.277560293674469,0,1
+collection_code_BD15L,0.08379683643579483,0,1
+collection_code_AA3A,0.06654150038957596,0,1
+collection_code_AC2A,0.06585241109132767,0,1
+collection_code_BD15C,0.06542403995990753,0,1
+collection_code_CC5A,0.064017154276371,0,1
+collection_code_BB1A,0.06363324820995331,0,1
+collection_code_BE7A,0.05220961198210716,0,1
+collection_code_BE3B,0.05048669874668121,0,1
+collection_code_BE3C,0.04907698556780815,0,1
+collection_code_BA2A,0.04853086918592453,0,1
+longitude,0.044334571808576584,0,1
+year,0.025053249672055244,0,1
+collection_code_BE3D,0.017999645322561264,0,1
+site_3 mi. WSW St. Vincent,0.00934951938688755,0,1
+collection_code_CB1A,0.003947016783058643,0,1
+"site_Gully, SE Sable I., Canada  BD",0.0038280461449176073,0,1
+latitude,0.002435041358694434,0,1
+"site_W of Wallilabu Bay, Bequia",0.0014533753274008632,0,1
+"site_T3 Ice Island, Canada",0.0012587093515321612,0,1
+"site_South of Sable Island, North Atlantic",0.001198225887492299,0,1
+site_W of Browns Bank,0.0006935651763342321,0,1
+site_Madeira,0.0003302481782156974,0,1
+site_50 mi. NE Malta,0.0002800145302899182,0,1
+native_sample_rate,0.0002475850924383849,0,1
+duration_seconds,0.00014025357086211443,0,1
+"site_New York Aquarium, NY",0.00011073114001192153,0,1
+cond_reverberation,0.00011039285163860768,0,1
+bytes_on_disk,0.00010022082278737798,0,1
+"site_1 mi. off SE tip of Santa Catalina, Calif.",0.0,0,1
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,1
+"site_1/2 mile South of Castle Rock Sulphur Cones, Antarctica",0.0,0,1
+"site_10 mi. SE of San Pedro Light, Santa Cruz Island, California",0.0,0,1
+"site_11 mi. WSW West Cay, Bequia",0.0,0,1
+"site_11 miles NW of Bimini, Northern Bahamas",0.0,0,1
+site_15 mi. E. Sicily,0.0,0,1
+"site_15 mi. W of Gambell, St. Lawrence I., Alaska",0.0,0,1
+"site_19 mi NNW of Alicudi Island, Italy",0.0,0,1
+"site_2.25 mi. W of Castle Rock, McMurdo Sound",0.0,0,1
+"site_2.25 mi. W of Castle Rock, McMurdo Sound, Antarctica",0.0,0,1
+"site_2.25 mi. west of Castle Rock, McMurdo Sound, Antarctica",0.0,0,1
+"site_3 1/2 mi. ENE of canal, Cape Cod Bay, MA",0.0,0,1
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,1
+"site_3-4 mi. off Roseau, Dominica",0.0,0,1
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,1
+site_60 - 70 nautical mi. S of St. Lawrence I.,0.0,0,1
+site_60- 70 nautical mi. S of St. Lawrence I.,0.0,0,1
+site_60-70 nautical mi. S of St. Lawrence I.,0.0,0,1
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,1
+site_90 miles E of Gibraltar,0.0,0,1
+"site_Andenes, Norway",0.0,0,1
+"site_Argus Island, Bermuda",0.0,0,1
+"site_Baie Ste. Catherine, Canada",0.0,0,1
+"site_Baie Ste. Catherine, CanadaX",0.0,0,1
+"site_Bay of Fundy, near Wolves Is.",0.0,0,1
+site_Bequia,0.0,0,1
+site_Bering Strait,0.0,0,1
+site_Bermuda,0.0,0,1
+site_BermudaBD,0.0,0,1
+"site_Bimini, Bahamas",0.0,0,1
+collection_code_BB1A,0.09053388237953186,0,2
+collection_code_AC2A,0.08979514241218567,0,2
+collection_code_BE7A,0.08976161479949951,0,2
+collection_code_BD15C,0.08972162008285522,0,2
+collection_code_CC5A,0.08969514816999435,0,2
+collection_code_AA3A,0.0896325334906578,0,2
+collection_code_CB1A,0.08941251784563065,0,2
+collection_code_BE3C,0.08911143243312836,0,2
+collection_code_BA2A,0.08503933250904083,0,2
+collection_code_BD15L,0.08243588358163834,0,2
+collection_code_BE3B,0.07668282091617584,0,2
+collection_code_BE3D,0.015615657903254032,0,2
+site_3 mi. WSW St. Vincent,0.009405309334397316,0,2
+site_N end of Dominica,0.007602453697472811,0,2
+site_Dominica  E,0.001388607663102448,0,2
+collection_code_BD15A,0.0011934095527976751,0,2
+"site_Sasuit Harbor, Dennis, Cape Cod MA",0.0005622241296805441,0,2
+year,0.0005619956646114588,0,2
+native_sample_rate,0.0004734220856335014,0,2
+longitude,0.00041679819696582854,0,2
+site_W of Browns Bank,0.0002807361597660929,0,2
+bytes_on_disk,0.00020082102855667472,0,2
+"site_South of Sable Island, North Atlantic",0.0001810642861528322,0,2
+latitude,0.00011728691606549546,0,2
+site_Western North Atlantic,9.400009730597958e-05,0,2
+duration_seconds,8.434669143753126e-05,0,2
+"site_1 mi. off SE tip of Santa Catalina, Calif.",0.0,0,2
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,2
+"site_1/2 mile South of Castle Rock Sulphur Cones, Antarctica",0.0,0,2
+"site_10 mi. SE of San Pedro Light, Santa Cruz Island, California",0.0,0,2
+"site_11 mi. WSW West Cay, Bequia",0.0,0,2
+"site_11 miles NW of Bimini, Northern Bahamas",0.0,0,2
+site_15 mi. E. Sicily,0.0,0,2
+"site_15 mi. W of Gambell, St. Lawrence I., Alaska",0.0,0,2
+"site_19 mi NNW of Alicudi Island, Italy",0.0,0,2
+"site_2.25 mi. W of Castle Rock, McMurdo Sound",0.0,0,2
+"site_2.25 mi. W of Castle Rock, McMurdo Sound, Antarctica",0.0,0,2
+"site_2.25 mi. west of Castle Rock, McMurdo Sound, Antarctica",0.0,0,2
+"site_3 1/2 mi. ENE of canal, Cape Cod Bay, MA",0.0,0,2
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,2
+"site_3-4 mi. off Roseau, Dominica",0.0,0,2
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,2
+site_50 mi. NE Malta,0.0,0,2
+site_60 - 70 nautical mi. S of St. Lawrence I.,0.0,0,2
+site_60- 70 nautical mi. S of St. Lawrence I.,0.0,0,2
+site_60-70 nautical mi. S of St. Lawrence I.,0.0,0,2
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,2
+site_90 miles E of Gibraltar,0.0,0,2
+"site_Andenes, Norway",0.0,0,2
+"site_Argus Island, Bermuda",0.0,0,2
+"site_Baie Ste. Catherine, Canada",0.0,0,2
+"site_Baie Ste. Catherine, CanadaX",0.0,0,2
+"site_Bay of Fundy, near Wolves Is.",0.0,0,2
+site_Bequia,0.0,0,2
+site_Bering Strait,0.0,0,2
+site_Bermuda,0.0,0,2
+site_BermudaBD,0.0,0,2
+"site_Bimini, Bahamas",0.0,0,2
+"site_Cape Cod Bay, MA",0.0,0,2
+"site_Castle Harbour, Bermuda",0.0,0,2
+"site_Kikvika, Norway",0.17595095932483673,0,3
+collection_code_BD15L,0.09515678882598877,0,3
+collection_code_AA3A,0.07915889471769333,0,3
+collection_code_AC2A,0.07902378588914871,0,3
+collection_code_CC5A,0.07867524027824402,0,3
+collection_code_BE3C,0.07719480991363525,0,3
+collection_code_BD15C,0.07632475346326828,0,3
+collection_code_BB1A,0.07159093022346497,0,3
+collection_code_BA2A,0.06155170500278473,0,3
+collection_code_CB1A,0.056999336928129196,0,3
+collection_code_BE3B,0.05596369877457619,0,3
+collection_code_BE7A,0.017899272963404655,0,3
+longitude,0.017657190561294556,0,3
+year,0.015261112712323666,0,3
+collection_code_BE3D,0.013760222122073174,0,3
+site_3 mi. WSW St. Vincent,0.007733787875622511,0,3
+site_N end of Dominica,0.0069238063879311085,0,3
+latitude,0.003545895218849182,0,3
+"site_Gully, SE Sable I., Canada  BD",0.002369722817093134,0,3
+"site_Marineland of the Pacific, Los Angeles, CA",0.0017383472295477986,0,3
+"site_W of Wallilabu Bay, Bequia",0.0014804430538788438,0,3
+site_Dominica  E,0.0012438860721886158,0,3
+collection_code_BD15A,0.0007099119247868657,0,3
+native_sample_rate,0.0004895703168585896,0,3
+"site_3-4 mi. off Roseau, Dominica",0.0003263523685745895,0,3
+site_Bequia,0.0002846860734280199,0,3
+"site_Sable Island, Nova Scotia",0.0002613356919027865,0,3
+site_W of Browns Bank,0.00019185568089596927,0,3
+cond_engine_noise,0.0001793941337382421,0,3
+bytes_on_disk,0.00016898367903195322,0,3
+duration_seconds,0.00010039486369350925,0,3
+cond_reverberation,6.35614778730087e-05,0,3
+site_50 mi. NE Malta,1.93729192687897e-05,0,3
+"site_1 mi. off SE tip of Santa Catalina, Calif.",0.0,0,3
+"site_1-1.5 miles North of Tortola, British Virgin Islands",0.0,0,3
+"site_1/2 mile South of Castle Rock Sulphur Cones, Antarctica",0.0,0,3
+"site_10 mi. SE of San Pedro Light, Santa Cruz Island, California",0.0,0,3
+"site_11 mi. WSW West Cay, Bequia",0.0,0,3
+"site_11 miles NW of Bimini, Northern Bahamas",0.0,0,3
+site_15 mi. E. Sicily,0.0,0,3
+"site_15 mi. W of Gambell, St. Lawrence I., Alaska",0.0,0,3
+"site_19 mi NNW of Alicudi Island, Italy",0.0,0,3
+"site_2.25 mi. W of Castle Rock, McMurdo Sound",0.0,0,3
+"site_2.25 mi. W of Castle Rock, McMurdo Sound, Antarctica",0.0,0,3
+"site_2.25 mi. west of Castle Rock, McMurdo Sound, Antarctica",0.0,0,3
+"site_3 1/2 mi. ENE of canal, Cape Cod Bay, MA",0.0,0,3
+"site_3 miles N of San Juan, Puerto Rico",0.0,0,3
+"site_3-4 mi. off Roseau, Dominica  BD",0.0,0,3
+site_60 - 70 nautical mi. S of St. Lawrence I.,0.0,0,3
+site_60- 70 nautical mi. S of St. Lawrence I.,0.0,0,3
+site_60-70 nautical mi. S of St. Lawrence I.,0.0,0,3
+"site_80 mi. south of Martha's Vineyard, Massachusetts",0.0,0,3
+site_90 miles E of Gibraltar,0.0,0,3
+"site_Andenes, Norway",0.0,0,3
+"site_Argus Island, Bermuda",0.0,0,3
+"site_Baie Ste. Catherine, Canada",0.0,0,3
+"site_Baie Ste. Catherine, CanadaX",0.0,0,3
+"site_Bay of Fundy, near Wolves Is.",0.0,0,3
+site_Bering Strait,0.0,0,3
+site_Bermuda,0.0,0,3

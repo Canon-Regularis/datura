@@ -1,0 +1,18 @@
+# The coarseness control for context_wide_10k, and it is needed for the same reason
+# context_shuffled.yaml is needed for context_10k.
+#
+# Grouping by place leaves 68 groups where the tape rule leaves 228, and the largest
+# place holds 49 tapes on its own, so the folds are coarser and far more lopsided than
+# the tape folds they are compared against. A score that falls under them has two
+# explanations and only one is a finding.
+#
+# This deals pseudo places matched to the real ones group for group, species for
+# species and tape for tape, with the geography destroyed. Whatever falls here is the
+# split shape; what falls further under the real places is the place.
+extends: context_wide.yaml
+name: context_shuffled_wide_10k
+
+split:
+  # Pseudo places, dealt at random inside each species. Nothing about a location
+  # survives into this column.
+  group_column: place_shuffled

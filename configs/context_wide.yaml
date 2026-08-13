@@ -1,0 +1,34 @@
+# The place experiment again, on three times as many places.
+#
+# `context.yaml` asks whether a model survives a recording context it has never heard
+# and answers no: XGBoost falls from 0.752 to 0.321 across that one line, which is
+# below the 0.333 a guess from the class shares reaches. That was measured over 24
+# places, five of which are all humpback has, so it leaves an obvious objection open.
+# A model cannot be expected to generalise across recording contexts when it was shown
+# two dozen of them.
+#
+# This is the same question posed on the widest corpus the archive supports: 68 places
+# across 228 tapes and 17 collections, against 24 places across 134. If the fall is
+# smaller here, then recording contexts are the limiting resource and collecting more
+# of them is worth what it costs. If it is just as steep with three times the places,
+# then the models are keying on something a place does not fix, and no amount of
+# further collection would change the answer.
+#
+# Nothing new is downloaded. `wide_10k` was already built, cached and reported on; only
+# the fold rule differs, exactly as it does between base.yaml and context.yaml.
+extends: wide.yaml
+name: context_wide_10k
+
+dataset:
+  # The same corpus as wide_10k, so its manifest, audit tables and feature caches are
+  # read rather than rebuilt.
+  corpus: wide_10k
+
+split:
+  group_column: place
+
+  # Four rather than five, and the corpus decides that rather than taste. Spinner
+  # dolphin is recorded at exactly four places, so a five fold split leaves one fold
+  # with no spinner dolphin to test on at all, and macro-F1 is undefined for a class
+  # with no support. At four folds every class reaches every fold.
+  n_folds: 4

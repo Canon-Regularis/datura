@@ -7,6 +7,18 @@ native sample rate,logbook,native sample rate shared by species,834,3,3,50,0.663
 native sample rate,logbook,native sample rate unique to a species,3254,3,3,50,0.8571786247,0.1729662193
 collection code,logbook,collection code not recorded,359,2,3,30,0.5,0.4152273993
 collection code,logbook,collection code unique to a species,3729,3,3,50,0.9850018807,0.0184119861
+native sample rate,probe,native sample rate shared by species,834,3,3,50,0.5615312739,0.2275100309
+native sample rate,probe,native sample rate unique to a species,3254,3,3,50,0.4859439751,0.0671693176
+collection code,probe,collection code not recorded,359,2,3,30,0.2759431182,0.2408236196
+collection code,probe,collection code unique to a species,3729,3,3,50,0.6411461984,0.1530914881
+native sample rate,xgboost_centred,native sample rate shared by species,834,3,3,50,0.5044326526,0.206918381
+native sample rate,xgboost_centred,native sample rate unique to a species,3254,3,3,50,0.6621913254,0.0860255542
+collection code,xgboost_centred,collection code not recorded,359,2,3,30,0.4611003654,0.0116543582
+collection code,xgboost_centred,collection code unique to a species,3729,3,3,50,0.6641061957,0.1267978333
+native sample rate,xgboost+probe,native sample rate shared by species,834,3,3,50,0.5544766523,0.2196173728
+native sample rate,xgboost+probe,native sample rate unique to a species,3254,3,3,50,0.5376122019,0.0902124567
+collection code,xgboost+probe,collection code not recorded,359,2,3,30,0.3460868962,0.242398725
+collection code,xgboost+probe,collection code unique to a species,3729,3,3,50,0.6824467459,0.2008042828
 native sample rate,metadata,native sample rate shared by species,834,3,3,50,0.6243550292,0.1804982321
 native sample rate,metadata,native sample rate unique to a species,3254,3,3,50,0.853913002,0.1305171179
 collection code,metadata,collection code not recorded,359,2,3,30,0.611827957,0.2874076048

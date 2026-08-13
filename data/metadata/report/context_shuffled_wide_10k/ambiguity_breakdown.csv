@@ -1,0 +1,26 @@
+giveaway,model,subset,clips,classes_scored,classes_total,folds,macro_f1_mean,macro_f1_std
+native sample rate,xgboost,native sample rate shared by species,4863,11,11,4,0.314171693,0.0729424183
+native sample rate,xgboost,native sample rate unique to a species,2482,8,11,4,0.2773360296,0.0690752966
+collection code,xgboost,collection code not recorded,361,3,11,3,0.3511256354,0.1952121183
+collection code,xgboost,collection code shared by species,2289,4,11,4,0.2688805185,0.072988418
+collection code,xgboost,collection code unique to a species,4695,10,11,4,0.3568689494,0.1178041764
+native sample rate,logbook,native sample rate shared by species,4863,11,11,4,0.9212057766,0.074511595
+native sample rate,logbook,native sample rate unique to a species,2482,8,11,4,0.5058815193,0.1184034816
+collection code,logbook,collection code not recorded,361,3,11,3,0.1996833923,0.1198784725
+collection code,logbook,collection code shared by species,2289,4,11,4,0.7141870651,0.0377452085
+collection code,logbook,collection code unique to a species,4695,10,11,4,0.8203314474,0.0966920131
+native sample rate,probe,native sample rate shared by species,4863,11,11,40,0.3413905721,0.0702162318
+native sample rate,probe,native sample rate unique to a species,2482,8,11,40,0.3362515245,0.1070433366
+collection code,probe,collection code not recorded,361,3,11,30,0.2760152402,0.022446034
+collection code,probe,collection code shared by species,2289,4,11,40,0.301644932,0.0402616219
+collection code,probe,collection code unique to a species,4695,10,11,40,0.3969194169,0.1332787425
+native sample rate,xgboost+probe,native sample rate shared by species,4863,11,11,4,0.3622817541,0.0836039405
+native sample rate,xgboost+probe,native sample rate unique to a species,2482,8,11,4,0.3412761517,0.1068539164
+collection code,xgboost+probe,collection code not recorded,361,3,11,3,0.2661863904,0.0862498612
+collection code,xgboost+probe,collection code shared by species,2289,4,11,4,0.3124017225,0.0926771189
+collection code,xgboost+probe,collection code unique to a species,4695,10,11,4,0.4105866169,0.1550877508
+native sample rate,metadata,native sample rate shared by species,4863,11,11,4,0.5216939708,0.1911681611
+native sample rate,metadata,native sample rate unique to a species,2482,8,11,4,0.3617578154,0.1939149693
+collection code,metadata,collection code not recorded,361,3,11,3,0.2775367558,0.0960169944
+collection code,metadata,collection code shared by species,2289,4,11,4,0.3852474366,0.2116654409
+collection code,metadata,collection code unique to a species,4695,10,11,4,0.5131661494,0.2143855641
