@@ -129,6 +129,11 @@ ignore = [
 # level and a timestamp on the one thing a person ran the command to read.
 "src/predict/__main__.py" = ["T201"]
 
+# A notebook's print is its output, for the same reason. `display` shadows a builtin
+# nobody uses and is IPython's own name for the function, so renaming it on import
+# would make every cell read less like the notebooks it is copied from.
+"experiments/*.ipynb" = ["T201", "A004"]
+
 [tool.mypy]
 files = ["src"]
 python_version = "3.12"

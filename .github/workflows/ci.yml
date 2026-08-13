@@ -128,13 +128,12 @@ jobs:
       # diffed like everything else. Correcting across all of them at once is the point
       # of it, and a stale copy would report a different verdict from the reports
       # beside it.
+      # --all discovers the configurations rather than naming them. They were listed
+      # here, so adding two left their reports rebuilt by nobody and diffed against
+      # nothing, which is the failure this job exists to catch.
       - name: Rebuild every report
         run: |
-          uv run python -m src.evaluate.report --config configs/base.yaml
-          uv run python -m src.evaluate.report --config configs/base_5k.yaml
-          uv run python -m src.evaluate.report --config configs/wide.yaml
-          uv run python -m src.evaluate.report --config configs/context.yaml
-          uv run python -m src.evaluate.report --config configs/context_shuffled.yaml
+          uv run python -m src.evaluate.report --all
           uv run python -m src.evaluate.multiplicity
 
       # Figures and provenance are excluded. Matplotlib output is not byte-stable

@@ -25,7 +25,7 @@ from pathlib import Path
 import pandas as pd
 
 from src import cli
-from src.config import Config
+from src.config import Config, experiment_configs, load_config
 from src.evaluate import coverage, ensemble, families, sections, tables
 from src.evaluate import figures as figure_set
 from src.evaluate.artifacts import write_table
@@ -152,8 +152,27 @@ def build(cfg: Config) -> Path:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = cli.parser_for(__doc__).parse_args(argv)
-    build(cli.prepare(args))
+    parser = cli.parser_for(__doc__)
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help=(
+            "rebuild every experiment configuration rather than the one named, "
+            "discovering them rather than taking a list"
+        ),
+    )
+    args = parser.parse_args(argv)
+
+    if not args.all:
+        build(cli.prepare(args))
+        return 0
+
+    # Discovered rather than listed. The reproduce job named five configurations by
+    # hand, so adding two left their reports rebuilt by nobody and diffed against
+    # nothing, which is the failure the job exists to catch.
+    cli.prepare(args)
+    for path in experiment_configs():
+        build(load_config(path))
     return 0
 
 
