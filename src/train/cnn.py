@@ -6,6 +6,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import logging
 import sys
 from pathlib import Path
@@ -39,15 +40,27 @@ def train_network(
     *,
     epochs: int | None = None,
     repeats: int | None = None,
+    deterministic: bool | None = None,
 ) -> Path:
     """Fit one network trainer model on one configuration.
 
     ``repeats`` defaults to what the registry declares, because the cost that decides
     it belongs beside the model rather than in whoever calls this.
+
+    ``deterministic`` overrides the config, and exists so that a change to the training
+    loop can be checked. These models are not reproducible as shipped: cuDNN picks
+    whichever kernel is quickest on the day, so refitting a fold disagrees with the
+    committed predictions on roughly one clip in six. Forcing it on costs about a third
+    of the throughput and is not how the published numbers were produced, which is why
+    it is a flag rather than a setting change.
     """
     spec = models.get(name)
-    overrides = {"train": {"epochs": epochs}} if epochs is not None else None
-    settings = load_settings(spec, overrides)
+    overrides: dict[str, dict[str, object]] = {"train": {}}
+    if epochs is not None:
+        overrides["train"]["epochs"] = epochs
+    if deterministic is not None:
+        overrides["train"]["deterministic"] = deterministic
+    settings = load_settings(spec, overrides if overrides["train"] else None)
     log_device(settings["train"])
 
     assembly: Assembly = assemble(
@@ -66,9 +79,25 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="rerun the whole split under fresh seeds; defaults to what the registry declares",
     )
+    parser.add_argument(
+        "--deterministic",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help=(
+            "force identical reruns on the same hardware, at about a third less "
+            "throughput. Off in the shipped configs, so the published numbers were not "
+            "produced with it; use it to check that a change left the model alone"
+        ),
+    )
     args = parser.parse_args(argv)
 
-    train_network(cli.prepare(args), args.name, epochs=args.epochs, repeats=args.repeats)
+    train_network(
+        cli.prepare(args),
+        args.name,
+        epochs=args.epochs,
+        repeats=args.repeats,
+        deterministic=args.deterministic,
+    )
     return 0
 
 
