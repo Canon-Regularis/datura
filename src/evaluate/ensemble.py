@@ -31,6 +31,7 @@ import pandas as pd
 
 from src import scoring
 from src.config import Config
+from src.evaluate.artifacts import write_table
 from src.results import (
     clip_metrics_path,
     confusion_path,
@@ -127,8 +128,16 @@ def materialise(cfg: Config, names: tuple[str, ...] = ENSEMBLE) -> str | None:
     fold_metrics = pd.DataFrame(rows)
 
     model_directory(cfg, name).mkdir(parents=True, exist_ok=True)
-    fold_metrics.to_csv(clip_metrics_path(cfg, name), index=False)
-    scoring.summarise_folds(fold_metrics).to_csv(summary_path(cfg, name), index=False)
+    # Through the shared writer, because these two are the only result tables the report
+    # regenerates. Every other model's are written once by a trainer and committed, so a
+    # rebuild never touches them; these are recomputed from the committed predictions on
+    # whatever machine runs the report. Written raw, they carried a full float64 repr and
+    # disagreed with themselves in the sixteenth significant figure between Windows and
+    # Linux, which failed the reproduce job and moved every p value downstream of them.
+    write_table(fold_metrics, clip_metrics_path(cfg, name))
+    write_table(scoring.summarise_folds(fold_metrics), summary_path(cfg, name))
+    # The confusion matrix keeps its index, which names the classes, and holds integer
+    # counts that no platform rounds differently.
     scoring.confusion(
         pooled["label"].to_numpy(), pooled["prediction"].to_numpy(), class_names
     ).to_csv(confusion_path(cfg, name))

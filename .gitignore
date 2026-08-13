@@ -2,7 +2,11 @@
 # needed to rebuild the reports without them is tracked.
 data/raw/
 data/processed/
-data/metadata/report/**/checkpoints/
+# The trailing /* matters. Excluding the directory itself means git never looks inside
+# it, so the exception below can never apply: a file cannot be re-included once a
+# parent directory is excluded. That is what left the shipped fold untracked while it
+# sat on every developer's disk, and it took a CI failure to notice.
+data/metadata/report/**/checkpoints/*
 # One exception: the fold `python -m src.predict` ships with. Without it a fresh clone
 # can score the committed predictions but cannot identify a recording. The trees
 # rather than the network, because the network is wrong while above 90% confident on

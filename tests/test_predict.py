@@ -206,9 +206,34 @@ def test_an_unknown_model_is_refused_by_name(cfg):
         predict.probabilities(cfg, cfg.source, ["not_a_model"], 0)
 
 
+SHIPPED_FOLD = "data/metadata/report/base_10k/xgboost/checkpoints/fold0.json"
+
+
 def test_the_shipped_fold_is_committed():
-    """Without it a fresh clone can score the committed predictions but not a wav file."""
+    """Without it a fresh clone can score the committed predictions but not a wav file.
+
+    Tracked rather than merely present. Every checkpoint directory is gitignored and
+    this one file is the exception, so it sits on the disk of anybody who has run the
+    pipeline whether or not git knows about it. Asking whether the path exists therefore
+    passed on every developer machine and failed on every clean checkout, which is
+    exactly where the claim matters, and it went unnoticed until CI said so.
+    """
+    import subprocess
+
     from src.config import PROJECT_ROOT
 
-    shipped = PROJECT_ROOT / "data/metadata/report/base_10k/xgboost/checkpoints/fold0.json"
-    assert shipped.exists(), "the model `python -m src.predict` defaults to is missing"
+    listed = subprocess.run(
+        ["git", "ls-files", "--", SHIPPED_FOLD],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+        check=False,
+    )
+    if listed.returncode != 0:
+        pytest.skip("not a git checkout, so nothing can say whether the fold is tracked")
+
+    assert listed.stdout.strip() == SHIPPED_FOLD, (
+        f"{SHIPPED_FOLD} is not tracked, so a fresh clone cannot run "
+        "`python -m src.predict`. Check .gitignore: a file cannot be re-included "
+        "once a parent directory is excluded."
+    )
