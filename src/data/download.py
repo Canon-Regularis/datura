@@ -126,6 +126,27 @@ def extract_species(cfg: Config, archive: Path, *, force: bool = False) -> Path:
     return root
 
 
+def fetch(
+    cfg: Config,
+    *,
+    force: bool = False,
+    skip_download: bool = False,
+    verify: bool = True,
+) -> Path:
+    """Get the archive and unpack the species under study, and say where they landed."""
+    archive = cfg.paths.raw / cfg.dataset.zip_name
+    if not skip_download:
+        archive = download_archive(cfg, force=force, verify=verify)
+    elif not archive.exists():
+        raise DownloadError(f"--skip-download given but {archive} does not exist")
+    elif verify:
+        verify_archive(cfg, archive)
+
+    root = extract_species(cfg, archive, force=force)
+    logger.info("dataset root: %s", root)
+    return root
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     parser.add_argument("--force", action="store_true", help="redownload and extract again")
@@ -135,17 +156,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    cfg = cli.prepare(args)
-    archive = cfg.paths.raw / cfg.dataset.zip_name
-    if not args.skip_download:
-        archive = download_archive(cfg, force=args.force, verify=not args.skip_verify)
-    elif not archive.exists():
-        raise DownloadError(f"--skip-download given but {archive} does not exist")
-    elif not args.skip_verify:
-        verify_archive(cfg, archive)
-
-    root = extract_species(cfg, archive, force=args.force)
-    logger.info("dataset root: %s", root)
+    fetch(
+        cli.prepare(args),
+        force=args.force,
+        skip_download=args.skip_download,
+        verify=not args.skip_verify,
+    )
     return 0
 
 

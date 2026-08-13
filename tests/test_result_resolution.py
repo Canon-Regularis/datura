@@ -10,7 +10,12 @@ from __future__ import annotations
 
 import pytest
 
-from src.evaluate.explain import DEFAULT_CALL_TYPE_MODEL, ExplainError, _task_of, spec_for_result
+from src.evaluate.resolve import (
+    DEFAULT_CALL_TYPE_MODEL,
+    ResolveError,
+    spec_for_result,
+    task_of,
+)
 
 
 class FakeDataset:
@@ -49,14 +54,14 @@ def test_the_default_cannot_be_explained_by_band_even_though_it_now_saves():
     there and the error names the representation that was asked.
     """
     from src.config import load_config
-    from src.evaluate.explain import ExplainError, _frequencies
+    from src.evaluate.resolve import frequency_axis
 
     trees = spec_for_result("calltype_spermwhale_coda")
     assert trees.load is not None, "the shipped fold would be unreadable"
     assert spec_for_result("cnn_small").load is not None
 
-    with pytest.raises(ExplainError, match="no frequency axis"):
-        _frequencies(load_config("configs/base.yaml"), trees)
+    with pytest.raises(ResolveError, match="no frequency axis"):
+        frequency_axis(load_config("configs/base.yaml"), trees)
 
 
 @pytest.mark.parametrize(
@@ -70,9 +75,9 @@ def test_the_default_cannot_be_explained_by_band_even_though_it_now_saves():
 )
 def test_the_species_and_call_type_come_back_off_the_name(result, species, call_type):
     """Directory names are lowercased, so the species is matched rather than guessed."""
-    assert _task_of(FakeConfig(), result) == (species, call_type)
+    assert task_of(FakeConfig(), result) == (species, call_type)
 
 
 def test_a_call_type_naming_no_species_under_study_is_refused():
-    with pytest.raises(ExplainError, match="names no species"):
-        _task_of(FakeConfig(), "calltype_belugawhale_click")
+    with pytest.raises(ResolveError, match="names no species"):
+        task_of(FakeConfig(), "calltype_belugawhale_click")

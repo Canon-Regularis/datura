@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from functools import partial
 
 import pandas as pd
 
@@ -57,6 +58,12 @@ from src.train.tasks import (
 
 logger = logging.getLogger(__name__)
 
+# The species with enough annotated call types to pose a question in, and the model
+# the published call type results were fitted with. Named here so the callable and
+# the command line cannot drift apart on what the default is.
+DEFAULT_SPECIES = "SpermWhale"
+DEFAULT_MODEL = "xgboost"
+
 # Re-exported so the entry point stays the one name a reader looks for, while the
 # question of which tasks are viable can be asked without the training stack.
 __all__ = [
@@ -77,7 +84,7 @@ def run_task(
     base: FeatureSource,
     labels: pd.DataFrame,
     task: Task,
-    model_name: str = "xgboost",
+    model_name: str = DEFAULT_MODEL,
     suffix: str = "",
     repeats: int = 1,
     skip_control: bool = False,
@@ -120,7 +127,9 @@ def run_task(
     audio_spec = models.get(model_name)
     tag = suffix + ("" if model_name == "xgboost" else f"_{model_name}")
 
-    wanted = [(audio_spec, audio, f"{task.name}{tag}")]
+    wanted: list[tuple[models.ModelSpec, FeatureSource, str]] = [
+        (audio_spec, audio, f"{task.name}{tag}")
+    ]
     if not skip_control:
         wanted.append((models.control(), control, f"{task.control_name}{suffix}"))
 
@@ -130,7 +139,7 @@ def run_task(
             cfg,
             source,
             plan,
-            lambda sp=spec, st=settings: sp.build(cfg, st),
+            partial(spec.build, cfg, settings),
             name,
             class_names=list(CLASS_NAMES),
         )
@@ -138,15 +147,57 @@ def run_task(
         logger.info("%s", result.headline())
 
 
+def run_call_types(
+    cfg: Config,
+    species: str,
+    *,
+    model_name: str = DEFAULT_MODEL,
+    only: str | None = None,
+    max_clip_seconds: float | None = None,
+    suffix: str = "",
+    repeats: int = 1,
+    skip_control: bool = False,
+) -> None:
+    """Pose every viable call type question inside one species, and answer it.
+
+    Which questions are viable is decided from the labels rather than listed, so a
+    species with nothing reaching the minimum simply produces nothing.
+    """
+    vocabulary = load_vocabulary()
+    labels = clip_labels(cfg, species, max_clip_seconds)
+    tasks = viable_tasks(cfg, species, labels, vocabulary)
+    logger.info(
+        "%s: %d viable call types\n%s",
+        species,
+        len(tasks),
+        "\n".join(f"  {task!r}" for task in tasks),
+    )
+
+    base = features.load_source(models.get(model_name).source, cfg)
+    for task in tasks:
+        if only and task.call_type != only:
+            continue
+        run_task(
+            cfg,
+            base,
+            labels,
+            task,
+            model_name=model_name,
+            suffix=suffix,
+            repeats=repeats,
+            skip_control=skip_control,
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     parser.add_argument(
         "--species",
-        default="SpermWhale",
+        default=DEFAULT_SPECIES,
         help="which species to pose the call type questions inside",
     )
     parser.add_argument(
-        "--model", default="xgboost", help="which registered model to fit, such as cnn_small"
+        "--model", default=DEFAULT_MODEL, help="which registered model to fit, such as cnn_small"
     )
     parser.add_argument(
         "--only", default=None, help="run one call type rather than every viable one"

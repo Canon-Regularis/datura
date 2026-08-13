@@ -194,11 +194,21 @@ class ResultName:
         return self.call_type is not None
 
     @property
+    def task(self) -> tuple[str, str]:
+        """The species and the call type, for a result that poses one.
+
+        Both or neither. Every caller that wants one wants the other, and asking for
+        them together is what lets the check live in one place.
+        """
+        if self.call_type is None or self.species is None:
+            raise ValueError(f"{self.render()} is a species result and names no call type")
+        return self.species, self.call_type
+
+    @property
     def task_key(self) -> str:
         """The task this result belongs to, which is what a family is keyed on."""
-        if not self.is_call_type:
-            raise ValueError("a species result belongs to no call type task")
-        return f"{CALL_TYPE_PREFIX}{self.species.lower()}_{self.call_type}"
+        species, call_type = self.task
+        return f"{CALL_TYPE_PREFIX}{species.lower()}_{call_type}"
 
     def render(self) -> str:
         """The directory name, which is the only place this string is built."""

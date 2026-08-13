@@ -11,7 +11,10 @@ A configuration now says which models it trains. These tests hold that line.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+import yaml
 
 from src.config import PROJECT_ROOT, load_config
 from src.config.sections import ConfigError, PipelineConfig
@@ -24,7 +27,7 @@ NETWORKS = {"cnn", "cnn_small"}
 
 def stages(filename: str) -> list[str]:
     cfg = load_config(f"configs/{filename}")
-    return [stage.name for stage in build_stages(cfg, f"configs/{filename}", skip_download=True)]
+    return [stage.name for stage in build_stages(cfg, skip_download=True)]
 
 
 def test_a_config_that_declares_nothing_trains_everything():
@@ -68,11 +71,7 @@ def test_a_full_run_would_fit_no_model_that_is_already_published(name):
             f"no results for {name}; run python -m src.pipeline --config configs/{filename}"
         )
 
-    pending = {
-        stage.name
-        for stage in build_stages(cfg, f"configs/{filename}", skip_download=True)
-        if not stage.done()
-    }
+    pending = {stage.name for stage in build_stages(cfg, skip_download=True) if not stage.done()}
     assert pending <= DERIVABLE_OR_CHEAP, (
         f"{name} would refit {sorted(pending - DERIVABLE_OR_CHEAP)}"
     )
@@ -80,21 +79,28 @@ def test_a_full_run_would_fit_no_model_that_is_already_published(name):
 
 def test_an_unknown_key_in_the_section_is_refused(tmp_path):
     """A typo here would silently restore the behaviour the section exists to stop."""
-    source = (PROJECT_ROOT / "configs" / "wide.yaml").read_text(encoding="utf-8")
-    broken = tmp_path / "broken.yaml"
-    broken.write_text(source.replace("  call_types: []", "  call_type: []"), encoding="utf-8")
-
     with pytest.raises(ConfigError, match="unknown keys in pipeline"):
-        load_config(broken)
+        load_config(_with_pipeline(tmp_path, {"models": ["xgboost"], "call_type": []}))
 
 
 def test_a_declared_list_has_to_be_a_list(tmp_path):
-    source = (PROJECT_ROOT / "configs" / "wide.yaml").read_text(encoding="utf-8")
-    broken = tmp_path / "broken.yaml"
-    broken.write_text(source.replace("  call_types: []", "  call_types: yes"), encoding="utf-8")
-
     with pytest.raises(ConfigError, match="must be a list"):
-        load_config(broken)
+        load_config(_with_pipeline(tmp_path, {"call_types": True}))
+
+
+def _with_pipeline(tmp_path, block: dict) -> Path:
+    """A full config carrying the given pipeline section, written somewhere disposable.
+
+    Built from base.yaml's parsed body rather than copied from a variant. A variant
+    states only its differences and reaches the rest through ``extends``, which
+    resolves against its own directory, so a copy of one lands somewhere its parent
+    is not.
+    """
+    raw = yaml.safe_load((PROJECT_ROOT / "configs" / "base.yaml").read_text(encoding="utf-8"))
+    raw["pipeline"] = block
+    path = tmp_path / "broken.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    return path
 
 
 def test_the_default_allows_everything():

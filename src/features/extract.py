@@ -17,9 +17,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from src import cli
-from src.audio.io import load as load_audio
-from src.audio.resample import to_target_rate
-from src.audio.windows import split_into_windows
+from src.audio.decode import decode_to_windows
 from src.config import Config
 from src.data.manifest import load_manifest
 from src.errors import DaturaError
@@ -73,15 +71,7 @@ def extract(
         unit="clip",
     ):
         try:
-            signal, native_rate = load_audio(root / row.relative_path)
-            resampled = to_target_rate(signal, native_rate, cfg.audio.target_sample_rate)
-            windows = split_into_windows(
-                resampled,
-                cfg.audio.window_samples,
-                cfg.audio.hop_samples,
-                cfg.audio.pad_mode,
-                cfg.audio.max_windows_per_clip,
-            )
+            windows = decode_to_windows(cfg, root / row.relative_path)
             block = extractor.transform_batch(windows, cfg.audio.target_sample_rate)
         except Exception as error:
             failures.append((row.clip_id, f"{type(error).__name__}: {error}"))
@@ -135,6 +125,29 @@ def _summarise(store: cache.FeatureStore, extractor: FeatureExtractor) -> None:
     logger.info("cache size %.0f MB", size_mb)
 
 
+def extract_all(
+    cfg: Config,
+    *,
+    kinds: list[str] | None = None,
+    force: bool = False,
+    allow_failures: bool = False,
+) -> None:
+    """Fill the cache for every representation this configuration needs.
+
+    ``kinds`` defaults to all of them. A representation whose cache is already present
+    is skipped, which is what makes a rerun after a failure cheap.
+    """
+    manifest = load_manifest(cfg, kept_only=True)
+    logger.info("%d kept clips across %d tapes", len(manifest), manifest["tape_id"].nunique())
+
+    for kind in kinds if kinds is not None else list(registry.kinds()):
+        extractor = registry.build_extractor(kind, cfg)
+        if cache.exists(cfg, extractor) and not force:
+            logger.info("%s: cache present, skipping (use --force to rebuild)", kind)
+            continue
+        _summarise(extract(cfg, extractor, manifest, allow_failures), extractor)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = cli.parser_for(__doc__)
     parser.add_argument(
@@ -151,18 +164,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    cfg = cli.prepare(args)
-    manifest = load_manifest(cfg, kept_only=True)
-    logger.info("%d kept clips across %d tapes", len(manifest), manifest["tape_id"].nunique())
-
-    kinds = list(registry.kinds()) if args.extractor == "all" else [args.extractor]
-    for kind in kinds:
-        extractor = registry.build_extractor(kind, cfg)
-        if cache.exists(cfg, extractor) and not args.force:
-            logger.info("%s: cache present, skipping (use --force to rebuild)", kind)
-            continue
-        store = extract(cfg, extractor, manifest, args.allow_failures)
-        _summarise(store, extractor)
+    extract_all(
+        cli.prepare(args),
+        kinds=None if args.extractor == "all" else [args.extractor],
+        force=args.force,
+        allow_failures=args.allow_failures,
+    )
     return 0
 
 

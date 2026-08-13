@@ -267,7 +267,7 @@ def test_every_grouping_column_regenerates_from_committed_code():
     the manifest stage would build a corpus the control config could not be fitted on,
     and nothing would have said so until a fold failed.
     """
-    from src.data.manifest import recording_contexts, recording_places, shuffled_places
+    from src.data.grouping import recording_contexts, recording_places, shuffled_places
 
     cfg = load_config(CONTEXT)
     corpus_present(cfg)

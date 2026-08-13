@@ -20,20 +20,21 @@ import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import partial
 
 from src import cli
 from src.config import Config
 from src.data import annotations as annotations_cli
-from src.data import download as download_cli
-from src.data import manifest as manifest_cli
+from src.data.download import fetch
+from src.data.manifest import write_manifest
 from src.errors import DaturaError
-from src.evaluate import explain as explain_cli
-from src.evaluate import report as report_cli
-from src.features import extract as extract_cli
+from src.evaluate.explain import explain_result
+from src.evaluate.report import build as build_report
 from src.features import registry as features
+from src.features.extract import extract_all
 from src.models import registry as models
-from src.results import config_directory, has_results, occlusion_path
-from src.train import calltypes as calltypes_cli
+from src.results import config_directory, has_results, manifest_path, occlusion_path
+from src.train.calltypes import run_call_types
 from src.train.cnn import train_network
 from src.train.xgb import train_trees
 
@@ -41,12 +42,12 @@ logger = logging.getLogger(__name__)
 
 # Which trained variant the explainability stage runs against, and on which fold.
 EXPLAINED_VARIANT = "cnn_small"
-EXPLAINED_FOLD = "3"
+EXPLAINED_FOLD = 3
 
 # How many times a call type task redraws its split. The tree models carry this in
 # the registry, beside the cost that decides it; a call type task is the same trees
 # on a subset, so it takes the same count from the model it fits.
-CALL_TYPE_REPEATS = str(models.get("xgboost").repeats)
+CALL_TYPE_REPEATS = models.get("xgboost").repeats
 
 # Which species the call type tasks are posed inside. Every other species in the
 # study has no call type reaching the minimum of 60 clips over 10 tapes.
@@ -66,39 +67,35 @@ class Stage:
     done: Callable[[], bool]
 
 
-def _acquisition_stages(cfg: Config, config_path: str, skip_download: bool) -> list[Stage]:
+def _acquisition_stages(cfg: Config, *, skip_download: bool) -> list[Stage]:
     root = cfg.paths.raw / cfg.dataset.archive_root
-    download_args = ["--config", config_path]
-    if skip_download:
-        download_args.append("--skip-download")
-
     return [
         Stage(
             "download",
-            lambda: download_cli.main(download_args),
+            lambda: fetch(cfg, skip_download=skip_download),
             lambda: root.exists() and all((root / name).exists() for name in cfg.dataset.species),
         ),
         Stage(
             # Before the manifest, because the audit tables describing the field
             # notes are built as part of it.
             "annotations",
-            lambda: annotations_cli.main(["--config", config_path]),
+            lambda: annotations_cli.build(cfg),
             lambda: annotations_cli.annotations_path(cfg).exists(),
         ),
         Stage(
             "manifest",
-            lambda: manifest_cli.main(["--config", config_path]),
-            lambda: manifest_cli.manifest_path(cfg).exists(),
+            lambda: write_manifest(cfg),
+            lambda: manifest_path(cfg).exists(),
         ),
         Stage(
             "features",
-            lambda: extract_cli.main(["--config", config_path]),
+            lambda: extract_all(cfg),
             lambda: all(features.cache_exists(kind, cfg) for kind in features.kinds()),
         ),
     ]
 
 
-def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
+def _training_stages(cfg: Config) -> list[Stage]:
     """One stage per model, taken straight from the registry.
 
     The tree models share a single command, because the control has to be fitted on
@@ -108,19 +105,11 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
     if not wanted:
         return []
 
-    # One command fits every tree on one assembly, so they have to agree on how many
-    # times the split is redrawn. Disagreeing would mean the control and the model it
-    # is compared against were scored on different numbers of splits.
-    counts = {spec.repeats for spec in wanted}
-    if len(counts) != 1:
-        raise ValueError(f"the tree models declare different repeat counts: {sorted(counts)}")
-    repeats = next(iter(counts))
-
     trees = [spec.name for spec in wanted]
     stages = [
         Stage(
             models.TREES,
-            lambda n=repeats: train_trees(cfg, repeats=n),
+            partial(train_trees, cfg),
             lambda: all(has_results(cfg, name) for name in trees),
         )
     ]
@@ -130,14 +119,14 @@ def _training_stages(cfg: Config, config_path: str) -> list[Stage]:
         stages.append(
             Stage(
                 spec.name,
-                lambda n=spec.name, r=spec.repeats: train_network(cfg, n, repeats=r),
-                lambda n=spec.name: has_results(cfg, n),
+                partial(train_network, cfg, spec.name, repeats=spec.repeats),
+                partial(has_results, cfg, spec.name),
             )
         )
     return stages
 
 
-def _call_type_stages(cfg: Config, config_path: str) -> list[Stage]:
+def _call_type_stages(cfg: Config) -> list[Stage]:
     """The within species call type tasks, one stage per species.
 
     These were run by hand for a long time, which meant a full pipeline run
@@ -147,24 +136,24 @@ def _call_type_stages(cfg: Config, config_path: str) -> list[Stage]:
     return [
         Stage(
             f"calltypes_{species.lower()}",
-            lambda s=species: calltypes_cli.main(
-                ["--config", config_path, "--species", s, "--repeats", CALL_TYPE_REPEATS]
-            ),
-            lambda s=species: any(
-                name.startswith(f"calltype_{s.lower()}_") and has_results(cfg, name)
-                for name in _existing_results(cfg)
-            ),
+            partial(run_call_types, cfg, species, repeats=CALL_TYPE_REPEATS),
+            partial(_has_call_type_results, cfg, species),
         )
         for species in cfg.pipeline.call_type_species(CALL_TYPE_SPECIES)
     ]
 
 
-def _existing_results(cfg: Config) -> list[str]:
+def _has_call_type_results(cfg: Config, species: str) -> bool:
+    """Whether this species has been posed its call type questions already."""
     directory = config_directory(cfg)
-    return [child.name for child in directory.iterdir()] if directory.exists() else []
+    existing = [child.name for child in directory.iterdir()] if directory.exists() else []
+    return any(
+        name.startswith(f"calltype_{species.lower()}_") and has_results(cfg, name)
+        for name in existing
+    )
 
 
-def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
+def _reporting_stages(cfg: Config) -> list[Stage]:
     stages = []
 
     # Explaining a model this configuration never trains would ask for a checkpoint
@@ -173,16 +162,7 @@ def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
         stages.append(
             Stage(
                 "explain",
-                lambda: explain_cli.main(
-                    [
-                        "--config",
-                        config_path,
-                        "--name",
-                        EXPLAINED_VARIANT,
-                        "--fold",
-                        EXPLAINED_FOLD,
-                    ]
-                ),
+                lambda: explain_result(cfg, EXPLAINED_VARIANT, fold_index=EXPLAINED_FOLD),
                 lambda: occlusion_path(cfg, EXPLAINED_VARIANT).exists(),
             )
         )
@@ -190,7 +170,7 @@ def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
     stages.append(
         Stage(
             "report",
-            lambda: report_cli.main(["--config", config_path]),
+            lambda: build_report(cfg),
             # The report is cheap and summarises everything before it, so it always reruns.
             lambda: False,
         )
@@ -198,16 +178,29 @@ def _reporting_stages(cfg: Config, config_path: str) -> list[Stage]:
     return stages
 
 
-def build_stages(cfg: Config, config_path: str, *, skip_download: bool) -> list[Stage]:
+def build_stages(cfg: Config, *, skip_download: bool) -> list[Stage]:
+    """Every stage this configuration runs, in the order it runs them.
+
+    Each stage closes over the loaded configuration and calls the work directly. It
+    went through the command line once, which reparsed the same YAML twelve times a
+    run and made a stage's arguments unreachable to a type checker.
+    """
     return [
-        *_acquisition_stages(cfg, config_path, skip_download),
-        *_training_stages(cfg, config_path),
-        *_call_type_stages(cfg, config_path),
-        *_reporting_stages(cfg, config_path),
+        *_acquisition_stages(cfg, skip_download=skip_download),
+        *_training_stages(cfg),
+        *_call_type_stages(cfg),
+        *_reporting_stages(cfg),
     ]
 
 
-def run(stages: list[Stage], *, force: bool, only: str | None) -> int:
+def run(stages: list[Stage], *, force: bool, only: str | None) -> None:
+    """Run the selected stages in order, stopping at the first one that raises.
+
+    There is no exit code to inspect any more. Every stage used to be a ``main(argv)``
+    returning one, and a stage that failed had to remember to return non-zero for the
+    run to stop; now each calls a function that either finishes or raises, and the
+    error carries what went wrong rather than the number 1.
+    """
     selected = [stage for stage in stages if only is None or stage.name == only]
     if only is not None and not selected:
         names = ", ".join(stage.name for stage in stages)
@@ -220,13 +213,9 @@ def run(stages: list[Stage], *, force: bool, only: str | None) -> int:
 
         logger.info("\n=== %s ===", stage.name)
         started = time.perf_counter()
-        code = stage.run()
+        stage.run()
         elapsed = time.perf_counter() - started
-        if code:
-            logger.error("%s failed with exit code %s", stage.name, code)
-            return int(code)
         logger.info("--- %s finished in %.1f min ---", stage.name, elapsed / 60)
-    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -239,14 +228,21 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     cfg = cli.prepare(args)
-    stages = build_stages(cfg, args.config, skip_download=args.skip_download)
+    stages = build_stages(cfg, skip_download=args.skip_download)
     logger.info("pipeline for %s: %s", cfg.name, " -> ".join(stage.name for stage in stages))
 
     started = time.perf_counter()
-    code = run(stages, force=args.force, only=args.only)
+    run(stages, force=args.force, only=args.only)
     logger.info("\ntotal %.1f min", (time.perf_counter() - started) / 60)
-    return code
+    return 0
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == "__main__":  # pragma: no cover
+    # A stage that fails raises, and the run stops there with a non-zero exit. It used
+    # to return an exit code through argparse and this printed the number 1; the error
+    # says which stage and why, which is what somebody three hours into a run needs.
+    try:
+        sys.exit(main())
+    except DaturaError as error:
+        logger.error("%s", error)
+        sys.exit(1)

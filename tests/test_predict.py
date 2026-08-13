@@ -24,6 +24,7 @@ from src.data.manifest import load_manifest
 from src.data.splits import folds_for_index
 from src.evaluate import coverage
 from src.results import predictions_path
+from tests.helpers import needs
 
 CONFIG = "configs/base.yaml"
 
@@ -36,8 +37,7 @@ def cfg():
 @pytest.fixture(scope="module")
 def audio(cfg):
     root = cfg.paths.raw / cfg.dataset.archive_root
-    if not root.exists():
-        pytest.skip("the audio archive is not on this machine")
+    needs(root, "run the pipeline that writes it")
     return root
 
 
@@ -113,7 +113,8 @@ def test_the_threshold_is_read_from_each_model_rather_than_chosen(cfg):
     trees = predict.threshold_for(predict.curve_for(cfg, "xgboost"))
     network = predict.threshold_for(predict.curve_for(cfg, "cnn_small"))
 
-    assert trees is not None and network is not None
+    assert trees is not None
+    assert network is not None
     assert network > trees + 0.2, "these models need very different cut offs"
 
 
@@ -172,7 +173,8 @@ def test_the_three_states_are_read_off_the_committed_curves(cfg):
         pytest.skip("no coverage table")
 
     on_recordings = predict.standing(cfg, "xgboost", 0.85)
-    assert on_recordings.has_curve and on_recordings.reaches_target
+    assert on_recordings.has_curve
+    assert on_recordings.reaches_target
 
     context = load_config("configs/context.yaml")
     if predict.curve_for(context, "xgboost") is None:
@@ -186,8 +188,7 @@ def test_the_three_states_are_read_off_the_committed_curves(cfg):
 
 def test_averaging_two_models_needs_both_of_them(cfg, audio):
     """And gives something between them rather than one of them."""
-    if not predictions_path(cfg, "probe").exists():
-        pytest.skip("the probe has not been fitted")
+    needs(predictions_path(cfg, "probe"), "run the pipeline that writes it")
 
     _, relative = held_out_clip(cfg, "KillerWhale")
     trees = predict.probabilities(cfg, audio / relative, ["xgboost"], 0)
