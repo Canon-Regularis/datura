@@ -24,7 +24,7 @@ import pandas as pd
 import pytest
 
 from src.config import PROJECT_ROOT
-from tests.helpers import needs
+from tests.helpers import needs, prose, published
 
 README = PROJECT_ROOT / "README.md"
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
@@ -36,10 +36,12 @@ def rows_of(table_marker: str) -> list[list[str]]:
     The tables have no ids and adding some would put scaffolding in prose written
     for people. Anchoring on a phrase from the sentence above each table is enough,
     and it fails loudly if that sentence is ever rewritten away.
+
+    Reads the unwrapped text, because a table is made of lines.
     """
-    text = README.read_text(encoding="utf-8")
+    text = published()
     start = text.find(table_marker)
-    assert start != -1, f"no line in the README contains {table_marker!r}"
+    assert start != -1, f"nothing published contains {table_marker!r}"
 
     rows = []
     for line in text[start:].splitlines():
@@ -280,7 +282,7 @@ def test_the_call_type_table_lists_every_result(report_exists):
 
 def test_the_narrow_band_claims_match_the_artifact(report_exists):
     """The 5 kHz result is quoted in prose rather than in a table."""
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     table = margins("base_5k")
 
     floor = margins("base_5k", control="logbook").loc["xgboost"]
@@ -306,7 +308,7 @@ def test_the_wide_species_table_matches_both_artifacts(report_exists):
 
 def test_the_wide_margins_match_the_artifact(report_exists):
     """The wide result is quoted in prose rather than in a table."""
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     against_logbook = margins("wide_10k", control="logbook").loc["xgboost"]
     against_control = margins("wide_10k").loc["logbook"]
 
@@ -319,7 +321,7 @@ def test_the_wide_margins_match_the_artifact(report_exists):
 
 def test_the_epoch_claims_match_the_training_curves(report_exists):
     """Which epoch each fold peaked on, quoted for both networks."""
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     for name in ("cnn", "cnn_small"):
         history = pd.read_csv(REPORTS / "base_10k" / name / "history.csv")
         peaks = history.loc[history.groupby("fold")["val_macro_f1"].idxmax()]
@@ -335,7 +337,7 @@ def test_no_number_is_quoted_without_the_artifact_that_backs_it():
     A guard against the cheapest kind of drift: a row copied in by hand for a run
     that was never committed.
     """
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     assert "0.626" not in text, "the pre-correction cnn_small interval is back"
     assert re.search(r"\b0\.893\b", text) is None, "the pre-repeats ambiguity figure is back"
     assert "between epochs 0 and 4 on every single fold" not in text
@@ -355,7 +357,7 @@ def test_the_corpus_caption_names_both_filters(report_exists):
     low_rate = int(by_reason["native_rate_below_target"])
     assert short > low_rate, "the caption below assumes the length filter is the larger one"
 
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     assert f"{low_rate} humpback clips" in text
     assert f"{short} more" in text
 
@@ -380,9 +382,7 @@ def test_the_coverage_table_matches_the_artifact(report_exists):
     # The opening paragraph quotes the best of these as a percentage, and it is the
     # first number anybody reads.
     best = curve[(curve["model"] == "xgboost+probe") & (curve["coverage"] == 0.7)]
-    assert f"takes accuracy to {best.iloc[0]['accuracy']:.1%}" in " ".join(
-        README.read_text(encoding="utf-8").split()
-    )
+    assert f"takes accuracy to {best.iloc[0]['accuracy']:.1%}" in prose()
 
 
 def test_the_coverage_table_lists_every_model_with_a_curve(report_exists):
@@ -412,7 +412,7 @@ def test_the_confident_mistake_claim_matches_the_predictions(report_exists):
         wrong = probabilities.argmax(axis=1) != frame["label"].to_numpy()
         return float((wrong & (probabilities.max(axis=1) > 0.9)).mean()) * 100
 
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     network, trees = confidently_wrong("cnn_small"), confidently_wrong("xgboost")
     assert f"{network:.2f}% of them and XGBoost on {trees:.3f}%" in text
     assert trees < network, "the shipped model has to be the one that is confidently wrong least"
@@ -429,7 +429,7 @@ def test_the_thresholds_quoted_are_the_ones_predict_would_use(report_exists):
 
     # Whitespace collapsed, because these two numbers sit either side of a line break
     # and a reflow of the paragraph is not a change to the claim.
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     trees = predict.threshold_for(predict.curve_for(cfg, "xgboost"))
     network = predict.threshold_for(predict.curve_for(cfg, "cnn_small"))
     assert f"XGBoost needs {trees:.3f} and `cnn_small` needs {network:.3f}" in text
@@ -462,7 +462,7 @@ def test_the_chance_baselines_are_measured_rather_than_assumed(report_exists):
         ]
         return float(np.mean(draws))
 
-    text = README.read_text(encoding="utf-8")
+    text = prose()
     stratified = guessing(shares)
     uniform = guessing(np.full(n_classes, 1 / n_classes))
     majority = scoring.from_counts(labels, np.full(len(labels), int(shares.argmax())), n_classes)[
@@ -617,7 +617,7 @@ def test_the_repeats_claim_matches_what_the_splitter_actually_does(report_exists
     assert counts["tape"] == 10, "the tape split still varies with every repeat"
     assert counts["context"] < counts["tape"], "the hedge in the README assumes it does not"
 
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     assert f"produce {counts['context']} distinct partition against {counts['tape']}" in text, (
         f"the README should say {counts['context']} against {counts['tape']}"
     )
@@ -633,7 +633,7 @@ def test_the_place_merge_is_described_as_the_manifest_has_it(report_exists):
     kept = load_manifest(cfg, kept_only=True)
     grouped = kept[kept["place"] != ""]
 
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     assert f"{grouped['site'].nunique()} sites" in text
     assert f"{grouped['context'].nunique()} contexts" in text
     assert f"{grouped['place'].nunique()} places" in text
@@ -703,7 +703,7 @@ def test_the_multiplicity_claims_match_the_correction(report_exists):
     table = pd.read_csv(path)
     survivors = table[table["rejected"]]
 
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     assert f"{_spelled(len(table))} are reported across the" in text, f"{len(table)} comparisons"
     assert f"{_spelled(len(survivors))} survive" in text, f"{len(survivors)} survive"
 
@@ -746,7 +746,7 @@ def test_the_opening_quotes_the_coarseness_control(report_exists):
     needs(path, "run the pipeline that writes it")
 
     control = pd.read_csv(path).set_index("metric").loc["macro_f1", "mean"]
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     assert f"no geography scores {control:.3f}" in text, f"the control scores {control:.4f}"
 
 
@@ -808,5 +808,5 @@ def test_the_stronger_normalisation_is_reported_as_the_loss_it_is(report_exists)
     assert scores["centred"] > scores["raw"], "centring is supposed to be the gain"
     assert scores["whitened"] < scores["raw"], "and scaling is supposed to be the loss"
 
-    text = " ".join(README.read_text(encoding="utf-8").split())
+    text = " ".join(published().split())
     assert f"costs {scores['raw'] - scores['whitened']:.3f} against the raw descriptors" in text

@@ -92,3 +92,27 @@ def needs(path: Path, hint: str = "run the pipeline") -> Path:
             shown = path
         pytest.skip(f"{shown} absent; {hint}")
     return path
+
+
+def published() -> str:
+    """Every document that quotes a number, as one string.
+
+    The README is the entry point and the longer arguments live under ``docs/``. A
+    figure is checked wherever it is printed, so moving a table between the two is a
+    question of what a reader wants first rather than of what stays honest.
+    """
+    parts = [(PROJECT_ROOT / "README.md").read_text(encoding="utf-8")]
+    parts += [
+        path.read_text(encoding="utf-8") for path in sorted((PROJECT_ROOT / "docs").glob("*.md"))
+    ]
+    return "\n\n".join(parts)
+
+
+def prose() -> str:
+    """The published text with its line breaks collapsed.
+
+    Every phrase checked against an artifact is one sentence in a document that wraps
+    where it suits a reader. Matching the raw text made a rewrap look like a wrong
+    number, so the wrapping comes out before the check rather than being pinned.
+    """
+    return " ".join(published().split())

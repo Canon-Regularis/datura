@@ -17,7 +17,7 @@ import pandas as pd
 import pytest
 
 from src.config import PROJECT_ROOT
-from tests.helpers import needs
+from tests.helpers import needs, prose
 
 REPORTS = PROJECT_ROOT / "data" / "metadata" / "report"
 CONFIGS = ["base_10k", "base_5k", "wide_10k"]
@@ -116,11 +116,10 @@ def test_the_two_wide_tape_counts_mean_different_things():
 
 def test_the_readme_quotes_recordings_rather_than_species_tapes():
     """The sample size claim has to use the smaller number."""
-    readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    prose = " ".join(readme.split())
+    text = prose()
 
-    assert f"{WIDE_KEPT_CLIPS:,} clips over {WIDE_RECORDINGS} recordings" in prose
-    assert f"{WIDE_RECORDINGS} across eleven species" in prose
+    assert f"{WIDE_KEPT_CLIPS:,} clips over {WIDE_RECORDINGS} recordings" in text
+    assert f"{WIDE_RECORDINGS} across eleven species" in text
 
 
 def shared_tapes(name: str) -> pd.DataFrame:
