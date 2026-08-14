@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-08-13T23:56:09+00:00",
+  "recorded_at": "2026-08-14T04:14:32+00:00",
   "config": {
     "name": "context_wide_10k",
     "source": "context_wide.yaml",
@@ -22,7 +22,7 @@
     "archive_sha256": "6631c14cf91269ee5b97ef0f3e9d838302af194901108729cfba26c1bc044f3e"
   },
   "git": {
-    "commit": "191edd2c1bc48ae4150e7c238751cc8505c58fd4",
+    "commit": "08d13420b3292ab807f53381fa5e9175b5495911",
     "branch": "main",
     "dirty": true
   },

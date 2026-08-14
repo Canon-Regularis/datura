@@ -35,19 +35,34 @@ SIGNIFICANT = 6
 SIGNIFICANT_COLUMNS = ("p_value", "q_value")
 
 
+# Below this the decimal rule stops keeping six significant figures, so the other rule
+# takes over. 1e-5 rounded to ten places has five of them left.
+SIGNIFICANT_BELOW = 10.0 ** -(SIGNIFICANT - 1)
+
+
 def _rounded(values: pd.Series) -> pd.Series:
     """One column rounded to whichever of the two rules keeps more of it.
 
     Values large enough for the decimal rule are left exactly where they were, so
     adding this changes nothing that was already surviving.
-    """
-    numbers = values.to_numpy(dtype=float)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        magnitude = np.floor(np.log10(np.abs(numbers)))
 
-    places = np.where(np.isfinite(magnitude), SIGNIFICANT - 1 - magnitude, DECIMALS)
-    scale = np.power(10.0, np.maximum(places, DECIMALS))
-    return pd.Series(np.round(numbers * scale) / scale, index=values.index)
+    Both rules round through the interpreter rather than by scaling. Scaling asks for
+    a power of ten, and a p value of 1e-18 asks for 1e23, which no float holds exactly
+    and which comes out of the platform's own pow. Dividing by a scale that differs in
+    its last bit gave 1.9066e-18 on one machine and 1.9066000000000003e-18 on another,
+    which is a rounding step reintroducing the disagreement it exists to remove.
+    """
+    rounded = [
+        value
+        if not np.isfinite(value)
+        else (
+            round(value, DECIMALS)
+            if abs(value) >= SIGNIFICANT_BELOW
+            else float(f"{value:.{SIGNIFICANT}g}")
+        )
+        for value in values.to_numpy(dtype=float)
+    ]
+    return pd.Series(rounded, index=values.index)
 
 
 def write_table(frame: pd.DataFrame, path: Path) -> Path:

@@ -1,5 +1,5 @@
 config,family,model,floor,margin,p_value,q_value,rejected,agreeing,folds
-wide_10k,species,probe,logbook,-0.5359400835,5.0215899999999996e-20,3.51511e-18,True,50,50
+wide_10k,species,probe,logbook,-0.5359400835,5.02159e-20,3.51511e-18,True,50,50
 wide_10k,species,xgboost+probe,logbook,-0.5152673344,1.9066e-18,6.6731e-17,True,50,50
 wide_10k,species,xgboost,logbook,-0.5478857754,5.548e-15,1.29453e-13,True,50,50
 wide_10k,species,logbook,metadata,0.3984743889,1.54256e-08,2.69948e-07,True,50,50
