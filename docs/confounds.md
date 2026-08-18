@@ -162,3 +162,35 @@ Killer whale loses most above 3.7 kHz. Sperm whale loses a little in every band 
 consistent with broadband clicks. Grad-CAM peaks land at 248 and 50 Hz for humpback, and at 1.0 and
 4.7 kHz for killer whale, straddling the whistle band rather than sitting on it.
 
+
+
+## Why humpback stays at 0.65
+
+Macro-F1 of 0.823 is one class. Humpback scores 0.649 against 0.892 for sperm whale and 0.927 for
+killer whale, and it is the unstable one: F1 standard deviation 0.228 against 0.038 for the other
+two, ranging 0.184 to 0.892 across the fifty splits.
+
+Per tape recall says it is not a uniform weakness. Four humpback tapes score exactly zero and a
+fifth scores 0.045. Tapes 92201, 55113 and 86008 carry 309 clips, 57 percent of the class, and are
+called killer whale 40 to 57 percent of the time. Tapes 52008, 61042, 79022 and 54018 carry 39 clips
+and are called sperm whale 96 to 100 percent of the time. The two tapes that score well are the two
+carrying song. Humpback pulsed calls against killer whale pulsed calls, and humpback moans against
+sperm whale clicks, are the two confusions, and both are between signals of a similar kind rather
+than between recording conditions.
+
+Two fixes were measured and neither worked.
+
+Per class decision weights, one multiplier per class fitted on each fold's validation clips by
+coordinate ascent on macro-F1 and applied to that fold's test clips, cost 0.049 macro-F1: 0.823 down
+to 0.774, worse on 40 of 50 folds, corrected interval [-0.102, +0.005] at p = 0.072. Humpback fell
+0.134, which is the reverse of what lifting its weight is supposed to do. The corpus holds 12
+humpback tapes, and in four folds of five the validation split contains exactly one of them, so the
+multiplier is fitted to a single tape and applied to tapes of the other confusion. Validation and
+test macro-F1 correlate at -0.111 across the fifty splits, so per fold there is nothing to fit on.
+
+The representation is not the bottleneck either. Sweeping one axis at a time from the baseline, and
+ranking on validation, every candidate came out lower: 128 mels by 0.011, 1024 point FFT by 0.021,
+a four second window by 0.028, and a 2048 point FFT by 0.042 at p = 0.039, the only one this design
+separates. Longer transforms buy frequency resolution and pay for it in time resolution, which these
+pulsed calls need more. The settings are kept under `configs/sweep/` and stay out of the published
+set, since `experiment_configs` globs `configs/*.yaml` and does not recurse.
