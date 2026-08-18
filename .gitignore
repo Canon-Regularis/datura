@@ -13,6 +13,12 @@ data/metadata/report/**/checkpoints/*
 # one prediction in twelve and the trees on one in a thousand.
 !data/metadata/report/base_10k/xgboost/checkpoints/fold0.json
 
+# Sweep candidates are fitted to be discarded. Their results run to hundreds of
+# megabytes and the whole point of the directory is that nothing published reads them,
+# so the numbers that survive a sweep live in docs/confounds.md rather than here.
+data/metadata/report/sweep_*/
+data/metadata/report/fold_summary_sweep_*.csv
+
 .venv/
 __pycache__/
 *.py[cod]
