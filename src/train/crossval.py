@@ -35,6 +35,7 @@ from src.results import (
     model_directory,
     predictions_path,
     summary_path,
+    validation_metrics_path,
     window_metrics_path,
     window_predictions_path,
 )
@@ -53,6 +54,10 @@ class CrossValidationResult:
     source_name: str
     clip_metrics: pd.DataFrame
     window_metrics: pd.DataFrame
+    # Scored on rows held out of training for early stopping. Anything selected by
+    # looking at a score is selected on these, never on the test rows.
+    validation_metrics: pd.DataFrame
+    validation_predictions: pd.DataFrame
     clip_predictions: pd.DataFrame
     window_predictions: pd.DataFrame
     confusion: pd.DataFrame
@@ -76,6 +81,8 @@ class FoldOutcome:
 
     clip_metrics: dict
     window_metrics: dict
+    validation_metrics: dict
+    validation_predictions: pd.DataFrame
     predictions: pd.DataFrame
     window_predictions: pd.DataFrame
     extras: dict[str, pd.DataFrame]
@@ -114,6 +121,14 @@ def _run_fold(
     window_probabilities = model.predict_proba(source.matrix(test_rows))
     clips, scores = scoring.evaluate_clips(index, test_rows, window_probabilities, class_names)
 
+    # The validation rows were held out of training for early stopping, and scoring them
+    # costs one more forward pass. Anything chosen by looking at a number, a decision
+    # threshold or a spectrogram setting, has to be chosen here rather than on the test
+    # rows, or the figure that gets published is the one the choice was made on.
+    validation_clips, validation_scores = scoring.evaluate_clips(
+        index, validation_rows, model.predict_proba(source.matrix(validation_rows)), class_names
+    )
+
     context = FoldContext(
         fold_index=fold.index,
         feature_names=source.feature_names(),
@@ -132,6 +147,8 @@ def _run_fold(
     )
     return FoldOutcome(
         clip_metrics={**stamp, **scores},
+        validation_metrics={**stamp, **validation_scores},
+        validation_predictions=validation_clips.assign(**stamp),
         window_metrics={
             **stamp,
             **scoring.score(labels[test_rows], window_probabilities, class_names),
@@ -192,6 +209,8 @@ def run_cross_validation(
 
     clip_rows: list[dict] = []
     window_rows: list[dict] = []
+    validation_rows: list[dict] = []
+    validation_predictions: list[pd.DataFrame] = []
     predictions: list[pd.DataFrame] = []
     window_predictions: list[pd.DataFrame] = []
     extras: dict[str, list[pd.DataFrame]] = {}
@@ -209,6 +228,8 @@ def run_cross_validation(
             )
             window_rows.append(outcome.window_metrics)
             clip_rows.append(outcome.clip_metrics)
+            validation_rows.append(outcome.validation_metrics)
+            validation_predictions.append(outcome.validation_predictions)
             predictions.append(outcome.predictions)
             if repeat == 0:
                 # One complete pass is enough. Every repeat partitions the same
@@ -223,6 +244,8 @@ def run_cross_validation(
         source_name=source.name,
         clip_metrics=pd.DataFrame(clip_rows),
         window_metrics=pd.DataFrame(window_rows),
+        validation_metrics=pd.DataFrame(validation_rows),
+        validation_predictions=pd.concat(validation_predictions, ignore_index=True),
         clip_predictions=all_predictions,
         window_predictions=pd.concat(window_predictions, ignore_index=True),
         confusion=scoring.confusion(
@@ -249,6 +272,7 @@ def save_result(
     directory.mkdir(parents=True, exist_ok=True)
 
     result.clip_metrics.to_csv(clip_metrics_path(cfg, name), index=False)
+    result.validation_metrics.to_csv(validation_metrics_path(cfg, name), index=False)
     result.window_metrics.to_csv(window_metrics_path(cfg, name), index=False)
     result.summary.to_csv(summary_path(cfg, name), index=False)
     result.confusion.to_csv(confusion_path(cfg, name))

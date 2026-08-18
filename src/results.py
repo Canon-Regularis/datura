@@ -28,6 +28,7 @@ PROVENANCE_FILE = "provenance.json"
 PREDICTIONS_FILE = "clip_predictions.parquet"
 WINDOW_PREDICTIONS_FILE = "window_predictions.parquet"
 CLIP_METRICS_FILE = "fold_metrics_clip.csv"
+VALIDATION_METRICS_FILE = "fold_metrics_validation.csv"
 WINDOW_METRICS_FILE = "fold_metrics_window.csv"
 CONFUSION_FILE = "confusion.csv"
 OCCLUSION_FILE = "occlusion.csv"
@@ -108,6 +109,16 @@ def diagnostics_path(cfg: Config) -> Path:
     same answer three times and invite the three copies to disagree.
     """
     return cfg.paths.reports / f"diagnostics_{cfg.corpus}.csv"
+
+
+def validation_metrics_path(cfg: Config, model_name: str) -> Path:
+    """Per fold scores on the rows held out for early stopping.
+
+    Kept beside the test scores so that anything chosen by looking at a number can be
+    shown to have been chosen here. A setting picked on the test folds is a setting
+    picked on the figure being published.
+    """
+    return model_directory(cfg, model_name) / VALIDATION_METRICS_FILE
 
 
 def comparison_path(cfg: Config) -> Path:
