@@ -1,0 +1,19 @@
+# One axis of the representation sweep, moved from base.yaml and nothing else.
+#
+# These live under configs/sweep/ rather than beside the published configs because
+# `experiment_configs()` globs `configs/*.yaml` and is not recursive. A sweep entry
+# discovered there would enter the multiplicity correction and the reproduce job, which
+# would publish a setting that exists to be tried and discarded.
+#
+# Selection is on `fold_metrics_validation.csv`, never on the test folds.
+extends: ../base.yaml
+#
+# Twice the mel bands over the same range, so the low band where humpback
+# lives is covered by more of them.
+name: sweep_mels128
+
+dataset:
+  corpus: base_10k
+
+spectrogram:
+  n_mels: 128

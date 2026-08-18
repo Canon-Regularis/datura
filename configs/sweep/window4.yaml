@@ -1,0 +1,20 @@
+# One axis of the representation sweep, moved from base.yaml and nothing else.
+#
+# These live under configs/sweep/ rather than beside the published configs because
+# `experiment_configs()` globs `configs/*.yaml` and is not recursive. A sweep entry
+# discovered there would enter the multiplicity correction and the reproduce job, which
+# would publish a setting that exists to be tried and discarded.
+#
+# Selection is on `fold_metrics_validation.csv`, never on the test folds.
+extends: ../base.yaml
+#
+# Humpback clips run to a median of 3.3 seconds against a 2.0 second window,
+# while killer whale sits at 1.8. A longer window holds a whole song unit.
+name: sweep_window4
+
+dataset:
+  corpus: base_10k
+
+audio:
+  window_seconds: 4.0
+  hop_seconds: 2.0

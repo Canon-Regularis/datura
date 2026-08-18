@@ -1,0 +1,20 @@
+# One axis of the representation sweep, moved from base.yaml and nothing else.
+#
+# These live under configs/sweep/ rather than beside the published configs because
+# `experiment_configs()` globs `configs/*.yaml` and is not recursive. A sweep entry
+# discovered there would enter the multiplicity correction and the reproduce job, which
+# would publish a setting that exists to be tried and discarded.
+#
+# Selection is on `fold_metrics_validation.csv`, never on the test folds.
+extends: ../base.yaml
+#
+# Twice the frequency resolution. 512 gives 19.5 Hz bins at 10 kHz, and
+# humpback pulsed calls are taken for killer whale pulsed calls, which is a
+# question about harmonic structure.
+name: sweep_nfft1024
+
+dataset:
+  corpus: base_10k
+
+spectrogram:
+  n_fft: 1024
