@@ -29,6 +29,7 @@ PREDICTIONS_FILE = "clip_predictions.parquet"
 WINDOW_PREDICTIONS_FILE = "window_predictions.parquet"
 CLIP_METRICS_FILE = "fold_metrics_clip.csv"
 VALIDATION_METRICS_FILE = "fold_metrics_validation.csv"
+CALIBRATED_METRICS_FILE = "fold_metrics_calibrated.csv"
 WINDOW_METRICS_FILE = "fold_metrics_window.csv"
 CONFUSION_FILE = "confusion.csv"
 OCCLUSION_FILE = "occlusion.csv"
@@ -119,6 +120,11 @@ def validation_metrics_path(cfg: Config, model_name: str) -> Path:
     picked on the figure being published.
     """
     return model_directory(cfg, model_name) / VALIDATION_METRICS_FILE
+
+
+def calibrated_metrics_path(cfg: Config, model_name: str) -> Path:
+    """The same test folds, decided with per class weights fitted on validation."""
+    return model_directory(cfg, model_name) / CALIBRATED_METRICS_FILE
 
 
 def comparison_path(cfg: Config) -> Path:

@@ -29,6 +29,7 @@ from src.features.source import FeatureSource
 from src.models.base import Batch, FoldContext, WindowClassifier
 from src.provenance import write as write_provenance
 from src.results import (
+    calibrated_metrics_path,
     checkpoint_path,
     clip_metrics_path,
     confusion_path,
@@ -56,6 +57,7 @@ class CrossValidationResult:
     window_metrics: pd.DataFrame
     # Scored on rows held out of training for early stopping. Anything selected by
     # looking at a score is selected on these, never on the test rows.
+    calibrated_metrics: pd.DataFrame
     validation_metrics: pd.DataFrame
     validation_predictions: pd.DataFrame
     clip_predictions: pd.DataFrame
@@ -81,6 +83,10 @@ class FoldOutcome:
 
     clip_metrics: dict
     window_metrics: dict
+    # The same test clips, decided with per class weights fitted on validation. Kept
+    # beside the plain scores rather than replacing them, so the two are comparable and
+    # nothing already published moves until the comparison says it should.
+    calibrated_metrics: dict
     validation_metrics: dict
     validation_predictions: pd.DataFrame
     predictions: pd.DataFrame
@@ -129,6 +135,18 @@ def _run_fold(
         index, validation_rows, model.predict_proba(source.matrix(validation_rows)), class_names
     )
 
+    # One multiplier per class, chosen on the validation clips and applied to the test
+    # clips. Fitted here rather than after the run because these are the only rows the
+    # model was neither trained on nor is about to be judged on.
+    weights = scoring.fit_decision_weights(
+        validation_clips["label"].to_numpy(),
+        validation_clips[scoring.probability_columns(len(class_names))].to_numpy(),
+        class_names,
+    )
+    _, calibrated_scores = scoring.evaluate_clips(
+        index, test_rows, window_probabilities, class_names, weights=weights
+    )
+
     context = FoldContext(
         fold_index=fold.index,
         feature_names=source.feature_names(),
@@ -147,6 +165,11 @@ def _run_fold(
     )
     return FoldOutcome(
         clip_metrics={**stamp, **scores},
+        calibrated_metrics={
+            **stamp,
+            **calibrated_scores,
+            **{f"weight_{name}": float(w) for name, w in zip(class_names, weights, strict=True)},
+        },
         validation_metrics={**stamp, **validation_scores},
         validation_predictions=validation_clips.assign(**stamp),
         window_metrics={
@@ -209,6 +232,7 @@ def run_cross_validation(
 
     clip_rows: list[dict] = []
     window_rows: list[dict] = []
+    calibrated_rows: list[dict] = []
     validation_rows: list[dict] = []
     validation_predictions: list[pd.DataFrame] = []
     predictions: list[pd.DataFrame] = []
@@ -228,6 +252,7 @@ def run_cross_validation(
             )
             window_rows.append(outcome.window_metrics)
             clip_rows.append(outcome.clip_metrics)
+            calibrated_rows.append(outcome.calibrated_metrics)
             validation_rows.append(outcome.validation_metrics)
             validation_predictions.append(outcome.validation_predictions)
             predictions.append(outcome.predictions)
@@ -244,6 +269,7 @@ def run_cross_validation(
         source_name=source.name,
         clip_metrics=pd.DataFrame(clip_rows),
         window_metrics=pd.DataFrame(window_rows),
+        calibrated_metrics=pd.DataFrame(calibrated_rows),
         validation_metrics=pd.DataFrame(validation_rows),
         validation_predictions=pd.concat(validation_predictions, ignore_index=True),
         clip_predictions=all_predictions,
@@ -273,6 +299,7 @@ def save_result(
 
     result.clip_metrics.to_csv(clip_metrics_path(cfg, name), index=False)
     result.validation_metrics.to_csv(validation_metrics_path(cfg, name), index=False)
+    result.calibrated_metrics.to_csv(calibrated_metrics_path(cfg, name), index=False)
     result.window_metrics.to_csv(window_metrics_path(cfg, name), index=False)
     result.summary.to_csv(summary_path(cfg, name), index=False)
     result.confusion.to_csv(confusion_path(cfg, name))

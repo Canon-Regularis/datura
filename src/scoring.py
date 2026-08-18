@@ -35,12 +35,65 @@ def probability_columns(n_classes: int) -> list[str]:
     return [f"p{i}" for i in range(n_classes)]
 
 
+# How far a class weight may be moved, and how finely. Multiplying a class by four or
+# dividing it by four is already far past anything a calibrated model needs, and the
+# grid is searched exhaustively so the result does not depend on where a search started.
+WEIGHT_GRID = tuple(float(2**step) for step in (-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2))
+WEIGHT_PASSES = 2
+
+
+def fit_decision_weights(
+    labels: np.ndarray, probabilities: np.ndarray, class_names: list[str]
+) -> np.ndarray:
+    """One multiplier per class, chosen to maximise macro-F1 on the rows given.
+
+    Averaging window probabilities and taking the argmax treats every class as equally
+    worth predicting. Macro-F1 does not: it averages the per class scores, so a rare
+    class the model under predicts costs as much as a common one it gets right. On this
+    corpus humpback is predicted at 0.727 precision and 0.608 recall, which is a class
+    the decision boundary is holding back rather than one the model cannot see.
+
+    Coordinate ascent over a small grid, every class in turn, twice. Macro-F1 is
+    piecewise constant in these weights, so a gradient is meaningless and an exhaustive
+    pass over a coarse grid is both cheaper and deterministic.
+
+    The caller is responsible for fitting this on rows the model will not be scored on.
+    Fitting it on the test rows would tune the decision to the figure being published.
+    """
+    weights = np.ones(len(class_names), dtype=float)
+
+    def macro(candidate: np.ndarray) -> float:
+        chosen = (probabilities * candidate).argmax(axis=1)
+        return from_counts(labels, chosen, len(class_names))["macro_f1"]
+
+    best = macro(weights)
+    for _ in range(WEIGHT_PASSES):
+        for position in range(len(class_names)):
+            trials = []
+            for value in WEIGHT_GRID:
+                candidate = weights.copy()
+                candidate[position] = value
+                trials.append((macro(candidate), -abs(np.log2(value)), value))
+            # Ties break towards leaving the class alone, so a weight only moves when
+            # moving it is worth something.
+            score_, _, value = max(trials)
+            if score_ > best:
+                best, weights[position] = score_, value
+    return weights
+
+
 def aggregate_to_clips(
-    index: pd.DataFrame, rows: np.ndarray, probabilities: np.ndarray
+    index: pd.DataFrame,
+    rows: np.ndarray,
+    probabilities: np.ndarray,
+    weights: np.ndarray | None = None,
 ) -> pd.DataFrame:
     """Average window probabilities within each clip.
 
     Returns one row per clip with its true label and the averaged class scores.
+
+    ``weights`` multiplies the averaged scores before the argmax, which moves the
+    decision boundary without touching the probabilities the coverage curve reads.
     """
     if len(rows) != len(probabilities):
         raise ValueError(f"{len(rows)} rows but {len(probabilities)} probability vectors")
@@ -58,7 +111,9 @@ def aggregate_to_clips(
             **dict.fromkeys(score_columns, "mean"),
         }
     )
-    grouped["prediction"] = grouped[score_columns].to_numpy().argmax(axis=1)
+    averaged = grouped[score_columns].to_numpy()
+    scaled = averaged if weights is None else averaged * np.asarray(weights, dtype=float)
+    grouped["prediction"] = scaled.argmax(axis=1)
     return grouped
 
 
@@ -67,16 +122,26 @@ def evaluate_clips(
     rows: np.ndarray,
     probabilities: np.ndarray,
     class_names: list[str],
+    weights: np.ndarray | None = None,
 ) -> tuple[pd.DataFrame, dict[str, float]]:
     """Aggregate window predictions to clips, then score them.
 
     Every model is judged through this one path: the cross validation runner and the
     occlusion test both call it, so a change to how clips are scored cannot apply to
     one and not the other.
+
+    ``weights`` moves the decision boundary only. The probabilities it returns are
+    untouched, so the coverage curve and the confident error rate read the same numbers
+    whether or not a decision was reweighted.
     """
-    clips = aggregate_to_clips(index, rows, probabilities)
+    clips = aggregate_to_clips(index, rows, probabilities, weights)
     clip_probabilities = clips[probability_columns(len(class_names))].to_numpy()
-    return clips, score(clips["label"].to_numpy(), clip_probabilities, class_names)
+    return clips, score(
+        clips["label"].to_numpy(),
+        clip_probabilities,
+        class_names,
+        predictions=None if weights is None else clips["prediction"].to_numpy(),
+    )
 
 
 def _safe_roc_auc(labels: np.ndarray, probabilities: np.ndarray, n_classes: int) -> float:
@@ -183,16 +248,22 @@ def score(
     probabilities: np.ndarray,
     class_names: list[str],
     scored_classes: np.ndarray | None = None,
+    predictions: np.ndarray | None = None,
 ) -> dict[str, float]:
     """Headline metrics for one set of predictions.
 
     ``scored_classes`` reaches ``from_counts`` and narrows the macro average only. The
     per class table below still covers every class, so a caller reading a recall by
     name gets the same answer either way.
+
+    ``predictions`` overrides the argmax, for a caller that moved the decision boundary.
+    The ranking metrics keep reading the probabilities, because reweighting a decision
+    does not change how well a model ordered the clips.
     """
     n_classes = len(class_names)
     all_labels = list(range(n_classes))
-    predictions = probabilities.argmax(axis=1)
+    if predictions is None:
+        predictions = probabilities.argmax(axis=1)
     precision, recall, f1, support = precision_recall_fscore_support(
         labels, predictions, labels=all_labels, zero_division=0
     )
