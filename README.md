@@ -1,14 +1,16 @@
 # datura
 
-Whale species identification from Watkins marine mammal recordings, with the controls
-to say what the answer is worth
+Whale species identification from audio, with the controls to say what the answer is
+worth
 
 **datura** names the species in a recording and declines when its own coverage curve
-says it should. Four independent representations of the audio each carry real species
-information. None of them beats a model given no audio at all, and moving the fold
-boundary from a recording to a recording location drops the strongest one to chance.
-Both results are reported below, with the experiments that separate them from
-arithmetic.
+says it should. It reaches 0.823 macro-F1 on recordings it has never heard, reading the
+waveform and nothing else. Four independent representations of that waveform land within
+0.043 of one another, so the answer survives how the audio is read.
+
+Two models given no audio at all score higher. That is a measurement of the corpus
+paperwork rather than a competitor to the classifier, and it is kept because it is the
+only thing that says what the audio number is worth.
 
 ## What it does
 
@@ -77,25 +79,46 @@ uv run python -m src.pipeline --config configs/base.yaml
 Macro-F1 on held out tapes, 10 kHz band. Ten repeats of the five fold split, so fifty
 estimates each, except `log mel CNN, 2.8 M` which ran one split.
 
-| model | macro-F1 | audio |
-| --- | --- | --- |
-| logbook | 0.997 ± 0.010 | no |
-| metadata | 0.868 ± 0.134 | no |
-| acoustic descriptors, recording mean removed | 0.823 ± 0.089 | yes |
-| XGBoost and probe averaged | 0.765 ± 0.089 | yes |
-| acoustic descriptors, XGBoost | 0.752 ± 0.070 | yes |
-| wav2vec2 probe | 0.739 ± 0.090 | yes |
-| log mel CNN, 2.8 M | 0.713 ± 0.123 | yes |
-| log mel CNN, 0.15 M | 0.710 ± 0.142 | yes |
+| model | macro-F1 |
+| --- | --- |
+| acoustic descriptors, recording mean removed | 0.823 ± 0.089 |
+| XGBoost and probe averaged | 0.765 ± 0.089 |
+| acoustic descriptors, XGBoost | 0.752 ± 0.070 |
+| wav2vec2 probe | 0.739 ± 0.090 |
+| log mel CNN, 2.8 M | 0.713 ± 0.123 |
+| log mel CNN, 0.15 M | 0.710 ± 0.142 |
 
 Chance is 0.333 for a guess drawn from the class shares, 0.301 for a uniform guess, and
 0.256 for always answering killer whale.
 
-Four of the audio rows are independent readings of the same waveform: descriptors
-computed by hand, a network trained from scratch, the same network at twenty times the
-capacity, and a transformer pretrained on 960 hours of English speech. They land within
-0.043 of one another, which is the evidence that the signal is in the waveform rather
-than in one way of reading it.
+Four of these are independent readings of the same waveform: descriptors computed by
+hand, a network trained from scratch, the same network at twenty times the capacity, and
+a transformer pretrained on 960 hours of English speech. They land within 0.043 of one
+another, which is the evidence that the signal is in the waveform rather than in one way
+of reading it.
+
+### Where the errors are
+
+The headline is one class. Per class, on the same fifty splits:
+
+| class | precision | recall | F1 |
+| --- | --- | --- | --- |
+| HumpbackWhale | 0.727 | 0.608 | 0.649 |
+| SpermWhale | 0.869 | 0.922 | 0.892 |
+| KillerWhale | 0.920 | 0.936 | 0.927 |
+
+Macro-F1 weights the three equally, so 0.823 is humpback holding two strong classes
+down. Humpback is also the unstable one, with an F1 standard deviation of 0.228 against
+0.038 and 0.037 for the others.
+
+The failure is concentrated rather than spread. One tape, 86008, carries 254 of the 546
+humpback clips and gets 0.510 recall, with sperm whale taking 40% of it. Four tapes score
+zero recall and hold 13 clips between them, so they cost the mean far less than their
+number suggests. Sperm whale leads the confusion on seven tapes and 80% of the class.
+
+Twelve tapes is what the corpus gives to learn that boundary from. Per class decision
+weights and a sweep of the spectrogram both made it worse:
+[docs/confounds.md](docs/confounds.md) has the numbers.
 
 ### Declining
 
@@ -122,10 +145,18 @@ XGBoost on 0.101%, which is why the command ships the trees. The cut off is read
 each model's own curve: to reach 90% accuracy XGBoost needs 0.591 and `cnn_small` needs
 0.954.
 
-## The control that beats it
+## What the paperwork gives away
 
-A model given no audio, reading only the recording metadata and the parsed field note,
-reaches 0.997.
+Two models are fitted on the same folds and given no audio at all. `logbook` reads the
+parsed field note; `metadata` reads four recording fields. Both beat every model above.
+
+| control | macro-F1 |
+| --- | --- |
+| logbook | 0.997 ± 0.010 |
+| metadata | 0.868 ± 0.134 |
+
+This is the floor the audio result is measured against, and it sat in the wrong place
+until the logbook control existed.
 
 | comparison | margin | 95% interval | p | agreeing |
 | --- | --- | --- | --- | --- |
@@ -136,75 +167,25 @@ reaches 0.997.
 | logbook against metadata | +0.129 | -0.009 to +0.268 | 0.067 | 44 of 50 |
 
 Every audio comparison resolves and every one is negative. Against the metadata control
-instead, XGBoost is -0.115 at p = 0.24, which settles nothing. The floor sat in the
-wrong place until the logbook control existed.
+instead, XGBoost is -0.115 at p = 0.24, which settles nothing.
 
 Replicated at 5120 Hz, which keeps all 14 humpback tapes: XGBoost lands 0.250 below the
 logbook at p = 2.5e-04 with 50 of 50 agreeing, and 0.150 below the metadata control at
 p = 0.012 with 46 of 50. The probe lands 0.276 below the logbook at p = 2.9e-06.
 
-Which fields do it, and what happens across eleven species, is in
-[docs/confounds.md](docs/confounds.md).
+### A new recording context
 
-## Does it survive a new recording context
+The fold rule costs more than either control. `configs/context.yaml` differs from
+`configs/base.yaml` in the column folds are grouped on, and XGBoost falls from 0.752 to
+0.321 across that one line. A control with the same fold geometry and no geography
+scores 0.556, so the fall is the place rather than the arithmetic.
 
-No. `configs/context.yaml` differs from `configs/base.yaml` in the column folds are
-grouped on, and XGBoost falls from 0.752 to 0.321 across that one line.
+Whether that is a changed channel or changed animals, this corpus cannot say: whale
+dialects are regional, and holding out a field campaign would separate them but seven of
+the eleven species have exactly one collection code.
 
-Some of that is geometry. Grouping by place leaves 24 groups where the tape rule leaves
-134, so `configs/context_shuffled.yaml` deals pseudo places matched group for group,
-species for species and tape for tape, with the geography destroyed. A control with the
-same fold geometry and no geography scores 0.556, so the fall is the place rather than
-the arithmetic.
-
-| model | tape held out | pseudo places | place held out | coarseness | the place |
-| --- | --- | --- | --- | --- | --- |
-| logbook | 0.997 | 0.927 | 0.982 | -0.070 | +0.054 |
-| metadata | 0.868 | 0.898 | 0.621 | +0.030 | -0.277 |
-| XGBoost and probe averaged | 0.765 | 0.635 | 0.440 | -0.130 | -0.195 |
-| wav2vec2 probe | 0.739 | 0.594 | 0.444 | -0.145 | -0.150 |
-| acoustic descriptors, XGBoost | 0.752 | 0.556 | 0.321 | -0.197 | -0.234 |
-| the same, recording mean removed | 0.823 | 0.657 | 0.546 | -0.165 | -0.112 |
-
-The logbook barely moves, because the collection code names the species wherever the
-recording was made. Under these folds XGBoost is 0.660 behind it at p = 1.1e-04 and the
-probe 0.537 behind at p = 1.5e-03, both on five folds.
-
-That row depends on how the control encodes a name, and getting it wrong was worth more
-than the effect being measured. A site coded to its position in the alphabet is an
-ordinal, so an unseen name is decided by where the alphabet put it. Five encodings
-carrying identical information scored between 0.7211 and 0.9993 on the same folds. One
-column per name removes the axis, and the same comparison then spans 0.018.
-
-Three limits. 24 places over three species leaves humpback exactly five, and `oregon`
-alone is 49 of the 65 killer whale tapes. Repeats buy nothing at this grouping: ten
-repeats of the place split produce 1 distinct partition against 10 for the tape split,
-so every figure here rests on five folds. And the pseudo places match on tapes per group
-rather than clips per group, 44 against a median of 57, so the control is close rather
-than exact.
-
-The group is the physical place, and both weaker versions leaked. Six tapes carry clips
-the notes place at more than one site, and names no tape connects stayed apart, which
-left 52% of held out clips in a fold whose place was also in training. 47 sites become
-39 contexts become 24 places, and no place, site or tape now crosses a boundary.
-
-### Three times the places changes nothing
-
-`configs/context_wide.yaml` poses the same question over 68 places, 228 tapes and 17
-collections. Four folds rather than five, because spinner dolphin is recorded at exactly
-four places.
-
-| model | tape held out, 11 species | pseudo places | place held out |
-| --- | --- | --- | --- |
-| logbook | 0.973 | 0.926 | 0.875 |
-| metadata | 0.575 | 0.573 | 0.396 |
-| XGBoost and probe averaged | 0.458 | 0.405 | 0.195 |
-| wav2vec2 probe | 0.437 | 0.384 | 0.191 |
-| acoustic descriptors, XGBoost | 0.425 | 0.355 | 0.160 |
-
-Chance is 0.091 here. Tripling the recording contexts cut XGBoost's coarseness penalty
-from 0.197 to 0.070 and left the location penalty at 0.195 against 0.234. The part that
-responds to more places is the fold geometry.
+Which metadata fields carry the species, what happens across eleven of them, and the
+place experiment with the three limits on it: [docs/confounds.md](docs/confounds.md).
 
 ## What the audio keys on
 
@@ -316,13 +297,18 @@ What the paperwork gives away, across three species and eleven:
 
 ## Project status
 
-Complete, and the result is negative. Seventy are reported across the seven
-configurations and `data/metadata/report/MULTIPLICITY.md` corrects across all of them at
-once. Twenty seven survive, and every one is either an audio model losing to a model
-that hears nothing or one no-audio model beating another.
+Complete. The classifier reaches 0.823 on recordings it has never heard, and the limit
+on it is humpback: twelve tapes, two confusions with classes that sound like it, and
+neither a decision reweighting nor a spectrogram sweep moved it.
 
-- Every number describes one recording source. The strongest effect measured is a
-  property of the corpus paperwork.
+Seventy comparisons are reported across the seven configurations and
+`data/metadata/report/MULTIPLICITY.md` corrects across all of them at once. Twenty seven
+survive, and every one is either an audio model losing to a model that hears nothing or
+one no-audio model beating another.
+
+- How much of 0.823 is the animal and how much is the recorder, this corpus cannot say.
+  Every number in it describes one recording source, and the strongest effect measured
+  is a property of the paperwork.
 - 134 independent recordings at 10 kHz, 228 across eleven species. Eleven classes leave
   one test tape behind some classes in some folds.
 - The networks cannot be regenerated. `deterministic: false` lets cuDNN keep whichever

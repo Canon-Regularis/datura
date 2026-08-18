@@ -23,7 +23,7 @@ import re
 import pandas as pd
 import pytest
 
-from src.config import PROJECT_ROOT
+from src.config import PROJECT_ROOT, load_config
 from tests.helpers import needs, prose, published
 
 README = PROJECT_ROOT / "README.md"
@@ -112,9 +112,11 @@ def report_exists() -> None:
     needs(REPORTS / "base_10k" / "family_margins.csv", "run python -m src.evaluate.report first")
 
 
-SPECIES_ROWS = {
-    "logbook": "logbook",
-    "metadata": "metadata",
+# The headline table prints the models that read audio. The two controls have a table
+# of their own, under the section that says what they are for, because a reader
+# comparing representations is not choosing between a spectrogram and a field note.
+# The completeness check below reads both, so a model on disk still cannot go unprinted.
+AUDIO_ROWS = {
     "acoustic descriptors, recording mean removed": "xgboost_centred",
     "XGBoost and probe averaged": "xgboost+probe",
     "acoustic descriptors, XGBoost": "xgboost",
@@ -122,6 +124,15 @@ SPECIES_ROWS = {
     "log mel CNN, 0.15 M": "cnn_small",
     "log mel CNN, 2.8 M": "cnn",
 }
+
+CONTROL_ROWS = {
+    "logbook": "logbook",
+    "metadata": "metadata",
+}
+
+SPECIES_ROWS = {**AUDIO_ROWS, **CONTROL_ROWS}
+
+SPECIES_TABLES = ("| model | macro-F1 |", "| control | macro-F1 |")
 
 AGAINST_LOGBOOK = {
     "XGBoost": "xgboost",
@@ -165,25 +176,62 @@ AMBIGUITY_ROWS = {
 
 
 def test_the_species_scores_match_the_artifact(report_exists):
-    for cells in rows_of("| model | macro-F1 | audio |"):
-        label, score = cells[0], cells[1]
-        name = SPECIES_ROWS[label]
-        summary = pd.read_csv(REPORTS / "base_10k" / name / "summary.csv")
-        row = summary[summary["metric"] == "macro_f1"].iloc[0]
+    for marker in SPECIES_TABLES:
+        for cells in rows_of(marker):
+            label, score = cells[0], cells[1]
+            name = SPECIES_ROWS[label]
+            summary = pd.read_csv(REPORTS / "base_10k" / name / "summary.csv")
+            row = summary[summary["metric"] == "macro_f1"].iloc[0]
 
-        mean, spread = (part.strip() for part in score.split("±"))
-        assert matches(mean, row["mean"]), f"{label}: macro-F1"
-        assert matches(spread, row["std"]), f"{label}: spread"
+            mean, spread = (part.strip() for part in score.split("±"))
+            assert matches(mean, row["mean"]), f"{label}: macro-F1"
+            assert matches(spread, row["std"]), f"{label}: spread"
 
 
-def test_the_species_table_lists_every_model(report_exists):
-    printed = {cells[0] for cells in rows_of("| model | macro-F1 | audio |")}
+def test_the_species_tables_list_every_model(report_exists):
+    """Between them, because splitting the table must not lose a row.
+
+    A model that reached the report and neither table would be a result nobody reads,
+    which is the failure this file was written for.
+    """
+    printed = {cells[0] for marker in SPECIES_TABLES for cells in rows_of(marker)}
     on_disk = {
         label
         for label, name in SPECIES_ROWS.items()
         if (REPORTS / "base_10k" / name / "summary.csv").exists()
     }
     assert on_disk == printed, f"printed {sorted(printed)} against {sorted(on_disk)} on disk"
+
+
+def test_the_per_class_table_matches_the_fold_metrics(report_exists):
+    """The headline is a macro average, so the class it hides has to be printed right.
+
+    Read from the per fold metrics rather than the summary, because the summary carries
+    the macro figures and these are the three the average is taken over.
+    """
+    path = REPORTS / "base_10k" / "xgboost_centred" / "fold_metrics_clip.csv"
+    needs(path, "fit the headline model")
+    folds = pd.read_csv(path)
+
+    for cells in rows_of("| class | precision | recall | F1 |"):
+        name, printed = cells[0], dict(zip(("precision", "recall", "f1"), cells[1:4], strict=True))
+        for metric, value in printed.items():
+            assert matches(value, folds[f"{metric}_{name}"].mean()), f"{name}: {metric}"
+
+
+def test_the_humpback_spread_claim_matches_the_folds(report_exists):
+    """The instability is the reason the class is hard, so the figure carries weight."""
+    path = REPORTS / "base_10k" / "xgboost_centred" / "fold_metrics_clip.csv"
+    needs(path, "fit the headline model")
+    folds = pd.read_csv(path)
+
+    spreads = {
+        name: folds[f"f1_{name}"].std(ddof=1)
+        for name in ("HumpbackWhale", "SpermWhale", "KillerWhale")
+    }
+    others = " and ".join(f"{spreads[name]:.3f}" for name in ("SpermWhale", "KillerWhale"))
+    claim = f"standard deviation of {spreads['HumpbackWhale']:.3f} against {others} for the others"
+    assert claim in prose(), f"the spreads are {spreads}"
 
 
 def test_the_margins_against_the_logbook_match_the_artifact(report_exists):
@@ -810,3 +858,49 @@ def test_the_stronger_normalisation_is_reported_as_the_loss_it_is(report_exists)
 
     text = " ".join(published().split())
     assert f"costs {scores['raw'] - scores['whitened']:.3f} against the raw descriptors" in text
+
+
+def test_the_humpback_tape_claims_match_the_predictions(report_exists):
+    """Per tape claims, recomputed from the committed clips.
+
+    These were published with the two confusions the wrong way round, because a per
+    tape breakdown is read once by hand and then quoted from memory. Nothing else in
+    this file checks a claim about a single recording, and that is how it survived.
+    """
+    cfg = load_config(PROJECT_ROOT / "configs" / "base.yaml")
+    path = REPORTS / "base_10k" / "xgboost_centred" / "clip_predictions.parquet"
+    needs(path, "fit the headline model")
+
+    species = sorted(cfg.dataset.species)
+    humpback = species.index("HumpbackWhale")
+    frame = pd.read_parquet(path)
+    rows = frame[frame["label"] == humpback]
+
+    total = rows["clip_id"].nunique()
+    text = prose()
+
+    per_tape = {}
+    for tape, group in rows.groupby("tape_id"):
+        shares = group["prediction"].value_counts(normalize=True)
+        leader = max((v, species[k]) for k, v in shares.items() if k != humpback)
+        per_tape[str(tape)] = {
+            "clips": group["clip_id"].nunique(),
+            "recall": (group["prediction"] == humpback).mean(),
+            "leader": leader[1],
+            "share": leader[0],
+        }
+
+    worst = max(per_tape, key=lambda tape: per_tape[tape]["clips"])
+    it = per_tape[worst]
+    assert f"{worst}, carries {it['clips']} of the {total} humpback clips" in text
+    assert f"gets {it['recall']:.3f} recall" in text
+    assert f"sperm whale taking {it['share']:.0%} of it" in text
+
+    silent = [tape for tape, it in per_tape.items() if it["recall"] == 0]
+    quiet = sum(per_tape[tape]["clips"] for tape in silent)
+    assert f"{_spelled(len(silent))} tapes score zero recall" in text
+    assert f"hold {quiet} clips between them" in text
+
+    leading = [tape for tape, it in per_tape.items() if it["leader"] == "SpermWhale"]
+    share = sum(per_tape[tape]["clips"] for tape in leading) / total
+    assert f"on {_spelled(len(leading)).lower()} tapes and {share:.0%} of the class" in text

@@ -170,13 +170,16 @@ Macro-F1 of 0.823 is one class. Humpback scores 0.649 against 0.892 for sperm wh
 killer whale, and it is the unstable one: F1 standard deviation 0.228 against 0.038 for the other
 two, ranging 0.184 to 0.892 across the fifty splits.
 
-Per tape recall says it is not a uniform weakness. Four humpback tapes score exactly zero and a
-fifth scores 0.045. Tapes 92201, 55113 and 86008 carry 309 clips, 57 percent of the class, and are
-called killer whale 40 to 57 percent of the time. Tapes 52008, 61042, 79022 and 54018 carry 39 clips
-and are called sperm whale 96 to 100 percent of the time. The two tapes that score well are the two
-carrying song. Humpback pulsed calls against killer whale pulsed calls, and humpback moans against
-sperm whale clicks, are the two confusions, and both are between signals of a similar kind rather
-than between recording conditions.
+Per tape recall says it is not a uniform weakness, and that the weakness is concentrated. Four
+tapes score exactly zero, and they hold 13 clips between them, so they cost the mean far less than
+their number suggests. The expensive tape is 86008: 254 clips on its own, 47 percent of the class,
+recall 0.510, and sperm whale takes 40 percent of it.
+
+Sperm whale is the leading confusion for seven tapes carrying 80 percent of the class. Tapes 92201,
+55113 and 86008 carry 309 clips, 57 percent of the class, and sperm whale takes 40 to 57 percent of
+each. Killer whale leads on five tapes and 20 percent of the class, and it takes 96 to 100 percent
+of the 39 clips on tapes 52008, 61042, 79022 and 54018. Both tapes whose notes list song score above
+0.72, and the four that score zero list a moan, a growl, or nothing at all.
 
 Two fixes were measured and neither worked.
 
@@ -194,3 +197,64 @@ a four second window by 0.028, and a 2048 point FFT by 0.042 at p = 0.039, the o
 separates. Longer transforms buy frequency resolution and pay for it in time resolution, which these
 pulsed calls need more. The settings are kept under `configs/sweep/` and stay out of the published
 set, since `experiment_configs` globs `configs/*.yaml` and does not recurse.
+
+
+## Does it survive a new recording context
+
+No. `configs/context.yaml` differs from `configs/base.yaml` in the column folds are
+grouped on, and XGBoost falls from 0.752 to 0.321 across that one line.
+
+Some of that is geometry. Grouping by place leaves 24 groups where the tape rule leaves
+134, so `configs/context_shuffled.yaml` deals pseudo places matched group for group,
+species for species and tape for tape, with the geography destroyed. A control with the
+same fold geometry and no geography scores 0.556, so the fall is the place rather than
+the arithmetic.
+
+| model | tape held out | pseudo places | place held out | coarseness | the place |
+| --- | --- | --- | --- | --- | --- |
+| logbook | 0.997 | 0.927 | 0.982 | -0.070 | +0.054 |
+| metadata | 0.868 | 0.898 | 0.621 | +0.030 | -0.277 |
+| XGBoost and probe averaged | 0.765 | 0.635 | 0.440 | -0.130 | -0.195 |
+| wav2vec2 probe | 0.739 | 0.594 | 0.444 | -0.145 | -0.150 |
+| acoustic descriptors, XGBoost | 0.752 | 0.556 | 0.321 | -0.197 | -0.234 |
+| the same, recording mean removed | 0.823 | 0.657 | 0.546 | -0.165 | -0.112 |
+
+The logbook barely moves, because the collection code names the species wherever the
+recording was made. Under these folds XGBoost is 0.660 behind it at p = 1.1e-04 and the
+probe 0.537 behind at p = 1.5e-03, both on five folds.
+
+That row depends on how the control encodes a name, and getting it wrong was worth more
+than the effect being measured. A site coded to its position in the alphabet is an
+ordinal, so an unseen name is decided by where the alphabet put it. Five encodings
+carrying identical information scored between 0.7211 and 0.9993 on the same folds. One
+column per name removes the axis, and the same comparison then spans 0.018.
+
+Three limits. 24 places over three species leaves humpback exactly five, and `oregon`
+alone is 49 of the 65 killer whale tapes. Repeats buy nothing at this grouping: ten
+repeats of the place split produce 1 distinct partition against 10 for the tape split,
+so every figure here rests on five folds. And the pseudo places match on tapes per group
+rather than clips per group, 44 against a median of 57, so the control is close rather
+than exact.
+
+The group is the physical place, and both weaker versions leaked. Six tapes carry clips
+the notes place at more than one site, and names no tape connects stayed apart, which
+left 52% of held out clips in a fold whose place was also in training. 47 sites become
+39 contexts become 24 places, and no place, site or tape now crosses a boundary.
+
+### Three times the places changes nothing
+
+`configs/context_wide.yaml` poses the same question over 68 places, 228 tapes and 17
+collections. Four folds rather than five, because spinner dolphin is recorded at exactly
+four places.
+
+| model | tape held out, 11 species | pseudo places | place held out |
+| --- | --- | --- | --- |
+| logbook | 0.973 | 0.926 | 0.875 |
+| metadata | 0.575 | 0.573 | 0.396 |
+| XGBoost and probe averaged | 0.458 | 0.405 | 0.195 |
+| wav2vec2 probe | 0.437 | 0.384 | 0.191 |
+| acoustic descriptors, XGBoost | 0.425 | 0.355 | 0.160 |
+
+Chance is 0.091 here. Tripling the recording contexts cut XGBoost's coarseness penalty
+from 0.197 to 0.070 and left the location penalty at 0.195 against 0.234. The part that
+responds to more places is the fold geometry.
