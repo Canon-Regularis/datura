@@ -8,7 +8,10 @@ both are pinned here.
 
 from __future__ import annotations
 
+import pytest
+
 from src.config import load_config
+from src.config.sections import ConfigError
 from tests.conftest import write_config
 
 
@@ -91,6 +94,44 @@ def test_spectrogram_settings_move_the_caches_built_from_them(tmp_path):
     assert base[registry.ACOUSTIC] != finer[registry.ACOUSTIC], "built through the mel basis"
     assert base[registry.LOGMEL] != finer[registry.LOGMEL]
     assert base[registry.ENCODER] == finer[registry.ENCODER], "the encoder reads the waveform"
+
+
+def test_the_mel_compression_moves_the_caches_built_through_it(tmp_path):
+    """PCEN replaces the decibel scale the cepstral coefficients are taken from.
+
+    The shape does not move, in exactly the way a mel setting does not move it, so a
+    stale array would load at the right size and be read as the new representation.
+    """
+    from src.features import registry
+
+    base = _cache_keys(tmp_path, "base")
+    pcen = _cache_keys(tmp_path, "pcen", spectrogram={"compression": "pcen"})
+
+    assert base[registry.ACOUSTIC] != pcen[registry.ACOUSTIC], "the mfccs are taken from it"
+    assert base[registry.LOGMEL] != pcen[registry.LOGMEL]
+    assert base[registry.ENCODER] == pcen[registry.ENCODER], "the encoder reads the waveform"
+
+
+def test_the_default_compression_is_absent_from_every_cache_key(tmp_path):
+    """The reason `SpectrogramConfig` has a `cache_identity` at all.
+
+    Every feature array on disk and every committed result was built under log
+    compression. Naming the default in the key would move all three digests and orphan
+    hundreds of megabytes of features, which would then be rebuilt to exactly the bytes
+    they already hold.
+    """
+    from src.config.sections import LOG_COMPRESSION
+
+    plain = _cache_keys(tmp_path, "plain")
+    named = _cache_keys(tmp_path, "named", spectrogram={"compression": LOG_COMPRESSION})
+
+    assert plain == named, "spelling out the default must not move a key"
+
+
+def test_an_unknown_compression_is_refused(tmp_path):
+    """A typo here would silently fall through to decibels and publish the wrong label."""
+    with pytest.raises(ConfigError, match="compression"):
+        load_config(write_config(tmp_path / "bad", spectrogram={"compression": "mel"}))
 
 
 def test_every_extractor_declares_the_sections_it_is_built_from(tmp_path):

@@ -1,0 +1,32 @@
+# One axis of the representation sweep, moved from base.yaml and nothing else.
+#
+# These live under configs/sweep/ rather than beside the published configs because
+# `experiment_configs()` globs `configs/*.yaml` and is not recursive. A sweep entry
+# discovered there would enter the multiplicity correction and the reproduce job, which
+# would publish a setting that exists to be tried and discarded.
+#
+# Selection is on `fold_metrics_validation.csv`, never on the test folds.
+extends: ../base.yaml
+#
+# Per channel energy normalisation as the mel compression, in place of decibels
+# against the window peak.
+#
+# The other four settings in this directory move a size. This one moves what the
+# cepstral coefficients are taken from, and it is here because of what already
+# worked: subtracting each recording's mean feature vector is the only change in
+# this project that raised an audio score, by 0.071 on held out tapes and 0.225
+# across places. PCEN divides each mel band by a smoothed estimate of itself, so
+# whatever holds steady across a recording divides itself out.
+#
+# It removes the same thing, and it does not need a statistic over a whole tape.
+# That is the part worth more than the score: the mean subtraction cannot run at
+# prediction time, because `src.predict` is handed one clip and 1,993 of the 4,160
+# clips here are a single window. A causal normaliser that matched the centred trees
+# would be the first shippable version of the best model.
+name: sweep_pcen
+
+dataset:
+  corpus: base_10k
+
+spectrogram:
+  compression: pcen

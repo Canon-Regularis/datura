@@ -170,7 +170,12 @@ def _folds_per_repeat(index: pd.Index) -> int:
     split that sets how much training data two folds share. A run with a plain index
     is one split, so every row is a fold of it.
     """
-    if isinstance(index, pd.MultiIndex) and "fold" in (index.names or []):
+    if isinstance(index, pd.MultiIndex):
+        if "fold" not in (index.names or []):
+            raise ComparisonError(
+                "a repeat and fold index must name its levels; unnamed, every row reads "
+                "as a split of its own and the overlap correction all but disappears"
+            )
         return int(index.get_level_values("fold").nunique())
     return len(index)
 

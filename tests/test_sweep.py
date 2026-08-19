@@ -45,6 +45,7 @@ def test_every_setting_moves_one_axis_from_the_baseline():
         "n_fft": lambda c: c.spectrogram.n_fft,
         "n_mels": lambda c: c.spectrogram.n_mels,
         "window_seconds": lambda c: c.audio.window_seconds,
+        "compression": lambda c: c.spectrogram.compression,
     }
 
     for path in sorted(sweep.SWEEP_DIRECTORY.glob("*.yaml")):

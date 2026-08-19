@@ -14,12 +14,19 @@ from __future__ import annotations
 import librosa
 import numpy as np
 
+from src.config.sections import LOG_COMPRESSION, PCEN_COMPRESSION
 from src.features.base import FeatureExtractor
 
 _AGGREGATIONS = ("mean", "std", "p10", "p90")
 _LOW_PERCENTILE = 10
 _HIGH_PERCENTILE = 90
 _CONTRAST_FMIN = 100.0
+_TOP_DB = 80.0
+
+# PCEN's published constants were tuned against magnitude spectrograms of integer PCM,
+# and this pipeline decodes to floats in [-1, 1]. Without the lift the smoother sits
+# near eps and the compression barely engages.
+_PCEN_SCALE = 2.0**31
 
 
 def contrast_band_count(sample_rate: int, fmin: float = _CONTRAST_FMIN) -> int:
@@ -71,6 +78,7 @@ class AcousticFeatures(FeatureExtractor):
         fmax: float,
         sample_rate: int,
         n_mfcc: int = 20,
+        compression: str = LOG_COMPRESSION,
     ) -> None:
         self.n_fft = n_fft
         self.hop_length = hop_length
@@ -79,6 +87,7 @@ class AcousticFeatures(FeatureExtractor):
         self.fmax = fmax
         self.sample_rate = sample_rate
         self.n_mfcc = n_mfcc
+        self.compression = compression
         self.n_contrast_bands = contrast_band_count(sample_rate)
         self._mel_basis = librosa.filters.mel(
             sr=sample_rate, n_fft=n_fft, n_mels=n_mels, fmin=fmin, fmax=fmax
@@ -129,6 +138,27 @@ class AcousticFeatures(FeatureExtractor):
         names += ["dominant_frequency", "dominant_frequency_ratio"]
         return names
 
+    def _compress(self, magnitude: np.ndarray, power: np.ndarray) -> np.ndarray:
+        """Mel energy on the scale the cepstral coefficients are taken from.
+
+        Decibels against the window peak measure how loud each band is relative to the
+        loudest moment in the window. That carries the recording as well as the animal,
+        which is why subtracting each tape's mean afterwards is worth 0.071 macro-F1.
+
+        PCEN divides each band by a smoothed estimate of itself instead. Whatever holds
+        steady across a recording divides itself out and whatever is transient survives,
+        so it removes the same thing without needing statistics over a whole tape. That
+        matters beyond the score: the mean subtraction cannot run at prediction time,
+        because the command is handed one clip.
+        """
+        if self.compression == PCEN_COMPRESSION:
+            return librosa.pcen(
+                (self._mel_basis @ magnitude) * _PCEN_SCALE,
+                sr=self.sample_rate,
+                hop_length=self.hop_length,
+            )
+        return librosa.power_to_db(self._mel_basis @ power, ref=np.max, top_db=_TOP_DB)
+
     def transform(self, window: np.ndarray, sample_rate: int) -> np.ndarray:
         if sample_rate != self.sample_rate:
             raise ValueError(
@@ -143,10 +173,7 @@ class AcousticFeatures(FeatureExtractor):
             )
         )
         power = magnitude**2
-        mel_power = self._mel_basis @ power
-        mel_db = librosa.power_to_db(mel_power, ref=np.max, top_db=80.0)
-
-        mfcc = librosa.feature.mfcc(S=mel_db, n_mfcc=self.n_mfcc)
+        mfcc = librosa.feature.mfcc(S=self._compress(magnitude, power), n_mfcc=self.n_mfcc)
         mfcc_delta = librosa.feature.delta(mfcc, width=min(9, _odd_below(mfcc.shape[1])))
 
         contrast = librosa.feature.spectral_contrast(

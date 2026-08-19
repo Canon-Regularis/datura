@@ -1,0 +1,27 @@
+# One axis of the representation sweep, moved from base.yaml and nothing else.
+#
+# These live under configs/sweep/ rather than beside the published configs because
+# `experiment_configs()` globs `configs/*.yaml` and is not recursive. A sweep entry
+# discovered there would enter the multiplicity correction and the reproduce job, which
+# would publish a setting that exists to be tried and discarded.
+#
+# Selection is on `fold_metrics_validation.csv`, never on the test folds.
+extends: ../base.yaml
+#
+# Half the window, and the mirror of window4.yaml. The first sweep tested a longer
+# window and never a shorter one, which left the side the evidence points at unmeasured.
+#
+# Humpback recall rises with clip length: 0.595 under three seconds, 0.829 above
+# thirty. The median humpback clip is 3.3 seconds, so at a two second window and a one
+# second hop it is decided on two windows, and the class that needs the most evidence
+# gets the least. Halving the window roughly doubles the count. It costs frames per
+# window, which the four within window statistics are computed over, so this is a trade
+# rather than a free gain.
+name: sweep_window1
+
+dataset:
+  corpus: base_10k
+
+audio:
+  window_seconds: 1.0
+  hop_seconds: 0.5

@@ -13,6 +13,7 @@ from typing import Any
 import yaml
 
 from src.config.sections import (
+    LOG_COMPRESSION,
     AudioConfig,
     Config,
     ConfigError,
@@ -222,7 +223,12 @@ def load_config(path: str | Path) -> Config:
             "max_windows_per_clip",
         },
     )
-    spec_block = _require(raw, "spectrogram", {"n_fft", "hop_length", "n_mels", "fmin", "fmax"})
+    spec_block = _require(
+        raw,
+        "spectrogram",
+        {"n_fft", "hop_length", "n_mels", "fmin", "fmax"},
+        optional={"compression"},
+    )
     split_block = _require(raw, "split", {"n_folds", "seed", "tape_id_length", "group_column"})
     paths_block = _require(raw, "paths", {"raw", "metadata", "processed", "reports"})
     pipeline_block = _optional(raw, "pipeline", {"models", "call_types"})
@@ -267,6 +273,7 @@ def load_config(path: str | Path) -> Config:
             n_mels=int(spec_block["n_mels"]),
             fmin=float(spec_block["fmin"]),
             fmax=float(spec_block["fmax"]),
+            compression=str(spec_block.get("compression", LOG_COMPRESSION)),
         ),
         split=SplitConfig(
             n_folds=int(split_block["n_folds"]),

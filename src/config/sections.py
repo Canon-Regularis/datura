@@ -108,6 +108,11 @@ class AudioConfig:
         return self.target_sample_rate / 2.0
 
 
+LOG_COMPRESSION = "log"
+PCEN_COMPRESSION = "pcen"
+COMPRESSIONS = frozenset({LOG_COMPRESSION, PCEN_COMPRESSION})
+
+
 @dataclass(frozen=True)
 class SpectrogramConfig:
     n_fft: int
@@ -115,6 +120,10 @@ class SpectrogramConfig:
     n_mels: int
     fmin: float
     fmax: float
+    # How mel energy is compressed. "log" is decibels against the window peak.
+    # "pcen" divides by a smoothed estimate of itself instead, which suppresses
+    # whatever is stationary in a recording and leaves what is transient.
+    compression: str = LOG_COMPRESSION
 
     def __post_init__(self) -> None:
         if self.n_fft <= 0 or self.hop_length <= 0 or self.n_mels <= 0:
@@ -123,6 +132,32 @@ class SpectrogramConfig:
             raise ConfigError("spectrogram.hop_length must not exceed spectrogram.n_fft")
         if self.fmin >= self.fmax:
             raise ConfigError("spectrogram.fmin must be below spectrogram.fmax")
+        if self.compression not in COMPRESSIONS:
+            raise ConfigError(
+                f"spectrogram.compression must be one of {sorted(COMPRESSIONS)}, "
+                f"got {self.compression!r}"
+            )
+
+    @property
+    def cache_identity(self) -> dict[str, Any]:
+        """The settings that change the array, with the default compression left out.
+
+        Every cache and every committed result in this project was built under log
+        compression, and naming it here would move all three digests and orphan the
+        features behind them. They would be rebuilt to exactly the bytes they already
+        hold. So the default stays silent and only a departure from it is recorded,
+        which is the same rule the dataset and encoder sections already follow.
+        """
+        identity: dict[str, Any] = {
+            "n_fft": self.n_fft,
+            "hop_length": self.hop_length,
+            "n_mels": self.n_mels,
+            "fmin": self.fmin,
+            "fmax": self.fmax,
+        }
+        if self.compression != LOG_COMPRESSION:
+            identity["compression"] = self.compression
+        return identity
 
 
 @dataclass(frozen=True)

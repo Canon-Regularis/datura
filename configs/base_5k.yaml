@@ -9,7 +9,7 @@ name: base_5k
 # them here would add sections to this configuration's report that are not in the
 # committed one.
 pipeline:
-  models: [xgboost, metadata, logbook, cnn_small, probe]
+  models: [xgboost, metadata, logbook, cnn_small, probe, xgboost_centred]
   call_types: []
 
 audio:

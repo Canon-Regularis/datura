@@ -38,7 +38,7 @@ name: wide_10k
 # Add a network by hand when it is wanted:
 #   python -m src.train.cnn --config configs/wide.yaml --name cnn_small
 pipeline:
-  models: [xgboost, metadata, logbook, probe]
+  models: [xgboost, metadata, logbook, probe, xgboost_centred]
   call_types: []
 
 # The species list is the only thing that differs from base.yaml, so any gap between

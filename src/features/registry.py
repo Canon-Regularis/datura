@@ -62,6 +62,7 @@ def _spectral(extractor: Callable[..., FeatureExtractor]) -> Callable[[Config], 
             fmin=cfg.spectrogram.fmin,
             fmax=cfg.spectrogram.fmax,
             sample_rate=cfg.audio.target_sample_rate,
+            compression=cfg.spectrogram.compression,
         )
 
     return build

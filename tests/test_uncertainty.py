@@ -364,3 +364,37 @@ def test_two_runs_sharing_no_split_are_refused():
 def test_fold_scores_refuse_a_metric_that_is_not_there():
     with pytest.raises(ComparisonError, match="macro_f1"):
         fold_scores(pd.DataFrame({"fold": [0], "accuracy": [0.5]}))
+
+
+def test_an_unnamed_repeat_and_fold_index_is_refused():
+    """The correction depends on a number that is silently wrong without the names.
+
+    ``paired_difference`` reads how many folds one split was cut into off the index
+    level called ``fold``. A Series built by hand from ``(repeat, fold)`` tuples carries
+    the same shape and no names, and the count then falls back to the row count. For ten
+    repeats of five folds that is 50 rather than 5, which shrinks the Nadeau and Bengio
+    term from ``1/50 + 1/4`` to ``1/50 + 1/49`` and reports a p value two orders of
+    magnitude too confident. It read 0.002 where the answer was 0.202.
+    """
+    rng = np.random.default_rng(0)
+    scores = pd.Series(
+        rng.uniform(0.7, 0.9, 10),
+        index=pd.MultiIndex.from_product([range(2), range(5)]),
+    )
+    # Varying, so the repeats are not deduplicated before the index is read.
+    other = scores + rng.uniform(0.0, 0.02, 10)
+
+    with pytest.raises(ComparisonError, match="name its levels"):
+        paired_difference(other, scores)
+
+
+def test_a_named_repeat_and_fold_index_counts_the_split_not_the_rows():
+    """The other half, so the guard cannot pass by refusing everything."""
+    rng = np.random.default_rng(0)
+    index = pd.MultiIndex.from_product([range(2), range(5)], names=["repeat", "fold"])
+    scores = pd.Series(rng.uniform(0.7, 0.9, 10), index=index)
+    other = scores + rng.uniform(0.0, 0.02, 10)
+
+    result = paired_difference(other, scores)
+
+    assert result.n_folds == 10, "two repeats of five folds, both kept"
