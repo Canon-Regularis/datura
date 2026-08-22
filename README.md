@@ -334,5 +334,5 @@ one no-audio model beating another.
 
 ## License
 
-MIT for the code. The Watkins recordings belong to the Woods Hole Oceanographic
+[Apache-2.0](LICENSE.md) for the code. The Watkins recordings belong to the Woods Hole Oceanographic
 Institution and are free for personal and academic use.
